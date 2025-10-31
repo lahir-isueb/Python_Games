@@ -9,10 +9,13 @@ pygame.display.set_caption("Bullet Hell")
 
 # --- GAME OVER ---
 
-def GAME_OVER(final_score):
+def GAME_OVER(final_score, p1, p2):
     screen.fill(BLACK)
     over_text = big_font.render("GAME OVER", True, RED)
-    score_text = font.render(f"Final Score: {final_score}", True, WHITE)
+    if players == 1: score_text = font.render(f"Final Score: {final_score}", True, WHITE)
+    elif p1 > p2: score_text = font.render(f"Player 1 wins by {p1}-{p2}.", True, WHITE)
+    elif p1 < p2: score_text = font.render(f"Player 2 wins by {p2}-{p1}.", True, WHITE)
+    elif p1 == p2: score_text = font.render(f"Both players tied with a score of {final_score}", True, WHITE)
     instr_text = font.render("Press space to exit", True, GRAY)
 
     screen.blit(over_text, over_text.get_rect(center=(WIDTH//2, HEIGHT//2 - 50)))
@@ -28,6 +31,9 @@ def GAME_OVER(final_score):
                 waiting = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 print(f"Final score: {final_score}")
+                if players == 2:
+                    print(f"Player 1 score: {p1}")
+                    print(f"Player 2 score: {p2}")
                 waiting = False
         clock.tick(15)
 
@@ -49,7 +55,7 @@ TEAL = (0, 140, 140)
 CYAN = (0, 255, 255)
 SKY = (105, 160, 225)
 BLUE = (0, 0, 255)
-INDIGO = (125, 0, 225)
+INDIGO = (110, 0, 200)
 PURPLE = (162, 0, 255)
 MAGENTA = (255, 0, 255)
 HOT_PINK = (255, 0, 106)
@@ -65,6 +71,8 @@ player_y = HEIGHT // 2
 player_speed = 8
 player_lives = 3
 player2_lives = 3
+player_alive = True
+player2_alive = True
 
 # --- Enemy ---
 enemy_size = 50
@@ -85,30 +93,37 @@ player2_x = spawner_pos[0] - player_size - 500  # or wherever you want
 player2_y = spawner_pos[1] + SPAWNER_SIZE // 2 - player_size // 2
 
 # --- Bounce limits / health ---
-basic_hp = 5 # gray enemy
-homing_hp = 2 # maroon enemy
-fatal_hp = 5 # red enemy
-flow_hp = 3 # yellow enemy
-sticky_hp = 8 # green enemy
-gloomy_hp = 8 # purple enemy
-trail_hp = 3 # orange enemy
-impostor_hp = 5 # white enemy
-splitter_hp = 3 # lime enemy
-bomb_hp = 10 # hot pink enemy
-shooter_hp = 4 # silver enemy
-sniper_hp = 1 # blue enemy
-speedy_hp = 5 # sky enemy
-shotgun_hp = 4 # scarlet enemy
-voodoo_hp = 3 # magenta enemy
+basic_hp = 5 # 1
+homing_hp = 2 # 2
+fatal_hp = 5 # 3
+flow_hp = 3 # 4
+sticky_hp = 7 # 5
+gloomy_hp = 8 # 6
+trail_hp = 3 # 7
+impostor_hp = 5 # 8
+splitter_hp = 3 # 9
+bomb_hp = 10 # 10
+shooter_hp = 4 # 11
+sniper_hp = 1 # 12
+speedy_hp = 5 # 13
+shotgun_hp = 4 # 14
+voodoo_hp = 3 # 15
+blind_hp = 8 # 16
+motion_hp = 8 # 17
+charger_hp = 4 # 18
 
 # --- Score ---
 score = 0
+score_p1 = score
+score_p2 = score
 font = pygame.font.SysFont(None, 40)
 big_font = pygame.font.SysFont(None, 120)
 enemy_font = pygame.font.SysFont(None, 48)
 player_font = pygame.font.SysFont(None, 48)
 regen = 70
 next_regen_score = regen
+player2_next_regen_score = regen
+
 
 # --- Clock ---
 clock = pygame.time.Clock()
@@ -116,12 +131,13 @@ FPS = 60
 
 # --- Enemy unlocking ---
 available_enemy_types = [1]  # start with basic
-locked_enemy_types = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+locked_enemy_types = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 unlock_scores = []
 unlocks = 0
 for unlocked in range(len(locked_enemy_types)):
     unlocks += ((1+unlocked)*20)
     unlock_scores.append(unlocks)
+targetting_enemies = [2, 8, 11, 12, 14]
     
 
 # --- Trail for orange enemy ---
@@ -144,8 +160,12 @@ shotgun_delay = 7500
 
 # --- Player damage flash ---
 damage_flash_time = 0
+player2_damage_flash_time = 0
 invincible_until = 0
+player2_invincible_until = 0
 invincibility_duration = 1000
+player2_last_regen = 0
+player2_regen_cooldown = 3000
 
 # +++ Regen indicator +++
 
@@ -164,7 +184,13 @@ def check_collision(px, py, pw, ph, ex, ey, ew, eh):
 def distance(x1, y1, x2, y2):
     return math.hypot(x2 - x1, y2 - y1)
 
-
+def get_target_position(enemy):
+    if enemy["target"] == 1:
+        return player_x, player_y
+    elif enemy["target"] == 2:
+        return player2_x, player2_y
+    else:
+        return None
 
 menu_font = pygame.font.Font(None, 48)
 button_color = (139, 0, 0)
@@ -236,8 +262,12 @@ while running:
     keys = pygame.key.get_pressed()
 
     # Determine movement for Player 1
-    p1_dx = (keys[pygame.K_d]) - (keys[pygame.K_a])
-    p1_dy = (keys[pygame.K_s]) - (keys[pygame.K_w])
+    if players == 1:
+        p1_dx = (keys[pygame.K_d] or keys[pygame.K_RIGHT]) - (keys[pygame.K_a] or keys[pygame.K_LEFT])
+        p1_dy = (keys[pygame.K_s] or keys[pygame.K_DOWN]) - (keys[pygame.K_w] or keys[pygame.K_UP])
+    else:
+        p1_dx = (keys[pygame.K_d]) - (keys[pygame.K_a])
+        p1_dy = (keys[pygame.K_s]) - (keys[pygame.K_w])
     if p1_dx != 0 or p1_dy != 0:
         length1 = math.hypot(p1_dx, p1_dy)
         p1_dx = p1_dx / length1 * player_speed
@@ -248,8 +278,8 @@ while running:
     # Determine movement for Player 2 (if exists)
     p2_dx, p2_dy = 0, 0
     if players == 2:
-        p2_dx = ((keys[pygame.K_RIGHT]) - (keys[pygame.K_LEFT]))
-        p2_dy = ((keys[pygame.K_DOWN]) - (keys[pygame.K_UP]))
+        p2_dx = ((keys[pygame.K_l]) - (keys[pygame.K_j]))
+        p2_dy = ((keys[pygame.K_k]) - (keys[pygame.K_i]))
         if p2_dx != 0 or p2_dy != 0:
             length2 = math.hypot(p2_dx, p2_dy)
             p2_dx = p2_dx / length2 * player_speed
@@ -335,11 +365,26 @@ while running:
             dx *= 0.9; dy *= 0.9; health = shotgun_hp
             shoot_delay = shotgun_delay
         elif enemy_type == 15:
-            dx *= 0.5; dy *= 0.5; health = voodoo_hp
+            dx *= 0.35; dy *= 0.35; health = voodoo_hp
+        elif enemy_type == 16:
+            dx *= 1.5; dy *= 1.5; health = blind_hp
+        elif enemy_type == 17:
+            dx *= 1.5; dy *= 1.5; health = motion_hp
+        elif enemy_type == 18:
+            dx *= 2; dy *= 2; health = charger_hp
+
+        if enemy_type in targetting_enemies:
+            if players == 1:
+                target = 1
+            else:
+                target = random.choice([1, 2])
+        else: target = 0
+            
 
         enemies.append({
             "x": spawner_pos[0],
             "y": spawner_pos[1],
+            "target": target,
             "dx": dx,
             "dy": dy,
             "type": enemy_type,
@@ -358,12 +403,18 @@ while running:
         })
         last_spawn_time = current_time
         
-        
+        for enemy in enemies:
+            if players == 2:
+                if not player_alive and player2_alive:
+                    enemy["target"] = 2
+                elif not player2_alive and player_alive:
+                    enemy["target"] = 1
 
     # --- Enemy Movement ---
     for enemy in enemies[:]:
         enemy_died = False
         sz = enemy.get("size", enemy_size)
+        
 
         if enemy["type"] == 1:
             enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
@@ -374,7 +425,12 @@ while running:
             if enemy["bounces"] >= basic_hp: enemy_died = True
 
         elif enemy["type"] == 2:
-            dx = player_x - enemy["x"]; dy = player_y - enemy["y"]
+            target_pos = get_target_position(enemy)
+            if target_pos:
+                tx, ty = target_pos
+                dx = tx - enemy["x"]; dy = ty - enemy["y"]
+            else:
+                dx, dy = 0, 0
             target_angle = math.atan2(dy, dx)
             enemy["angle"] = rotate_toward(enemy["angle"], target_angle, 0.02)
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 0.7)
@@ -394,9 +450,11 @@ while running:
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
             if enemy["bounces"] >= fatal_hp: enemy_died = True
 
-        elif enemy["type"] == 4:  # Yellow
-            dist = distance(enemy["x"], enemy["y"], player_x, player_y)
-            speed_multiplier = 2.5 if dist < 250 else 2/3
+        elif enemy["type"] == 4:
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            closest_dist = min(dist1, dist2)
+            speed_multiplier = 2.5 if closest_dist < 250 else 2/3
             # Move enemy
             enemy["x"] += enemy["dx"] * speed_multiplier
             enemy["y"] += enemy["dy"] * speed_multiplier
@@ -428,7 +486,7 @@ while running:
                 enemy_died = True
 
 
-        elif enemy["type"] == 5:  # Green
+        elif enemy["type"] == 5:
             if enemy["stopped"]:
                 # after 2 seconds resume moving
                 if current_time - enemy["stop_start_time"] >= 2000:
@@ -458,8 +516,10 @@ while running:
                 enemy_died = True
 
         elif enemy["type"] == 6:  # Purple
-            dist = distance(enemy["x"], enemy["y"], player_x, player_y)
-            if dist > 250:
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            closest_dist = min(dist1, dist2)
+            if closest_dist > 250:
                 enemy["x"] += enemy["dx"]
                 enemy["y"] += enemy["dy"]
                 bounced = False
@@ -489,9 +549,12 @@ while running:
             if enemy["health"] <= 0: enemy_died = True
 
         elif enemy["type"] == 8:
-            if player_moving:
-                enemy["x"] += enemy["dx"]
-                enemy["y"] += enemy["dy"]
+            target_pos = get_target_position(enemy)
+            if target_pos:
+                tx, ty = target_pos
+                if (enemy["target"] == 1 and (p1_dx or p1_dy)) or (enemy["target"] == 2 and (p2_dx or p2_dy)):
+                    enemy["x"] += enemy["dx"]
+                    enemy["y"] += enemy["dy"]
             bounced = False
             if enemy["x"] <= 0 or enemy["x"] >= WIDTH - enemy_size:
                 enemy["dx"] *= -1
@@ -552,6 +615,10 @@ while running:
                             })
                     else:
                         score += 1
+                        if player_alive:
+                            score_p1 = score
+                        if player2_alive:
+                            score_p2 = score
 
                     enemies.remove(enemy)
                 continue
@@ -577,9 +644,10 @@ while running:
                 enemy["health"] -= 1
 
             # Proximity trigger – bomb kills itself and explodes
-            if distance(enemy["x"], enemy["y"], player_x, player_y) < 200:# EXPLODE DISTANCE FROM PALYER
-                # spawn 8 projectiles immediately
-                for i in range(8):
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            if min(dist1, dist2) < 200:
+                for i in range(8):  # fire 8 projectiles in all directions
                     ang = i * (2 * math.pi / 8)
                     dxp = math.cos(ang) * bomb_projectile_speed
                     dyp = math.sin(ang) * bomb_projectile_speed
@@ -589,8 +657,7 @@ while running:
                         "dx": dxp,
                         "dy": dyp
                     })
-                # instantly kill bomb (not player)
-                enemy["health"] = 0  # mark as dead
+                enemy["health"] = 0
 
             # If HP ≤ 0 (killed normally or via proximity), explode once and remove
             if enemy["health"] <= 0:
@@ -612,8 +679,13 @@ while running:
 
             # Shoot at player
             if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"]:
-                dxp = player_x + player_size/2 - (enemy["x"] + enemy_size/2)
-                dyp = player_y + player_size/2 - (enemy["y"] + enemy_size/2)
+                target_pos = get_target_position(enemy)
+                if target_pos:
+                    tx, ty = target_pos
+                else:
+                    tx, ty = player_x, player_y
+                dxp = tx + player_size/2 - (enemy["x"] + enemy_size/2)
+                dyp = ty + player_size/2 - (enemy["y"] + enemy_size/2)
                 dist = math.hypot(dxp, dyp)
                 dxp = dxp / dist * shooter_projectile_speed
                 dyp = dyp / dist * shooter_projectile_speed
@@ -640,8 +712,13 @@ while running:
                 enemy_died = True
             # Shoot at player
             if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"]:
-                dxp = player_x + player_size/2 - (enemy["x"] + enemy_size/2)
-                dyp = player_y + player_size/2 - (enemy["y"] + enemy_size/2)
+                target_pos = get_target_position(enemy)
+                if target_pos:
+                    tx, ty = target_pos
+                else:
+                    tx, ty = player_x, player_y
+                dxp = tx + player_size/2 - (enemy["x"] + enemy_size/2)
+                dyp = ty + player_size/2 - (enemy["y"] + enemy_size/2)
                 dist = math.hypot(dxp, dyp)
                 dxp = dxp / dist * sniper_projectile_speed
                 dyp = dyp / dist * sniper_projectile_speed
@@ -676,8 +753,13 @@ while running:
 
             # --- Fire 5 bullets in a spread ---
             if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"]:
-                dxp = player_x + player_size/2 - (enemy["x"] + enemy_size/2)
-                dyp = player_y + player_size/2 - (enemy["y"] + enemy_size/2)
+                target_pos = get_target_position(enemy)
+                if target_pos:
+                    tx, ty = target_pos
+                else:
+                    tx, ty = player_x, player_y
+                dxp = tx + player_size/2 - (enemy["x"] + enemy_size/2)
+                dyp = ty + player_size/2 - (enemy["y"] + enemy_size/2)
                 base_angle = math.atan2(dyp, dxp)
                 spread = math.radians(30)  # total spread angle
                 for i in range(5):
@@ -719,12 +801,72 @@ while running:
                 if enemy["health"] <= 0:
                     if current_time >= invincible_until:
                         player_lives -= 1
+                        player2_lives -= 1
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
                         if player_lives <= 0:
-                            GAME_OVER(score)
-                            running = False
+                            player_alive = False
+                        if player2_lives <= 0:
+                            player2_alive = False
                     enemy_died = True
+        elif enemy["type"] == 16:
+            enemy["x"] += enemy["dx"]
+            enemy["y"] += enemy["dy"]
+            bounced = False
+            if enemy["x"] <= 0 or enemy["x"] >= WIDTH - enemy_size:
+                enemy["dx"] *= -1
+                bounced = True
+            if enemy["y"] <= 0 or enemy["y"] >= HEIGHT - enemy_size:
+                enemy["dy"] *= -1
+                bounced = True
+            if bounced:
+                enemy["bounces"] += 1
+                enemy["health"] -= 1
+            if enemy["bounces"] >= blind_hp or enemy["health"] <= 0:
+                enemy_died = True
+        elif enemy["type"] == 17:
+            enemy["x"] += enemy["dx"]
+            enemy["y"] += enemy["dy"]
+            bounced = False
+            if enemy["x"] <= 0 or enemy["x"] >= WIDTH - enemy_size:
+                enemy["dx"] *= -1
+                bounced = True
+            if enemy["y"] <= 0 or enemy["y"] >= HEIGHT - enemy_size:
+                enemy["dy"] *= -1
+                bounced = True
+            if bounced:
+                enemy["bounces"] += 1
+                enemy["health"] -= 1
+            if enemy["bounces"] >= motion_hp or enemy["health"] <= 0:
+                enemy_died = True
+        elif enemy["type"] == 18:
+            if enemy["stopped"]:
+                # after 2 seconds resume moving
+                if current_time - enemy["stop_start_time"] >= 8000:
+                    enemy["stopped"] = False
+            else:
+                enemy["x"] += enemy["dx"]
+                enemy["y"] += enemy["dy"]
+
+                bounced = False
+                if enemy["x"] <= 0 or enemy["x"] >= WIDTH - enemy_size:
+                    enemy["dx"] *= -1
+                    bounced = True
+                if enemy["y"] <= 0 or enemy["y"] >= HEIGHT - enemy_size:
+                    enemy["dy"] *= -1
+                    bounced = True
+
+                if bounced:
+                    enemy["health"] -= 1
+                    if enemy["health"] <= 0:
+                        enemy_died = True
+                    else:
+                        enemy["stopped"] = True
+                        enemy["stop_start_time"] = current_time
+
+            # final safety: if health already at 0, mark dead
+            if enemy["health"] <= 0:
+                enemy_died = True
 
 
 
@@ -733,19 +875,42 @@ while running:
 
 
 
-        if check_collision(player_x, player_y, player_size, player_size,
-                           enemy["x"], enemy["y"], enemy_size, enemy_size):
+        if player_alive and check_collision(player_x, player_y, player_size, player_size,
+                                            enemy["x"], enemy["y"], enemy_size, enemy_size):
+            if enemy["type"] == 17:
+                if not player_moving:  # Only damages if player is still
+                    if current_time >= invincible_until:
+                        player_lives -= 1
+                        damage_flash_time = current_time
+                        invincible_until = current_time + invincibility_duration
+                        enemies.remove(enemy)
+                        if player_lives <= 0:
+                            player_alive = False
+                continue
+            if enemy["type"] == 16:
+                if player_moving:  # Only damages if player is moving
+                    if current_time >= invincible_until:
+                        player_lives -= 1
+                        damage_flash_time = current_time
+                        invincible_until = current_time + invincibility_duration
+                        enemies.remove(enemy)
+                        if player_lives <= 0:
+                            player_alive = False
+                continue
             if enemy["type"] == 15:
             # only reward and trigger shrinking once
                 if not enemy.get("shrinking", False):
                     score += 2
+                    if player_alive:
+                        score_p1 = score
+                    if player2_alive:
+                        score_p2 = score
                     enemy["shrinking"] = True
                 continue
             if enemy["type"] == 3:
                 player_lives -= 3
                 if player_lives <= 0:
-                    GAME_OVER(score)
-                running = False
+                    player_alive = False
             else:
                 if current_time >= invincible_until:
                     player_lives -= 1
@@ -753,21 +918,84 @@ while running:
                     invincible_until = current_time + invincibility_duration
                     enemies.remove(enemy)
                     if player_lives <= 0:
-                        GAME_OVER(score)
-                        running = False
+                        player_alive = False
                 continue
+        if players == 2 and player2_alive and check_collision(player2_x, player2_y, player_size, player_size,
+                                    enemy["x"], enemy["y"], enemy_size, enemy_size):
+            if enemy["type"] == 17:
+                if p2_dx == 0 and p2_dy == 0:  # not moving
+                    if current_time >= player2_invincible_until:
+                        player2_lives -= 1
+                        player2_damage_flash_time = current_time
+                        player2_invincible_until = current_time + invincibility_duration
+                        enemies.remove(enemy)
+                        if player2_lives <= 0:
+                            player2_alive = False
+                continue
+            if enemy["type"] == 16:
+                if (p2_dx != 0 or p2_dy != 0):  # moving?
+                    if current_time >= player2_invincible_until:
+                        player2_lives -= 1
+                        player2_damage_flash_time = current_time
+                        player2_invincible_until = current_time + invincibility_duration
+                        enemies.remove(enemy)
+                        if player2_lives <= 0:
+                            player2_alive = False
+                continue
+            if enemy["type"] == 15:
+                if not enemy.get("shrinking", False):
+                    score += 2
+                    if player_alive:
+                        score_p1 = score
+                    if player2_alive:
+                        score_p2 = score
+                    enemy["shrinking"] = True
+                continue
+            if enemy["type"] == 3:
+                player2_lives -= 3
+                if player2_lives <= 0:
+                    player2_alive = False
+            else:
+                if current_time >= player2_invincible_until:
+                    player2_lives -= 1
+                    player2_damage_flash_time = current_time
+                    player2_invincible_until = current_time + invincibility_duration
+                    enemies.remove(enemy)
+                    if player2_lives <= 0:
+                        player2_alive = False
+            continue
+        if not player_alive and (players == 1 or not player2_alive):
+            GAME_OVER(score, score_p1, score_p2)
+            running = False
+            break
+
+
 
         if enemy_died:
             if enemy in enemies:
                 enemies.remove(enemy)
             score += 2
-            # grant at most one life per frame (prevents jumping from 1 -> 3 instantly)
-            if score >= next_regen_score and player_lives < 3:
+            if player_alive:
+                score_p1 = score
+            if player2_alive:
+                score_p2 = score
+
+            # Only regenerate if player is alive
+            if player_alive and score >= next_regen_score and player_lives < 3:
                 player_lives += 1
                 next_regen_score += regen
                 heal_indicators.append({
                     "x": player_x,
                     "y": player_y,
+                    "spawn_time": pygame.time.get_ticks()
+                })
+
+            if players == 2 and player2_alive and score >= player2_next_regen_score and player2_lives < 3:
+                player2_lives += 1
+                player2_next_regen_score += regen
+                heal_indicators.append({
+                    "x": player2_x,
+                    "y": player2_y,
                     "spawn_time": pygame.time.get_ticks()
                 })
 
@@ -777,15 +1005,27 @@ while running:
     for sq in trail_squares:
         if current_time - sq["spawn"] > trail_lifetime_ms:
             continue
-        if check_collision(player_x, player_y, player_size, player_size,
+        if player_alive and check_collision(player_x, player_y, player_size, player_size,
                            sq["x"], sq["y"], trail_size, trail_size):
             if current_time >= invincible_until:
                 player_lives -= 1
                 damage_flash_time = current_time
                 invincible_until = current_time + invincibility_duration
                 if player_lives <= 0:
-                    GAME_OVER(score)
-                    running = False
+                    player_alive = False
+                    break
+            sq["health"] -= 1
+            if sq["health"] > 0:
+                new_trails.append(sq)
+            continue
+        if players == 2 and player2_alive and check_collision(player2_x, player2_y, player_size, player_size,
+                                            sq["x"], sq["y"], trail_size, trail_size):
+            if current_time >= player2_invincible_until:
+                player2_lives -= 1
+                player2_damage_flash_time = current_time
+                player2_invincible_until = current_time + invincibility_duration
+                if player2_lives <= 0:
+                    player2_alive = False
                     break
             sq["health"] -= 1
             if sq["health"] > 0:
@@ -808,17 +1048,28 @@ while running:
         proj_cy = p["y"]
 
         # collision if distance < sum of radii
-        if distance(player_cx, player_cy, proj_cx, proj_cy) < (player_size / 2 + projectile_size / 2):
+        if player_alive and distance(player_cx, player_cy, proj_cx, proj_cy) < (player_size / 2 + projectile_size / 2):
             if current_time >= invincible_until:
                 player_lives -= 1
                 damage_flash_time = current_time
                 invincible_until = current_time + invincibility_duration
                 if player_lives <= 0:
-                    GAME_OVER(score)
-                    running = False
+                    player_alive = False
                     break
             # projectile consumed on hit (do not add to new_projectiles)
             continue
+        if players == 2:
+            player2_cx = player2_x + player_size / 2
+            player2_cy = player2_y + player_size / 2
+            if player2_alive and distance(player2_cx, player2_cy, proj_cx, proj_cy) < (player_size / 2 + projectile_size / 2):
+                if current_time >= player2_invincible_until:
+                    player2_lives -= 1
+                    player2_damage_flash_time = current_time
+                    player2_invincible_until = current_time + invincibility_duration
+                    if player2_lives <= 0:
+                        player2_alive = False
+                        break
+                continue
 
         # Keep projectile on screen (using center coords)
         if 0 - projectile_size < p["x"] < WIDTH + projectile_size and 0 - projectile_size < p["y"] < HEIGHT + projectile_size:
@@ -906,27 +1157,41 @@ while running:
         elif enemy["type"] == 13: color = SKY
         elif enemy["type"] == 14: color = BRICK
         elif enemy["type"] == 15: color = MAGENTA
+        elif enemy["type"] == 16: color = BLUE
+        elif enemy["type"] == 17: color = ORANGE
+        elif enemy["type"] == 18: color = YELLOW
 
         sz = int(enemy.get("size", enemy_size))
         pygame.draw.rect(screen, color, (enemy["x"], enemy["y"], sz, sz))
 
-        # draw the HP (or player_lives for impostor) centered on the enemy's current size
+        if players == 1: enemy_text_color = BLACK
+        elif players == 2:
+            if enemy["type"] in targetting_enemies:
+                if enemy["target"] == 1: enemy_text_color = RED
+                elif enemy["target"] == 2: enemy_text_color = BLUE
+            else: enemy_text_color = BLACK
+        
         if enemy["type"] == 8:
-            text_surface = enemy_font.render(str(player_lives), True, BLACK)
+            if enemy["target"] == 1: text_surface = enemy_font.render(str(player_lives), True, enemy_text_color)
+            elif enemy["target"] == 2: text_surface = enemy_font.render(str(player2_lives), True, enemy_text_color)
         else:
-            text_surface = enemy_font.render(str(max(int(enemy.get("health", 0)), 0)), True, BLACK)
+            text_surface = enemy_font.render(str(max(int(enemy.get("health", 0)), 0)), True, enemy_text_color)
 
         text_rect = text_surface.get_rect(center=(enemy["x"] + sz/2, enemy["y"] + sz/2))
         screen.blit(text_surface, text_rect)
 
     # draw player (flash red if hit)
-    if current_time - damage_flash_time < 100:
-        pygame.draw.rect(screen, RED, (player_x, player_y, player_size, player_size))
-    else:
-        pygame.draw.rect(screen, WHITE, (player_x, player_y, player_size, player_size))
+    if player_alive:
+        if current_time - damage_flash_time < 100:
+            pygame.draw.rect(screen, RED, (player_x, player_y, player_size, player_size))
+        else:
+            pygame.draw.rect(screen, WHITE, (player_x, player_y, player_size, player_size))
         
-    if players == 2:
-        pygame.draw.rect(screen, WHITE, (player2_x, player2_y, player_size, player_size))
+    if players == 2 and player2_alive:
+        if current_time - player2_damage_flash_time < 100:
+            pygame.draw.rect(screen, RED, (player2_x, player2_y, player_size, player_size))
+        else:
+            pygame.draw.rect(screen, WHITE, (player2_x, player2_y, player_size, player_size))
 
     new_heal_indicators = []
     for ind in heal_indicators:
@@ -951,8 +1216,14 @@ while running:
         screen.blit(player2_life_text, player2_life_rect)
 
     # draw HUD
-    score_text = font.render(f"Score: {score}", True, WHITE)
-    screen.blit(score_text, (20, 20))
+    if players == 1:
+        p1_text = font.render(f"Score: {score_p1}", True, WHITE)
+        screen.blit(p1_text, (20, 20))
+    elif players == 2:
+        p1_text = font.render(f"P1 Score: {score_p1}", True, WHITE)
+        screen.blit(p1_text, (20, 20))
+        p2_text = font.render(f"P2 Score: {score_p2}", True, WHITE)
+        screen.blit(p2_text, (WIDTH - 200, 20))
         
     pygame.display.flip()
 
