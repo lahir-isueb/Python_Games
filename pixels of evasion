@@ -381,7 +381,7 @@ while running:
             available_enemy_types.append(new_type)
             locked_enemy_types.remove(new_type)
         unlock_scores.pop(0)
-        if ultralocked_enemy_types and score >= 100:
+        if ultralocked_enemy_types and score >= 40:
             locked_enemy_types.extend(ultralocked_enemy_types)
             ultralocked_enemy_types.clear()
 
