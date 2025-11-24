@@ -217,7 +217,7 @@ def get_target_position(enemy):
 def SETTINGS():
     running = True
     while running:
-        screen.fill((20, 20, 20))
+        screen.fill(BLACK)
         text = big_font.render("Nothing here for now", True, WHITE)
         screen.blit(text, text.get_rect(center=(WIDTH//2, HEIGHT//2)))
 
@@ -294,6 +294,8 @@ def TITLE_SCREEN():
 
         if settings_button.collidepoint(mouse_pos) and mouse_click:
             SETTINGS()
+            pygame.time.delay(200)   # <-- prevents instant selection
+            continue
 
         # --- Player buttons (BELOW Start button) ---
         for rect, label, value in [(button_1p, "1 Player", 1), (button_2p, "2 Players", 2)]:
@@ -477,7 +479,7 @@ while running:
         elif enemy_type == 18:
             dx *= 2; dy *= 2; health = charger_hp
         elif enemy_type == 19:
-            dx *= 1; dy *= 1; health = rapidshooter_hp
+            dx *= 1.25; dy *= 1.25; health = rapidshooter_hp
             shoot_delay = rapidshooter_delay
         elif enemy_type == 20:
             dx *= 0.5; dy *= 0.5; health = frostbite_hp
