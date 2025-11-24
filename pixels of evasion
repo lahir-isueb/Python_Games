@@ -94,8 +94,8 @@ spawner_pos = (WIDTH // 2 - SPAWNER_SIZE // 2, HEIGHT // 2 - SPAWNER_SIZE // 2)
 initial_spawn_delay = 2000 # ORIGINAL VALUE 2000
 last_spawn_time = pygame.time.get_ticks()
 enemy_speed = 5
-min_spawn_delay = 500  # max spawn rate
-spawn_rate = 20
+min_spawn_delay = 500  # ORIGINAL VALUE 500
+spawn_rate = 18
 
 player_x = spawner_pos[0] - player_size - 300
 player_y = spawner_pos[1] + SPAWNER_SIZE // 2 - player_size // 2
@@ -111,7 +111,7 @@ flow_hp = 3 # 4
 sticky_hp = 7 # 5
 gloomy_hp = 9 # 6
 trail_hp = 3 # 7
-impostor_hp = 5 # 8
+impostor_hp = 5 # 8 (ULTRALOCKED)
 splitter_hp = 3 # 9
 bomb_hp = 8 # 10
 shooter_hp = 4 # 11
@@ -147,8 +147,8 @@ FPS = 60
 
 # --- Enemy unlocking ---
 available_enemy_types = [1]  # Starts with basic enemies
-locked_enemy_types = [2, 4, 5, 6, 7, 8, 9, 10, 11, 13, 16, 17, 18]
-ultralocked_enemy_types = [3, 12, 14, 15, 19, 20, 21, 22]
+locked_enemy_types = [2, 4, 5, 6, 7, 9, 10, 11, 13, 16, 17, 18]
+ultralocked_enemy_types = [3, 8, 12, 14, 15, 19, 20, 21, 22]
 unlock_scores = []
 unlocks = 0
 for unlocked in range(len(locked_enemy_types)):
