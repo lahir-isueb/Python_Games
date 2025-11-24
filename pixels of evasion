@@ -62,6 +62,7 @@ SKY = (105, 160, 225)
 BLUE = (0, 0, 255)
 NAVY = (0, 0, 100)
 INDIGO = (110, 0, 200)
+MAUVE = (145, 95, 140)
 PURPLE = (162, 0, 255)
 MAGENTA = (255, 0, 255)
 PINK = (255, 140, 255)
@@ -126,6 +127,7 @@ rapidshooter_hp = 1 # 19 (ULTRALOCKED)
 frostbite_hp = 4 # 20 (ULTRALOCKED)
 addictive_hp = 4 # 21 (ULTRALOCKED)
 laser_hp = 3 # 22 (ULTRALOCKED)
+hardened_hp = 40 # 23 (ULTRALOCKED)
 
 # --- Scoring System & Text Size ---
 score = 0
@@ -148,7 +150,7 @@ FPS = 60
 # --- Enemy unlocking ---
 available_enemy_types = [1]  # Starts with basic enemies
 locked_enemy_types = [2, 4, 5, 6, 7, 9, 10, 11, 13, 16, 17, 18]
-ultralocked_enemy_types = [3, 8, 12, 14, 15, 19, 20, 21, 22]
+ultralocked_enemy_types = [3, 8, 12, 14, 15, 19, 20, 21, 22, 23]
 unlock_scores = []
 unlocks = 0
 for unlocked in range(len(locked_enemy_types)):
@@ -482,7 +484,9 @@ while running:
         elif enemy_type == 21:
             dx *= 0.75; dy *= 0.75; health = addictive_hp
         elif enemy_type == 22:
-            dx *= 0.5; dy *= 0.5; health = laser_hp
+            dx *= 0.65; dy *= 0.65; health = laser_hp
+        elif enemy_type == 23:
+            dx *= 0.5; dy *= 0.5; health = hardened_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -1093,8 +1097,6 @@ while running:
                 hit_right = enemy["x"] >= WIDTH - enemy_size
                 hit_top = enemy["y"] <= 0
                 hit_bottom = enemy["y"] >= HEIGHT - enemy_size
-
-        # Did it hit ANY edge?
                 if hit_left or hit_right or hit_top or hit_bottom:
                     enemy["health"] -= 1
 
@@ -1102,37 +1104,26 @@ while running:
                         score += 1
                         if player_alive: score_p1 = score
                         if players == 2 and player2_alive: score_p2 = score
-
-                # --- ENTER LASER MODE ---
                         enemy["laser_mode"] = True
                         enemy["laser_start"] = pygame.time.get_ticks()
                         enemy["damaged_p1"] = False
                         enemy["damaged_p2"] = False
-
-                # --- Orientation ---
                         if hit_left or hit_right:
                             enemy["laser_orientation"] = "horizontal"
                             enemy["laser_y"] = enemy["y"]
                         if hit_top or hit_bottom:
                             enemy["laser_orientation"] = "vertical"
                             enemy["laser_x"] = enemy["x"]
-
                     else:
-                # Bounce normally until HP runs out
                         if hit_left or hit_right:
                             enemy["dx"] *= -1
                         if hit_top or hit_bottom:
                             enemy["dy"] *= -1
-
             else:
-        # LASER ACTIVE
                 if current_time - enemy["laser_start"] >= 1000:
                     enemies.remove(enemy)
                     continue
-
                 laser_width = 20
-
-        # Draw + Deal Damage
                 if enemy["laser_orientation"] == "vertical":
                     lx = enemy["laser_x"]
                     if player_alive and not enemy["damaged_p1"]:
@@ -1154,7 +1145,6 @@ while running:
                                 player2_invincible_until = current_time + invincibility_duration
                                 enemy["damaged_p2"] = True
                                 if player2_lives <= 0: player2_alive = False
-
                 elif enemy["laser_orientation"] == "horizontal":
                     ly = enemy["laser_y"]
                     if player_alive and not enemy["damaged_p1"]:
@@ -1176,10 +1166,56 @@ while running:
                                 player2_invincible_until = current_time + invincibility_duration
                                 enemy["damaged_p2"] = True
                                 if player2_lives <= 0: player2_alive = False
-
                 continue
+        elif enemy["type"] == 23:  # Hardened enemy (brown)
+            # Moves slowly
+            enemy["x"] += enemy["dx"]
+            enemy["y"] += enemy["dy"]
+
+            # Bounces like normal
+            bounced = False
+            if enemy["x"] <= 0 or enemy["x"] >= WIDTH - enemy_size:
+                enemy["dx"] *= -1
+                bounced = True
+            if enemy["y"] <= 0 or enemy["y"] >= HEIGHT - enemy_size:
+                enemy["dy"] *= -1
+                bounced = True
+
+            if bounced:
+                enemy["health"] -= 1
+
+            # --- PROXIMITY DAMAGE ---
+            # Damage per second (tweakable)
+            hardened_dps = 0.1 * (60 / FPS)  # consistent over framerate
+
+            # Distance checks
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+
+            # If within 200 pixels → lose HP
+            if dist1 < 200:
+                enemy["health"] -= hardened_dps
+            if dist2 < 200:
+                enemy["health"] -= hardened_dps  # stackable
+            if enemy["health"] < 1:
+                    enemy_died = True
 
         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1527,6 +1563,7 @@ while running:
         elif enemy["type"] == 20: color = CYAN
         elif enemy["type"] == 21: color = PINK
         elif enemy["type"] == 22: color = TURQUOISE
+        elif enemy["type"] == 23: color = BROWN
         if enemy["type"] == 22 and enemy.get("laser_mode", False):
             if enemy["laser_orientation"] == "vertical":
                 pygame.draw.rect(screen, TURQUOISE, (enemy["laser_x"], 0, 45, HEIGHT))
@@ -1534,6 +1571,7 @@ while running:
             elif enemy["laser_orientation"] == "horizontal":
                 pygame.draw.rect(screen, TURQUOISE, (0, enemy["laser_y"], WIDTH, 45))
             continue
+
 
         sz = int(enemy.get("size", enemy_size))
         pygame.draw.rect(screen, color, (enemy["x"], enemy["y"], sz, sz))
