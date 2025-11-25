@@ -217,12 +217,13 @@ def get_target_position(enemy):
 # --- Default Settings ---
 player_size_setting = 50
 enemy_size_setting = 50
-    
+
 def SETTINGS():
     global player_size_setting
     global enemy_size_setting
     
     running = True
+    button_offset = 10
 
     player_size_plus_button = pygame.Rect(WIDTH//2 + 120, HEIGHT//2 - 20, 60, 60)
     player_size_minus_button = pygame.Rect(WIDTH//2 - 180, HEIGHT//2 - 20, 60, 60)
@@ -241,8 +242,8 @@ def SETTINGS():
 
         player_size_label = font.render("Player Size: " + str(player_size_setting), True, WHITE)
         screen.blit(player_size_label, (50, 300))
-        player_size_minus_button = pygame.Rect(350, 290, 50, 50)
-        player_size_plus_button = pygame.Rect(410, 290, 50, 50)
+        player_size_minus_button = pygame.Rect(350, 300 - button_offset, 50, 50)
+        player_size_plus_button = pygame.Rect(410, 300 - button_offset, 50, 50)
         pygame.draw.rect(screen, GREEN, player_size_plus_button, border_radius=10)
         screen.blit(plus_txt, plus_txt.get_rect(center=player_size_plus_button.center))
         pygame.draw.rect(screen, RED, player_size_minus_button, border_radius=10)
@@ -267,9 +268,9 @@ def SETTINGS():
 
 
         enemy_size_label = font.render("Enemy Size: " + str(enemy_size_setting), True, WHITE)
-        screen.blit(enemy_size_label, (50, 350))
-        enemy_size_minus_button = pygame.Rect(350, 340, 50, 50)
-        enemy_size_plus_button = pygame.Rect(410, 340, 50, 50)
+        screen.blit(enemy_size_label, (50, 360))
+        enemy_size_minus_button = pygame.Rect(350, 360 - button_offset, 50, 50)
+        enemy_size_plus_button = pygame.Rect(410, 360 - button_offset, 50, 50)
         pygame.draw.rect(screen, GREEN, enemy_size_plus_button, border_radius=10)
         screen.blit(plus_txt, plus_txt.get_rect(center=enemy_size_plus_button.center))
         pygame.draw.rect(screen, RED, enemy_size_minus_button, border_radius=10)
@@ -608,6 +609,13 @@ while running:
         if enemy["type"] == 1:
             enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
             bounced = False
+            # EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE
+            # EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE
+            # EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE
+            # EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE
+            # EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE
+            # EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE
+            # EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE EDIT HERE
             if enemy["x"] <= 0 or enemy["x"] >= WIDTH - enemy_size: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= 0 or enemy["y"] >= HEIGHT - enemy_size: enemy["dy"] *= -1; bounced = True
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
@@ -1294,7 +1302,7 @@ while running:
 
 
         if player_alive and check_collision(player_x, player_y, player_size, player_size,
-                                            enemy["x"], enemy["y"], enemy_size, enemy_size):
+                                            enemy["x"] - enemy_size//2, enemy["y"] - enemy_size//2, enemy_size, enemy_size):
             if enemy["type"] == 17:
                 if not player_moving:  # Only damages if player is still
                     if current_time >= invincible_until:
@@ -1647,7 +1655,14 @@ while running:
 
 
         sz = int(enemy.get("size", enemy_size))
-        pygame.draw.rect(screen, color, (enemy["x"], enemy["y"], sz, sz))
+        pygame.draw.rect(
+            screen,
+            color,
+            (enemy["x"] - sz // 2,
+             enemy["y"] - sz // 2,
+             sz,
+             sz)
+        )
 
         if players == 1: enemy_text_color = BLACK
         elif players == 2:
@@ -1662,7 +1677,7 @@ while running:
         else:
             text_surface = enemy_font.render(str(max(int(enemy.get("health", 0)), 0)), True, enemy_text_color)
 
-        text_rect = text_surface.get_rect(center=(enemy["x"] + sz/2, enemy["y"] + sz/2))
+        text_rect = text_surface.get_rect(center=(enemy["x"], enemy["y"]))
         screen.blit(text_surface, text_rect)
 
     # draw player (flash red if hit)
