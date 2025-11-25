@@ -73,7 +73,7 @@ SPAWNER_SIZE = 50
 
 # --- Player ---
 players = 1
-player_size = 50
+player_size = 50 # ORIGINAL VALUE 50
 player_speed = 8
 player_lives = 3
 player2_lives = 3
@@ -87,7 +87,7 @@ player_speed = player_speed_base
 player2_speed = player2_speed_base
 
 # --- Enemy ---
-enemy_size = 50
+enemy_size = 50 # ORIGINAL VALUE 50
 enemies = []
 
 # --- Spawner ---
@@ -135,9 +135,9 @@ split_score = 0
 score_p1 = score
 score_p2 = score
 font = pygame.font.SysFont(None, 40)
-big_font = pygame.font.SysFont(None, 120)
-enemy_font = pygame.font.SysFont(None, 48)
-player_font = pygame.font.SysFont(None, 48)
+big_font = pygame.font.SysFont(None, 120) #48 below
+enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size))
+player_font = pygame.font.SysFont(None, int(0.96 * player_size))
 regen_delay = 10
 p1_regen_block_until = 0
 p2_regen_block_until = 0
@@ -214,15 +214,52 @@ def get_target_position(enemy):
     else:
         return None
 
+# --- Default Settings ---
+player_size_setting = 50
+enemy_size_setting = 50
+    
 def SETTINGS():
+    global player_size_setting
+    
     running = True
+
+    player_size_plus_button = pygame.Rect(WIDTH//2 + 120, HEIGHT//2 - 20, 60, 60)
+    player_size_minus_button = pygame.Rect(WIDTH//2 - 180, HEIGHT//2 - 20, 60, 60)
+    
     while running:
         screen.fill(BLACK)
-        text = big_font.render("Nothing here for now", True, WHITE)
-        screen.blit(text, text.get_rect(center=(WIDTH//2, HEIGHT//2)))
+        text = big_font.render("Settings", True, WHITE)
+        screen.blit(text, (50, 50))
+
+        plus_txt = font.render("+", True, BLACK)
+        minus_txt = font.render("-", True, BLACK)
+
+        player_size_label = font.render("Player Size: " + str(player_size_setting), True, WHITE)
+        screen.blit(player_size_label, (50, 300))
+        player_size_minus_button = pygame.Rect(350, 290, 50, 50)
+        player_size_plus_button = pygame.Rect(410, 290, 50, 50)
+        pygame.draw.rect(screen, GREEN, player_size_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=player_size_plus_button.center))
+        pygame.draw.rect(screen, RED, player_size_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=player_size_minus_button.center))
 
         info = font.render("Press Space to return", True, GRAY)
-        screen.blit(info, info.get_rect(center=(WIDTH//2, HEIGHT//2 + 80)))
+        screen.blit(info, (50, 150))
+
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_click = pygame.mouse.get_pressed()[0]
+
+        if player_size_plus_button.collidepoint(mouse_pos) and mouse_click:
+            player_size_setting += 5
+            if player_size_setting > 250:
+                player_size_setting = 250
+            pygame.time.delay(50)
+
+        if player_size_minus_button.collidepoint(mouse_pos) and mouse_click:
+            player_size_setting -= 5
+            if player_size_setting < 10:
+                player_size_setting = 10
+            pygame.time.delay(50)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -324,6 +361,10 @@ def TITLE_SCREEN():
 
 TITLE_SCREEN()
 spawn_enabled = False
+
+# --- SETTINGS SET
+player_size = player_size_setting
+player_font = pygame.font.SysFont(None, int(0.96 * player_size))
 
 running = True
 while running:
