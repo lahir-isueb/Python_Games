@@ -75,7 +75,7 @@ SPAWNER_SIZE = 50
 players = 1
 player_size = 50 # ORIGINAL VALUE 50
 player_speed = 8
-player_lives = 3
+player_lives = 1000 # ORIGINAL VALUE 3 AKHFGKAHSGKDSJAHGFKAJSGHFJKAHF
 player2_lives = 3
 player_alive = True
 player2_alive = True
@@ -148,8 +148,8 @@ clock = pygame.time.Clock()
 FPS = 60
 
 # --- Enemy unlocking ---
-available_enemy_types = [2]
-#2,4,6,9,10,15,20,21,22,23 are all bugged
+available_enemy_types = [21]
+#4,6,9,10,15,20,21,22,23 are all bugged
 locked_enemy_types = [2, 4, 5, 6, 7, 9, 10, 11, 13, 16, 17, 18]
 ultralocked_enemy_types = [3, 8, 12, 14, 15, 19, 20, 21, 22, 23]
 unlock_scores = []
@@ -209,9 +209,9 @@ def distance(x1, y1, x2, y2):
 
 def get_target_position(enemy):
     if enemy["target"] == 1:
-        return player_x, player_y
+        return player_x + player_size/2, player_y + player_size/2
     elif enemy["target"] == 2:
-        return player2_x, player2_y
+        return player2_x + player_size/2, player2_y + player_size/2
     else:
         return None
 
@@ -572,8 +572,8 @@ while running:
             
 
         enemies.append({
-            "x": spawner_pos[0],
-            "y": spawner_pos[1],
+            "x": spawner_pos[0]+25,
+            "y": spawner_pos[1]+25,
             "target": target,
             "dx": dx,
             "dy": dy,
@@ -876,8 +876,8 @@ while running:
                     tx, ty = target_pos
                 else:
                     tx, ty = player_x, player_y
-                dxp = tx + player_size/2 - (enemy["x"])
-                dyp = ty + player_size/2 - (enemy["y"])
+                dxp = tx - (enemy["x"])
+                dyp = ty - (enemy["y"])
                 dist = math.hypot(dxp, dyp)
                 dxp = dxp / dist * shooter_projectile_speed
                 dyp = dyp / dist * shooter_projectile_speed
@@ -909,8 +909,8 @@ while running:
                     tx, ty = target_pos
                 else:
                     tx, ty = player_x, player_y
-                dxp = tx + player_size/2 - (enemy["x"])
-                dyp = ty + player_size/2 - (enemy["y"])
+                dxp = tx - (enemy["x"])
+                dyp = ty - (enemy["y"])
                 dist = math.hypot(dxp, dyp)
                 dxp = dxp / dist * sniper_projectile_speed
                 dyp = dyp / dist * sniper_projectile_speed
@@ -950,8 +950,8 @@ while running:
                     tx, ty = target_pos
                 else:
                     tx, ty = player_x, player_y
-                dxp = tx + player_size/2 - (enemy["x"])
-                dyp = ty + player_size/2 - (enemy["y"])
+                dxp = tx - (enemy["x"])
+                dyp = ty - (enemy["y"])
                 base_angle = math.atan2(dyp, dxp)
                 spread = math.radians(30)  # total spread angle
                 for i in range(5):
@@ -1082,8 +1082,8 @@ while running:
                     tx, ty = target_pos
                 else:
                     tx, ty = player_x, player_y
-                dxp = tx + player_size/2 - (enemy["x"])
-                dyp = ty + player_size/2 - (enemy["y"])
+                dxp = tx - (enemy["x"])#YOU WERE HERE LAST TIME
+                dyp = ty - (enemy["y"])
                 dist = math.hypot(dxp, dyp)
                 dxp = dxp / dist * rapidshooter_projectile_speed
                 dyp = dyp / dist * rapidshooter_projectile_speed
