@@ -75,8 +75,8 @@ SPAWNER_SIZE = 50
 players = 1
 player_size = 50 # ORIGINAL VALUE 50
 player_speed = 8
-player_lives = 1000 # ORIGINAL VALUE 3 AKHFGKAHSGKDSJAHGFKAJSGHFJKAHF
-player2_lives = 3
+player_lives = 3 # ORIGINAL VALUE 3
+player2_lives = 3 # ORIGINAL VALUE 3
 player_alive = True
 player2_alive = True
 slow_until = 0
@@ -148,8 +148,7 @@ clock = pygame.time.Clock()
 FPS = 60
 
 # --- Enemy unlocking ---
-available_enemy_types = [21]
-#4,6,9,10,15,20,21,22,23 are all bugged
+available_enemy_types = [9]
 locked_enemy_types = [2, 4, 5, 6, 7, 9, 10, 11, 13, 16, 17, 18]
 ultralocked_enemy_types = [3, 8, 12, 14, 15, 19, 20, 21, 22, 23]
 unlock_scores = []
@@ -640,32 +639,25 @@ while running:
             if enemy["bounces"] >= fatal_hp: enemy_died = True
 
         elif enemy["type"] == 4:
-            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
-            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             speed_multiplier = 2.5 if closest_dist < 250 else 2/3
-            # Move enemy
             enemy["x"] += enemy["dx"] * speed_multiplier
             enemy["y"] += enemy["dy"] * speed_multiplier
             bounced = False
             # X-axis bounce
-            if enemy["x"] <= 0:
-                enemy["x"] = 0
+            if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1
                 bounced = True
-            elif enemy["x"] >= WIDTH - enemy_size:
-                enemy["x"] = WIDTH - enemy_size
-                enemy["dx"] *= -1
-                bounced = True
+                if enemy["x"] <= 0: enemy["x"] = 0
+                elif enemy["x"] >= WIDTH - enemy_size: enemy["x"] = WIDTH - enemy_size
             # Y-axis bounce
-            if enemy["y"] <= 0:
-                enemy["y"] = 0
+            if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
                 enemy["dy"] *= -1
                 bounced = True
-            elif enemy["y"] >= HEIGHT - enemy_size:
-                enemy["y"] = HEIGHT - enemy_size
-                enemy["dy"] *= -1
-                bounced = True
+                if enemy["y"] <= 0: enemy["y"] = 0
+                elif enemy["y"] >= HEIGHT - enemy_size: enemy["y"] = HEIGHT - enemy_size
             # Update bounce count and health once per frame
             if bounced:
                 enemy["bounces"] += 1
@@ -705,8 +697,8 @@ while running:
                 enemy_died = True
 
         elif enemy["type"] == 6:  # Purple
-            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
-            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             if closest_dist > 250:
                 enemy["x"] += enemy["dx"]
@@ -776,12 +768,11 @@ while running:
                 hit_edge = True
 
             if hit_edge:
-                # If still protected, just bounce off edges normally (no split/damage yet)
                 if enemy.get("spawn_protected"):
                     # bounce without damage
-                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
+                    if enemy["x"] <= enemy_size/2 - 5 or enemy["x"] >= WIDTH - enemy_size/2 - 5:
                         enemy["dx"] *= -1
-                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
+                    if enemy["y"] <= enemy_size/2 - 5 or enemy["y"] >= HEIGHT - enemy_size/2 - 5:
                         enemy["dy"] *= -1
                 else:
                     # Kill and split into two clones if health > 1
@@ -836,8 +827,8 @@ while running:
                 enemy["health"] -= 1
 
             # Proximity trigger – bomb kills itself and explodes
-            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
-            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
             if min(dist1, dist2) < 200:
                 for i in range(8):  # fire 8 projectiles in all directions
                     ang = i * (2 * math.pi / 8)
@@ -853,7 +844,6 @@ while running:
 
             # If HP ≤ 0 (killed normally or via proximity), explode once and remove
             if enemy["health"] <= 0:
-                # (optional) award score here if you want
                 enemy_died = True
         elif enemy["type"] == 11:
             enemy["x"] += enemy["dx"]
@@ -975,15 +965,14 @@ while running:
                     if enemy in enemies:
                         enemies.remove(enemy)
                     continue
-
             # movement using current size (sz)
             enemy["x"] += enemy["dx"]
             enemy["y"] += enemy["dy"]
             bounced = False
-            if enemy["x"] <= 0 or enemy["x"] >= WIDTH - sz:
+            if enemy["x"] <= sz/2 or enemy["x"] >= WIDTH - sz/2:
                 enemy["dx"] *= -1
                 bounced = True
-            if enemy["y"] <= 0 or enemy["y"] >= HEIGHT - sz:
+            if enemy["y"] <= sz/2 or enemy["y"] >= HEIGHT - sz/2:
                 enemy["dy"] *= -1
                 bounced = True
             if bounced:
@@ -1108,8 +1097,8 @@ while running:
             if bounced:
                 enemy["health"] -= 1
 
-            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
-            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
             if min(dist1, dist2) < 200 and enemy["ability"] == 1:
                 for i in range(32):  # fire 16 projectiles in all directions
                     ang = i * (2 * math.pi / 32)
@@ -1146,8 +1135,8 @@ while running:
             pull_radius = 600   # much wider area
             base_pull_strength = 5  # stronger base pull
             if player_alive:
-                dxp = enemy["x"] - player_x
-                dyp = enemy["y"] - player_y
+                dxp = enemy["x"] - player_x - enemy_size/2
+                dyp = enemy["y"] - player_y - enemy_size/2
                 dist = math.hypot(dxp, dyp)
                 if dist < pull_radius and dist > 1:
                     pull_strength = base_pull_strength * (1 - dist / pull_radius)
@@ -1166,10 +1155,10 @@ while running:
                 enemy["x"] += enemy["dx"]
                 enemy["y"] += enemy["dy"]
 
-                hit_left = enemy["x"] <= 0
-                hit_right = enemy["x"] >= WIDTH - enemy_size
-                hit_top = enemy["y"] <= 0
-                hit_bottom = enemy["y"] >= HEIGHT - enemy_size
+                hit_left = enemy["x"] <= enemy_size/2
+                hit_right = enemy["x"] >= WIDTH - enemy_size/2
+                hit_top = enemy["y"] <= enemy_size/2
+                hit_bottom = enemy["y"] >= HEIGHT - enemy_size/2
                 if hit_left or hit_right or hit_top or hit_bottom:
                     enemy["health"] -= 1
 
@@ -1262,8 +1251,8 @@ while running:
             hardened_dps = 0.1 * (60 / FPS)  # consistent over framerate
 
             # Distance checks
-            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
-            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
 
             # If within 200 pixels → lose HP
             if dist1 < 200:
