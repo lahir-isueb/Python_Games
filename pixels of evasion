@@ -148,7 +148,7 @@ clock = pygame.time.Clock()
 FPS = 60
 
 # --- Enemy unlocking ---
-available_enemy_types = [1]
+available_enemy_types = [7]
 locked_enemy_types = [2, 4, 5, 6, 7, 9, 10, 11, 13, 16, 17, 18]
 ultralocked_enemy_types = [3, 8, 12, 14, 15, 19, 20, 21, 22, 23]
 unlock_scores = []
@@ -897,8 +897,8 @@ while running:
                     dxp = math.cos(ang) * bomb_projectile_speed
                     dyp = math.sin(ang) * bomb_projectile_speed
                     projectiles.append({
-                        "x": enemy["x"] - projectile_size / 2,
-                        "y": enemy["y"] - projectile_size / 2,
+                        "x": enemy["x"] + enemy_size/2 - projectile_size/2,
+                        "y": enemy["y"] + enemy_size/2 - projectile_size/2,
                         "dx": dxp,
                         "dy": dyp
                     })
@@ -932,8 +932,8 @@ while running:
                 dxp = dxp / dist * shooter_projectile_speed
                 dyp = dyp / dist * shooter_projectile_speed
                 projectiles.append({
-                    "x": enemy["x"] - projectile_size / 2,
-                    "y": enemy["y"] - projectile_size / 2,
+                    "x": enemy["x"] + enemy_size/2 - projectile_size/2,
+                    "y": enemy["y"] + enemy_size/2 - projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
                     "color": BRONZE   # add color key
@@ -965,8 +965,8 @@ while running:
                 dxp = dxp / dist * sniper_projectile_speed
                 dyp = dyp / dist * sniper_projectile_speed
                 projectiles.append({
-                    "x": enemy["x"] - projectile_size / 2,
-                    "y": enemy["y"] - projectile_size / 2,
+                    "x": enemy["x"] + enemy_size/2 - projectile_size/2,
+                    "y": enemy["y"] + enemy_size/2 - projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
                     "color": INDIGO
@@ -1008,8 +1008,8 @@ while running:
                     angle_offset = spread * (i - 2) / 4  # center + 2 on each side
                     ang = base_angle + angle_offset
                     projectiles.append({
-                        "x": enemy["x"] - projectile_size / 2,
-                        "y": enemy["y"] - projectile_size / 2,
+                        "x": enemy["x"] + enemy_size/2 - projectile_size/2,
+                        "y": enemy["y"] + enemy_size/2 - projectile_size/2,
                         "dx": math.cos(ang) * shotgun_projectile_speed,
                         "dy": math.sin(ang) * shotgun_projectile_speed,
                         "color": BRICK
@@ -1137,8 +1137,8 @@ while running:
                 dxp = dxp / dist * rapidshooter_projectile_speed
                 dyp = dyp / dist * rapidshooter_projectile_speed
                 projectiles.append({
-                    "x": enemy["x"] - projectile_size / 2,
-                    "y": enemy["y"] - projectile_size / 2,
+                    "x": enemy["x"] + enemy_size/2 - projectile_size/2,
+                    "y": enemy["y"] + enemy_size/2 - projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
                     "color": SILVER   # add color key
@@ -1165,8 +1165,8 @@ while running:
                     dxp = math.cos(ang) * frostbite_projectile_speed
                     dyp = math.sin(ang) * frostbite_projectile_speed
                     projectiles.append({
-                        "x": enemy["x"] - projectile_size / 2,
-                        "y": enemy["y"] - projectile_size / 2,
+                        "x": enemy["x"] + enemy_size/2 - projectile_size/2,
+                        "y": enemy["y"] + enemy_size/2 - projectile_size/2,
                         "dx": dxp,
                         "dy": dyp,
                         "color": CYAN
