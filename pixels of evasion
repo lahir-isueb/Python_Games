@@ -148,9 +148,11 @@ clock = pygame.time.Clock()
 FPS = 60
 
 # --- Enemy unlocking ---
-available_enemy_types = [7]
-locked_enemy_types = [2, 4, 5, 6, 7, 9, 10, 11, 13, 16, 17, 18]
-ultralocked_enemy_types = [3, 8, 12, 14, 15, 19, 20, 21, 22, 23]
+available_enemy_types = [1]
+#I miss enemies not being ultralocked so we are keeping them all here for now.
+locked_enemy_types = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+#locked_enemy_types = [2, 4, 5, 6, 7, 9, 10, 11, 13, 16, 17, 18]
+#ultralocked_enemy_types = [3, 8, 12, 14, 15, 19, 20, 21, 22, 23]
 unlock_scores = []
 unlocks = 0
 for unlocked in range(len(locked_enemy_types)):
@@ -701,8 +703,8 @@ while running:
             if enemy["bounces"] >= fatal_hp: enemy_died = True
 
         elif enemy["type"] == 4:
-            dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
-            dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             speed_multiplier = 2.5 if closest_dist < 250 else 2/3
             enemy["x"] += enemy["dx"] * speed_multiplier
@@ -889,16 +891,16 @@ while running:
                 enemy["health"] -= 1
 
             # Proximity trigger – bomb kills itself and explodes
-            dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
-            dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             if min(dist1, dist2) < 200:
                 for i in range(8):  # fire 8 projectiles in all directions
                     ang = i * (2 * math.pi / 8)
                     dxp = math.cos(ang) * bomb_projectile_speed
                     dyp = math.sin(ang) * bomb_projectile_speed
                     projectiles.append({
-                        "x": enemy["x"] + enemy_size/2 - projectile_size/2,
-                        "y": enemy["y"] + enemy_size/2 - projectile_size/2,
+                        "x": enemy["x"],
+                        "y": enemy["y"],
                         "dx": dxp,
                         "dy": dyp
                     })
@@ -932,8 +934,8 @@ while running:
                 dxp = dxp / dist * shooter_projectile_speed
                 dyp = dyp / dist * shooter_projectile_speed
                 projectiles.append({
-                    "x": enemy["x"] + enemy_size/2 - projectile_size/2,
-                    "y": enemy["y"] + enemy_size/2 - projectile_size/2,
+                    "x": enemy["x"],
+                    "y": enemy["y"],
                     "dx": dxp,
                     "dy": dyp,
                     "color": BRONZE   # add color key
@@ -965,8 +967,8 @@ while running:
                 dxp = dxp / dist * sniper_projectile_speed
                 dyp = dyp / dist * sniper_projectile_speed
                 projectiles.append({
-                    "x": enemy["x"] + enemy_size/2 - projectile_size/2,
-                    "y": enemy["y"] + enemy_size/2 - projectile_size/2,
+                    "x": enemy["x"],
+                    "y": enemy["y"],
                     "dx": dxp,
                     "dy": dyp,
                     "color": INDIGO
@@ -1008,8 +1010,8 @@ while running:
                     angle_offset = spread * (i - 2) / 4  # center + 2 on each side
                     ang = base_angle + angle_offset
                     projectiles.append({
-                        "x": enemy["x"] + enemy_size/2 - projectile_size/2,
-                        "y": enemy["y"] + enemy_size/2 - projectile_size/2,
+                        "x": enemy["x"],
+                        "y": enemy["y"],
                         "dx": math.cos(ang) * shotgun_projectile_speed,
                         "dy": math.sin(ang) * shotgun_projectile_speed,
                         "color": BRICK
@@ -1137,8 +1139,8 @@ while running:
                 dxp = dxp / dist * rapidshooter_projectile_speed
                 dyp = dyp / dist * rapidshooter_projectile_speed
                 projectiles.append({
-                    "x": enemy["x"] + enemy_size/2 - projectile_size/2,
-                    "y": enemy["y"] + enemy_size/2 - projectile_size/2,
+                    "x": enemy["x"],
+                    "y": enemy["y"],
                     "dx": dxp,
                     "dy": dyp,
                     "color": SILVER   # add color key
@@ -1157,16 +1159,16 @@ while running:
             if bounced:
                 enemy["health"] -= 1
 
-            dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
-            dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             if min(dist1, dist2) < 200 and enemy["ability"] == 1:
                 for i in range(32):  # fire 16 projectiles in all directions
                     ang = i * (2 * math.pi / 32)
                     dxp = math.cos(ang) * frostbite_projectile_speed
                     dyp = math.sin(ang) * frostbite_projectile_speed
                     projectiles.append({
-                        "x": enemy["x"] + enemy_size/2 - projectile_size/2,
-                        "y": enemy["y"] + enemy_size/2 - projectile_size/2,
+                        "x": enemy["x"],
+                        "y": enemy["y"],
                         "dx": dxp,
                         "dy": dyp,
                         "color": CYAN
@@ -1311,8 +1313,8 @@ while running:
             hardened_dps = 0.1 * (60 / FPS)  # consistent over framerate
 
             # Distance checks
-            dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
-            dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
 
             # If within 200 pixels → lose HP
             if dist1 < 200:
@@ -1341,9 +1343,8 @@ while running:
 
 
 
-
         if player_alive and check_collision(player_x, player_y, player_size, player_size,
-                                            enemy["x"] - enemy_size//2, enemy["y"] - enemy_size//2, enemy_size, enemy_size):
+                                            enemy["x"], enemy["y"], enemy_size, enemy_size):
             if enemy["type"] == 17:
                 if not player_moving:  # Only damages if player is still
                     if current_time >= invincible_until:
@@ -1410,7 +1411,7 @@ while running:
                         player_alive = False
                 continue
         if players == 2 and player2_alive and check_collision(player2_x, player2_y, player_size, player_size,
-                                    enemy["x"] - enemy_size//2, enemy["y"] - enemy_size//2, enemy_size, enemy_size):
+                                    enemy["x"], enemy["y"], enemy_size, enemy_size):
             if enemy["type"] == 17:
                 if p2_dx == 0 and p2_dy == 0:  # not moving
                     if current_time >= player2_invincible_until:
@@ -1516,7 +1517,7 @@ while running:
         if current_time - sq["spawn"] > trail_lifetime_ms:
             continue
         if player_alive and check_collision(player_x, player_y, player_size, player_size,
-                           sq["x"], sq["y"], trail_size, trail_size):
+                           sq["x"] + player_size/2, sq["y"] + player_size/2, trail_size, trail_size):
             if current_time >= invincible_until:
                 player_lives -= 1
                 p1_regen_block_until = score + regen_delay
@@ -1530,7 +1531,7 @@ while running:
                 new_trails.append(sq)
             continue
         if players == 2 and player2_alive and check_collision(player2_x, player2_y, player_size, player_size,
-                                            sq["x"], sq["y"], trail_size, trail_size):
+                                            sq["x"] + player_size/2, sq["y"] + player_size/2, trail_size, trail_size):
             if current_time >= player2_invincible_until:
                 player2_lives -= 1
                 p2_regen_block_until = score + regen_delay
@@ -1560,7 +1561,8 @@ while running:
         proj_cy = p["y"]
 
         # collision if distance < sum of radii
-        if player_alive and distance(player_cx, player_cy, proj_cx, proj_cy) < (player_size / 2 + projectile_size / 2):
+        if player_alive and check_collision(player_x, player_y, player_size, player_size,
+                                            p["x"], p["y"], projectile_size, projectile_size):
             if p.get("color") == CYAN:
                 slow_until = current_time + 10000  # 10 seconds
                 player_speed = player_speed_base / 2
@@ -1724,15 +1726,15 @@ while running:
     # draw player (flash red if hit)
     if player_alive:
         if current_time - damage_flash_time < 100:
-            pygame.draw.rect(screen, RED, (player_x, player_y, player_size, player_size))
+            pygame.draw.rect(screen, RED, (player_x - player_size/2, player_y - player_size/2, player_size, player_size))
         else:
-            pygame.draw.rect(screen, WHITE, (player_x, player_y, player_size, player_size))
+            pygame.draw.rect(screen, WHITE, (player_x - player_size/2, player_y - player_size/2, player_size, player_size))
         
     if players == 2 and player2_alive:
         if current_time - player2_damage_flash_time < 100:
-            pygame.draw.rect(screen, RED, (player2_x, player2_y, player_size, player_size))
+            pygame.draw.rect(screen, RED, (player2_x - player_size/2, player2_y - player_size/2, player_size, player_size))
         else:
-            pygame.draw.rect(screen, WHITE, (player2_x, player2_y, player_size, player_size))
+            pygame.draw.rect(screen, WHITE, (player2_x - player_size/2, player2_y - player_size/2, player_size, player_size))
 
     new_heal_indicators = []
     for ind in heal_indicators:
@@ -1748,12 +1750,12 @@ while running:
     # draw player lives in center
     if players == 1: player_life_text = player_font.render(str(player_lives), True, BLACK)
     else: player_life_text = player_font.render(str(player_lives), True, RED)
-    player_life_rect = player_life_text.get_rect(center=(player_x + player_size/2, player_y + player_size/2))
+    player_life_rect = player_life_text.get_rect(center=(player_x, player_y))
     screen.blit(player_life_text, player_life_rect)
 
     if players == 2:
         player2_life_text = player_font.render(str(player2_lives), True, BLUE)
-        player2_life_rect = player2_life_text.get_rect(center=(player2_x + player_size/2, player2_y + player_size/2))
+        player2_life_rect = player2_life_text.get_rect(center=(player2_x, player2_y))
         screen.blit(player2_life_text, player2_life_rect)
 
     # draw HUD
