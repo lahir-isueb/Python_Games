@@ -232,6 +232,8 @@ projectile_size_setting = 10
 min_spawn_delay_setting = 500
 max_spawn_delay_setting = 2000
 spawn_delay_change_setting = 18
+player_speed_setting = 8
+enemy_speed_setting = 5
 
 def SETTINGS():
     global player_size_setting
@@ -239,6 +241,9 @@ def SETTINGS():
     global projectile_size_setting
     global min_spawn_delay_setting
     global max_spawn_delay_setting
+    global spawn_delay_change_setting
+    global player_speed_setting
+    global enemy_speed_setting
     
     running = True
     button_offset = 10
@@ -360,6 +365,28 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
+
+
+        spawn_delay_change_label = font.render("Spawn Delay Change: " + str(spawn_delay_change_setting), True, WHITE)
+        screen.blit(spawn_delay_change_label, (50, 600))
+        spawn_delay_change_minus_button = pygame.Rect(500, 600 - button_offset, 50, 50)
+        spawn_delay_change_plus_button = pygame.Rect(560, 600 - button_offset, 50, 50)
+        pygame.draw.rect(screen, GREEN, spawn_delay_change_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=spawn_delay_change_plus_button.center))
+        pygame.draw.rect(screen, RED, spawn_delay_change_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=spawn_delay_change_minus_button.center))
+        if spawn_delay_change_plus_button.collidepoint(mouse_pos) and mouse_click:
+            spawn_delay_change_setting += 2
+            if spawn_delay_change_setting > 100:
+                spawn_delay_change_setting = 100
+            pygame.time.delay(50)
+        if spawn_delay_change_minus_button.collidepoint(mouse_pos) and mouse_click:
+            spawn_delay_change_setting -= 2
+            if spawn_delay_change_setting < 2:
+                spawn_delay_change_setting = 2
+            pygame.time.delay(50)
+
+
             
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -470,6 +497,7 @@ min_spawn_delay = min_spawn_delay_setting
 initial_spawn_delay = max_spawn_delay_setting
 projectile_size = projectile_size_setting
 trail_size = projectile_size_setting
+spawn_rate = spawn_delay_change_setting
 
 running = True
 while running:
