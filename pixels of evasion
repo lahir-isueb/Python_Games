@@ -387,6 +387,48 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
+
+        player_speed_label = font.render("Player Speed: " + str(player_speed_setting), True, WHITE)
+        screen.blit(player_speed_label, (50, 660))
+        player_speed_minus_button = pygame.Rect(500, 660 - button_offset, 50, 50)
+        player_speed_plus_button = pygame.Rect(560, 660 - button_offset, 50, 50)
+        pygame.draw.rect(screen, GREEN, player_speed_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=player_speed_plus_button.center))
+        pygame.draw.rect(screen, RED, player_speed_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=player_speed_minus_button.center))
+        if player_speed_plus_button.collidepoint(mouse_pos) and mouse_click:
+            player_speed_setting += 1
+            if player_speed_setting > 20:
+                player_speed_setting = 20
+            pygame.time.delay(50)
+        if player_speed_minus_button.collidepoint(mouse_pos) and mouse_click:
+            player_speed_setting -= 1
+            if player_speed_setting < 1:
+                player_speed_setting = 1
+            pygame.time.delay(50)
+
+
+
+        enemy_speed_label = font.render("Enemy Speed: " + str(enemy_speed_setting), True, WHITE)
+        screen.blit(enemy_speed_label, (50, 720))
+        enemy_speed_minus_button = pygame.Rect(500, 720 - button_offset, 50, 50)
+        enemy_speed_plus_button = pygame.Rect(560, 720 - button_offset, 50, 50)
+        pygame.draw.rect(screen, GREEN, enemy_speed_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=enemy_speed_plus_button.center))
+        pygame.draw.rect(screen, RED, enemy_speed_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=enemy_speed_minus_button.center))
+        if enemy_speed_plus_button.collidepoint(mouse_pos) and mouse_click:
+            enemy_speed_setting += 1
+            if enemy_speed_setting > 20:
+                enemy_speed_setting = 20
+            pygame.time.delay(50)
+        if enemy_speed_minus_button.collidepoint(mouse_pos) and mouse_click:
+            enemy_speed_setting -= 1
+            if enemy_speed_setting < 1:
+                enemy_speed_setting = 1
+            pygame.time.delay(50)
+
+
             
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -488,7 +530,7 @@ def TITLE_SCREEN():
 TITLE_SCREEN()
 spawn_enabled = False
 
-# --- SETTINGS SET
+# --- SETTINGS SET ---
 player_size = player_size_setting
 player_font = pygame.font.SysFont(None, int(0.96 * player_size))
 enemy_size = enemy_size_setting
@@ -498,6 +540,11 @@ initial_spawn_delay = max_spawn_delay_setting
 projectile_size = projectile_size_setting
 trail_size = projectile_size_setting
 spawn_rate = spawn_delay_change_setting
+player_speed = player_speed_setting
+player_speed_base = player_speed_setting
+player2_speed = player_speed_setting
+player2_speed_base = player_speed_setting
+enemy_speed = enemy_speed_setting
 
 running = True
 while running:
@@ -521,8 +568,8 @@ while running:
         p1_dy = (keys[pygame.K_s]) - (keys[pygame.K_w])
     if p1_dx != 0 or p1_dy != 0:
         length1 = math.hypot(p1_dx, p1_dy)
-        p1_dx = p1_dx / length1 * player_speed
-        p1_dy = p1_dy / length1 * player_speed
+        p1_dx = (p1_dx / length1) * player_speed
+        p1_dy = (p1_dy / length1) * player_speed
 
     keys2 = pygame.key.get_pressed()
     
