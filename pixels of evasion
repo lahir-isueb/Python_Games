@@ -501,16 +501,16 @@ while running:
     # Move players
     player_x += p1_dx
     player_y += p1_dy
-    player_x = max(0, min(WIDTH - player_size, player_x))
-    player_y = max(0, min(HEIGHT - player_size, player_y))
+    player_x = max(player_size/2, min(WIDTH - player_size/2, player_x))
+    player_y = max(player_size/2, min(HEIGHT - player_size/2, player_y))
 
     if players == 2:
         player2_x += p2_dx
         player2_y += p2_dy
 
         # Clamp Player 2 to screen edges
-        player2_x = max(0, min(WIDTH - player_size, player2_x))
-        player2_y = max(0, min(HEIGHT - player_size, player2_y))
+        player2_x = max(player_size/2, min(WIDTH - player_size/2, player2_x))
+        player2_y = max(player_size/2, min(HEIGHT - player_size/2, player2_y))
         if player_alive and player2_alive:
             if check_collision(player_x, player_y, player_size, player_size,
                                player2_x, player2_y, player_size, player_size):
