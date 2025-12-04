@@ -151,6 +151,7 @@ FPS = 60
 available_enemy_types = [1]
 #I miss enemies not being ultralocked so we are keeping them all here for now.
 locked_enemy_types = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+ultralocked_enemy_types = []
 #locked_enemy_types = [2, 4, 5, 6, 7, 9, 10, 11, 13, 16, 17, 18]
 #ultralocked_enemy_types = [3, 8, 12, 14, 15, 19, 20, 21, 22, 23]
 unlock_scores = []
