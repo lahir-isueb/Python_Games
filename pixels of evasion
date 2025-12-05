@@ -654,6 +654,8 @@ while running:
         angle = random.uniform(0, 2 * math.pi)
         dx = math.cos(angle) * enemy_speed
         dy = math.sin(angle) * enemy_speed
+        sussy_dx = math.cos(angle) * player_speed_base
+        sussy_dy = math.sin(angle) * player_speed_base
 
         # Default values
         health = basic_hp
@@ -675,7 +677,7 @@ while running:
         elif enemy_type == 7:
             dx *= 1; dy *= 1; health = trail_hp
         elif enemy_type == 8:
-            dx *= float(player_speed_setting*(3/16)); dy *= float(player_speed_setting*(3/16)); health = impostor_hp
+            dx *= 1; dy *= 1; health = impostor_hp
         elif enemy_type == 9:
             dx *= 1; dy *= 1; health = splitter_hp
         elif enemy_type == 10:
@@ -725,6 +727,8 @@ while running:
             "target": target,
             "dx": dx,
             "dy": dy,
+            "sussy_dx": sussy_dx,
+            "sussy_dy": sussy_dy,
             "type": enemy_type,
             "angle": angle,
             "bounces": 0,
@@ -883,14 +887,14 @@ while running:
             if target_pos:
                 tx, ty = target_pos
                 if (enemy["target"] == 1 and (p1_dx or p1_dy)) or (enemy["target"] == 2 and (p2_dx or p2_dy)):
-                    enemy["x"] += enemy["dx"]
-                    enemy["y"] += enemy["dy"]
+                    enemy["x"] += enemy["sussy_dx"]
+                    enemy["y"] += enemy["sussy_dy"]
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
-                enemy["dx"] *= -1
+                enemy["sussy_dx"] *= -1
                 bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
-                enemy["dy"] *= -1
+                enemy["sussy_dy"] *= -1
                 bounced = True
             if bounced:
                 enemy["bounces"] += 1
