@@ -8,7 +8,7 @@ WIDTH, HEIGHT = screen.get_size()
 pygame.display.set_caption("Bullet Hell")
 
 # --- GAME OVER SCREEN ---
-def GAME_OVER(final_score, p1, p2):
+def GAME_OVER(final_score, p1, p2): 
     screen.fill(BLACK)
     over_text = big_font.render("GAME OVER", True, RED)
     if players == 1: score_text = font.render(f"Final Score: {final_score}", True, WHITE)
@@ -148,7 +148,7 @@ clock = pygame.time.Clock()
 FPS = 60
 
 # --- Enemy unlocking ---
-available_enemy_types = [1]
+available_enemy_types = [8]
 #I miss enemies not being ultralocked so we are keeping them all here for now.
 locked_enemy_types = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
 ultralocked_enemy_types = []
@@ -675,7 +675,7 @@ while running:
         elif enemy_type == 7:
             dx *= 1; dy *= 1; health = trail_hp
         elif enemy_type == 8:
-            dx *= 1.5; dy *= 1.5; health = impostor_hp
+            dx *= float(player_speed_setting*(3/16)); dy *= float(player_speed_setting*(3/16)); health = impostor_hp
         elif enemy_type == 9:
             dx *= 1; dy *= 1; health = splitter_hp
         elif enemy_type == 10:
