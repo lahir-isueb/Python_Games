@@ -48,6 +48,7 @@ BRONZE = (140, 45, 0)
 BRICK = (140, 65, 65)
 RED = (255, 0, 0)
 LAVA = (200, 60, 0)
+TAN = (155, 125, 95)
 ORANGE = (255, 120, 0)
 GOLD = (255, 195, 0)
 YELLOW = (255, 255, 0)
@@ -128,6 +129,7 @@ frostbite_hp = 4 # 20 (ULTRALOCKED)
 addictive_hp = 4 # 21 (ULTRALOCKED)
 laser_hp = 3 # 22 (ULTRALOCKED)
 hardened_hp = 40 # 23 (ULTRALOCKED)
+accelerator_hp = 5 # 24
 
 # --- Scoring System & Text Size ---
 score = 0
@@ -148,11 +150,11 @@ clock = pygame.time.Clock()
 FPS = 60
 
 # --- Enemy unlocking ---
-available_enemy_types = [10, 11, 19]
+available_enemy_types = [1]
 #I miss enemies not being ultralocked so we are keeping them all here for now.
-locked_enemy_types = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+locked_enemy_types = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 ultralocked_enemy_types = []
-#locked_enemy_types = [2, 4, 5, 6, 7, 9, 10, 11, 13, 16, 17, 18]
+#locked_enemy_types = [2, 4, 5, 6, 7, 9, 10, 11, 13, 16, 17, 18, 24]
 #ultralocked_enemy_types = [3, 8, 12, 14, 15, 19, 20, 21, 22, 23]
 unlock_scores = []
 unlocks = 0
@@ -182,6 +184,11 @@ shooter_delay = 3000
 sniper_delay = 5500
 shotgun_delay = 7500
 rapidshooter_delay = 200
+
+
+# --- Acceleration ---
+accel = 0.0
+accel_rate = 0.02
 
 # --- Player damage flash ---
 damage_flash_time = 0
@@ -684,6 +691,8 @@ while running:
         dy = math.sin(angle) * enemy_speed
         sussy_dx = math.cos(angle) * player_speed_base
         sussy_dy = math.sin(angle) * player_speed_base
+        base_dx = dx
+        base_dy = dy
 
         # Default values
         health = basic_hp
@@ -705,7 +714,7 @@ while running:
         elif enemy_type == 7:
             dx *= 1; dy *= 1; health = trail_hp
         elif enemy_type == 8:
-            dx *= 1; dy *= 1; health = impostor_hp
+            health = impostor_hp
         elif enemy_type == 9:
             dx *= 1; dy *= 1; health = splitter_hp
         elif enemy_type == 10:
@@ -740,6 +749,10 @@ while running:
             dx *= 0.65; dy *= 0.65; health = laser_hp
         elif enemy_type == 23:
             dx *= 0.5; dy *= 0.5; health = hardened_hp
+        elif enemy_type == 24:
+            base_dx = dx; base_dy = dy
+            dx *= 0; dy *= 0; health = accelerator_hp
+            accel = 0.0; accel_rate = 0.02
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -757,6 +770,10 @@ while running:
             "dy": dy,
             "sussy_dx": sussy_dx,
             "sussy_dy": sussy_dy,
+            "base_dx": base_dx,
+            "base_dy": base_dy,
+            "accel": accel,
+            "accel_rate": accel_rate,
             "type": enemy_type,
             "angle": angle,
             "bounces": 0,
@@ -832,13 +849,13 @@ while running:
                 enemy["dx"] *= -1
                 bounced = True
                 if enemy["x"] <= 0: enemy["x"] = 0
-                elif enemy["x"] >= WIDTH - enemy_size: enemy["x"] = WIDTH - enemy_size
+                elif enemy["x"] >= WIDTH - enemy_size: enemy["x"] = WIDTH - enemy_size/2
             # Y-axis bounce
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
                 enemy["dy"] *= -1
                 bounced = True
                 if enemy["y"] <= 0: enemy["y"] = 0
-                elif enemy["y"] >= HEIGHT - enemy_size: enemy["y"] = HEIGHT - enemy_size
+                elif enemy["y"] >= HEIGHT - enemy_size: enemy["y"] = HEIGHT - enemy_size/2
             # Update bounce count and health once per frame
             if bounced:
                 enemy["bounces"] += 1
@@ -1440,6 +1457,44 @@ while running:
                 enemy["health"] -= hardened_dps  # stackable
             if enemy["health"] < 1:
                     enemy_died = True
+        elif enemy["type"] == 24:
+            enemy["accel"] += enemy.get("accel_rate", 0.02)
+            vx = enemy.get("base_dx", enemy["dx"]) * enemy["accel"]
+            vy = enemy.get("base_dy", enemy["dy"]) * enemy["accel"]
+
+            speed_cap = enemy_speed  # from your game settings
+            speed = math.hypot(vx, vy)
+            if speed > speed_cap:
+                scale = speed_cap / speed
+                vx *= scale
+                vy *= scale
+
+            enemy["dx"] = vx
+            enemy["dy"] = vy
+            enemy["x"] += enemy["dx"]
+            enemy["y"] += enemy["dy"]
+
+            bounced = False
+            if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
+                enemy["base_dx"] *= -1
+                bounced = True
+                if enemy["x"] <= enemy_size: enemy["x"] = enemy_size/2 + enemy["base_dx"]
+                elif enemy["x"] >= WIDTH - enemy_size: enemy["x"] = WIDTH - enemy_size/2 + enemy["base_dx"]
+            if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
+                enemy["base_dy"] *= -1
+                bounced = True
+                if enemy["y"] <= enemy_size: enemy["y"] = enemy_size/2 + enemy["base_dy"]
+                elif enemy["y"] >= HEIGHT - enemy_size: enemy["y"] = HEIGHT - enemy_size/2 + enemy["base_dy"]
+
+            if bounced:
+                enemy["accel"] = 0.0
+                enemy["dx"] = 0
+                enemy["dy"] = 0
+                enemy["bounces"] += 1
+                enemy["health"] -= 1
+
+            if enemy["bounces"] >= accelerator_hp or enemy["health"] <= 0:
+                enemy_died = True
 
         
 
@@ -1805,6 +1860,9 @@ while running:
         elif enemy["type"] == 21: color = PINK
         elif enemy["type"] == 22: color = TURQUOISE
         elif enemy["type"] == 23: color = BROWN
+        elif enemy["type"] == 24: color = TAN
+
+        
         if enemy["type"] == 22 and enemy.get("laser_mode", False):
             if enemy["laser_orientation"] == "vertical":
                 pygame.draw.rect(screen, TURQUOISE, (enemy["laser_x"]-enemy_size/2, 0, enemy_size, HEIGHT))
@@ -1859,7 +1917,7 @@ while running:
             alpha = 255 * (1 - (current_time - ind["spawn_time"]) / heal_duration)  # optional fade
             s = pygame.Surface((player_size, player_size), pygame.SRCALPHA)
             s.fill((0, 255, 0, int(alpha)))
-            screen.blit(s, (ind["x"], ind["y"]))
+            screen.blit(s, (ind["x"] - player_size/2, ind["y"] - player_size/2))
             new_heal_indicators.append(ind)
     heal_indicators = new_heal_indicators
 
