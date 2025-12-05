@@ -1462,7 +1462,7 @@ while running:
             vx = enemy.get("base_dx", enemy["dx"]) * enemy["accel"]
             vy = enemy.get("base_dy", enemy["dy"]) * enemy["accel"]
 
-            speed_cap = enemy_speed  # from your game settings
+            speed_cap = enemy_speed * 1.5  # from your game settings
             speed = math.hypot(vx, vy)
             if speed > speed_cap:
                 scale = speed_cap / speed
