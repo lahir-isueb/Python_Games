@@ -74,7 +74,7 @@ SPAWNER_SIZE = 50
 
 # --- Player ---
 players = 1
-player_size = 50 # ORIGINAL VALUE 50
+player_size = 50
 player_speed = 8
 player_lives = 3 # ORIGINAL VALUE 3
 player2_lives = 3 # ORIGINAL VALUE 3
@@ -151,8 +151,9 @@ FPS = 60
 
 # --- Enemy unlocking ---
 available_enemy_types = [1]
-#I miss enemies not being ultralocked so we are keeping them all here for now.
 locked_enemy_types = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+#locked_enemy_types = []
+random.shuffle(locked_enemy_types)
 ultralocked_enemy_types = []
 #locked_enemy_types = [2, 4, 5, 6, 7, 9, 10, 11, 13, 16, 17, 18, 24]
 #ultralocked_enemy_types = [3, 8, 12, 14, 15, 19, 20, 21, 22, 23]
@@ -242,6 +243,9 @@ spawn_delay_change_setting = 18
 player_speed_setting = 8
 enemy_speed_setting = 5
 projectile_speed_setting = 5
+regen_delay_setting = 10
+player_health_setting = 3
+player2_health_setting = 3
 
 def SETTINGS():
     global player_size_setting
@@ -253,6 +257,9 @@ def SETTINGS():
     global player_speed_setting
     global enemy_speed_setting
     global projectile_speed_setting
+    global regen_delay_setting
+    global player_health_setting
+    global player2_health_setting
     
     running = True
     button_offset = 10
@@ -272,72 +279,31 @@ def SETTINGS():
         minus_txt = font.render("-", True, BLACK)
 
 
-        player_size_label = font.render("Player Size: " + str(player_size_setting), True, WHITE)
-        screen.blit(player_size_label, (50, 300))
-        player_size_minus_button = pygame.Rect(500, 300 - button_offset, 50, 50)
-        player_size_plus_button = pygame.Rect(560, 300 - button_offset, 50, 50)
-        pygame.draw.rect(screen, GREEN, player_size_plus_button, border_radius=10)
-        screen.blit(plus_txt, plus_txt.get_rect(center=player_size_plus_button.center))
-        pygame.draw.rect(screen, RED, player_size_minus_button, border_radius=10)
-        screen.blit(minus_txt, minus_txt.get_rect(center=player_size_minus_button.center))
-        if player_size_plus_button.collidepoint(mouse_pos) and mouse_click:
-            player_size_setting += 5
-            if player_size_setting > 250:
-                player_size_setting = 250
+        max_spawn_delay_label = font.render("Starting Spawn Delay: " + str(max_spawn_delay_setting), True, WHITE)
+        screen.blit(max_spawn_delay_label, (50, 300))
+        max_spawn_delay_minus_button = pygame.Rect(500, 300 - button_offset, 50, 50)
+        max_spawn_delay_plus_button = pygame.Rect(560, 300 - button_offset, 50, 50)
+        pygame.draw.rect(screen, GREEN, max_spawn_delay_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=max_spawn_delay_plus_button.center))
+        pygame.draw.rect(screen, RED, max_spawn_delay_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=max_spawn_delay_minus_button.center))
+        if max_spawn_delay_plus_button.collidepoint(mouse_pos) and mouse_click:
+            max_spawn_delay_setting += 100
+            if max_spawn_delay_setting > 2500:
+                max_spawn_delay_setting = 2500
             pygame.time.delay(50)
-        if player_size_minus_button.collidepoint(mouse_pos) and mouse_click:
-            player_size_setting -= 5
-            if player_size_setting < 10:
-                player_size_setting = 10
-            pygame.time.delay(50)
-
-
-
-
-        enemy_size_label = font.render("Enemy Size: " + str(enemy_size_setting), True, WHITE)
-        screen.blit(enemy_size_label, (50, 360))
-        enemy_size_minus_button = pygame.Rect(500, 360 - button_offset, 50, 50)
-        enemy_size_plus_button = pygame.Rect(560, 360 - button_offset, 50, 50)
-        pygame.draw.rect(screen, GREEN, enemy_size_plus_button, border_radius=10)
-        screen.blit(plus_txt, plus_txt.get_rect(center=enemy_size_plus_button.center))
-        pygame.draw.rect(screen, RED, enemy_size_minus_button, border_radius=10)
-        screen.blit(minus_txt, minus_txt.get_rect(center=enemy_size_minus_button.center))
-        if enemy_size_plus_button.collidepoint(mouse_pos) and mouse_click:
-            enemy_size_setting += 5
-            if enemy_size_setting > 250:
-                enemy_size_setting = 250
-            pygame.time.delay(50)
-        if enemy_size_minus_button.collidepoint(mouse_pos) and mouse_click:
-            enemy_size_setting -= 5
-            if enemy_size_setting < 10:
-                enemy_size_setting = 10
+        if max_spawn_delay_minus_button.collidepoint(mouse_pos) and mouse_click:
+            max_spawn_delay_setting -= 100
+            if max_spawn_delay_setting < 100 or max_spawn_delay_setting < min_spawn_delay_setting:
+                max_spawn_delay_setting += 100
             pygame.time.delay(50)
 
+            
 
-        projectile_size_label = font.render("Projectile Size: " + str(projectile_size_setting), True, WHITE)
-        screen.blit(projectile_size_label, (50, 420))
-        projectile_size_minus_button = pygame.Rect(500, 420 - button_offset, 50, 50)
-        projectile_size_plus_button = pygame.Rect(560, 420 - button_offset, 50, 50)
-        pygame.draw.rect(screen, GREEN, projectile_size_plus_button, border_radius=10)
-        screen.blit(plus_txt, plus_txt.get_rect(center=projectile_size_plus_button.center))
-        pygame.draw.rect(screen, RED, projectile_size_minus_button, border_radius=10)
-        screen.blit(minus_txt, minus_txt.get_rect(center=projectile_size_minus_button.center))
-        if projectile_size_plus_button.collidepoint(mouse_pos) and mouse_click:
-            projectile_size_setting += 2
-            if projectile_size_setting > 50:
-                projectile_size_setting = 50
-            pygame.time.delay(50)
-        if projectile_size_minus_button.collidepoint(mouse_pos) and mouse_click:
-            projectile_size_setting -= 2
-            if projectile_size_setting < 2:
-                projectile_size_setting = 2
-            pygame.time.delay(50)
-
-
-        min_spawn_delay_label = font.render("Minimum Spawn Delay: " + str(min_spawn_delay_setting), True, WHITE)
-        screen.blit(min_spawn_delay_label, (50, 480))
-        min_spawn_delay_minus_button = pygame.Rect(500, 480 - button_offset, 50, 50)
-        min_spawn_delay_plus_button = pygame.Rect(560, 480 - button_offset, 50, 50)
+        min_spawn_delay_label = font.render("Ending Spawn Delay: " + str(min_spawn_delay_setting), True, WHITE)
+        screen.blit(min_spawn_delay_label, (50, 360))
+        min_spawn_delay_minus_button = pygame.Rect(500, 360 - button_offset, 50, 50)
+        min_spawn_delay_plus_button = pygame.Rect(560, 360 - button_offset, 50, 50)
         pygame.draw.rect(screen, GREEN, min_spawn_delay_plus_button, border_radius=10)
         screen.blit(plus_txt, plus_txt.get_rect(center=min_spawn_delay_plus_button.center))
         pygame.draw.rect(screen, RED, min_spawn_delay_minus_button, border_radius=10)
@@ -354,32 +320,13 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
-        max_spawn_delay_label = font.render("Maximum Spawn Delay: " + str(max_spawn_delay_setting), True, WHITE)
-        screen.blit(max_spawn_delay_label, (50, 540))
-        max_spawn_delay_minus_button = pygame.Rect(500, 540 - button_offset, 50, 50)
-        max_spawn_delay_plus_button = pygame.Rect(560, 540 - button_offset, 50, 50)
-        pygame.draw.rect(screen, GREEN, max_spawn_delay_plus_button, border_radius=10)
-        screen.blit(plus_txt, plus_txt.get_rect(center=max_spawn_delay_plus_button.center))
-        pygame.draw.rect(screen, RED, max_spawn_delay_minus_button, border_radius=10)
-        screen.blit(minus_txt, minus_txt.get_rect(center=max_spawn_delay_minus_button.center))
-        if max_spawn_delay_plus_button.collidepoint(mouse_pos) and mouse_click:
-            max_spawn_delay_setting += 100
-            if max_spawn_delay_setting > 2500:
-                max_spawn_delay_setting = 2500
-            pygame.time.delay(50)
-        if max_spawn_delay_minus_button.collidepoint(mouse_pos) and mouse_click:
-            max_spawn_delay_setting -= 100
-            if max_spawn_delay_setting < 100 or max_spawn_delay_setting < min_spawn_delay_setting:
-                max_spawn_delay_setting += 100
-            pygame.time.delay(50)
-
-
+        
 
 
         spawn_delay_change_label = font.render("Spawn Delay Change: " + str(spawn_delay_change_setting), True, WHITE)
-        screen.blit(spawn_delay_change_label, (50, 600))
-        spawn_delay_change_minus_button = pygame.Rect(500, 600 - button_offset, 50, 50)
-        spawn_delay_change_plus_button = pygame.Rect(560, 600 - button_offset, 50, 50)
+        screen.blit(spawn_delay_change_label, (50, 420))
+        spawn_delay_change_minus_button = pygame.Rect(500, 420 - button_offset, 50, 50)
+        spawn_delay_change_plus_button = pygame.Rect(560, 420 - button_offset, 50, 50)
         pygame.draw.rect(screen, GREEN, spawn_delay_change_plus_button, border_radius=10)
         screen.blit(plus_txt, plus_txt.get_rect(center=spawn_delay_change_plus_button.center))
         pygame.draw.rect(screen, RED, spawn_delay_change_minus_button, border_radius=10)
@@ -395,6 +342,68 @@ def SETTINGS():
                 spawn_delay_change_setting = 2
             pygame.time.delay(50)
 
+
+        player_health_label = font.render("Player 1 Health: " + str(player_health_setting), True, WHITE)
+        screen.blit(player_health_label, (50, 480))
+        player_health_minus_button = pygame.Rect(500, 480 - button_offset, 50, 50)
+        player_health_plus_button = pygame.Rect(560, 480 - button_offset, 50, 50)
+        pygame.draw.rect(screen, GREEN, player_health_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=player_health_plus_button.center))
+        pygame.draw.rect(screen, RED, player_health_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=player_health_minus_button.center))
+        if player_health_plus_button.collidepoint(mouse_pos) and mouse_click:
+            player_health_setting += 1
+            if player_health_setting > 99:
+                player_health_setting = 99
+            pygame.time.delay(50)
+        if player_health_minus_button.collidepoint(mouse_pos) and mouse_click:
+            player_health_setting -= 1
+            if player_health_setting < 1:
+                player_health_setting = 1
+            pygame.time.delay(50)
+
+
+        player2_health_label = font.render("Player 2 Health: " + str(player2_health_setting), True, WHITE)
+        screen.blit(player2_health_label, (50, 540))
+        player2_health_minus_button = pygame.Rect(500, 540 - button_offset, 50, 50)
+        player2_health_plus_button = pygame.Rect(560, 540 - button_offset, 50, 50)
+        pygame.draw.rect(screen, GREEN, player2_health_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=player2_health_plus_button.center))
+        pygame.draw.rect(screen, RED, player2_health_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=player2_health_minus_button.center))
+        if player2_health_plus_button.collidepoint(mouse_pos) and mouse_click:
+            player2_health_setting += 2
+            if player2_health_setting > 99:
+                player2_health_setting = 99
+            pygame.time.delay(50)
+        if player2_health_minus_button.collidepoint(mouse_pos) and mouse_click:
+            player2_health_setting -= 1
+            if player2_health_setting < 1:
+                player2_health_setting = 1
+            pygame.time.delay(50)
+
+
+        if regen_delay_setting == 6767: regen_delay_label = font.render("No Regen", True, WHITE)
+        else: regen_delay_label = font.render("Regen Delay: " + str(regen_delay_setting), True, WHITE)
+        screen.blit(regen_delay_label, (50, 600))
+        regen_delay_minus_button = pygame.Rect(500, 600 - button_offset, 50, 50)
+        regen_delay_plus_button = pygame.Rect(560, 600 - button_offset, 50, 50)
+        pygame.draw.rect(screen, GREEN, regen_delay_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=regen_delay_plus_button.center))
+        pygame.draw.rect(screen, RED, regen_delay_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=regen_delay_minus_button.center))
+        if regen_delay_plus_button.collidepoint(mouse_pos) and mouse_click:
+            regen_delay_setting += 1
+            if regen_delay_setting > 40:
+                regen_delay_setting = 6767
+            pygame.time.delay(50)
+        if regen_delay_minus_button.collidepoint(mouse_pos) and mouse_click:
+            if regen_delay_setting == 6767:
+                regen_delay_setting = 40
+            else: regen_delay_setting -= 1
+            if regen_delay_setting < 1:
+                regen_delay_setting = 1
+            pygame.time.delay(50)
 
 
         player_speed_label = font.render("Player Speed: " + str(player_speed_setting), True, WHITE)
@@ -417,11 +426,31 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
+        player_size_label = font.render("Player Size: " + str(player_size_setting), True, WHITE)
+        screen.blit(player_size_label, (50, 720))
+        player_size_minus_button = pygame.Rect(500, 720 - button_offset, 50, 50)
+        player_size_plus_button = pygame.Rect(560, 720 - button_offset, 50, 50)
+        pygame.draw.rect(screen, GREEN, player_size_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=player_size_plus_button.center))
+        pygame.draw.rect(screen, RED, player_size_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=player_size_minus_button.center))
+        if player_size_plus_button.collidepoint(mouse_pos) and mouse_click:
+            player_size_setting += 5
+            if player_size_setting > 250:
+                player_size_setting = 250
+            pygame.time.delay(50)
+        if player_size_minus_button.collidepoint(mouse_pos) and mouse_click:
+            player_size_setting -= 5
+            if player_size_setting < 10:
+                player_size_setting = 10
+            pygame.time.delay(50)
+
+
 
         enemy_speed_label = font.render("Enemy Speed: " + str(enemy_speed_setting), True, WHITE)
-        screen.blit(enemy_speed_label, (50, 720))
-        enemy_speed_minus_button = pygame.Rect(500, 720 - button_offset, 50, 50)
-        enemy_speed_plus_button = pygame.Rect(560, 720 - button_offset, 50, 50)
+        screen.blit(enemy_speed_label, (50, 780))
+        enemy_speed_minus_button = pygame.Rect(500, 780 - button_offset, 50, 50)
+        enemy_speed_plus_button = pygame.Rect(560, 780 - button_offset, 50, 50)
         pygame.draw.rect(screen, GREEN, enemy_speed_plus_button, border_radius=10)
         screen.blit(plus_txt, plus_txt.get_rect(center=enemy_speed_plus_button.center))
         pygame.draw.rect(screen, RED, enemy_speed_minus_button, border_radius=10)
@@ -438,10 +467,33 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
+
+
+        enemy_size_label = font.render("Enemy Size: " + str(enemy_size_setting), True, WHITE)
+        screen.blit(enemy_size_label, (50, 840))
+        enemy_size_minus_button = pygame.Rect(500, 840 - button_offset, 50, 50)
+        enemy_size_plus_button = pygame.Rect(560, 840 - button_offset, 50, 50)
+        pygame.draw.rect(screen, GREEN, enemy_size_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=enemy_size_plus_button.center))
+        pygame.draw.rect(screen, RED, enemy_size_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=enemy_size_minus_button.center))
+        if enemy_size_plus_button.collidepoint(mouse_pos) and mouse_click:
+            enemy_size_setting += 5
+            if enemy_size_setting > 250:
+                enemy_size_setting = 250
+            pygame.time.delay(50)
+        if enemy_size_minus_button.collidepoint(mouse_pos) and mouse_click:
+            enemy_size_setting -= 5
+            if enemy_size_setting < 10:
+                enemy_size_setting = 10
+            pygame.time.delay(50)
+
+
+
         projectile_speed_label = font.render("Projectile Speed: " + str(projectile_speed_setting), True, WHITE)
-        screen.blit(projectile_speed_label, (50, 780))
-        projectile_speed_minus_button = pygame.Rect(500, 780 - button_offset, 50, 50)
-        projectile_speed_plus_button = pygame.Rect(560, 780 - button_offset, 50, 50)
+        screen.blit(projectile_speed_label, (50, 900))
+        projectile_speed_minus_button = pygame.Rect(500, 900 - button_offset, 50, 50)
+        projectile_speed_plus_button = pygame.Rect(560, 900 - button_offset, 50, 50)
         pygame.draw.rect(screen, GREEN, projectile_speed_plus_button, border_radius=10)
         screen.blit(plus_txt, plus_txt.get_rect(center=projectile_speed_plus_button.center))
         pygame.draw.rect(screen, RED, projectile_speed_minus_button, border_radius=10)
@@ -457,8 +509,29 @@ def SETTINGS():
                 projectile_speed_setting = 1
             pygame.time.delay(50)
 
+        
 
-            
+        projectile_size_label = font.render("Projectile Size: " + str(projectile_size_setting), True, WHITE)
+        screen.blit(projectile_size_label, (50, 960))
+        projectile_size_minus_button = pygame.Rect(500, 960 - button_offset, 50, 50)
+        projectile_size_plus_button = pygame.Rect(560, 960 - button_offset, 50, 50)
+        pygame.draw.rect(screen, GREEN, projectile_size_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=projectile_size_plus_button.center))
+        pygame.draw.rect(screen, RED, projectile_size_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=projectile_size_minus_button.center))
+        if projectile_size_plus_button.collidepoint(mouse_pos) and mouse_click:
+            projectile_size_setting += 2
+            if projectile_size_setting > 50:
+                projectile_size_setting = 50
+            pygame.time.delay(50)
+        if projectile_size_minus_button.collidepoint(mouse_pos) and mouse_click:
+            projectile_size_setting -= 2
+            if projectile_size_setting < 2:
+                projectile_size_setting = 2
+            pygame.time.delay(50)
+
+
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit(); exit()
@@ -580,6 +653,9 @@ sniper_projectile_speed *= (projectile_speed_setting / 5)
 shotgun_projectile_speed *= (projectile_speed_setting / 5)
 rapidshooter_projectile_speed *= (projectile_speed_setting / 5)
 frostbite_projectile_speed *= (projectile_speed_setting / 5)
+regen_delay = regen_delay_setting
+player_lives = player_health_setting
+player2_lives = player2_health_setting
 
 running = True
 while running:
@@ -670,7 +746,7 @@ while running:
     # --- Dynamic Enemy Unlock ---
     while unlock_scores and score >= unlock_scores[0]:
         if locked_enemy_types:
-            new_type = random.choice(locked_enemy_types)
+            new_type = locked_enemy_types[0]
             available_enemy_types.append(new_type)
             locked_enemy_types.remove(new_type)
         unlock_scores.pop(0)
@@ -1664,7 +1740,7 @@ while running:
                 score_p2 = score
 
             # Only regenerate if player is alive
-            if player_alive and score >= p1_regen_block_until and player_lives < 3:
+            if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6767:
                 player_lives += 1
                 p1_regen_block_until = score + regen_delay
                 heal_indicators.append({
@@ -1673,7 +1749,7 @@ while running:
                     "spawn_time": pygame.time.get_ticks()
                 })
 
-            if players == 2 and player2_alive and score >= p2_regen_block_until and player2_lives < 3:
+            if players == 2 and player2_alive and score >= p2_regen_block_until and player2_lives < player2_health_setting and regen_delay != 6767:
                 player2_lives += 1
                 p2_regen_block_until = score + regen_delay
                 heal_indicators.append({
@@ -1826,7 +1902,7 @@ while running:
 
     # draw trail squares
     for sq in trail_squares:
-        pygame.draw.rect(screen, LAVA, (sq["x"], sq["y"], trail_size, trail_size))
+        pygame.draw.rect(screen, LAVA, (sq["x"] - trail_size // 2, sq["y"] - trail_size // 2, trail_size, trail_size))
 
     # draw projectiles
     for p in projectiles:
