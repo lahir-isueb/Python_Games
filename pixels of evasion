@@ -1117,8 +1117,8 @@ while running:
                     dxp = math.cos(ang) * bomb_projectile_speed
                     dyp = math.sin(ang) * bomb_projectile_speed
                     projectiles.append({
-                        "x": enemy["x"],
-                        "y": enemy["y"],
+                        "x": enemy["x"] + projectile_size/2,
+                        "y": enemy["y"] + projectile_size/2,
                         "dx": dxp,
                         "dy": dyp
                     })
