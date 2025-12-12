@@ -240,7 +240,7 @@ projectile_speed_setting = 5
 regen_delay_setting = 10
 player_health_setting = 3
 player2_health_setting = 3
-enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+enemy_locks = [0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -322,7 +322,7 @@ def SETTINGS():
     button_offset = 10
     scroll_y = 0
     scroll_speed = 25
-    max_scroll = 1100
+    max_scroll = 2000
     enemy_locking_labels = ["Starter", "Locked", "Ultralocked", "Banned"]
 
     player_size_plus_button = pygame.Rect(WIDTH//2 + 120, HEIGHT//2 - 20, 60, 60)
@@ -371,7 +371,7 @@ def SETTINGS():
         screen.blit(minus_txt, minus_txt.get_rect(center=min_spawn_delay_minus_button.center))
         if min_spawn_delay_plus_button.collidepoint(mouse_pos) and mouse_click:
             min_spawn_delay_setting += 100
-            if min_spawn_delay_setting > 2500 or min_spawn_delay_setting > max_spawn_delay_setting:
+            if min_spawn_delay_setting > 5000 or min_spawn_delay_setting > max_spawn_delay_setting:
                 min_spawn_delay_setting -= 100
             pygame.time.delay(50)
         if min_spawn_delay_minus_button.collidepoint(mouse_pos) and mouse_click:
@@ -1021,6 +1021,150 @@ def SETTINGS():
         if voodoo_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[14] > 2: enemy_locks[14] = 0
             else: enemy_locks[14] = enemy_locks[14] + 1
+            pygame.time.delay(200)
+
+
+
+        blind_hp_label = font.render("Blind Enemy - HP: " + str(blind_hp_setting), True, BLUE)
+        screen.blit(blind_hp_label, (50, 1920 + scroll_y))
+        blind_hp_minus_button = pygame.Rect(500, 1920 - button_offset + scroll_y, 50, 50)
+        blind_hp_plus_button = pygame.Rect(560, 1920 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, blind_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=blind_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, blind_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=blind_hp_minus_button.center))
+        if blind_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            blind_hp_setting += 1
+            if blind_hp_setting > 99:
+                blind_hp_setting = 99
+            pygame.time.delay(50)
+        if blind_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            blind_hp_setting -= 1
+            if blind_hp_setting < 1:
+                blind_hp_setting = 1
+            pygame.time.delay(50)
+        blind_locks_text = font.render(enemy_locking_labels[enemy_locks[15]], True, WHITE)
+        blind_locks_button = pygame.Rect(650, 1920 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, BLUE, blind_locks_button, border_radius=10)
+        screen.blit(blind_locks_text, blind_locks_text.get_rect(center=blind_locks_button.center))
+        if blind_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[15] > 2: enemy_locks[15] = 0
+            else: enemy_locks[15] = enemy_locks[15] + 1
+            pygame.time.delay(200)
+
+
+
+
+        motion_hp_label = font.render("Motion Enemy - HP: " + str(motion_hp_setting), True, ORANGE)
+        screen.blit(motion_hp_label, (50, 1980 + scroll_y))
+        motion_hp_minus_button = pygame.Rect(500, 1980 - button_offset + scroll_y, 50, 50)
+        motion_hp_plus_button = pygame.Rect(560, 1980 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, motion_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=motion_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, motion_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=motion_hp_minus_button.center))
+        if motion_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            motion_hp_setting += 1
+            if motion_hp_setting > 99:
+                motion_hp_setting = 99
+            pygame.time.delay(50)
+        if motion_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            motion_hp_setting -= 1
+            if motion_hp_setting < 1:
+                motion_hp_setting = 1
+            pygame.time.delay(50)
+        motion_locks_text = font.render(enemy_locking_labels[enemy_locks[16]], True, WHITE)
+        motion_locks_button = pygame.Rect(650, 1980 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, ORANGE, motion_locks_button, border_radius=10)
+        screen.blit(motion_locks_text, motion_locks_text.get_rect(center=motion_locks_button.center))
+        if motion_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[16] > 2: enemy_locks[16] = 0
+            else: enemy_locks[16] = enemy_locks[16] + 1
+            pygame.time.delay(200)
+
+
+        charger_hp_label = font.render("Charger Enemy - HP: " + str(charger_hp_setting), True, YELLOW)
+        screen.blit(charger_hp_label, (50, 2040 + scroll_y))
+        charger_hp_minus_button = pygame.Rect(500, 2040 - button_offset + scroll_y, 50, 50)
+        charger_hp_plus_button = pygame.Rect(560, 2040 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, charger_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=charger_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, charger_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=charger_hp_minus_button.center))
+        if charger_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            charger_hp_setting += 1
+            if charger_hp_setting > 99:
+                charger_hp_setting = 99
+            pygame.time.delay(50)
+        if charger_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            charger_hp_setting -= 1
+            if charger_hp_setting < 1:
+                charger_hp_setting = 1
+            pygame.time.delay(50)
+        charger_locks_text = font.render(enemy_locking_labels[enemy_locks[17]], True, WHITE)
+        charger_locks_button = pygame.Rect(650, 2040 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, YELLOW, charger_locks_button, border_radius=10)
+        screen.blit(charger_locks_text, charger_locks_text.get_rect(center=charger_locks_button.center))
+        if charger_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[17] > 2: enemy_locks[17] = 0
+            else: enemy_locks[17] = enemy_locks[17] + 1
+            pygame.time.delay(200)
+
+
+        rapidshooter_hp_label = font.render("Rapidshooter Enemy - HP: " + str(rapidshooter_hp_setting), True, SILVER)
+        screen.blit(rapidshooter_hp_label, (50, 2100 + scroll_y))
+        rapidshooter_hp_minus_button = pygame.Rect(500, 2100 - button_offset + scroll_y, 50, 50)
+        rapidshooter_hp_plus_button = pygame.Rect(560, 2100 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, rapidshooter_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=rapidshooter_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, rapidshooter_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=rapidshooter_hp_minus_button.center))
+        if rapidshooter_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            rapidshooter_hp_setting += 1
+            if rapidshooter_hp_setting > 99:
+                rapidshooter_hp_setting = 99
+            pygame.time.delay(50)
+        if rapidshooter_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            rapidshooter_hp_setting -= 1
+            if rapidshooter_hp_setting < 1:
+                rapidshooter_hp_setting = 1
+            pygame.time.delay(50)
+        rapidshooter_locks_text = font.render(enemy_locking_labels[enemy_locks[18]], True, WHITE)
+        rapidshooter_locks_button = pygame.Rect(650, 2100 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, SILVER, rapidshooter_locks_button, border_radius=10)
+        screen.blit(rapidshooter_locks_text, rapidshooter_locks_text.get_rect(center=rapidshooter_locks_button.center))
+        if rapidshooter_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[18] > 2: enemy_locks[18] = 0
+            else: enemy_locks[18] = enemy_locks[18] + 1
+            pygame.time.delay(200)
+
+
+
+        frostbite_hp_label = font.render("Frostbite Enemy - HP: " + str(frostbite_hp_setting), True, CYAN)
+        screen.blit(frostbite_hp_label, (50, 2160 + scroll_y))
+        frostbite_hp_minus_button = pygame.Rect(500, 2160 - button_offset + scroll_y, 50, 50)
+        frostbite_hp_plus_button = pygame.Rect(560, 2160 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, frostbite_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=frostbite_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, frostbite_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=frostbite_hp_minus_button.center))
+        if frostbite_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            frostbite_hp_setting += 1
+            if frostbite_hp_setting > 99:
+                frostbite_hp_setting = 99
+            pygame.time.delay(50)
+        if frostbite_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            frostbite_hp_setting -= 1
+            if frostbite_hp_setting < 1:
+                frostbite_hp_setting = 1
+            pygame.time.delay(50)
+        frostbite_locks_text = font.render(enemy_locking_labels[enemy_locks[19]], True, WHITE)
+        frostbite_locks_button = pygame.Rect(650, 2160 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, CYAN, frostbite_locks_button, border_radius=10)
+        screen.blit(frostbite_locks_text, frostbite_locks_text.get_rect(center=frostbite_locks_button.center))
+        if frostbite_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[19] > 2: enemy_locks[19] = 0
+            else: enemy_locks[19] = enemy_locks[19] + 1
             pygame.time.delay(200)
 
 
