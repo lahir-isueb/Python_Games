@@ -59,7 +59,7 @@ GREEN = (0, 125, 0)
 FOREST = (0, 60, 0)
 TEAL = (0, 140, 140)
 TURQUOISE = (0, 255, 180)
-ICE = (200, 255, 255)
+ICE = (175, 255, 255)
 CYAN = (0, 255, 255)
 SKY = (105, 160, 225)
 BLUE = (0, 0, 255)
@@ -112,7 +112,7 @@ player2_y = spawner_pos[1] + SPAWNER_SIZE // 2
 # --- Enemy Health ---
 basic_hp = 5 # 1
 homing_hp = 2 # 2
-fatal_hp = 4 # 3 (ULTRALOCKED)
+fatal_hp = 3 # 3 (ULTRALOCKED)
 flow_hp = 3 # 4
 sticky_hp = 7 # 5
 gloomy_hp = 9 # 6
@@ -244,7 +244,7 @@ enemy_locks = [0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 
 basic_hp_setting = 5
 homing_hp_setting = 2
-fatal_hp_setting = 4
+fatal_hp_setting = 3
 flow_hp_setting = 3
 sticky_hp_setting = 7
 gloomy_hp_setting = 9
@@ -322,8 +322,18 @@ def SETTINGS():
     button_offset = 10
     scroll_y = 0
     scroll_speed = 25
-    max_scroll = 2000
+    max_scroll = 1500
     enemy_locking_labels = ["Starter", "Locked", "Ultralocked", "Banned"]
+    scrollbar_width = 20
+    scrollbar_margin = 50
+    scrollbar_track = pygame.Rect(
+        WIDTH - scrollbar_width - scrollbar_margin,
+        50,
+        scrollbar_width,
+        HEIGHT - 100
+    )
+
+    dragging_scrollbar = False
 
     player_size_plus_button = pygame.Rect(WIDTH//2 + 120, HEIGHT//2 - 20, 60, 60)
     player_size_minus_button = pygame.Rect(WIDTH//2 - 180, HEIGHT//2 - 20, 60, 60)
@@ -338,6 +348,28 @@ def SETTINGS():
         mouse_click = pygame.mouse.get_pressed()[0]
         plus_txt = font.render("+", True, BLACK)
         minus_txt = font.render("-", True, BLACK)
+
+
+        content_height = max_scroll + HEIGHT
+        view_height = HEIGHT
+
+        handle_height = max(
+            40,
+            int(scrollbar_track.height * (view_height / content_height))
+        )
+
+        scroll_ratio = -scroll_y / max_scroll if max_scroll > 0 else 0
+
+        handle_y = scrollbar_track.y + int(
+            scroll_ratio * (scrollbar_track.height - handle_height)
+        )
+
+        scrollbar_handle = pygame.Rect(
+            scrollbar_track.x,
+            handle_y,
+            scrollbar_width,
+            handle_height
+        )
 
 
         max_spawn_delay_label = font.render("Starting Spawn Delay: " + str(max_spawn_delay_setting), True, WHITE)
@@ -1313,6 +1345,11 @@ def SETTINGS():
 
 
 
+        pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=6)
+        pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=6)
+
+        
+
         for event in pygame.event.get():
             if event.type == pygame.MOUSEWHEEL:
                 scroll_y += event.y * scroll_speed * 2
@@ -1321,6 +1358,23 @@ def SETTINGS():
                 pygame.quit(); exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if scrollbar_handle.collidepoint(event.pos):
+                    dragging_scrollbar = True
+                    mouse_offset_y = event.pos[1] - scrollbar_handle.y
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                dragging_scrollbar = False
+
+            if event.type == pygame.MOUSEMOTION and dragging_scrollbar:
+                new_y = event.pos[1] - mouse_offset_y
+                new_y = max(
+                    scrollbar_track.y,
+                    min(new_y, scrollbar_track.bottom - handle_height)
+                )
+
+                ratio = (new_y - scrollbar_track.y) / (scrollbar_track.height - handle_height)
+                scroll_y = -int(ratio * max_scroll)
         pygame.display.flip()
         clock.tick(60)
 
@@ -1855,8 +1909,15 @@ while running:
             if target_pos:
                 tx, ty = target_pos
                 if (enemy["target"] == 1 and (p1_dx or p1_dy)) or (enemy["target"] == 2 and (p2_dx or p2_dy)):
-                    enemy["x"] += enemy["sussy_dx"]
-                    enemy["y"] += enemy["sussy_dy"]
+                    if player_frozen == True and enemy["target"] == 1:
+                        enemy["x"] += enemy["sussy_dx"] * 0.5
+                        enemy["y"] += enemy["sussy_dy"] * 0.5
+                    elif player2_frozen == True and enemy["target"] == 2:
+                        enemy["x"] += enemy["sussy_dx"] * 0.5
+                        enemy["y"] += enemy["sussy_dy"] * 0.5
+                    else:
+                        enemy["x"] += enemy["sussy_dx"]
+                        enemy["y"] += enemy["sussy_dy"]
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["sussy_dx"] *= -1
@@ -2771,7 +2832,7 @@ while running:
         color = p.get("color", HOT_PINK)
         draw_x = int(p["x"] - projectile_size / 2)
         draw_y = int(p["y"] - projectile_size / 2)
-        pygame.draw.rect(screen, color, (draw_x - projectile_size/2, draw_y - projectile_size/2, projectile_size, projectile_size))
+        pygame.draw.rect(screen, color, (draw_x - projectile_size//2, draw_y - projectile_size//2, projectile_size, projectile_size))
 
     # draw enemies
     for enemy in enemies:
@@ -2782,7 +2843,10 @@ while running:
         elif enemy["type"] == 5: color = GREEN
         elif enemy["type"] == 6: color = PURPLE
         elif enemy["type"] == 7: color = LAVA
-        elif enemy["type"] == 8: color = WHITE
+        elif enemy["type"] == 8:
+            if player_frozen == True and enemy["target"] == 1: color = ICE
+            elif player2_frozen == True and enemy["target"] == 2: color = ICE
+            else: color = WHITE
         elif enemy["type"] == 9: color = LIME
         elif enemy["type"] == 10: color = HOT_PINK
         elif enemy["type"] == 11: color = BRONZE
