@@ -1390,7 +1390,7 @@ def SETTINGS():
             if event.type == pygame.QUIT:
                 pygame.quit(); exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                if 1 in enemy_locks: running = False
+                if 0 in enemy_locks: running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if scrollbar_handle.collidepoint(event.pos):
                     dragging_scrollbar = True
@@ -1585,7 +1585,7 @@ unlocks = 0
 for unlocked in range(len(locked_enemy_types)):
     unlocks += ((1+unlocked)*10)
     unlock_scores.append(unlocks)
-targetting_enemies = [2, 8, 11, 12, 14, 19]
+targetting_enemies = [2, 8, 11, 12, 14, 15, 19]
 
 running = True
 while running:
@@ -2191,10 +2191,12 @@ while running:
                 # when it loses all HP from bounces, player takes 1 damage
                 if enemy["health"] <= 0:
                     if current_time >= invincible_until:
-                        player_lives -= 1
-                        p1_regen_block_until = score + regen_delay
-                        player2_lives -= 1
-                        p2_regen_block_until = score + regen_delay
+                        if enemy["target"] == 1:
+                            player_lives -= 1
+                            p1_regen_block_until = score + regen_delay
+                        if enemy["target"] == 2:
+                            player2_lives -= 1
+                            p2_regen_block_until = score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
                         if player_lives <= 0:
