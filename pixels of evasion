@@ -647,6 +647,14 @@ def SETTINGS():
             for en in range(0, len(enemy_locks)):
                 enemy_locks[en] = 2
             pygame.time.delay(200)
+        all_random_text = font.render("All Random", True, WHITE)
+        all_random_button = pygame.Rect(800, 960 - button_offset + scroll_y, 225, 50)
+        pygame.draw.rect(screen, PURPLE, all_random_button, border_radius=10)
+        screen.blit(all_random_text, all_random_text.get_rect(center=all_random_button.center))
+        if all_random_button.collidepoint(mouse_pos) and mouse_click:
+            for en in range(0, len(enemy_locks)):
+                enemy_locks[en] = random.randrange(3)
+            pygame.time.delay(200)
 
 
 
@@ -1382,7 +1390,7 @@ def SETTINGS():
             if event.type == pygame.QUIT:
                 pygame.quit(); exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                running = False
+                if 1 in enemy_locks: running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if scrollbar_handle.collidepoint(event.pos):
                     dragging_scrollbar = True
