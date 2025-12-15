@@ -53,6 +53,7 @@ TAN = (155, 125, 95)
 ORANGE = (255, 120, 0)
 GOLD = (255, 195, 0)
 YELLOW = (255, 255, 0)
+SULFUR = (190, 190, 0)
 OLIVE = (100, 100, 0)
 LIME = (0, 255, 0)
 GREEN = (0, 125, 0)
@@ -112,27 +113,27 @@ player2_y = spawner_pos[1] + SPAWNER_SIZE // 2
 # --- Enemy Health ---
 basic_hp = 5 # 1
 homing_hp = 2 # 2
-fatal_hp = 3 # 3 (ULTRALOCKED)
+fatal_hp = 3 # 3
 flow_hp = 3 # 4
 sticky_hp = 7 # 5
 gloomy_hp = 9 # 6
 trail_hp = 3 # 7
-impostor_hp = 5 # 8 (ULTRALOCKED)
+impostor_hp = 5 # 8
 splitter_hp = 3 # 9
 bomb_hp = 8 # 10
 shooter_hp = 4 # 11
-sniper_hp = 1 # 12 (ULTRALOCKED)
+sniper_hp = 1 # 12
 speedy_hp = 5 # 13
-shotgun_hp = 4 # 14 (ULTRALOCKED)
-voodoo_hp = 5 # 15 (ULTRALOCKED)
+shotgun_hp = 4 # 14
+voodoo_hp = 5 # 15
 blind_hp = 6 # 16
 motion_hp = 7 # 17
 charger_hp = 3 # 18
-rapidshooter_hp = 1 # 19 (ULTRALOCKED)
-frostbite_hp = 4 # 20 (ULTRALOCKED)
-addictive_hp = 4 # 21 (ULTRALOCKED)
-laser_hp = 3 # 22 (ULTRALOCKED)
-hardened_hp = 40 # 23 (ULTRALOCKED)
+rapidshooter_hp = 1 # 19
+frostbite_hp = 4 # 20
+addictive_hp = 4 # 21
+laser_hp = 3 # 22
+hardened_hp = 40 # 23
 accelerator_hp = 5 # 24
 cold_hp = 9 # 25
 
@@ -157,7 +158,6 @@ FPS = 60
 # --- Enemy unlocking ---
 available_enemy_types = []
 locked_enemy_types = []
-ultralocked_enemy_types = []
 
 # --- Trail for orange enemy ---
 trail_squares = []
@@ -272,11 +272,9 @@ cold_hp_setting = 9
 def enemy_lock_setup(enemy):
     global available_enemy_types
     global locked_enemy_types
-    global ultralocked_enemy_types
     global enemy_locks
     if enemy_locks[enemy] == 0: available_enemy_types.append(enemy + 1)
     if enemy_locks[enemy] == 1: locked_enemy_types.append(enemy + 1)
-    if enemy_locks[enemy] == 2: ultralocked_enemy_types.append(enemy + 1)
 
 def SETTINGS():
     global player_size_setting
@@ -323,7 +321,7 @@ def SETTINGS():
     scroll_y = 0
     scroll_speed = 25
     max_scroll = 1500
-    enemy_locking_labels = ["Starter", "Locked", "Ultralocked", "Banned"]
+    enemy_locking_labels = ["Starter", "Locked", "Banned"]
     scrollbar_width = 20
     scrollbar_margin = 50
     scrollbar_track = pygame.Rect(
@@ -627,7 +625,7 @@ def SETTINGS():
 
         all_starter_text = font.render("All Starter", True, WHITE)
         all_starter_button = pygame.Rect(50, 960 - button_offset + scroll_y, 225, 50)
-        pygame.draw.rect(screen, LIME, all_starter_button, border_radius=10)
+        pygame.draw.rect(screen, GREEN, all_starter_button, border_radius=10)
         screen.blit(all_starter_text, all_starter_text.get_rect(center=all_starter_button.center))
         if all_starter_button.collidepoint(mouse_pos) and mouse_click:
             for en in range(0, len(enemy_locks)):
@@ -635,27 +633,19 @@ def SETTINGS():
             pygame.time.delay(200)
         all_locked_text = font.render("All Locked", True, WHITE)
         all_locked_button = pygame.Rect(300, 960 - button_offset + scroll_y, 225, 50)
-        pygame.draw.rect(screen, YELLOW, all_locked_button, border_radius=10)
+        pygame.draw.rect(screen, SULFUR, all_locked_button, border_radius=10)
         screen.blit(all_locked_text, all_locked_text.get_rect(center=all_locked_button.center))
         if all_locked_button.collidepoint(mouse_pos) and mouse_click:
             for en in range(0, len(enemy_locks)):
                 enemy_locks[en] = 1
             pygame.time.delay(200)
-        all_ultralocked_text = font.render("All Ultralocked", True, WHITE)
-        all_ultralocked_button = pygame.Rect(550, 960 - button_offset + scroll_y, 225, 50)
-        pygame.draw.rect(screen, ORANGE, all_ultralocked_button, border_radius=10)
-        screen.blit(all_ultralocked_text, all_ultralocked_text.get_rect(center=all_ultralocked_button.center))
-        if all_ultralocked_button.collidepoint(mouse_pos) and mouse_click:
-            for en in range(0, len(enemy_locks)):
-                enemy_locks[en] = 2
-            pygame.time.delay(200)
         all_banned_text = font.render("All Banned", True, WHITE)
-        all_banned_button = pygame.Rect(800, 960 - button_offset + scroll_y, 225, 50)
+        all_banned_button = pygame.Rect(550, 960 - button_offset + scroll_y, 225, 50)
         pygame.draw.rect(screen, RED, all_banned_button, border_radius=10)
         screen.blit(all_banned_text, all_banned_text.get_rect(center=all_banned_button.center))
         if all_banned_button.collidepoint(mouse_pos) and mouse_click:
             for en in range(0, len(enemy_locks)):
-                enemy_locks[en] = 3
+                enemy_locks[en] = 2
             pygame.time.delay(200)
 
 
@@ -683,7 +673,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GRAY, basic_locks_button, border_radius=10)
         screen.blit(basic_locks_text, basic_locks_text.get_rect(center=basic_locks_button.center))
         if basic_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[0] > 2: enemy_locks[0] = 0
+            if enemy_locks[0] > 1: enemy_locks[0] = 0
             else: enemy_locks[0] = enemy_locks[0] + 1
             pygame.time.delay(200)
 
@@ -712,7 +702,7 @@ def SETTINGS():
         pygame.draw.rect(screen, MAROON, homing_locks_button, border_radius=10)
         screen.blit(homing_locks_text, homing_locks_text.get_rect(center=homing_locks_button.center))
         if homing_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[1] > 2: enemy_locks[1] = 0
+            if enemy_locks[1] > 1: enemy_locks[1] = 0
             else: enemy_locks[1] = enemy_locks[1] + 1
             pygame.time.delay(200)
 
@@ -740,7 +730,7 @@ def SETTINGS():
         pygame.draw.rect(screen, RED, fatal_locks_button, border_radius=10)
         screen.blit(fatal_locks_text, fatal_locks_text.get_rect(center=fatal_locks_button.center))
         if fatal_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[2] > 2: enemy_locks[2] = 0
+            if enemy_locks[2] > 1: enemy_locks[2] = 0
             else: enemy_locks[2] = enemy_locks[2] + 1
             pygame.time.delay(200)
 
@@ -769,7 +759,7 @@ def SETTINGS():
         pygame.draw.rect(screen, TEAL, flow_locks_button, border_radius=10)
         screen.blit(flow_locks_text, flow_locks_text.get_rect(center=flow_locks_button.center))
         if flow_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[3] > 2: enemy_locks[3] = 0
+            if enemy_locks[3] > 1: enemy_locks[3] = 0
             else: enemy_locks[3] = enemy_locks[3] + 1
             pygame.time.delay(200)
 
@@ -798,7 +788,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GREEN, sticky_locks_button, border_radius=10)
         screen.blit(sticky_locks_text, sticky_locks_text.get_rect(center=sticky_locks_button.center))
         if sticky_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[4] > 2: enemy_locks[4] = 0
+            if enemy_locks[4] > 1: enemy_locks[4] = 0
             else: enemy_locks[4] = enemy_locks[4] + 1
             pygame.time.delay(200)
 
@@ -827,7 +817,7 @@ def SETTINGS():
         pygame.draw.rect(screen, PURPLE, gloomy_locks_button, border_radius=10)
         screen.blit(gloomy_locks_text, gloomy_locks_text.get_rect(center=gloomy_locks_button.center))
         if gloomy_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[5] > 2: enemy_locks[5] = 0
+            if enemy_locks[5] > 1: enemy_locks[5] = 0
             else: enemy_locks[5] = enemy_locks[5] + 1
             pygame.time.delay(200)
 
@@ -856,7 +846,7 @@ def SETTINGS():
         pygame.draw.rect(screen, LAVA, trail_locks_button, border_radius=10)
         screen.blit(trail_locks_text, trail_locks_text.get_rect(center=trail_locks_button.center))
         if trail_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[6] > 2: enemy_locks[6] = 0
+            if enemy_locks[6] > 1: enemy_locks[6] = 0
             else: enemy_locks[6] = enemy_locks[6] + 1
             pygame.time.delay(200)
 
@@ -885,7 +875,7 @@ def SETTINGS():
         pygame.draw.rect(screen, WHITE, impostor_locks_button, border_radius=10)
         screen.blit(impostor_locks_text, impostor_locks_text.get_rect(center=impostor_locks_button.center))
         if impostor_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[7] > 2: enemy_locks[7] = 0
+            if enemy_locks[7] > 1: enemy_locks[7] = 0
             else: enemy_locks[7] = enemy_locks[7] + 1
             pygame.time.delay(200)
 
@@ -914,7 +904,7 @@ def SETTINGS():
         pygame.draw.rect(screen, LIME, splitter_locks_button, border_radius=10)
         screen.blit(splitter_locks_text, splitter_locks_text.get_rect(center=splitter_locks_button.center))
         if splitter_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[8] > 2: enemy_locks[8] = 0
+            if enemy_locks[8] > 1: enemy_locks[8] = 0
             else: enemy_locks[8] = enemy_locks[8] + 1
             pygame.time.delay(200)
 
@@ -943,7 +933,7 @@ def SETTINGS():
         pygame.draw.rect(screen, HOT_PINK, bomb_locks_button, border_radius=10)
         screen.blit(bomb_locks_text, bomb_locks_text.get_rect(center=bomb_locks_button.center))
         if bomb_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[9] > 2: enemy_locks[9] = 0
+            if enemy_locks[9] > 1: enemy_locks[9] = 0
             else: enemy_locks[9] = enemy_locks[9] + 1
             pygame.time.delay(200)
 
@@ -972,7 +962,7 @@ def SETTINGS():
         pygame.draw.rect(screen, BRONZE, shooter_locks_button, border_radius=10)
         screen.blit(shooter_locks_text, shooter_locks_text.get_rect(center=shooter_locks_button.center))
         if shooter_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[10] > 2: enemy_locks[10] = 0
+            if enemy_locks[10] > 1: enemy_locks[10] = 0
             else: enemy_locks[10] = enemy_locks[10] + 1
             pygame.time.delay(200)
 
@@ -1001,7 +991,7 @@ def SETTINGS():
         pygame.draw.rect(screen, INDIGO, sniper_locks_button, border_radius=10)
         screen.blit(sniper_locks_text, sniper_locks_text.get_rect(center=sniper_locks_button.center))
         if sniper_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[11] > 2: enemy_locks[11] = 0
+            if enemy_locks[11] > 1: enemy_locks[11] = 0
             else: enemy_locks[11] = enemy_locks[11] + 1
             pygame.time.delay(200)
 
@@ -1029,7 +1019,7 @@ def SETTINGS():
         pygame.draw.rect(screen, SKY, speedy_locks_button, border_radius=10)
         screen.blit(speedy_locks_text, speedy_locks_text.get_rect(center=speedy_locks_button.center))
         if speedy_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[12] > 2: enemy_locks[12] = 0
+            if enemy_locks[12] > 1: enemy_locks[12] = 0
             else: enemy_locks[12] = enemy_locks[12] + 1
             pygame.time.delay(200)
 
@@ -1057,7 +1047,7 @@ def SETTINGS():
         pygame.draw.rect(screen, BRICK, shotgun_locks_button, border_radius=10)
         screen.blit(shotgun_locks_text, shotgun_locks_text.get_rect(center=shotgun_locks_button.center))
         if shotgun_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[13] > 2: enemy_locks[13] = 0
+            if enemy_locks[13] > 1: enemy_locks[13] = 0
             else: enemy_locks[13] = enemy_locks[13] + 1
             pygame.time.delay(200)
 
@@ -1086,7 +1076,7 @@ def SETTINGS():
         pygame.draw.rect(screen, MAGENTA, voodoo_locks_button, border_radius=10)
         screen.blit(voodoo_locks_text, voodoo_locks_text.get_rect(center=voodoo_locks_button.center))
         if voodoo_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[14] > 2: enemy_locks[14] = 0
+            if enemy_locks[14] > 1: enemy_locks[14] = 0
             else: enemy_locks[14] = enemy_locks[14] + 1
             pygame.time.delay(200)
 
@@ -1115,7 +1105,7 @@ def SETTINGS():
         pygame.draw.rect(screen, BLUE, blind_locks_button, border_radius=10)
         screen.blit(blind_locks_text, blind_locks_text.get_rect(center=blind_locks_button.center))
         if blind_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[15] > 2: enemy_locks[15] = 0
+            if enemy_locks[15] > 1: enemy_locks[15] = 0
             else: enemy_locks[15] = enemy_locks[15] + 1
             pygame.time.delay(200)
 
@@ -1145,7 +1135,7 @@ def SETTINGS():
         pygame.draw.rect(screen, ORANGE, motion_locks_button, border_radius=10)
         screen.blit(motion_locks_text, motion_locks_text.get_rect(center=motion_locks_button.center))
         if motion_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[16] > 2: enemy_locks[16] = 0
+            if enemy_locks[16] > 1: enemy_locks[16] = 0
             else: enemy_locks[16] = enemy_locks[16] + 1
             pygame.time.delay(200)
 
@@ -1173,7 +1163,7 @@ def SETTINGS():
         pygame.draw.rect(screen, YELLOW, charger_locks_button, border_radius=10)
         screen.blit(charger_locks_text, charger_locks_text.get_rect(center=charger_locks_button.center))
         if charger_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[17] > 2: enemy_locks[17] = 0
+            if enemy_locks[17] > 1: enemy_locks[17] = 0
             else: enemy_locks[17] = enemy_locks[17] + 1
             pygame.time.delay(200)
 
@@ -1201,7 +1191,7 @@ def SETTINGS():
         pygame.draw.rect(screen, SILVER, rapidshooter_locks_button, border_radius=10)
         screen.blit(rapidshooter_locks_text, rapidshooter_locks_text.get_rect(center=rapidshooter_locks_button.center))
         if rapidshooter_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[18] > 2: enemy_locks[18] = 0
+            if enemy_locks[18] > 1: enemy_locks[18] = 0
             else: enemy_locks[18] = enemy_locks[18] + 1
             pygame.time.delay(200)
 
@@ -1230,7 +1220,7 @@ def SETTINGS():
         pygame.draw.rect(screen, CYAN, frostbite_locks_button, border_radius=10)
         screen.blit(frostbite_locks_text, frostbite_locks_text.get_rect(center=frostbite_locks_button.center))
         if frostbite_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[19] > 2: enemy_locks[19] = 0
+            if enemy_locks[19] > 1: enemy_locks[19] = 0
             else: enemy_locks[19] = enemy_locks[19] + 1
             pygame.time.delay(200)
 
@@ -1258,7 +1248,7 @@ def SETTINGS():
         pygame.draw.rect(screen, PINK, addictive_locks_button, border_radius=10)
         screen.blit(addictive_locks_text, addictive_locks_text.get_rect(center=addictive_locks_button.center))
         if addictive_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[20] > 2: enemy_locks[20] = 0
+            if enemy_locks[20] > 1: enemy_locks[20] = 0
             else: enemy_locks[20] = enemy_locks[20] + 1
             pygame.time.delay(200)
 
@@ -1287,7 +1277,7 @@ def SETTINGS():
         pygame.draw.rect(screen, TURQUOISE, laser_locks_button, border_radius=10)
         screen.blit(laser_locks_text, laser_locks_text.get_rect(center=laser_locks_button.center))
         if laser_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[21] > 2: enemy_locks[21] = 0
+            if enemy_locks[21] > 1: enemy_locks[21] = 0
             else: enemy_locks[21] = enemy_locks[21] + 1
             pygame.time.delay(200)
 
@@ -1316,7 +1306,7 @@ def SETTINGS():
         pygame.draw.rect(screen, BROWN, hardened_locks_button, border_radius=10)
         screen.blit(hardened_locks_text, hardened_locks_text.get_rect(center=hardened_locks_button.center))
         if hardened_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[22] > 2: enemy_locks[22] = 0
+            if enemy_locks[22] > 1: enemy_locks[22] = 0
             else: enemy_locks[22] = enemy_locks[22] + 1
             pygame.time.delay(200)
 
@@ -1345,7 +1335,7 @@ def SETTINGS():
         pygame.draw.rect(screen, TAN, accelerator_locks_button, border_radius=10)
         screen.blit(accelerator_locks_text, accelerator_locks_text.get_rect(center=accelerator_locks_button.center))
         if accelerator_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[23] > 2: enemy_locks[23] = 0
+            if enemy_locks[23] > 1: enemy_locks[23] = 0
             else: enemy_locks[23] = enemy_locks[23] + 1
             pygame.time.delay(200)
 
@@ -1374,7 +1364,7 @@ def SETTINGS():
         pygame.draw.rect(screen, ICE, cold_locks_button, border_radius=10)
         screen.blit(cold_locks_text, cold_locks_text.get_rect(center=cold_locks_button.center))
         if cold_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[24] > 2: enemy_locks[24] = 0
+            if enemy_locks[24] > 1: enemy_locks[24] = 0
             else: enemy_locks[24] = enemy_locks[24] + 1
             pygame.time.delay(200)
 
@@ -1684,9 +1674,6 @@ while running:
             available_enemy_types.append(new_type)
             locked_enemy_types.remove(new_type)
         unlock_scores.pop(0)
-        if ultralocked_enemy_types and score >= 40:
-            locked_enemy_types.extend(ultralocked_enemy_types)
-            ultralocked_enemy_types.clear()
 
     # --- Enemy Spawning ---
     adjusted_score = score / 2  # scale back to old point rate
