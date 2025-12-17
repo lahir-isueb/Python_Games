@@ -104,10 +104,10 @@ enemy_speed = 5
 min_spawn_delay = 500  # ORIGINAL VALUE 500
 spawn_rate = 18
 
-player_x = player_size
+player_x = player_size // 2
 player_y = spawner_pos[1] + SPAWNER_SIZE // 2
 
-player2_x = WIDTH - player_size
+player2_x = WIDTH - player_size // 2
 player2_y = spawner_pos[1] + SPAWNER_SIZE // 2
 
 # --- Enemy Health ---
@@ -212,9 +212,6 @@ def rotate_toward(current_angle, target_angle, turn_speed):
     if abs(difference) < turn_speed:
         return target_angle
     return current_angle + turn_speed * (1 if difference > 0 else -1)
-
-def check_collision(px, py, pw, ph, ex, ey, ew, eh):
-    return px < ex + ew and px + pw > ex and py < ey + eh and py + ph > ey
 
 def distance(x1, y1, x2, y2):
     return math.hypot(x2 - x1, y2 - y1)
@@ -2441,7 +2438,7 @@ while running:
                                 enemy["damaged_p2"] = True
                                 if player2_lives <= 0: player2_alive = False
                 continue
-        elif enemy["type"] == 23:  # Hardened enemy (brown)
+        elif enemy["type"] == 23:
             # Moves slowly
             enemy["x"] += enemy["dx"]
             enemy["y"] += enemy["dy"]
@@ -2460,7 +2457,7 @@ while running:
 
             # --- PROXIMITY DAMAGE ---
             # Damage per second (tweakable)
-            hardened_dps = 0.1 * (60 / FPS)  # consistent over framerate
+            hardened_dps = 0.1 * (60 / FPS)
 
             # Distance checks
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
@@ -2781,7 +2778,8 @@ while running:
         if players == 2:
             player2_cx = player2_x + player_size / 2
             player2_cy = player2_y + player_size / 2
-            if player2_alive and distance(player2_cx, player2_cy, proj_cx, proj_cy) < (player_size / 2 + projectile_size / 2):
+            if player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
+                                                    p["x"] - projectile_size/2, p["y"] - projectile_size/2, projectile_size):
                 if p.get("color") == CYAN:
                     player2_slow_until = current_time + 10000
                     player2_speed = player2_speed_base / 2
@@ -2936,20 +2934,19 @@ while running:
     # draw player (flash red if hit)
     if player_alive:
         if current_time - damage_flash_time < 100:
-            pygame.draw.rect(screen, RED, (player_x - player_size/2, player_y - player_size/2, player_size, player_size))
+            pygame.draw.rect(screen, RED, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         elif player_frozen == True:
-            pygame.draw.rect(screen, ICE, (player_x - player_size/2, player_y - player_size/2, player_size, player_size))
+            pygame.draw.rect(screen, ICE, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         else:
-            pygame.draw.rect(screen, WHITE, (player_x - player_size/2, player_y - player_size/2, player_size, player_size))
+            pygame.draw.rect(screen, WHITE, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         
     if players == 2 and player2_alive:
         if current_time - player2_damage_flash_time < 100:
-            pygame.draw.rect(screen, RED, (player2_x - player_size/2, player2_y - player_size/2, player_size, player_size))
+            pygame.draw.rect(screen, RED, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
         elif player2_frozen == True:
-            pygame.draw.rect(screen, ICE, (player2_x - player_size/2, player2_y - player_size/2, player_size, player_size))
+            pygame.draw.rect(screen, ICE, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
         else:
-            pygame.draw.rect(screen, WHITE, (player2_x - player_size/2, player2_y - player_size/2, player_size, player_size))
-
+            pygame.draw.rect(screen, WHITE, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
     new_heal_indicators = []
     for ind in heal_indicators:
         if current_time - ind["spawn_time"] < heal_duration:
