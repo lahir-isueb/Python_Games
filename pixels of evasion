@@ -136,7 +136,7 @@ laser_hp = 3 # 22
 hardened_hp = 40 # 23
 accelerator_hp = 5 # 24
 cold_hp = 9 # 25
-tracker_hp = 1 # 26
+tracer_hp = 1 # 26
 
 # --- Scoring System & Text Size ---
 score = 0
@@ -265,7 +265,7 @@ laser_hp_setting = 3
 hardened_hp_setting = 40
 accelerator_hp_setting = 5
 cold_hp_setting = 9
-tracker_hp_setting = 1
+tracer_hp_setting = 1
 
 
 def enemy_lock_setup(enemy):
@@ -314,7 +314,7 @@ def SETTINGS():
     global hardened_hp_setting
     global accelerator_hp_setting
     global cold_hp_setting
-    global tracker_hp_setting
+    global tracer_hp_setting
     
     running = True
     button_offset = 10
@@ -1378,29 +1378,29 @@ def SETTINGS():
 
 
 
-        tracker_hp_label = font.render("Tracker Enemy - HP: " + str(tracker_hp_setting), True, SULFUR)
-        screen.blit(tracker_hp_label, (50, 2520 + scroll_y))
-        tracker_hp_minus_button = pygame.Rect(500, 2520 - button_offset + scroll_y, 50, 50)
-        tracker_hp_plus_button = pygame.Rect(560, 2520 - button_offset + scroll_y, 50, 50)
-        pygame.draw.rect(screen, GREEN, tracker_hp_plus_button, border_radius=10)
-        screen.blit(plus_txt, plus_txt.get_rect(center=tracker_hp_plus_button.center))
-        pygame.draw.rect(screen, RED, tracker_hp_minus_button, border_radius=10)
-        screen.blit(minus_txt, minus_txt.get_rect(center=tracker_hp_minus_button.center))
-        if tracker_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
-            tracker_hp_setting += 1
-            if tracker_hp_setting > 99:
-                tracker_hp_setting = 99
+        tracer_hp_label = font.render("Tracer Enemy - HP: " + str(tracer_hp_setting), True, SULFUR)
+        screen.blit(tracer_hp_label, (50, 2520 + scroll_y))
+        tracer_hp_minus_button = pygame.Rect(500, 2520 - button_offset + scroll_y, 50, 50)
+        tracer_hp_plus_button = pygame.Rect(560, 2520 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, tracer_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=tracer_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, tracer_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=tracer_hp_minus_button.center))
+        if tracer_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            tracer_hp_setting += 1
+            if tracer_hp_setting > 99:
+                tracer_hp_setting = 99
             pygame.time.delay(50)
-        if tracker_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
-            tracker_hp_setting -= 1
-            if tracker_hp_setting < 1:
-                tracker_hp_setting = 1
+        if tracer_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            tracer_hp_setting -= 1
+            if tracer_hp_setting < 1:
+                tracer_hp_setting = 1
             pygame.time.delay(50)
-        tracker_locks_text = font.render(enemy_locking_labels[enemy_locks[25]], True, WHITE)
-        tracker_locks_button = pygame.Rect(650, 2520 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, SULFUR, tracker_locks_button, border_radius=10)
-        screen.blit(tracker_locks_text, tracker_locks_text.get_rect(center=tracker_locks_button.center))
-        if tracker_locks_button.collidepoint(mouse_pos) and mouse_click:
+        tracer_locks_text = font.render(enemy_locking_labels[enemy_locks[25]], True, WHITE)
+        tracer_locks_button = pygame.Rect(650, 2520 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, SULFUR, tracer_locks_button, border_radius=10)
+        screen.blit(tracer_locks_text, tracer_locks_text.get_rect(center=tracer_locks_button.center))
+        if tracer_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[25] > 1: enemy_locks[25] = 0
             else: enemy_locks[25] = enemy_locks[25] + 1
             pygame.time.delay(200)
@@ -1581,7 +1581,7 @@ laser_hp = laser_hp_setting
 hardened_hp = hardened_hp_setting
 accelerator_hp = accelerator_hp_setting
 cold_hp = cold_hp_setting
-tracker_hp = tracker_hp_setting
+tracer_hp = tracer_hp_setting
 
 
 enemy_lock_setup(0)
@@ -1792,7 +1792,7 @@ while running:
         elif enemy_type == 25:
             dx *= 0.5; dy *= 0.5; health = cold_hp
         elif enemy_type == 26:
-            dx *= 0.7; dy *= 0.7; health = tracker_hp
+            dx *= 0.7; dy *= 0.7; health = tracer_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -2577,7 +2577,7 @@ while running:
                     "color": SULFUR
                 })
                 enemy["last_trail_time"] = current_time
-            if enemy["bounces"] >= tracker_hp: enemy_died = True
+            if enemy["bounces"] >= tracer_hp: enemy_died = True
 
 
 
