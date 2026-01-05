@@ -137,6 +137,8 @@ hardened_hp = 40 # 23
 accelerator_hp = 5 # 24
 cold_hp = 9 # 25
 tracer_hp = 1 # 26
+savage_hp = 1 # 27
+
 
 # --- Scoring System & Text Size ---
 score = 0
@@ -238,7 +240,7 @@ projectile_speed_setting = 5
 regen_delay_setting = 10
 player_health_setting = 3
 player2_health_setting = 3
-enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -266,6 +268,7 @@ hardened_hp_setting = 40
 accelerator_hp_setting = 5
 cold_hp_setting = 9
 tracer_hp_setting = 1
+savage_hp_setting = 1
 
 
 def enemy_lock_setup(enemy):
@@ -315,12 +318,13 @@ def SETTINGS():
     global accelerator_hp_setting
     global cold_hp_setting
     global tracer_hp_setting
+    global savage_hp_setting
     
     running = True
     button_offset = 10
     scroll_y = 0
     scroll_speed = 25
-    max_scroll = 2600 - HEIGHT
+    max_scroll = 2660 - HEIGHT
     enemy_locking_labels = ["Starter", "Locked", "Banned"]
     scrollbar_width = 20
     scrollbar_margin = 50
@@ -687,7 +691,7 @@ def SETTINGS():
 
 
 
-        homing_hp_label = font.render("Homing Enemy - HP: " + str(homing_hp_setting), True, MAROON)
+        homing_hp_label = font.render("Homing Enemy - HP: " + str(homing_hp_setting), True, OLIVE)
         screen.blit(homing_hp_label, (50, 1080 + scroll_y))
         homing_hp_minus_button = pygame.Rect(500, 1080 - button_offset + scroll_y, 50, 50)
         homing_hp_plus_button = pygame.Rect(560, 1080 - button_offset + scroll_y, 50, 50)
@@ -707,7 +711,7 @@ def SETTINGS():
             pygame.time.delay(50)
         homing_locks_text = font.render(enemy_locking_labels[enemy_locks[1]], True, WHITE)
         homing_locks_button = pygame.Rect(650, 1080 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, MAROON, homing_locks_button, border_radius=10)
+        pygame.draw.rect(screen, OLIVE, homing_locks_button, border_radius=10)
         screen.blit(homing_locks_text, homing_locks_text.get_rect(center=homing_locks_button.center))
         if homing_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[1] > 1: enemy_locks[1] = 0
@@ -1407,6 +1411,35 @@ def SETTINGS():
 
 
 
+        savage_hp_label = font.render("Savage Enemy - HP: " + str(savage_hp_setting), True, MAROON)
+        screen.blit(savage_hp_label, (50, 2580 + scroll_y))
+        savage_hp_minus_button = pygame.Rect(500, 2580 - button_offset + scroll_y, 50, 50)
+        savage_hp_plus_button = pygame.Rect(560, 2580 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, savage_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=savage_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, savage_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=savage_hp_minus_button.center))
+        if savage_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            savage_hp_setting += 1
+            if savage_hp_setting > 99:
+                savage_hp_setting = 99
+            pygame.time.delay(50)
+        if savage_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            savage_hp_setting -= 1
+            if savage_hp_setting < 1:
+                savage_hp_setting = 1
+            pygame.time.delay(50)
+        savage_locks_text = font.render(enemy_locking_labels[enemy_locks[26]], True, WHITE)
+        savage_locks_button = pygame.Rect(650, 2580 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, MAROON, savage_locks_button, border_radius=10)
+        screen.blit(savage_locks_text, savage_locks_text.get_rect(center=savage_locks_button.center))
+        if savage_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[26] > 1: enemy_locks[26] = 0
+            else: enemy_locks[26] = enemy_locks[26] + 1
+            pygame.time.delay(200)
+
+
+
         pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=6)
         pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=6)
 
@@ -1582,6 +1615,7 @@ hardened_hp = hardened_hp_setting
 accelerator_hp = accelerator_hp_setting
 cold_hp = cold_hp_setting
 tracer_hp = tracer_hp_setting
+savage_hp = savage_hp_setting
 
 
 enemy_lock_setup(0)
@@ -1610,13 +1644,14 @@ enemy_lock_setup(22)
 enemy_lock_setup(23)
 enemy_lock_setup(24)
 enemy_lock_setup(25)
+enemy_lock_setup(26)
 random.shuffle(locked_enemy_types)
 unlock_scores = []
 unlocks = 0
 for unlocked in range(len(locked_enemy_types)):
     unlocks += ((1+unlocked)*10)
     unlock_scores.append(unlocks)
-targetting_enemies = [2, 8, 11, 12, 14, 15, 19, 26]
+targetting_enemies = [2, 8, 11, 12, 14, 15, 19, 26, 27]
 
 running = True
 while running:
@@ -1793,6 +1828,8 @@ while running:
             dx *= 0.5; dy *= 0.5; health = cold_hp
         elif enemy_type == 26:
             dx *= 0.7; dy *= 0.7; health = tracer_hp
+        elif enemy_type == 27:
+            dx *= 2/3; dy *= 2/3; health = savage_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -2043,7 +2080,7 @@ while running:
                         split_score += 1
                         if split_score == 4:
                             score += 1
-                            split_score = 0
+                            split_score -= 4
                             if player_alive:
                                 score_p1 = score
                             if player2_alive:
@@ -2051,11 +2088,10 @@ while running:
 
                     enemies.remove(enemy)
                 continue
-            # If waiting flag: wait until enemy is off the edge before taking damage
             if enemy.get("waiting"):
                 # Check if off edge now
                 if 0 < enemy["x"] < WIDTH - enemy_size and 0 < enemy["y"] < HEIGHT - enemy_size:
-                    enemy.pop("waiting")  # remove waiting flag
+                    enemy.pop("waiting")
 
                     
         elif enemy["type"] == 10:  # Hot Pink Bomb
@@ -2364,7 +2400,6 @@ while running:
             enemy["x"] += enemy["dx"]
             enemy["y"] += enemy["dy"]
 
-            # Bounce off walls
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1
@@ -2377,9 +2412,8 @@ while running:
                 if enemy["health"] <= 0:
                     enemy_died = True
 
-            # --- Pull players toward it ---
-            pull_radius = 600   # much wider area
-            base_pull_strength = 5  # stronger base pull
+            pull_radius = 300   # much wider area
+            base_pull_strength = 10  # stronger base pull
             if player_alive:
                 dxp = enemy["x"] - player_x
                 dyp = enemy["y"] - player_y
@@ -2578,14 +2612,34 @@ while running:
                 })
                 enemy["last_trail_time"] = current_time
             if enemy["bounces"] >= tracer_hp: enemy_died = True
-
-
-
-
-
-
-
-
+        elif enemy["type"] == 27:
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            closest_dist = min(dist1, dist2)
+            speed_multiplier = 2.5 if closest_dist < 250 else 2/3
+            
+            target_pos = get_target_position(enemy)
+            if target_pos:
+                tx, ty = target_pos
+                dx = tx - enemy["x"]; dy = ty - enemy["y"]
+            else:
+                dx, dy = 0, 0
+            target_angle = math.atan2(dy, dx)
+            enemy["angle"] = rotate_toward(enemy["angle"], target_angle, 0.02)
+            enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 0.7)
+            enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
+            enemy["x"] += enemy["dx"] * speed_multiplier; enemy["y"] += enemy["dy"] * speed_multiplier
+            bounced = False
+            if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
+                enemy["angle"] = math.pi - enemy["angle"]; bounced = True
+                if enemy["x"] <= 0: enemy["x"] = 0
+                elif enemy["x"] >= WIDTH - enemy_size: enemy["x"] = WIDTH - enemy_size/2
+            if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
+                enemy["angle"] = -enemy["angle"]; bounced = True
+                if enemy["y"] <= 0: enemy["y"] = 0
+                elif enemy["y"] >= HEIGHT - enemy_size: enemy["y"] = HEIGHT - enemy_size/2
+            if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
+            if enemy["bounces"] >= savage_hp: enemy_died = True
 
 
 
@@ -2928,7 +2982,7 @@ while running:
     # draw enemies
     for enemy in enemies:
         if enemy["type"] == 1: color = GRAY
-        elif enemy["type"] == 2: color = MAROON
+        elif enemy["type"] == 2: color = OLIVE
         elif enemy["type"] == 3: color = RED
         elif enemy["type"] == 4: color = TEAL
         elif enemy["type"] == 5: color = GREEN
@@ -2956,6 +3010,8 @@ while running:
         elif enemy["type"] == 24: color = TAN
         elif enemy["type"] == 25: color = ICE
         elif enemy["type"] == 26: color = SULFUR
+        elif enemy["type"] == 27: color = MAROON
+
 
         
         if enemy["type"] == 22 and enemy.get("laser_mode", False):
