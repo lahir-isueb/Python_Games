@@ -131,13 +131,14 @@ motion_hp = 7 # 17
 charger_hp = 3 # 18
 rapidshooter_hp = 1 # 19
 frostbite_hp = 4 # 20
-addictive_hp = 4 # 21
+addictive_hp = 7 # 21
 laser_hp = 3 # 22
 hardened_hp = 40 # 23
 accelerator_hp = 5 # 24
 cold_hp = 9 # 25
 tracer_hp = 1 # 26
-savage_hp = 1 # 27
+savage_hp = 2 # 27
+teleporter_hp = 6 # 28
 
 
 # --- Scoring System & Text Size ---
@@ -162,7 +163,7 @@ FPS = 60
 available_enemy_types = []
 locked_enemy_types = []
 
-# --- Trail for orange enemy ---
+# --- Trail ---
 trail_squares = []
 trail_lifetime_ms = 3000 # this is the length of the trail
 trail_interval_ms = 450 # this is the distance between trail particles
@@ -241,7 +242,7 @@ projectile_speed_setting = 5
 regen_delay_setting = 10
 player_health_setting = 3
 player2_health_setting = 3
-enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -264,13 +265,14 @@ motion_hp_setting = 7
 charger_hp_setting = 3
 rapidshooter_hp_setting = 1
 frostbite_hp_setting = 4
-addictive_hp_setting = 4
+addictive_hp_setting = 7
 laser_hp_setting = 3
 hardened_hp_setting = 40
 accelerator_hp_setting = 5
 cold_hp_setting = 9
 tracer_hp_setting = 1
-savage_hp_setting = 1
+savage_hp_setting = 2
+teleporter_hp_setting = 6
 
 
 
@@ -323,12 +325,13 @@ def SETTINGS():
     global cold_hp_setting
     global tracer_hp_setting
     global savage_hp_setting
+    global teleporter_hp_setting
     
     running = True
     button_offset = 10
     scroll_y = 0
     scroll_speed = 25
-    max_scroll = 2660 - HEIGHT
+    max_scroll = 2780 - HEIGHT
     enemy_locking_labels = ["Starter", "Locked", "Banned"]
     scrollbar_width = 20
     scrollbar_margin = 50
@@ -1465,6 +1468,35 @@ def SETTINGS():
 
 
 
+        teleporter_hp_label = font.render("Teleporter Enemy - HP: " + str(teleporter_hp_setting), True, NAVY)
+        screen.blit(teleporter_hp_label, (50, 2700 + scroll_y))
+        teleporter_hp_minus_button = pygame.Rect(500, 2700 - button_offset + scroll_y, 50, 50)
+        teleporter_hp_plus_button = pygame.Rect(560, 2700 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, teleporter_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=teleporter_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, teleporter_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=teleporter_hp_minus_button.center))
+        if teleporter_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            teleporter_hp_setting += 1
+            if teleporter_hp_setting > 99:
+                teleporter_hp_setting = 99
+            pygame.time.delay(50)
+        if teleporter_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            teleporter_hp_setting -= 1
+            if teleporter_hp_setting < 1:
+                teleporter_hp_setting = 1
+            pygame.time.delay(50)
+        teleporter_locks_text = font.render(enemy_locking_labels[enemy_locks[27]], True, BLACK)
+        teleporter_locks_button = pygame.Rect(650, 2700 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, NAVY, teleporter_locks_button, border_radius=10)
+        screen.blit(teleporter_locks_text, teleporter_locks_text.get_rect(center=teleporter_locks_button.center))
+        if teleporter_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[27] > 1: enemy_locks[27] = 0
+            else: enemy_locks[27] = enemy_locks[27] + 1
+            pygame.time.delay(200)
+
+
+
         pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=6)
         pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=6)
 
@@ -1642,6 +1674,7 @@ accelerator_hp = accelerator_hp_setting
 cold_hp = cold_hp_setting
 tracer_hp = tracer_hp_setting
 savage_hp = savage_hp_setting
+teleporter_hp = teleporter_hp_setting
 
 
 enemy_lock_setup(0)
@@ -1671,6 +1704,7 @@ enemy_lock_setup(23)
 enemy_lock_setup(24)
 enemy_lock_setup(25)
 enemy_lock_setup(26)
+enemy_lock_setup(27)
 random.shuffle(locked_enemy_types)
 unlock_scores = []
 unlocks = 0
@@ -1856,6 +1890,8 @@ while running:
             dx *= 0.7; dy *= 0.7; health = tracer_hp
         elif enemy_type == 27:
             dx *= 2/3; dy *= 2/3; health = savage_hp
+        elif enemy_type == 28:
+            dx *= 1; dy *= 1; health = teleporter_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -2657,6 +2693,22 @@ while running:
                 elif enemy["y"] >= HEIGHT - enemy_size: enemy["y"] = HEIGHT - enemy_size/2
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
             if enemy["bounces"] >= savage_hp: enemy_died = True
+        elif enemy["type"] == 28:
+            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            bounced = False
+            if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: bounced = True
+            if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: bounced = True
+            if bounced:
+                enemy["bounces"] += 1
+                enemy["health"] -= 1
+                enemy["x"] = spawner_pos[0]+25
+                enemy["y"] = spawner_pos[1]+25
+            if enemy["bounces"] >= teleporter_hp: enemy_died = True
+
+
+
+
+
 
 
 
@@ -3020,6 +3072,7 @@ while running:
         elif enemy["type"] == 25: color = ICE
         elif enemy["type"] == 26: color = SULFUR
         elif enemy["type"] == 27: color = MAROON
+        elif enemy["type"] == 28: color = NAVY
 
 
         
