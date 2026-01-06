@@ -188,19 +188,17 @@ rapidshooter_delay = 200
 accel = 0.0
 accel_rate = 0.02
 
-# --- Player damage flash ---
+# --- Player damage & heal flash ---
 damage_flash_time = 0
 player2_damage_flash_time = 0
+heal_flash_time = 0
+player2_heal_flash_time = 0
 invincible_until = 0
 player2_invincible_until = 0
 invincibility_duration = 1000
 player2_last_regen = 0
 player2_regen_cooldown = 3000
 
-# +++ Regen indicator +++
-
-heal_indicators = []
-heal_duration = 500
 
 def centered_rect_collision(x1, y1, s1, x2, y2, s2):
     half1 = s1 / 2
@@ -531,8 +529,8 @@ def SETTINGS():
         screen.blit(minus_txt, minus_txt.get_rect(center=player_size_minus_button.center))
         if player_size_plus_button.collidepoint(mouse_pos) and mouse_click:
             player_size_setting += 5
-            if player_size_setting > 250:
-                player_size_setting = 250
+            if player_size_setting > 150:
+                player_size_setting = 150
             pygame.time.delay(50)
         if player_size_minus_button.collidepoint(mouse_pos) and mouse_click:
             player_size_setting -= 5
@@ -574,8 +572,8 @@ def SETTINGS():
         screen.blit(minus_txt, minus_txt.get_rect(center=enemy_size_minus_button.center))
         if enemy_size_plus_button.collidepoint(mouse_pos) and mouse_click:
             enemy_size_setting += 5
-            if enemy_size_setting > 250:
-                enemy_size_setting = 250
+            if enemy_size_setting > 150:
+                enemy_size_setting = 150
             pygame.time.delay(50)
         if enemy_size_minus_button.collidepoint(mouse_pos) and mouse_click:
             enemy_size_setting -= 5
@@ -680,7 +678,7 @@ def SETTINGS():
             if basic_hp_setting < 1:
                 basic_hp_setting = 1
             pygame.time.delay(50)
-        basic_locks_text = font.render(enemy_locking_labels[enemy_locks[0]], True, WHITE)
+        basic_locks_text = font.render(enemy_locking_labels[enemy_locks[0]], True, BLACK)
         basic_locks_button = pygame.Rect(650, 1020 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, GRAY, basic_locks_button, border_radius=10)
         screen.blit(basic_locks_text, basic_locks_text.get_rect(center=basic_locks_button.center))
@@ -709,7 +707,7 @@ def SETTINGS():
             if homing_hp_setting < 1:
                 homing_hp_setting = 1
             pygame.time.delay(50)
-        homing_locks_text = font.render(enemy_locking_labels[enemy_locks[1]], True, WHITE)
+        homing_locks_text = font.render(enemy_locking_labels[enemy_locks[1]], True, BLACK)
         homing_locks_button = pygame.Rect(650, 1080 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, OLIVE, homing_locks_button, border_radius=10)
         screen.blit(homing_locks_text, homing_locks_text.get_rect(center=homing_locks_button.center))
@@ -737,7 +735,7 @@ def SETTINGS():
             if fatal_hp_setting < 1:
                 fatal_hp_setting = 1
             pygame.time.delay(50)
-        fatal_locks_text = font.render(enemy_locking_labels[enemy_locks[2]], True, WHITE)
+        fatal_locks_text = font.render(enemy_locking_labels[enemy_locks[2]], True, BLACK)
         fatal_locks_button = pygame.Rect(650, 1140 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, RED, fatal_locks_button, border_radius=10)
         screen.blit(fatal_locks_text, fatal_locks_text.get_rect(center=fatal_locks_button.center))
@@ -766,7 +764,7 @@ def SETTINGS():
             if flow_hp_setting < 1:
                 flow_hp_setting = 1
             pygame.time.delay(50)
-        flow_locks_text = font.render(enemy_locking_labels[enemy_locks[3]], True, WHITE)
+        flow_locks_text = font.render(enemy_locking_labels[enemy_locks[3]], True, BLACK)
         flow_locks_button = pygame.Rect(650, 1200 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, TEAL, flow_locks_button, border_radius=10)
         screen.blit(flow_locks_text, flow_locks_text.get_rect(center=flow_locks_button.center))
@@ -795,7 +793,7 @@ def SETTINGS():
             if sticky_hp_setting < 1:
                 sticky_hp_setting = 1
             pygame.time.delay(50)
-        sticky_locks_text = font.render(enemy_locking_labels[enemy_locks[4]], True, WHITE)
+        sticky_locks_text = font.render(enemy_locking_labels[enemy_locks[4]], True, BLACK)
         sticky_locks_button = pygame.Rect(650, 1260 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, GREEN, sticky_locks_button, border_radius=10)
         screen.blit(sticky_locks_text, sticky_locks_text.get_rect(center=sticky_locks_button.center))
@@ -824,7 +822,7 @@ def SETTINGS():
             if gloomy_hp_setting < 1:
                 gloomy_hp_setting = 1
             pygame.time.delay(50)
-        gloomy_locks_text = font.render(enemy_locking_labels[enemy_locks[5]], True, WHITE)
+        gloomy_locks_text = font.render(enemy_locking_labels[enemy_locks[5]], True, BLACK)
         gloomy_locks_button = pygame.Rect(650, 1320 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, PURPLE, gloomy_locks_button, border_radius=10)
         screen.blit(gloomy_locks_text, gloomy_locks_text.get_rect(center=gloomy_locks_button.center))
@@ -853,7 +851,7 @@ def SETTINGS():
             if trail_hp_setting < 1:
                 trail_hp_setting = 1
             pygame.time.delay(50)
-        trail_locks_text = font.render(enemy_locking_labels[enemy_locks[6]], True, WHITE)
+        trail_locks_text = font.render(enemy_locking_labels[enemy_locks[6]], True, BLACK)
         trail_locks_button = pygame.Rect(650, 1380 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, LAVA, trail_locks_button, border_radius=10)
         screen.blit(trail_locks_text, trail_locks_text.get_rect(center=trail_locks_button.center))
@@ -911,7 +909,7 @@ def SETTINGS():
             if splitter_hp_setting < 1:
                 splitter_hp_setting = 1
             pygame.time.delay(50)
-        splitter_locks_text = font.render(enemy_locking_labels[enemy_locks[8]], True, WHITE)
+        splitter_locks_text = font.render(enemy_locking_labels[enemy_locks[8]], True, BLACK)
         splitter_locks_button = pygame.Rect(650, 1500 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, LIME, splitter_locks_button, border_radius=10)
         screen.blit(splitter_locks_text, splitter_locks_text.get_rect(center=splitter_locks_button.center))
@@ -940,7 +938,7 @@ def SETTINGS():
             if bomb_hp_setting < 1:
                 bomb_hp_setting = 1
             pygame.time.delay(50)
-        bomb_locks_text = font.render(enemy_locking_labels[enemy_locks[9]], True, WHITE)
+        bomb_locks_text = font.render(enemy_locking_labels[enemy_locks[9]], True, BLACK)
         bomb_locks_button = pygame.Rect(650, 1560 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, HOT_PINK, bomb_locks_button, border_radius=10)
         screen.blit(bomb_locks_text, bomb_locks_text.get_rect(center=bomb_locks_button.center))
@@ -969,7 +967,7 @@ def SETTINGS():
             if shooter_hp_setting < 1:
                 shooter_hp_setting = 1
             pygame.time.delay(50)
-        shooter_locks_text = font.render(enemy_locking_labels[enemy_locks[10]], True, WHITE)
+        shooter_locks_text = font.render(enemy_locking_labels[enemy_locks[10]], True, BLACK)
         shooter_locks_button = pygame.Rect(650, 1620 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, BRONZE, shooter_locks_button, border_radius=10)
         screen.blit(shooter_locks_text, shooter_locks_text.get_rect(center=shooter_locks_button.center))
@@ -998,7 +996,7 @@ def SETTINGS():
             if sniper_hp_setting < 1:
                 sniper_hp_setting = 1
             pygame.time.delay(50)
-        sniper_locks_text = font.render(enemy_locking_labels[enemy_locks[11]], True, WHITE)
+        sniper_locks_text = font.render(enemy_locking_labels[enemy_locks[11]], True, BLACK)
         sniper_locks_button = pygame.Rect(650, 1680 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, INDIGO, sniper_locks_button, border_radius=10)
         screen.blit(sniper_locks_text, sniper_locks_text.get_rect(center=sniper_locks_button.center))
@@ -1026,7 +1024,7 @@ def SETTINGS():
             if speedy_hp_setting < 1:
                 speedy_hp_setting = 1
             pygame.time.delay(50)
-        speedy_locks_text = font.render(enemy_locking_labels[enemy_locks[12]], True, WHITE)
+        speedy_locks_text = font.render(enemy_locking_labels[enemy_locks[12]], True, BLACK)
         speedy_locks_button = pygame.Rect(650, 1740 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, SKY, speedy_locks_button, border_radius=10)
         screen.blit(speedy_locks_text, speedy_locks_text.get_rect(center=speedy_locks_button.center))
@@ -1054,7 +1052,7 @@ def SETTINGS():
             if shotgun_hp_setting < 1:
                 shotgun_hp_setting = 1
             pygame.time.delay(50)
-        shotgun_locks_text = font.render(enemy_locking_labels[enemy_locks[13]], True, WHITE)
+        shotgun_locks_text = font.render(enemy_locking_labels[enemy_locks[13]], True, BLACK)
         shotgun_locks_button = pygame.Rect(650, 1800 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, BRICK, shotgun_locks_button, border_radius=10)
         screen.blit(shotgun_locks_text, shotgun_locks_text.get_rect(center=shotgun_locks_button.center))
@@ -1083,7 +1081,7 @@ def SETTINGS():
             if voodoo_hp_setting < 1:
                 voodoo_hp_setting = 1
             pygame.time.delay(50)
-        voodoo_locks_text = font.render(enemy_locking_labels[enemy_locks[14]], True, WHITE)
+        voodoo_locks_text = font.render(enemy_locking_labels[enemy_locks[14]], True, BLACK)
         voodoo_locks_button = pygame.Rect(650, 1860 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, MAGENTA, voodoo_locks_button, border_radius=10)
         screen.blit(voodoo_locks_text, voodoo_locks_text.get_rect(center=voodoo_locks_button.center))
@@ -1112,7 +1110,7 @@ def SETTINGS():
             if blind_hp_setting < 1:
                 blind_hp_setting = 1
             pygame.time.delay(50)
-        blind_locks_text = font.render(enemy_locking_labels[enemy_locks[15]], True, WHITE)
+        blind_locks_text = font.render(enemy_locking_labels[enemy_locks[15]], True, BLACK)
         blind_locks_button = pygame.Rect(650, 1920 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, BLUE, blind_locks_button, border_radius=10)
         screen.blit(blind_locks_text, blind_locks_text.get_rect(center=blind_locks_button.center))
@@ -1142,7 +1140,7 @@ def SETTINGS():
             if motion_hp_setting < 1:
                 motion_hp_setting = 1
             pygame.time.delay(50)
-        motion_locks_text = font.render(enemy_locking_labels[enemy_locks[16]], True, WHITE)
+        motion_locks_text = font.render(enemy_locking_labels[enemy_locks[16]], True, BLACK)
         motion_locks_button = pygame.Rect(650, 1980 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, ORANGE, motion_locks_button, border_radius=10)
         screen.blit(motion_locks_text, motion_locks_text.get_rect(center=motion_locks_button.center))
@@ -1170,7 +1168,7 @@ def SETTINGS():
             if charger_hp_setting < 1:
                 charger_hp_setting = 1
             pygame.time.delay(50)
-        charger_locks_text = font.render(enemy_locking_labels[enemy_locks[17]], True, WHITE)
+        charger_locks_text = font.render(enemy_locking_labels[enemy_locks[17]], True, BLACK)
         charger_locks_button = pygame.Rect(650, 2040 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, YELLOW, charger_locks_button, border_radius=10)
         screen.blit(charger_locks_text, charger_locks_text.get_rect(center=charger_locks_button.center))
@@ -1198,7 +1196,7 @@ def SETTINGS():
             if rapidshooter_hp_setting < 1:
                 rapidshooter_hp_setting = 1
             pygame.time.delay(50)
-        rapidshooter_locks_text = font.render(enemy_locking_labels[enemy_locks[18]], True, WHITE)
+        rapidshooter_locks_text = font.render(enemy_locking_labels[enemy_locks[18]], True, BLACK)
         rapidshooter_locks_button = pygame.Rect(650, 2100 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, SILVER, rapidshooter_locks_button, border_radius=10)
         screen.blit(rapidshooter_locks_text, rapidshooter_locks_text.get_rect(center=rapidshooter_locks_button.center))
@@ -1227,7 +1225,7 @@ def SETTINGS():
             if frostbite_hp_setting < 1:
                 frostbite_hp_setting = 1
             pygame.time.delay(50)
-        frostbite_locks_text = font.render(enemy_locking_labels[enemy_locks[19]], True, WHITE)
+        frostbite_locks_text = font.render(enemy_locking_labels[enemy_locks[19]], True, BLACK)
         frostbite_locks_button = pygame.Rect(650, 2160 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, CYAN, frostbite_locks_button, border_radius=10)
         screen.blit(frostbite_locks_text, frostbite_locks_text.get_rect(center=frostbite_locks_button.center))
@@ -1255,7 +1253,7 @@ def SETTINGS():
             if addictive_hp_setting < 1:
                 addictive_hp_setting = 1
             pygame.time.delay(50)
-        addictive_locks_text = font.render(enemy_locking_labels[enemy_locks[20]], True, WHITE)
+        addictive_locks_text = font.render(enemy_locking_labels[enemy_locks[20]], True, BLACK)
         addictive_locks_button = pygame.Rect(650, 2220 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, PINK, addictive_locks_button, border_radius=10)
         screen.blit(addictive_locks_text, addictive_locks_text.get_rect(center=addictive_locks_button.center))
@@ -1284,7 +1282,7 @@ def SETTINGS():
             if laser_hp_setting < 1:
                 laser_hp_setting = 1
             pygame.time.delay(50)
-        laser_locks_text = font.render(enemy_locking_labels[enemy_locks[21]], True, WHITE)
+        laser_locks_text = font.render(enemy_locking_labels[enemy_locks[21]], True, BLACK)
         laser_locks_button = pygame.Rect(650, 2280 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, TURQUOISE, laser_locks_button, border_radius=10)
         screen.blit(laser_locks_text, laser_locks_text.get_rect(center=laser_locks_button.center))
@@ -1313,7 +1311,7 @@ def SETTINGS():
             if hardened_hp_setting < 1:
                 hardened_hp_setting = 1
             pygame.time.delay(50)
-        hardened_locks_text = font.render(enemy_locking_labels[enemy_locks[22]], True, WHITE)
+        hardened_locks_text = font.render(enemy_locking_labels[enemy_locks[22]], True, BLACK)
         hardened_locks_button = pygame.Rect(650, 2340 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, BROWN, hardened_locks_button, border_radius=10)
         screen.blit(hardened_locks_text, hardened_locks_text.get_rect(center=hardened_locks_button.center))
@@ -1342,7 +1340,7 @@ def SETTINGS():
             if accelerator_hp_setting < 1:
                 accelerator_hp_setting = 1
             pygame.time.delay(50)
-        accelerator_locks_text = font.render(enemy_locking_labels[enemy_locks[23]], True, WHITE)
+        accelerator_locks_text = font.render(enemy_locking_labels[enemy_locks[23]], True, BLACK)
         accelerator_locks_button = pygame.Rect(650, 2400 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, TAN, accelerator_locks_button, border_radius=10)
         screen.blit(accelerator_locks_text, accelerator_locks_text.get_rect(center=accelerator_locks_button.center))
@@ -1371,7 +1369,7 @@ def SETTINGS():
             if cold_hp_setting < 1:
                 cold_hp_setting = 1
             pygame.time.delay(50)
-        cold_locks_text = font.render(enemy_locking_labels[enemy_locks[24]], True, WHITE)
+        cold_locks_text = font.render(enemy_locking_labels[enemy_locks[24]], True, BLACK)
         cold_locks_button = pygame.Rect(650, 2460 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, ICE, cold_locks_button, border_radius=10)
         screen.blit(cold_locks_text, cold_locks_text.get_rect(center=cold_locks_button.center))
@@ -1400,7 +1398,7 @@ def SETTINGS():
             if tracer_hp_setting < 1:
                 tracer_hp_setting = 1
             pygame.time.delay(50)
-        tracer_locks_text = font.render(enemy_locking_labels[enemy_locks[25]], True, WHITE)
+        tracer_locks_text = font.render(enemy_locking_labels[enemy_locks[25]], True, BLACK)
         tracer_locks_button = pygame.Rect(650, 2520 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, SULFUR, tracer_locks_button, border_radius=10)
         screen.blit(tracer_locks_text, tracer_locks_text.get_rect(center=tracer_locks_button.center))
@@ -1429,7 +1427,7 @@ def SETTINGS():
             if savage_hp_setting < 1:
                 savage_hp_setting = 1
             pygame.time.delay(50)
-        savage_locks_text = font.render(enemy_locking_labels[enemy_locks[26]], True, WHITE)
+        savage_locks_text = font.render(enemy_locking_labels[enemy_locks[26]], True, BLACK)
         savage_locks_button = pygame.Rect(650, 2580 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, MAROON, savage_locks_button, border_radius=10)
         screen.blit(savage_locks_text, savage_locks_text.get_rect(center=savage_locks_button.center))
@@ -1944,7 +1942,6 @@ while running:
 
         elif enemy["type"] == 5:
             if enemy["stopped"]:
-                # after 2 seconds resume moving
                 if current_time - enemy["stop_start_time"] >= 2000:
                     enemy["stopped"] = False
             else:
@@ -1967,11 +1964,10 @@ while running:
                         enemy["stopped"] = True
                         enemy["stop_start_time"] = current_time
 
-            # final safety: if health already at 0, mark dead
             if enemy["health"] <= 0:
                 enemy_died = True
 
-        elif enemy["type"] == 6:  # Purple
+        elif enemy["type"] == 6:
             dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
@@ -2033,17 +2029,13 @@ while running:
                 enemy_died = True
 
         elif enemy["type"] == 9:
-            # Move normally
             enemy["x"] += enemy["dx"]
             enemy["y"] += enemy["dy"]
 
-            # --- Handle spawn protection ---
             if enemy.get("spawn_protected"):
-                # remove protection after 0.5 seconds
                 if pygame.time.get_ticks() - enemy["spawn_time"] > 500:
                     enemy.pop("spawn_protected")
 
-            # Bounce or split
             hit_edge = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 hit_edge = True
@@ -2052,13 +2044,16 @@ while running:
 
             if hit_edge:
                 if enemy.get("spawn_protected"):
-                    # bounce without damage
-                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
+                    if enemy["x"] < enemy_size/2 or enemy["x"] > WIDTH - enemy_size/2:
                         enemy["dx"] *= -1
-                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
+                    if enemy["y"] < enemy_size/2 or enemy["y"] > HEIGHT - enemy_size/2:
                         enemy["dy"] *= -1
+                    length = math.hypot(enemy["dx"], enemy["dy"])
+
+                    if length != 0:
+                        enemy["dx"] = (enemy["dx"] / length) * enemy_speed
+                        enemy["dy"] = (enemy["dy"] / length) * enemy_speed
                 else:
-                    # Kill and split into two clones if health > 1
                     if enemy["health"] > 1:
                         for i in range(2):
                             angle = random.uniform(0, 2 * math.pi)
@@ -2067,8 +2062,8 @@ while running:
                             enemies.append({
                                 "x": max(1 + enemy_size/2, min(WIDTH - enemy_size/2 - 1, enemy["x"])),
                                 "y": max(1 + enemy_size/2, min(HEIGHT - enemy_size/2 - 1, enemy["y"])),
-                                "dx": dx + projectile_size/2,
-                                "dy": dy + projectile_size/2,
+                                "dx": dx,
+                                "dy": dy,
                                 "type": 9,
                                 "angle": angle,
                                 "bounces": 0,
@@ -2510,11 +2505,9 @@ while running:
                                 if player2_lives <= 0: player2_alive = False
                 continue
         elif enemy["type"] == 23:
-            # Moves slowly
             enemy["x"] += enemy["dx"]
             enemy["y"] += enemy["dy"]
 
-            # Bounces like normal
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1
@@ -2526,19 +2519,15 @@ while running:
             if bounced:
                 enemy["health"] -= 1
 
-            # --- PROXIMITY DAMAGE ---
-            # Damage per second (tweakable)
             hardened_dps = 0.1 * (60 / FPS)
 
-            # Distance checks
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
 
-            # If within 200 pixels → lose HP
             if dist1 < 200:
                 enemy["health"] -= hardened_dps
             if dist2 < 200:
-                enemy["health"] -= hardened_dps  # stackable
+                enemy["health"] -= hardened_dps
             if enemy["health"] < 1:
                     enemy_died = True
         elif enemy["type"] == 24:
@@ -2806,21 +2795,13 @@ while running:
             # Only regenerate if player is alive
             if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6767:
                 player_lives += 1
+                heal_flash_time = current_time
                 p1_regen_block_until = score + regen_delay
-                heal_indicators.append({
-                    "x": player_x,
-                    "y": player_y,
-                    "spawn_time": pygame.time.get_ticks()
-                })
 
             if players == 2 and player2_alive and score >= p2_regen_block_until and player2_lives < player2_health_setting and regen_delay != 6767:
                 player2_lives += 1
+                player2_heal_flash_time = current_time
                 p2_regen_block_until = score + regen_delay
-                heal_indicators.append({
-                    "x": player2_x,
-                    "y": player2_y,
-                    "spawn_time": pygame.time.get_ticks()
-                })
 
 
     # --- Trail squares update ---
@@ -3053,6 +3034,8 @@ while running:
     if player_alive:
         if current_time - damage_flash_time < 100:
             pygame.draw.rect(screen, RED, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
+        elif current_time - heal_flash_time < 150:
+            pygame.draw.rect(screen, LIME, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         elif player_frozen == True:
             pygame.draw.rect(screen, ICE, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         else:
@@ -3061,19 +3044,12 @@ while running:
     if players == 2 and player2_alive:
         if current_time - player2_damage_flash_time < 100:
             pygame.draw.rect(screen, RED, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
+        elif current_time - player2_heal_flash_time < 150:
+            pygame.draw.rect(screen, LIME, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
         elif player2_frozen == True:
             pygame.draw.rect(screen, ICE, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
         else:
             pygame.draw.rect(screen, WHITE, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
-    new_heal_indicators = []
-    for ind in heal_indicators:
-        if current_time - ind["spawn_time"] < heal_duration:
-            alpha = 255 * (1 - (current_time - ind["spawn_time"]) / heal_duration)  # optional fade
-            s = pygame.Surface((player_size, player_size), pygame.SRCALPHA).convert_alpha()
-            s.fill((0, 255, 0, int(alpha)))
-            screen.blit(s, (ind["x"] - player_size/2, ind["y"] - player_size/2))
-            new_heal_indicators.append(ind)
-    heal_indicators = new_heal_indicators
 
 
     # draw player lives in center
