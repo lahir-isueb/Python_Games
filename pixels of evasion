@@ -102,7 +102,7 @@ initial_spawn_delay = 2000 # ORIGINAL VALUE 2000
 last_spawn_time = pygame.time.get_ticks()
 enemy_speed = 5
 min_spawn_delay = 500  # ORIGINAL VALUE 500
-spawn_rate = 18
+spawn_rate = 20
 
 player_x = player_size // 2
 player_y = spawner_pos[1] + SPAWNER_SIZE // 2
@@ -125,7 +125,7 @@ shooter_hp = 4 # 11
 sniper_hp = 1 # 12
 speedy_hp = 5 # 13
 shotgun_hp = 4 # 14
-voodoo_hp = 4 # 15
+voodoo_hp = 5 # 15
 blind_hp = 6 # 16
 motion_hp = 7 # 17
 charger_hp = 3 # 18
@@ -143,14 +143,15 @@ teleporter_hp = 6 # 28
 
 # --- Scoring System & Text Size ---
 score = 0
+truescore = 0
 split_score = 0
-score_p1 = score
-score_p2 = score
+score_p1 = truescore
+score_p2 = truescore
 font = pygame.font.SysFont(None, 40)
 big_font = pygame.font.SysFont(None, 120)
 enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size))
 player_font = pygame.font.SysFont(None, int(0.96 * player_size))
-regen_delay = 10
+regen_delay = 50
 p1_regen_block_until = 0
 p2_regen_block_until = 0
 
@@ -235,11 +236,11 @@ enemy_size_setting = 50
 projectile_size_setting = 10
 min_spawn_delay_setting = 500
 max_spawn_delay_setting = 2000
-spawn_delay_change_setting = 18
+spawn_delay_change_setting = 20
 player_speed_setting = 8
 enemy_speed_setting = 5
 projectile_speed_setting = 5
-regen_delay_setting = 10
+regen_delay_setting = 50
 player_health_setting = 3
 player2_health_setting = 3
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -259,7 +260,7 @@ shooter_hp_setting = 4
 sniper_hp_setting = 1
 speedy_hp_setting = 5
 shotgun_hp_setting = 4
-voodoo_hp_setting = 4
+voodoo_hp_setting = 5
 blind_hp_setting = 6
 motion_hp_setting = 7
 charger_hp_setting = 3
@@ -495,16 +496,16 @@ def SETTINGS():
         pygame.draw.rect(screen, RED, regen_delay_minus_button, border_radius=10)
         screen.blit(minus_txt, minus_txt.get_rect(center=regen_delay_minus_button.center))
         if regen_delay_plus_button.collidepoint(mouse_pos) and mouse_click:
-            regen_delay_setting += 1
-            if regen_delay_setting > 80:
+            regen_delay_setting += 10
+            if regen_delay_setting > 150:
                 regen_delay_setting = 6767
             pygame.time.delay(50)
         if regen_delay_minus_button.collidepoint(mouse_pos) and mouse_click:
             if regen_delay_setting == 6767:
-                regen_delay_setting = 80
-            else: regen_delay_setting -= 1
-            if regen_delay_setting < 1:
-                regen_delay_setting = 1
+                regen_delay_setting = 150
+            else: regen_delay_setting -= 10
+            if regen_delay_setting < 10:
+                regen_delay_setting = 10
             pygame.time.delay(50)
 
 
@@ -1709,8 +1710,7 @@ random.shuffle(locked_enemy_types)
 unlock_scores = []
 unlocks = 0
 for unlocked in range(len(locked_enemy_types)):
-    unlocks += ((1+unlocked)*10)
-    unlock_scores.append(unlocks)
+    unlock_scores.append(100 * (1 + unlocked))
 targetting_enemies = [2, 8, 11, 12, 14, 15, 19, 26, 27]
 
 running = True
@@ -1810,7 +1810,7 @@ while running:
         unlock_scores.pop(0)
 
     # --- Enemy Spawning ---
-    adjusted_score = score / 2  # scale back to old point rate
+    adjusted_score = score / 5  # scale back to old point rate
     spawn_delay = max(
         min_spawn_delay,
         initial_spawn_delay - int(adjusted_score * spawn_rate)
@@ -2135,16 +2135,6 @@ while running:
                                 "spawn_protected": True,
                                 "spawn_time": pygame.time.get_ticks()
                             })
-                    else:
-                        split_score += 1
-                        if split_score == 4:
-                            score += 1
-                            split_score -= 4
-                            if player_alive:
-                                score_p1 = score
-                            if player2_alive:
-                                score_p2 = score
-
                     enemies.remove(enemy)
                 continue
             if enemy.get("waiting"):
@@ -2502,9 +2492,6 @@ while running:
                     enemy["health"] -= 1
 
                     if enemy["health"] <= 0:
-                        score += 1
-                        if player_alive: score_p1 = score
-                        if players == 2 and player2_alive: score_p2 = score
                         enemy["laser_mode"] = True
                         enemy["laser_start"] = pygame.time.get_ticks()
                         enemy["damaged_p1"] = False
@@ -2743,22 +2730,10 @@ while running:
                             player_alive = False
                 continue
             elif enemy["type"] == 15:
-            # only reward and trigger shrinking once
                 if not enemy.get("shrinking", False):
-                    score += 1
-                    if player_alive:
-                        score_p1 = score
-                    if player2_alive:
-                        score_p2 = score
                     enemy["shrinking"] = True
                 continue
-            elif enemy["type"] == 21:
-                # behaves like voodoo, dies instantly when touched
-                score += 1
-                if player_alive:
-                    score_p1 = score
-                if player2_alive:
-                    score_p2 = score
+            elif enemy["type"] == 21:                
                 enemies.remove(enemy)
                 continue
             elif enemy["type"] == 22:
@@ -2802,7 +2777,7 @@ while running:
                             player2_alive = False
                 continue
             elif enemy["type"] == 16:
-                if (p2_dx != 0 or p2_dy != 0):  # moving?
+                if (p2_dx != 0 or p2_dy != 0):
                     if current_time >= player2_invincible_until:
                         player2_lives -= 1
                         p2_regen_block_until = score + regen_delay
@@ -2814,19 +2789,9 @@ while running:
                 continue
             elif enemy["type"] == 15:
                 if not enemy.get("shrinking", False):
-                    score += 1
-                    if player_alive:
-                        score_p1 = score
-                    if player2_alive:
-                        score_p2 = score
                     enemy["shrinking"] = True
                 continue
             elif enemy["type"] == 21:
-                score += 1
-                if player_alive:
-                    score_p1 = score
-                if player2_alive:
-                    score_p2 = score
                 enemies.remove(enemy)
                 continue
             elif enemy["type"] == 22:
@@ -2857,7 +2822,7 @@ while running:
                         player2_alive = False
             continue
         if not player_alive and (players == 1 or not player2_alive):
-            GAME_OVER(score, score_p1, score_p2)
+            GAME_OVER(truescore, score_p1, score_p2)
             running = False
             break
 
@@ -2866,11 +2831,6 @@ while running:
         if enemy_died:
             if enemy in enemies:
                 enemies.remove(enemy)
-            score += 1
-            if player_alive:
-                score_p1 = score
-            if player2_alive:
-                score_p2 = score
 
             # Only regenerate if player is alive
             if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6767:
@@ -3132,7 +3092,15 @@ while running:
         else:
             pygame.draw.rect(screen, WHITE, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
 
-
+    if spawn_enabled:
+        score += 0.1 * (60 / FPS) #SCORE SET
+        if truescore < score:
+            truescore = math.floor(score)
+        if player_alive:
+            score_p1 = truescore
+        if player2_alive:
+            score_p2 = truescore
+    
     # draw player lives in center
     if players == 1: player_life_text = player_font.render(str(player_lives), True, BLACK)
     else: player_life_text = player_font.render(str(player_lives), True, RED)
