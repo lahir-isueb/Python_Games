@@ -33,17 +33,16 @@ def GAME_OVER(final_score, p1, p2):
                 if players == 2:
                     print(f"Player 1 score: {p1}")
                     print(f"Player 2 score: {p2}")
-                TITLE_SCREEN()
-                return
+                return "TITLE"
         clock.tick(15)
 
 # --- Colors ---
 WHITE = (255, 255, 255)
 SILVER = (175, 175, 175)
 GRAY = (100, 100, 100)
-BLACK = (0, 0, 0)
+BLACK = (0, 0, 0) #not used?
 BROWN = (108, 65, 0)
-CRISP = (50, 0, 0)
+CRISP = (50, 0, 0) #not used?
 MAROON = (120, 0, 0)
 BRONZE = (140, 45, 0)
 BRICK = (140, 65, 65)
@@ -51,14 +50,15 @@ RED = (255, 0, 0)
 LAVA = (200, 60, 0)
 TAN = (155, 125, 95)
 ORANGE = (255, 120, 0)
-GOLD = (255, 195, 0)
+GOLD = (255, 195, 0) #NOT USED
 YELLOW = (255, 255, 0)
 SULFUR = (190, 190, 0)
 OLIVE = (100, 100, 0)
 LIME = (0, 255, 0)
 GREEN = (0, 125, 0)
-FOREST = (0, 60, 0)
-TEAL = (0, 140, 140)
+FOREST = (0, 60, 0) #NOT USED
+TEAL = (0, 130, 130)
+AQUA = (0, 190, 160)
 TURQUOISE = (0, 255, 180)
 ICE = (175, 255, 255)
 CYAN = (0, 255, 255)
@@ -66,7 +66,7 @@ SKY = (105, 160, 225)
 BLUE = (0, 0, 255)
 NAVY = (0, 0, 100)
 INDIGO = (110, 0, 200)
-MAUVE = (145, 95, 140)
+MAUVE = (145, 95, 140) #NOT USED
 PURPLE = (162, 0, 255)
 VIOLET = (130, 0, 130)
 MAGENTA = (255, 0, 255)
@@ -141,12 +141,12 @@ tracer_hp = 1 # 26
 savage_hp = 2 # 27
 teleporter_hp = 6 # 28
 haunter_hp = 3 # 29
+stream_hp = 4 # 30
 
 
 # --- Scoring System & Text Size ---
 score = 0
 truescore = 0
-split_score = 0
 score_p1 = truescore
 score_p2 = truescore
 font = pygame.font.SysFont(None, 40)
@@ -156,6 +156,7 @@ player_font = pygame.font.SysFont(None, int(0.96 * player_size))
 regen_delay = 50
 p1_regen_block_until = 0
 p2_regen_block_until = 0
+unlock_scores = []
 
 
 # --- Clock ---
@@ -165,6 +166,7 @@ FPS = 60
 # --- Enemy unlocking ---
 available_enemy_types = []
 locked_enemy_types = []
+targetting_enemies = [2, 8, 11, 12, 14, 15, 19, 26, 27, 29]
 
 # --- Trail ---
 trail_squares = []
@@ -232,6 +234,32 @@ def get_target_position(enemy):
     else:
         return None
 
+def reset_game_state():
+    global player_x, player_y, player2_x, player2_y
+    global player_lives, player2_lives
+    global player_alive, player2_alive
+    global enemies, projectiles, trail_squares
+    global score, truescore, score_p1, score_p2
+    global last_spawn_time, invincible_until, player2_invincible_until
+    player_x = player_size // 2
+    player_y = spawner_pos[1] + SPAWNER_SIZE // 2
+    player2_x = WIDTH - player_size // 2
+    player2_y = spawner_pos[1] + SPAWNER_SIZE // 2
+    player_lives = player_health_setting
+    player2_lives = player2_health_setting
+    player_alive = True
+    player2_alive = True
+    enemies.clear()
+    projectiles.clear()
+    trail_squares.clear()
+    score = 0
+    truescore = 0
+    score_p1 = 0
+    score_p2 = 0
+    last_spawn_time = pygame.time.get_ticks()
+    invincible_until = 0
+    player2_invincible_until = 0
+
 # --- Default Settings ---
 player_size_setting = 50
 enemy_size_setting = 50
@@ -245,7 +273,7 @@ projectile_speed_setting = 5
 regen_delay_setting = 50
 player_health_setting = 3
 player2_health_setting = 3
-enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -278,15 +306,14 @@ tracer_hp_setting = 1
 savage_hp_setting = 2
 teleporter_hp_setting = 6
 haunter_hp_setting = 3
+stream_hp_setting = 4
 
 
-
-def enemy_lock_setup(enemy):
+def enemy_lock_setup(els, enum):
     global available_enemy_types
     global locked_enemy_types
-    global enemy_locks
-    if enemy_locks[enemy] == 0: available_enemy_types.append(enemy + 1)
-    if enemy_locks[enemy] == 1: locked_enemy_types.append(enemy + 1)
+    if els == 0: available_enemy_types.append(enum + 1)
+    if els == 1: locked_enemy_types.append(enum + 1)
 
 def SETTINGS():
     global player_size_setting
@@ -333,12 +360,13 @@ def SETTINGS():
     global savage_hp_setting
     global teleporter_hp_setting
     global haunter_hp_setting
+    global stream_hp_setting
     
     running = True
     button_offset = 10
     scroll_y = 0
     scroll_speed = 25
-    max_scroll = 2900 - HEIGHT
+    max_scroll = 2960 - HEIGHT
     enemy_locking_labels = ["Starter", "Locked", "Banned"]
     scrollbar_width = 20
     scrollbar_margin = 50
@@ -1554,6 +1582,35 @@ def SETTINGS():
 
 
 
+        stream_hp_label = font.render("Stream Enemy - HP: " + str(stream_hp_setting), True, AQUA)
+        screen.blit(stream_hp_label, (50, 2880 + scroll_y))
+        stream_hp_minus_button = pygame.Rect(500, 2880 - button_offset + scroll_y, 50, 50)
+        stream_hp_plus_button = pygame.Rect(560, 2880 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, stream_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=stream_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, stream_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=stream_hp_minus_button.center))
+        if stream_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            stream_hp_setting += 1
+            if stream_hp_setting > 99:
+                stream_hp_setting = 99
+            pygame.time.delay(50)
+        if stream_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            stream_hp_setting -= 1
+            if stream_hp_setting < 1:
+                stream_hp_setting = 1
+            pygame.time.delay(50)
+        stream_locks_text = font.render(enemy_locking_labels[enemy_locks[29]], True, BLACK)
+        stream_locks_button = pygame.Rect(650, 2880 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, AQUA, stream_locks_button, border_radius=10)
+        screen.blit(stream_locks_text, stream_locks_text.get_rect(center=stream_locks_button.center))
+        if stream_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[29] > 1: enemy_locks[29] = 0
+            else: enemy_locks[29] = enemy_locks[29] + 1
+            pygame.time.delay(200)
+
+
+
         pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=6)
         pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=6)
 
@@ -1599,6 +1656,114 @@ start_x = (WIDTH - total_width) // 2
 y_pos = HEIGHT - button_height - margin - 400
 
 
+def apply_settings():
+    global player_size, player_font, enemy_size, enemy_font, projectile_size, trail_size
+    global min_spawn_delay, initial_spawn_delay, spawn_rate
+    global player_speed, player_speed_base, player2_speed, player2_speed_base, enemy_speed
+    global bomb_projectile_speed, shooter_projectile_speed, sniper_projectile_speed, shotgun_projectile_speed, rapidshooter_projectile_speed, frostbite_projectile_speed
+    global regen_delay, player_lives, player2_lives
+    global basic_hp
+    global homing_hp
+    global fatal_hp
+    global flow_hp
+    global sticky_hp
+    global gloomy_hp
+    global trail_hp
+    global impostor_hp
+    global splitter_hp, split_amount
+    global bomb_hp
+    global shooter_hp
+    global sniper_hp
+    global speedy_hp
+    global shotgun_hp
+    global shotgun_bullets
+    global voodoo_hp
+    global blind_hp
+    global motion_hp
+    global charger_hp
+    global rapidshooter_hp
+    global frostbite_hp
+    global addictive_hp
+    global laser_hp
+    global hardened_hp
+    global accelerator_hp
+    global cold_hp
+    global tracer_hp
+    global savage_hp
+    global teleporter_hp
+    global haunter_hp
+    global stream_hp
+    
+
+    # --- SETTINGS SET ---
+    player_size = player_size_setting
+    player_font = pygame.font.SysFont(None, int(0.96 * player_size))
+    enemy_size = enemy_size_setting
+    enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size))
+    min_spawn_delay = min_spawn_delay_setting
+    initial_spawn_delay = max_spawn_delay_setting
+    projectile_size = projectile_size_setting
+    trail_size = projectile_size_setting
+    spawn_rate = spawn_delay_change_setting
+    player_speed = player_speed_setting
+    player_speed_base = player_speed_setting
+    player2_speed = player_speed_setting
+    player2_speed_base = player_speed_setting
+    enemy_speed = enemy_speed_setting
+    bomb_projectile_speed *= (projectile_speed_setting / 5)
+    shooter_projectile_speed *= (projectile_speed_setting / 5)
+    sniper_projectile_speed *= (projectile_speed_setting / 5)
+    shotgun_projectile_speed *= (projectile_speed_setting / 5)
+    rapidshooter_projectile_speed *= (projectile_speed_setting / 5)
+    frostbite_projectile_speed *= (projectile_speed_setting / 5)
+    regen_delay = regen_delay_setting
+    player_lives = player_health_setting
+    player2_lives = player2_health_setting
+    basic_hp = basic_hp_setting
+    homing_hp = homing_hp_setting
+    fatal_hp = fatal_hp_setting
+    flow_hp = flow_hp_setting
+    sticky_hp = sticky_hp_setting
+    gloomy_hp = gloomy_hp_setting
+    trail_hp = trail_hp_setting
+    impostor_hp = impostor_hp_setting
+    splitter_hp = splitter_hp_setting
+    split_amount = split_amount_setting
+    bomb_hp = bomb_hp_setting
+    shooter_hp = shooter_hp_setting
+    sniper_hp = sniper_hp_setting
+    speedy_hp = speedy_hp_setting
+    shotgun_hp = shotgun_hp_setting
+    shotgun_bullets = shotgun_bullets_setting
+    voodoo_hp = voodoo_hp_setting
+    blind_hp = blind_hp_setting
+    motion_hp = motion_hp_setting
+    charger_hp = charger_hp_setting
+    rapidshooter_hp = rapidshooter_hp_setting
+    frostbite_hp = frostbite_hp_setting
+    addictive_hp = addictive_hp_setting
+    laser_hp = laser_hp_setting
+    hardened_hp = hardened_hp_setting
+    accelerator_hp = accelerator_hp_setting
+    cold_hp = cold_hp_setting
+    tracer_hp = tracer_hp_setting
+    savage_hp = savage_hp_setting
+    teleporter_hp = teleporter_hp_setting
+    haunter_hp = haunter_hp_setting
+    stream_hp = stream_hp_setting
+
+
+    available_enemy_types.clear()
+    locked_enemy_types.clear()
+    unlock_scores = []
+    for e in range(0, len(enemy_locks)-1):
+        enemy_lock_setup(enemy_locks[e], e)
+    random.shuffle(locked_enemy_types)
+    unlocks = 0
+    for unlocked in range(len(locked_enemy_types)):
+        unlock_scores.append(100 * (1 + unlocked))
+
+
 def TITLE_SCREEN():
     global players
 
@@ -1634,6 +1799,8 @@ def TITLE_SCREEN():
         screen.blit(start_text, start_text.get_rect(center=start_button.center))
 
         if start_button.collidepoint(mouse_pos) and mouse_click and players in [1, 2]:
+            apply_settings()
+            reset_game_state()
             waiting = False
 
         # --- Settings button (TOP) ---
@@ -1678,100 +1845,6 @@ def TITLE_SCREEN():
 
 TITLE_SCREEN()
 spawn_enabled = False
-
-# --- SETTINGS SET ---
-player_size = player_size_setting
-player_font = pygame.font.SysFont(None, int(0.96 * player_size))
-enemy_size = enemy_size_setting
-enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size))
-min_spawn_delay = min_spawn_delay_setting
-initial_spawn_delay = max_spawn_delay_setting
-projectile_size = projectile_size_setting
-trail_size = projectile_size_setting
-spawn_rate = spawn_delay_change_setting
-player_speed = player_speed_setting
-player_speed_base = player_speed_setting
-player2_speed = player_speed_setting
-player2_speed_base = player_speed_setting
-enemy_speed = enemy_speed_setting
-bomb_projectile_speed *= (projectile_speed_setting / 5)
-shooter_projectile_speed *= (projectile_speed_setting / 5)
-sniper_projectile_speed *= (projectile_speed_setting / 5)
-shotgun_projectile_speed *= (projectile_speed_setting / 5)
-rapidshooter_projectile_speed *= (projectile_speed_setting / 5)
-frostbite_projectile_speed *= (projectile_speed_setting / 5)
-regen_delay = regen_delay_setting
-player_lives = player_health_setting
-player2_lives = player2_health_setting
-basic_hp = basic_hp_setting
-homing_hp = homing_hp_setting
-fatal_hp = fatal_hp_setting
-flow_hp = flow_hp_setting
-sticky_hp = sticky_hp_setting
-gloomy_hp = gloomy_hp_setting
-trail_hp = trail_hp_setting
-impostor_hp = impostor_hp_setting
-splitter_hp = splitter_hp_setting
-split_amount = split_amount_setting
-bomb_hp = bomb_hp_setting
-shooter_hp = shooter_hp_setting
-sniper_hp = sniper_hp_setting
-speedy_hp = speedy_hp_setting
-shotgun_hp = shotgun_hp_setting
-shotgun_bullets = shotgun_bullets_setting
-voodoo_hp = voodoo_hp_setting
-blind_hp = blind_hp_setting
-motion_hp = motion_hp_setting
-charger_hp = charger_hp_setting
-rapidshooter_hp = rapidshooter_hp_setting
-frostbite_hp = frostbite_hp_setting
-addictive_hp = addictive_hp_setting
-laser_hp = laser_hp_setting
-hardened_hp = hardened_hp_setting
-accelerator_hp = accelerator_hp_setting
-cold_hp = cold_hp_setting
-tracer_hp = tracer_hp_setting
-savage_hp = savage_hp_setting
-teleporter_hp = teleporter_hp_setting
-haunter_hp = haunter_hp_setting
-
-
-
-enemy_lock_setup(0)
-enemy_lock_setup(1)
-enemy_lock_setup(2)
-enemy_lock_setup(3)
-enemy_lock_setup(4)
-enemy_lock_setup(5)
-enemy_lock_setup(6)
-enemy_lock_setup(7)
-enemy_lock_setup(8)
-enemy_lock_setup(9)
-enemy_lock_setup(10)
-enemy_lock_setup(11)
-enemy_lock_setup(12)
-enemy_lock_setup(13)
-enemy_lock_setup(14)
-enemy_lock_setup(15)
-enemy_lock_setup(16)
-enemy_lock_setup(17)
-enemy_lock_setup(18)
-enemy_lock_setup(19)
-enemy_lock_setup(20)
-enemy_lock_setup(21)
-enemy_lock_setup(22)
-enemy_lock_setup(23)
-enemy_lock_setup(24)
-enemy_lock_setup(25)
-enemy_lock_setup(26)
-enemy_lock_setup(27)
-enemy_lock_setup(28)
-random.shuffle(locked_enemy_types)
-unlock_scores = []
-unlocks = 0
-for unlocked in range(len(locked_enemy_types)):
-    unlock_scores.append(100 * (1 + unlocked))
-targetting_enemies = [2, 8, 11, 12, 14, 15, 19, 26, 27, 29]
 
 running = True
 while running:
@@ -1954,6 +2027,8 @@ while running:
             dx *= 1; dy *= 1; health = teleporter_hp
         elif enemy_type == 29:
             dx *= 0.7; dy *= 0.7; health = haunter_hp
+        elif enemy_type == 30:
+            dx *= 2/3; dy *= 2/3; health = stream_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -2064,8 +2139,7 @@ while running:
             # Remove enemy if health depleted
             if enemy["bounces"] >= flow_hp or enemy["health"] <= 0:
                 enemy_died = True
-
-
+                
         elif enemy["type"] == 5:
             if enemy["stopped"]:
                 if current_time - enemy["stop_start_time"] >= 2000:
@@ -2637,9 +2711,9 @@ while running:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
 
-            if dist1 < 200:
+            if dist1 < 200 and enemy["health"] > 1.1:
                 enemy["health"] -= hardened_dps
-            if dist2 < 200:
+            if dist2 < 200 and enemy["health"] > 1.1:
                 enemy["health"] -= hardened_dps
             if enemy["health"] < 1:
                     enemy_died = True
@@ -2774,6 +2848,23 @@ while running:
                 enemy["x"] = spawner_pos[0]+25
                 enemy["y"] = spawner_pos[1]+25
             if enemy["bounces"] >= haunter_hp: enemy_died = True
+        elif enemy["type"] == 30:
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            closest_dist = min(dist1, dist2)
+            speed_multiplier = 2.5 if closest_dist < 250 else 2/3
+            enemy["x"] += enemy["dx"] * speed_multiplier
+            enemy["y"] += enemy["dy"] * speed_multiplier
+            bounced = False
+            if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
+            if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
+            if bounced:
+                enemy["bounces"] += 1
+                enemy["health"] -= 1
+                enemy["x"] = spawner_pos[0]+25
+                enemy["y"] = spawner_pos[1]+25
+            if enemy["bounces"] >= stream_hp or enemy["health"] <= 0:
+                enemy_died = True
 
 
 
@@ -2905,7 +2996,10 @@ while running:
                         player2_alive = False
             continue
         if not player_alive and (players == 1 or not player2_alive):
-            GAME_OVER(truescore, score_p1, score_p2)
+            result = GAME_OVER(truescore, score_p1, score_p2)
+            if result == "TITLE":
+                TITLE_SCREEN()
+                continue
             running = False
             break
 
@@ -3047,7 +3141,12 @@ while running:
         start_glow_radius = SPAWNER_SIZE * 2
         end_glow_radius = SPAWNER_SIZE // 2
         glow_radius = int(start_glow_radius * (1 - indicator_ratio) + end_glow_radius * indicator_ratio)
-        pygame.draw.circle(glow_surface, (*pulse_color, alpha),
+        r, g, b = pulse_color[:3]
+        r = max(0, min(255, int(r)))
+        g = max(0, min(255, int(g)))
+        b = max(0, min(255, int(b)))
+        safe_alpha = max(0, min(255, int(alpha)))
+        pygame.draw.circle(glow_surface, (r, g, b, safe_alpha),
                            (glow_size // 2, glow_size // 2), glow_radius)
         screen.blit(glow_surface, (center[0] - glow_size // 2, center[1] - glow_size // 2))
 
@@ -3057,7 +3156,12 @@ while running:
         for i in range(3):
             start_angle = angle_progress + i * (2 * math.pi / 3)
             end_angle = start_angle + math.pi / 4
-            pygame.draw.arc(screen, pulse_color,
+            r, g, b = pulse_color[:3]
+            r = max(0, min(255, int(r)))
+            g = max(0, min(255, int(g)))
+            b = max(0, min(255, int(b)))
+            safe_color = (r, g, b)
+            pygame.draw.arc(screen, safe_color,
                             (center[0] - arc_radius, center[1] - arc_radius,
                              arc_radius * 2, arc_radius * 2),
                             start_angle, end_angle, 5)
@@ -3117,6 +3221,7 @@ while running:
         elif enemy["type"] == 27: color = MAROON
         elif enemy["type"] == 28: color = PURPLE
         elif enemy["type"] == 29: color = NAVY
+        elif enemy["type"] == 30: color = AQUA
 
 
         
@@ -3201,10 +3306,10 @@ while running:
         p1_text = font.render(f"Score: {score_p1}", True, WHITE)
         screen.blit(p1_text, (20, 20))
     elif players == 2:
-        p1_text = font.render(f"P1 Score: {score_p1}", True, WHITE)
+        p1_text = font.render(f"P1 Score: {score_p1}", True, RED)
         screen.blit(p1_text, (20, 20))
-        p2_text = font.render(f"P2 Score: {score_p2}", True, WHITE)
-        screen.blit(p2_text, (WIDTH - 200, 20))
+        p2_text = font.render(f"P2 Score: {score_p2}", True, BLUE)
+        screen.blit(p2_text, (20, 60))
         
     pygame.display.flip()
 
