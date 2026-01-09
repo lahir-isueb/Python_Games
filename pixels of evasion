@@ -72,6 +72,7 @@ VIOLET = (130, 0, 130)
 MAGENTA = (255, 0, 255)
 PINK = (255, 140, 255)
 HOT_PINK = (255, 0, 106)
+CRIMSON = (150, 0, 48) #NOT USED
 
 # --- Spawner Size ---
 SPAWNER_SIZE = 50
@@ -96,6 +97,9 @@ player2_speed = player2_speed_base
 # --- Enemy ---
 enemy_size = 50 # ORIGINAL VALUE 50
 enemies = []
+available_enemy_types = []
+locked_enemy_types = []
+targetting_enemies = [2, 8, 11, 12, 14, 15, 19, 26, 27, 29]
 
 # --- Spawner ---
 spawner_pos = (WIDTH // 2 - SPAWNER_SIZE // 2, HEIGHT // 2 - SPAWNER_SIZE // 2)
@@ -162,11 +166,6 @@ unlock_scores = []
 # --- Clock ---
 clock = pygame.time.Clock()
 FPS = 60
-
-# --- Enemy unlocking ---
-available_enemy_types = []
-locked_enemy_types = []
-targetting_enemies = [2, 8, 11, 12, 14, 15, 19, 26, 27, 29]
 
 # --- Trail ---
 trail_squares = []
@@ -273,7 +272,9 @@ projectile_speed_setting = 5
 regen_delay_setting = 50
 player_health_setting = 3
 player2_health_setting = 3
-enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+trail_duration_setting = 3000
+trail_distance_setting = 450
+enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -309,11 +310,11 @@ haunter_hp_setting = 3
 stream_hp_setting = 4
 
 
-def enemy_lock_setup(els, enum):
+def enemy_lock_setup(elock, enumber):
     global available_enemy_types
     global locked_enemy_types
-    if els == 0: available_enemy_types.append(enum + 1)
-    if els == 1: locked_enemy_types.append(enum + 1)
+    if elock == 0: available_enemy_types.append(enumber + 1)
+    elif elock == 1: locked_enemy_types.append(enumber + 1)
 
 def SETTINGS():
     global player_size_setting
@@ -328,6 +329,8 @@ def SETTINGS():
     global regen_delay_setting
     global player_health_setting
     global player2_health_setting
+    global trail_duration_setting
+    global trail_distance_setting
     global enemy_locks
     global basic_hp_setting
     global homing_hp_setting
@@ -366,7 +369,7 @@ def SETTINGS():
     button_offset = 10
     scroll_y = 0
     scroll_speed = 25
-    max_scroll = 2960 - HEIGHT
+    max_scroll = 3080 - HEIGHT
     enemy_locking_labels = ["Starter", "Locked", "Banned"]
     scrollbar_width = 20
     scrollbar_margin = 50
@@ -1610,6 +1613,46 @@ def SETTINGS():
             pygame.time.delay(200)
 
 
+        trail_duration_label = font.render("Trail Duration: " + str(trail_duration_setting), True, WHITE)
+        screen.blit(trail_duration_label, (50, 2940 + scroll_y))
+        trail_duration_minus_button = pygame.Rect(500, 2940 - button_offset + scroll_y, 50, 50)
+        trail_duration_plus_button = pygame.Rect(560, 2940 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, trail_duration_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=trail_duration_plus_button.center))
+        pygame.draw.rect(screen, RED, trail_duration_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=trail_duration_minus_button.center))
+        if trail_duration_plus_button.collidepoint(mouse_pos) and mouse_click:
+            trail_duration_setting += 500
+            if trail_duration_setting > 16000:
+                trail_duration_setting = 16000
+            pygame.time.delay(50)
+        if trail_duration_minus_button.collidepoint(mouse_pos) and mouse_click:
+            trail_duration_setting -= 500
+            if trail_duration_setting < 500:
+                trail_duration_setting = 500
+            pygame.time.delay(50)
+
+
+        trail_distance_label = font.render("Trail Distance: " + str(trail_distance_setting), True, WHITE)
+        screen.blit(trail_distance_label, (50, 3000 + scroll_y))
+        trail_distance_minus_button = pygame.Rect(500, 3000 - button_offset + scroll_y, 50, 50)
+        trail_distance_plus_button = pygame.Rect(560, 3000 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, trail_distance_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=trail_distance_plus_button.center))
+        pygame.draw.rect(screen, RED, trail_distance_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=trail_distance_minus_button.center))
+        if trail_distance_plus_button.collidepoint(mouse_pos) and mouse_click:
+            trail_distance_setting += 100
+            if trail_distance_setting > 950:
+                trail_distance_setting = 950
+            pygame.time.delay(50)
+        if trail_distance_minus_button.collidepoint(mouse_pos) and mouse_click:
+            trail_distance_setting -= 100
+            if trail_distance_setting < 50:
+                trail_distance_setting = 50
+            pygame.time.delay(50)
+
+
 
         pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=6)
         pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=6)
@@ -1662,6 +1705,7 @@ def apply_settings():
     global player_speed, player_speed_base, player2_speed, player2_speed_base, enemy_speed
     global bomb_projectile_speed, shooter_projectile_speed, sniper_projectile_speed, shotgun_projectile_speed, rapidshooter_projectile_speed, frostbite_projectile_speed
     global regen_delay, player_lives, player2_lives
+    global trail_lifetime_ms, trail_interval_ms
     global basic_hp
     global homing_hp
     global fatal_hp
@@ -1719,6 +1763,8 @@ def apply_settings():
     regen_delay = regen_delay_setting
     player_lives = player_health_setting
     player2_lives = player2_health_setting
+    trail_lifetime_ms = trail_duration_setting
+    trail_interval_ms = trail_distance_setting
     basic_hp = basic_hp_setting
     homing_hp = homing_hp_setting
     fatal_hp = fatal_hp_setting
@@ -1751,17 +1797,20 @@ def apply_settings():
     teleporter_hp = teleporter_hp_setting
     haunter_hp = haunter_hp_setting
     stream_hp = stream_hp_setting
-
-
+    
     available_enemy_types.clear()
     locked_enemy_types.clear()
-    unlock_scores = []
-    for e in range(0, len(enemy_locks)-1):
-        enemy_lock_setup(enemy_locks[e], e)
+    unlock_scores.clear()
+    enemy_counter = 0
+    for i in enemy_locks:
+        enemy_lock_setup(i, enemy_counter)
+        enemy_counter += 1
     random.shuffle(locked_enemy_types)
     unlocks = 0
     for unlocked in range(len(locked_enemy_types)):
         unlock_scores.append(100 * (1 + unlocked))
+
+    
 
 
 def TITLE_SCREEN():
@@ -1851,6 +1900,7 @@ while running:
     clock.tick(FPS)
     current_time = pygame.time.get_ticks()
 
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -1935,8 +1985,8 @@ while running:
 
         
     # --- Dynamic Enemy Unlock ---
-    while unlock_scores and score >= unlock_scores[0]:
-        if locked_enemy_types:
+    while unlock_scores and truescore >= unlock_scores[0]:
+        if len(locked_enemy_types) > 0:
             new_type = locked_enemy_types[0]
             available_enemy_types.append(new_type)
             locked_enemy_types.remove(new_type)
@@ -2039,6 +2089,7 @@ while running:
             
 
         enemies.append({
+            "dead": False,
             "x": spawner_pos[0]+25,
             "y": spawner_pos[1]+25,
             "target": target,
@@ -2075,7 +2126,7 @@ while running:
                     enemy["target"] = 1
 
     # --- Enemy Movement ---
-    for enemy in enemies[:]:
+    for enemy in enemies:
         enemy_died = False
         sz = enemy.get("size", enemy_size)
         if enemy["type"] == 1:
@@ -2271,7 +2322,7 @@ while running:
                                 "spawn_protected": True,
                                 "spawn_time": pygame.time.get_ticks()
                             })
-                    enemies.remove(enemy)
+                    enemy["dead"] = True
                 continue
             if enemy.get("waiting"):
                 # Check if off edge now
@@ -2428,7 +2479,7 @@ while running:
                 if enemy["size"] < 2:
                     # remove immediately once tiny
                     if enemy in enemies:
-                        enemies.remove(enemy)
+                        enemy["dead"] = True
                     continue
             # movement using current size (sz)
             enemy["x"] += enemy["dx"]
@@ -2645,7 +2696,7 @@ while running:
                             enemy["dy"] *= -1
             else:
                 if current_time - enemy["laser_start"] >= 1000:
-                    enemies.remove(enemy)
+                    enemy["dead"] = True
                     continue
                 laser_width = enemy_size
                 if enemy["laser_orientation"] == "vertical":
@@ -2888,7 +2939,7 @@ while running:
                         p1_regen_block_until = score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
-                        enemies.remove(enemy)
+                        enemy["dead"] = True
                         if player_lives <= 0:
                             player_alive = False
                 continue
@@ -2899,7 +2950,7 @@ while running:
                         p1_regen_block_until = score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
-                        enemies.remove(enemy)
+                        enemy["dead"] = True
                         if player_lives <= 0:
                             player_alive = False
                 continue
@@ -2908,7 +2959,7 @@ while running:
                     enemy["shrinking"] = True
                 continue
             elif enemy["type"] == 21:                
-                enemies.remove(enemy)
+                enemy["dead"] = True
                 continue
             elif enemy["type"] == 22:
                 if current_time >= invincible_until:
@@ -2918,7 +2969,7 @@ while running:
                     invincible_until = current_time + invincibility_duration
                     if player_lives <= 0:
                         player_alive = False
-                    if enemy.get("laser_mode", True): enemies.remove(enemy)
+                    if enemy.get("laser_mode", True): enemy["dead"] = True
                 continue
             elif enemy["type"] == 25:
                 slow_until = current_time + 10000
@@ -2933,7 +2984,7 @@ while running:
                     p1_regen_block_until = score + regen_delay
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
-                    enemies.remove(enemy)
+                    enemy["dead"] = True
                     if player_lives <= 0:
                         player_alive = False
                 continue
@@ -2946,7 +2997,7 @@ while running:
                         p2_regen_block_until = score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
-                        enemies.remove(enemy)
+                        enemy["dead"] = True
                         if player2_lives <= 0:
                             player2_alive = False
                 continue
@@ -2957,7 +3008,7 @@ while running:
                         p2_regen_block_until = score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
-                        enemies.remove(enemy)
+                        enemy["dead"] = True
                         if player2_lives <= 0:
                             player2_alive = False
                 continue
@@ -2966,7 +3017,7 @@ while running:
                     enemy["shrinking"] = True
                 continue
             elif enemy["type"] == 21:
-                enemies.remove(enemy)
+                enemy["dead"] = True
                 continue
             elif enemy["type"] == 22:
                 if current_time >= player2_invincible_until:
@@ -2976,7 +3027,7 @@ while running:
                     player2_invincible_until = current_time + invincibility_duration
                     if player2_lives <= 0:
                         player2_alive = False
-                    if enemy.get("laser_mode", True): enemies.remove(enemy)
+                    if enemy.get("laser_mode", True): enemy["dead"] = True
                 continue
             elif enemy["type"] == 25:
                 player2_slow_until = current_time + 10000
@@ -2991,7 +3042,7 @@ while running:
                     p2_regen_block_until = score + regen_delay
                     player2_damage_flash_time = current_time
                     player2_invincible_until = current_time + invincibility_duration
-                    enemies.remove(enemy)
+                    enemy["dead"] = True
                     if player2_lives <= 0:
                         player2_alive = False
             continue
@@ -3003,11 +3054,10 @@ while running:
             running = False
             break
 
-
-
+        
         if enemy_died:
             if enemy in enemies:
-                enemies.remove(enemy)
+                enemy["dead"] = True
 
             # Only regenerate if player is alive
             if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6767:
@@ -3112,6 +3162,9 @@ while running:
             new_projectiles.append(p)
 
     projectiles = new_projectiles
+
+    enemies[:] = [e for e in enemies if not e.get("dead", False)]
+
 
     # --- Drawing ---
     screen.fill(BLACK)
@@ -3260,6 +3313,7 @@ while running:
         text_rect = text_surface.get_rect(center=(enemy["x"], enemy["y"]))
         screen.blit(text_surface, text_rect)
 
+    
     # draw player (flash red if hit)
     if player_alive:
         if current_time - damage_flash_time < 100:
