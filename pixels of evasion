@@ -240,6 +240,7 @@ def reset_game_state():
     global enemies, projectiles, trail_squares
     global score, truescore, score_p1, score_p2
     global last_spawn_time, invincible_until, player2_invincible_until
+    global spawn_enabled, p1_ready, p2_ready
     player_x = player_size // 2
     player_y = spawner_pos[1] + SPAWNER_SIZE // 2
     player2_x = WIDTH - player_size // 2
@@ -258,6 +259,9 @@ def reset_game_state():
     last_spawn_time = pygame.time.get_ticks()
     invincible_until = 0
     player2_invincible_until = 0
+    spawn_enabled = False
+    p1_ready = False
+    p2_ready = False
 
 # --- Default Settings ---
 player_size_setting = 50
@@ -1894,6 +1898,8 @@ def TITLE_SCREEN():
 
 TITLE_SCREEN()
 spawn_enabled = False
+p1_ready = False
+p2_ready = False
 
 running = True
 while running:
@@ -1934,18 +1940,19 @@ while running:
             p2_dy = p2_dy / length2 * player2_speed
 
     # Move players
+    if p1_dx > 0 or p1_dy > 0: p1_ready = True
     player_x += p1_dx
     player_y += p1_dy
     player_x = max(player_size / 2, min(WIDTH - player_size / 2, player_x))
     player_y = max(player_size / 2, min(HEIGHT - player_size / 2, player_y))
 
     if players == 2:
+        if p2_dx > 0 or p2_dy > 0: p2_ready = True
         player2_x += p2_dx
         player2_y += p2_dy
-
-        # Clamp Player 2 to screen edges
         player2_x = max(player_size / 2, min(WIDTH - player_size / 2, player2_x))
         player2_y = max(player_size / 2, min(HEIGHT - player_size / 2, player2_y))
+
         if player_alive and player2_alive:
             if centered_rect_collision(player_x, player_y, player_size,
                                player2_x, player2_y, player_size):
@@ -1979,8 +1986,8 @@ while running:
 
     # Update spawner activation
     if not spawn_enabled:
-        if p1_dx != 0 or p1_dy != 0 or (players == 2 and (p2_dx != 0 or p2_dy != 0)):
-            spawn_enabled = True
+        if p1_ready and players == 1: spawn_enabled = True
+        if p1_ready and p2_ready and players == 2: spawn_enabled = True
 
 
         
@@ -3059,17 +3066,6 @@ while running:
             if enemy in enemies:
                 enemy["dead"] = True
 
-            # Only regenerate if player is alive
-            if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6767:
-                player_lives += 1
-                heal_flash_time = current_time
-                p1_regen_block_until = score + regen_delay
-
-            if players == 2 and player2_alive and score >= p2_regen_block_until and player2_lives < player2_health_setting and regen_delay != 6767:
-                player2_lives += 1
-                player2_heal_flash_time = current_time
-                p2_regen_block_until = score + regen_delay
-
 
     # --- Trail squares update ---
     new_trails = []
@@ -3364,7 +3360,25 @@ while running:
         screen.blit(p1_text, (20, 20))
         p2_text = font.render(f"P2 Score: {score_p2}", True, BLUE)
         screen.blit(p2_text, (20, 60))
-        
+
+    if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6767:
+        player_lives += 1
+        heal_flash_time = current_time
+        p1_regen_block_until = score + regen_delay
+
+    if players == 2 and player2_alive and score >= p2_regen_block_until and player2_lives < player2_health_setting and regen_delay != 6767:
+        player2_lives += 1
+        player2_heal_flash_time = current_time
+        p2_regen_block_until = score + regen_delay
+
+    if not player_alive and (players == 1 or not player2_alive):
+        result = GAME_OVER(truescore, score_p1, score_p2)
+        if result == "TITLE":
+            TITLE_SCREEN()
+            continue
+        running = False
+        break
+    
     pygame.display.flip()
 
 pygame.quit()
