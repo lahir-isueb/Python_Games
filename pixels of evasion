@@ -93,6 +93,7 @@ player2_slow_until = 0
 player2_speed_base = player_speed
 player_speed = player_speed_base
 player2_speed = player2_speed_base
+freeze_duration = 10000
 
 # --- Enemy ---
 enemy_size = 50 # ORIGINAL VALUE 50
@@ -188,7 +189,6 @@ sniper_delay = 5500
 shotgun_delay = 7500
 rapidshooter_delay = 200
 
-
 # --- Split Amount ---
 split_amount = 2
 
@@ -278,6 +278,7 @@ player_health_setting = 3
 player2_health_setting = 3
 trail_duration_setting = 3000
 trail_distance_setting = 450
+freeze_duration_setting = 10000
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 basic_hp_setting = 5
@@ -335,6 +336,7 @@ def SETTINGS():
     global player2_health_setting
     global trail_duration_setting
     global trail_distance_setting
+    global freeze_duration_setting
     global enemy_locks
     global basic_hp_setting
     global homing_hp_setting
@@ -373,7 +375,7 @@ def SETTINGS():
     button_offset = 10
     scroll_y = 0
     scroll_speed = 25
-    max_scroll = 3080 - HEIGHT
+    max_scroll = 3140 - HEIGHT
     enemy_locking_labels = ["Starter", "Locked", "Banned"]
     scrollbar_width = 20
     scrollbar_margin = 50
@@ -1658,6 +1660,27 @@ def SETTINGS():
 
 
 
+        freeze_duration_label = font.render("Freeze Duration: " + str(freeze_duration_setting), True, WHITE)
+        screen.blit(freeze_duration_label, (50, 3060 + scroll_y))
+        freeze_duration_minus_button = pygame.Rect(500, 3060 - button_offset + scroll_y, 50, 50)
+        freeze_duration_plus_button = pygame.Rect(560, 3060 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, freeze_duration_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=freeze_duration_plus_button.center))
+        pygame.draw.rect(screen, RED, freeze_duration_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=freeze_duration_minus_button.center))
+        if freeze_duration_plus_button.collidepoint(mouse_pos) and mouse_click:
+            freeze_duration_setting += 500
+            if freeze_duration_setting > 20000:
+                freeze_duration_setting = 20000
+            pygame.time.delay(50)
+        if freeze_duration_minus_button.collidepoint(mouse_pos) and mouse_click:
+            freeze_duration_setting -= 500
+            if freeze_duration_setting < 0:
+                freeze_duration_setting = 0
+            pygame.time.delay(50)
+
+
+
         pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=6)
         pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=6)
 
@@ -1710,6 +1733,7 @@ def apply_settings():
     global bomb_projectile_speed, shooter_projectile_speed, sniper_projectile_speed, shotgun_projectile_speed, rapidshooter_projectile_speed, frostbite_projectile_speed
     global regen_delay, player_lives, player2_lives
     global trail_lifetime_ms, trail_interval_ms
+    global freeze_duration
     global basic_hp
     global homing_hp
     global fatal_hp
@@ -1769,6 +1793,7 @@ def apply_settings():
     player2_lives = player2_health_setting
     trail_lifetime_ms = trail_duration_setting
     trail_interval_ms = trail_distance_setting
+    freeze_duration = freeze_duration_setting
     basic_hp = basic_hp_setting
     homing_hp = homing_hp_setting
     fatal_hp = fatal_hp_setting
@@ -2979,7 +3004,7 @@ while running:
                     if enemy.get("laser_mode", True): enemy["dead"] = True
                 continue
             elif enemy["type"] == 25:
-                slow_until = current_time + 10000
+                slow_until = current_time + freeze_duration
                 player_speed = player_speed_base / 2
                 player_frozen = True
             elif enemy["type"] == 3:
@@ -3037,7 +3062,7 @@ while running:
                     if enemy.get("laser_mode", True): enemy["dead"] = True
                 continue
             elif enemy["type"] == 25:
-                player2_slow_until = current_time + 10000
+                player2_slow_until = current_time + freeze_duration
                 player2_speed = player2_speed_base / 2
                 player2_frozen = True
             elif enemy["type"] == 3:
@@ -3120,7 +3145,7 @@ while running:
         if player_alive and centered_rect_collision(player_x, player_y, player_size,
                                                     p["x"] - projectile_size/2, p["y"] - projectile_size/2, projectile_size):
             if p.get("color") == CYAN:
-                slow_until = current_time + 10000  # 10 seconds
+                slow_until = current_time + freeze_duration  # 10 seconds
                 player_speed = player_speed_base / 2
                 player_frozen = True
             else:
@@ -3139,7 +3164,7 @@ while running:
             if player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
                                                     p["x"] - projectile_size/2, p["y"] - projectile_size/2, projectile_size):
                 if p.get("color") == CYAN:
-                    player2_slow_until = current_time + 10000
+                    player2_slow_until = current_time + freeze_duration
                     player2_speed = player2_speed_base / 2
                     player2_frozen = True
                 else:
