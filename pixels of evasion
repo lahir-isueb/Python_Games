@@ -3,7 +3,7 @@ import random
 import math
 
 pygame.init()
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((1920, 1080))
 WIDTH, HEIGHT = screen.get_size()
 pygame.display.set_caption("Bullet Hell")
 
@@ -279,6 +279,7 @@ player2_health_setting = 3
 trail_duration_setting = 3000
 trail_distance_setting = 450
 freeze_duration_setting = 10000
+invincibility_duration_setting = 1000
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 basic_hp_setting = 5
@@ -337,6 +338,7 @@ def SETTINGS():
     global trail_duration_setting
     global trail_distance_setting
     global freeze_duration_setting
+    global invincibility_duration_setting
     global enemy_locks
     global basic_hp_setting
     global homing_hp_setting
@@ -375,7 +377,7 @@ def SETTINGS():
     button_offset = 10
     scroll_y = 0
     scroll_speed = 25
-    max_scroll = 3140 - HEIGHT
+    max_scroll = 3200 - HEIGHT
     enemy_locking_labels = ["Starter", "Locked", "Banned"]
     scrollbar_width = 20
     scrollbar_margin = 50
@@ -1681,6 +1683,27 @@ def SETTINGS():
 
 
 
+        invincibility_duration_label = font.render("Invincibility Duration: " + str(invincibility_duration_setting), True, WHITE)
+        screen.blit(invincibility_duration_label, (50, 3120 + scroll_y))
+        invincibility_duration_minus_button = pygame.Rect(500, 3120 - button_offset + scroll_y, 50, 50)
+        invincibility_duration_plus_button = pygame.Rect(560, 3120 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, invincibility_duration_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=invincibility_duration_plus_button.center))
+        pygame.draw.rect(screen, RED, invincibility_duration_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=invincibility_duration_minus_button.center))
+        if invincibility_duration_plus_button.collidepoint(mouse_pos) and mouse_click:
+            invincibility_duration_setting += 250
+            if invincibility_duration_setting > 5000:
+                invincibility_duration_setting = 5000
+            pygame.time.delay(50)
+        if invincibility_duration_minus_button.collidepoint(mouse_pos) and mouse_click:
+            invincibility_duration_setting -= 250
+            if invincibility_duration_setting < 0:
+                invincibility_duration_setting = 0
+            pygame.time.delay(50)
+
+
+
         pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=6)
         pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=6)
 
@@ -1734,6 +1757,7 @@ def apply_settings():
     global regen_delay, player_lives, player2_lives
     global trail_lifetime_ms, trail_interval_ms
     global freeze_duration
+    global invincibility_duration
     global basic_hp
     global homing_hp
     global fatal_hp
@@ -1782,18 +1806,19 @@ def apply_settings():
     player2_speed = player_speed_setting
     player2_speed_base = player_speed_setting
     enemy_speed = enemy_speed_setting
-    bomb_projectile_speed *= (projectile_speed_setting / 5)
-    shooter_projectile_speed *= (projectile_speed_setting / 5)
-    sniper_projectile_speed *= (projectile_speed_setting / 5)
-    shotgun_projectile_speed *= (projectile_speed_setting / 5)
-    rapidshooter_projectile_speed *= (projectile_speed_setting / 5)
-    frostbite_projectile_speed *= (projectile_speed_setting / 5)
+    bomb_projectile_speed = 2.5 * (projectile_speed_setting / 5)
+    shooter_projectile_speed = 5 * (projectile_speed_setting / 5)
+    sniper_projectile_speed = 10 * (projectile_speed_setting / 5)
+    shotgun_projectile_speed = 5 * (projectile_speed_setting / 5)
+    rapidshooter_projectile_speed = 5 * (projectile_speed_setting / 5)
+    frostbite_projectile_speed = 5 * (projectile_speed_setting / 5)
     regen_delay = regen_delay_setting
     player_lives = player_health_setting
     player2_lives = player2_health_setting
     trail_lifetime_ms = trail_duration_setting
     trail_interval_ms = trail_distance_setting
     freeze_duration = freeze_duration_setting
+    invincibility_duration = invincibility_duration_setting
     basic_hp = basic_hp_setting
     homing_hp = homing_hp_setting
     fatal_hp = fatal_hp_setting
