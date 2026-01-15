@@ -67,6 +67,7 @@ BLUE = (0, 0, 255)
 NAVY = (0, 0, 100)
 INDIGO = (110, 0, 200)
 MAUVE = (145, 95, 140) #NOT USED
+LAVENDER = (225, 175, 255)
 PURPLE = (162, 0, 255)
 VIOLET = (130, 0, 130)
 MAGENTA = (255, 0, 255)
@@ -147,7 +148,10 @@ savage_hp = 2 # 27
 teleporter_hp = 6 # 28
 haunter_hp = 3 # 29
 stream_hp = 4 # 30
+sensitive_hp = 20 #31
 
+# --- Enemy Damage ---
+enemy_damage = 1
 
 # --- Scoring System & Text Size ---
 score = 0
@@ -299,7 +303,11 @@ invincibility_duration_setting = 1000
 chaser_turn_amount_setting = 5
 enemy_stick_setting = 2000
 projectile_fire_rate_setting = 10
-enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+enemy_damage_setting = 1
+enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+               1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+               1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+               1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -338,6 +346,7 @@ savage_hp_setting = 2
 teleporter_hp_setting = 6
 haunter_hp_setting = 3
 stream_hp_setting = 4
+sensitive_hp_setting = 20
 
 def enemy_lock_setup(elock, enumber):
     global available_enemy_types
@@ -365,6 +374,7 @@ def SETTINGS():
     global chaser_turn_amount_setting
     global enemy_stick_setting
     global projectile_fire_rate_setting
+    global enemy_damage_setting
     global enemy_locks
     global basic_hp_setting
     global homing_hp_setting
@@ -403,12 +413,13 @@ def SETTINGS():
     global teleporter_hp_setting
     global haunter_hp_setting
     global stream_hp_setting
+    global sensitive_hp_setting
     
     running = True
     button_offset = 10
     scroll_y = 0
     scroll_speed = 25
-    max_scroll = 3730 - HEIGHT
+    max_scroll = 3850 - HEIGHT #SCROLL HEIGHT I ALWAYS NEED TO CHANGE WHEN ADDING A NEW SETTING
     enemy_locking_labels = ["Starter", "Locked", "Banned"]
     scrollbar_width = 20
     scrollbar_margin = 50
@@ -482,7 +493,11 @@ def SETTINGS():
             chaser_turn_amount_setting = 5
             enemy_stick_setting = 2000
             projectile_fire_rate_setting = 10
-            enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            enemy_damage_setting = 1
+            enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                           1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                           1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                           1]
 
             basic_hp_setting = 5
             homing_hp_setting = 2
@@ -521,6 +536,7 @@ def SETTINGS():
             teleporter_hp_setting = 6
             haunter_hp_setting = 3
             stream_hp_setting = 4
+            sensitive_hp_setting = 20
             pygame.time.delay(200)
 
 
@@ -1948,10 +1964,39 @@ def SETTINGS():
 
 
 
+        sensitive_hp_label = font.render("Sensitive Enemy - HP: " + str(sensitive_hp_setting), True, LAVENDER)
+        screen.blit(sensitive_hp_label, (50, 3660 + scroll_y))
+        sensitive_hp_minus_button = pygame.Rect(500, 3660 - button_offset + scroll_y, 50, 50)
+        sensitive_hp_plus_button = pygame.Rect(560, 3660 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, sensitive_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=sensitive_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, sensitive_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=sensitive_hp_minus_button.center))
+        if sensitive_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            sensitive_hp_setting += 1
+            if sensitive_hp_setting > 99:
+                sensitive_hp_setting = 99
+            pygame.time.delay(50)
+        if sensitive_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            sensitive_hp_setting -= 1
+            if sensitive_hp_setting < 1:
+                sensitive_hp_setting = 1
+            pygame.time.delay(50)
+        sensitive_locks_text = font.render(enemy_locking_labels[enemy_locks[30]], True, BLACK)
+        sensitive_locks_button = pygame.Rect(650, 3660 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, LAVENDER, sensitive_locks_button, border_radius=10)
+        screen.blit(sensitive_locks_text, sensitive_locks_text.get_rect(center=sensitive_locks_button.center))
+        if sensitive_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[30] > 1: enemy_locks[30] = 0
+            else: enemy_locks[30] = enemy_locks[30] + 1
+            pygame.time.delay(200)
+
+
+
         harden_break_label = font.render("Unhardening Rate: " + str(harden_break_setting), True, WHITE)
-        screen.blit(harden_break_label, (50, 3660 + scroll_y))
-        harden_break_minus_button = pygame.Rect(500, 3660 - button_offset + scroll_y, 50, 50)
-        harden_break_plus_button = pygame.Rect(560, 3660 - button_offset + scroll_y, 50, 50)
+        screen.blit(harden_break_label, (50, 3720 + scroll_y))
+        harden_break_minus_button = pygame.Rect(500, 3720 - button_offset + scroll_y, 50, 50)
+        harden_break_plus_button = pygame.Rect(560, 3720 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, harden_break_plus_button, border_radius=10)
         screen.blit(plus_txt, plus_txt.get_rect(center=harden_break_plus_button.center))
         pygame.draw.rect(screen, RED, harden_break_minus_button, border_radius=10)
@@ -1965,6 +2010,26 @@ def SETTINGS():
             harden_break_setting -= 1
             if harden_break_setting < 1:
                 harden_break_setting = 1
+            pygame.time.delay(50)
+
+
+        enemy_damage_label = font.render("Enemy Damage: " + str(enemy_damage_setting), True, WHITE)
+        screen.blit(enemy_damage_label, (50, 3780 + scroll_y))
+        enemy_damage_minus_button = pygame.Rect(500, 3780 - button_offset + scroll_y, 50, 50)
+        enemy_damage_plus_button = pygame.Rect(560, 3780 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, enemy_damage_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=enemy_damage_plus_button.center))
+        pygame.draw.rect(screen, RED, enemy_damage_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=enemy_damage_minus_button.center))
+        if enemy_damage_plus_button.collidepoint(mouse_pos) and mouse_click:
+            enemy_damage_setting += 1
+            if enemy_damage_setting > 99:
+                enemy_damage_setting = 99
+            pygame.time.delay(50)
+        if enemy_damage_minus_button.collidepoint(mouse_pos) and mouse_click:
+            enemy_damage_setting -= 1
+            if enemy_damage_setting < 0:
+                enemy_damage_setting = 0
             pygame.time.delay(50)
 
 
@@ -2016,7 +2081,7 @@ y_pos = HEIGHT - button_height - margin - 400
 
 def apply_settings():
     global player_size, player_font, enemy_size, enemy_font, projectile_size, trail_size
-    global min_spawn_delay, initial_spawn_delay, spawn_rate
+    global min_spawn_delay, initial_spawn_delay, spawn_rate, enemy_damage
     global player_speed, player_speed_base, player2_speed, player2_speed_base, enemy_speed
     global bomb_projectile_speed, shooter_projectile_speed, sniper_projectile_speed, shotgun_projectile_speed, rapidshooter_projectile_speed, frostbite_projectile_speed
     global regen_delay, player_lives, player2_lives
@@ -2057,6 +2122,7 @@ def apply_settings():
     global teleporter_hp
     global haunter_hp
     global stream_hp
+    global sensitive_hp
     
 
     # --- SETTINGS SET ---
@@ -2090,6 +2156,7 @@ def apply_settings():
     chase_turn = chaser_turn_amount_setting
     stickiness = enemy_stick_setting
     projectile_fire_rate = projectile_fire_rate_setting
+    enemy_damage = enemy_damage_setting
     basic_hp = basic_hp_setting
     homing_hp = homing_hp_setting
     fatal_hp = fatal_hp_setting
@@ -2127,6 +2194,7 @@ def apply_settings():
     teleporter_hp = teleporter_hp_setting
     haunter_hp = haunter_hp_setting
     stream_hp = stream_hp_setting
+    sensitive_hp = sensitive_hp_setting
     
     available_enemy_types.clear()
     locked_enemy_types.clear()
@@ -2413,6 +2481,8 @@ while running:
             dx *= 0.7; dy *= 0.7; health = haunter_hp
         elif enemy_type == 30:
             dx *= 2/3; dy *= 2/3; health = stream_hp
+        elif enemy_type == 31:
+            dx *= 2/3; dy *= 2/3; health = sensitive_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -2831,10 +2901,10 @@ while running:
                 if enemy["health"] <= 0:
                     if current_time >= invincible_until:
                         if enemy["target"] == 1:
-                            player_lives -= 1
+                            player_lives -= enemy_damage
                             p1_regen_block_until = score + regen_delay
                         if enemy["target"] == 2:
-                            player2_lives -= 1
+                            player2_lives -= enemy_damage
                             p2_regen_block_until = score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
@@ -3035,7 +3105,7 @@ while running:
                     if player_alive and not enemy["damaged_p1"]:
                         if abs(player_x - lx) < (player_size/2 + laser_width/2):
                             if current_time >= invincible_until:
-                                player_lives -= 1
+                                player_lives -= enemy_damage
                                 p1_regen_block_until = score + regen_delay
                                 damage_flash_time = current_time
                                 invincible_until = current_time + invincibility_duration
@@ -3045,7 +3115,7 @@ while running:
                     if players == 2 and player2_alive and not enemy["damaged_p2"]:
                         if player2_x + player_size > lx and player2_x < lx + laser_width:
                             if current_time >= player2_invincible_until:
-                                player2_lives -= 1
+                                player2_lives -= enemy_damage
                                 p2_regen_block_until = score + regen_delay
                                 player2_damage_flash_time = current_time
                                 player2_invincible_until = current_time + invincibility_duration
@@ -3056,7 +3126,7 @@ while running:
                     if player_alive and not enemy["damaged_p1"]:
                         if abs(player_y - ly) < (player_size/2 + laser_width/2):
                             if current_time >= invincible_until:
-                                player_lives -= 1
+                                player_lives -= enemy_damage
                                 p1_regen_block_until = score + regen_delay
                                 damage_flash_time = current_time
                                 invincible_until = current_time + invincibility_duration
@@ -3066,7 +3136,7 @@ while running:
                     if players == 2 and player2_alive and not enemy["damaged_p2"]:
                         if player2_y + player_size > ly and player2_y < ly + laser_width:
                             if current_time >= player2_invincible_until:
-                                player2_lives -= 1
+                                player2_lives -= enemy_damage
                                 p2_regen_block_until = score + regen_delay
                                 player2_damage_flash_time = current_time
                                 player2_invincible_until = current_time + invincibility_duration
@@ -3252,6 +3322,40 @@ while running:
                 enemy["y"] = spawner_pos[1]+25
             if enemy["bounces"] >= stream_hp or enemy["health"] <= 0:
                 enemy_died = True
+        elif enemy["type"] == 31:
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            closest_dist = min(dist1, dist2)
+            speed_multiplier = 2.5 if closest_dist < 200+enemy_size/2+player_size/2 else 2/3
+            enemy["x"] += enemy["dx"] * speed_multiplier
+            enemy["y"] += enemy["dy"] * speed_multiplier
+            bounced = False
+            # X-axis bounce
+            if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
+                enemy["dx"] *= -1
+                bounced = True
+                if enemy["x"] <= 0: enemy["x"] = 0
+                elif enemy["x"] >= WIDTH - enemy_size: enemy["x"] = WIDTH - enemy_size/2
+            # Y-axis bounce
+            if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
+                enemy["dy"] *= -1
+                bounced = True
+                if enemy["y"] <= 0: enemy["y"] = 0
+                elif enemy["y"] >= HEIGHT - enemy_size: enemy["y"] = HEIGHT - enemy_size/2
+            hardened_dps = 0.1 * (60 / FPS) * (harden_break / 10)
+            if dist1 < 200+enemy_size/2+player_size/2:
+                enemy["health"] -= hardened_dps
+                if enemy["health"] < 1:
+                    enemy["health"] = 1
+            if dist2 < 150+enemy_size/2+player_size/2:
+                enemy["health"] -= hardened_dps
+                if enemy["health"] < 1:
+                    enemy["health"] = 1
+            if bounced:
+                enemy["health"] -= 1
+                enemy["bounces"] += 1
+            if enemy["health"] < 1:
+                enemy_died = True
 
 
 
@@ -3271,7 +3375,7 @@ while running:
             if enemy["type"] == 17:
                 if not player_moving:  # Only damages if player is still
                     if current_time >= invincible_until:
-                        player_lives -= 1
+                        player_lives -= enemy_damage
                         p1_regen_block_until = score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
@@ -3282,7 +3386,7 @@ while running:
             elif enemy["type"] == 16:
                 if player_moving:  # Only damages if player is moving
                     if current_time >= invincible_until:
-                        player_lives -= 1
+                        player_lives -= enemy_damage
                         p1_regen_block_until = score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
@@ -3299,7 +3403,7 @@ while running:
                 continue
             elif enemy["type"] == 22:
                 if current_time >= invincible_until:
-                    player_lives -= 1
+                    player_lives -= enemy_damage
                     p1_regen_block_until = score + regen_delay
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
@@ -3316,7 +3420,7 @@ while running:
                 player_alive = False
             else:
                 if current_time >= invincible_until:
-                    player_lives -= 1
+                    player_lives -= enemy_damage
                     p1_regen_block_until = score + regen_delay
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
@@ -3329,7 +3433,7 @@ while running:
             if enemy["type"] == 17:
                 if p2_dx == 0 and p2_dy == 0:  # not moving
                     if current_time >= player2_invincible_until:
-                        player2_lives -= 1
+                        player2_lives -= enemy_damage
                         p2_regen_block_until = score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
@@ -3340,7 +3444,7 @@ while running:
             elif enemy["type"] == 16:
                 if (p2_dx != 0 or p2_dy != 0):
                     if current_time >= player2_invincible_until:
-                        player2_lives -= 1
+                        player2_lives -= enemy_damage
                         p2_regen_block_until = score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
@@ -3357,7 +3461,7 @@ while running:
                 continue
             elif enemy["type"] == 22:
                 if current_time >= player2_invincible_until:
-                    player2_lives -= 1
+                    player2_lives -= enemy_damage
                     p2_regen_block_until = score + regen_delay
                     player2_damage_flash_time = current_time
                     player2_invincible_until = current_time + invincibility_duration
@@ -3374,7 +3478,7 @@ while running:
                 player2_alive = False
             else:
                 if current_time >= player2_invincible_until:
-                    player2_lives -= 1
+                    player2_lives -= enemy_damage
                     p2_regen_block_until = score + regen_delay
                     player2_damage_flash_time = current_time
                     player2_invincible_until = current_time + invincibility_duration
@@ -3600,6 +3704,7 @@ while running:
         elif enemy["type"] == 28: color = PURPLE
         elif enemy["type"] == 29: color = NAVY
         elif enemy["type"] == 30: color = AQUA
+        elif enemy["type"] == 31: color = LAVENDER
 
 
         
