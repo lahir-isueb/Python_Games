@@ -200,11 +200,18 @@ split_amount = 2
 accel = 0.0
 accel_rate = 0.02
 
+# --- Harden ---
+harden_break = 10
+
 # --- Turn Speed ---
 chase_turn = 5
 
 # --- Stickiness ---
 stickiness = 2000
+
+# --- Addiction ---
+addictive_pull_radius = 300
+addictive_pull_strength = 10
 
 # --- Player damage & heal flash ---
 damage_flash_time = 0
@@ -319,8 +326,11 @@ rapidshooter_hp_setting = 1
 frostbite_hp_setting = 4
 frostbite_projectile_amount_setting = 32
 addictive_hp_setting = 7
+addictive_pull_strength_setting = 10
+addictive_pull_radius_setting = 300
 laser_hp_setting = 3
 hardened_hp_setting = 40
+harden_break_setting = 10
 accelerator_hp_setting = 5
 cold_hp_setting = 6
 tracer_hp_setting = 1
@@ -381,8 +391,11 @@ def SETTINGS():
     global frostbite_hp_setting
     global frostbite_projectile_amount_setting
     global addictive_hp_setting
+    global addictive_pull_strength_setting
+    global addictive_pull_radius_setting
     global laser_hp_setting
     global hardened_hp_setting
+    global harden_break_setting
     global accelerator_hp_setting
     global cold_hp_setting
     global tracer_hp_setting
@@ -395,7 +408,7 @@ def SETTINGS():
     button_offset = 10
     scroll_y = 0
     scroll_speed = 25
-    max_scroll = 3670 - HEIGHT
+    max_scroll = 3730 - HEIGHT
     enemy_locking_labels = ["Starter", "Locked", "Banned"]
     scrollbar_width = 20
     scrollbar_margin = 50
@@ -496,8 +509,11 @@ def SETTINGS():
             frostbite_hp_setting = 4
             frostbite_projectile_amount_setting = 32
             addictive_hp_setting = 7
+            addictive_pull_strength_setting = 10
+            addictive_pull_radius_setting = 300
             laser_hp_setting = 3
             hardened_hp_setting = 40
+            harden_break_setting = 10
             accelerator_hp_setting = 5
             cold_hp_setting = 6
             tracer_hp_setting = 1
@@ -1629,11 +1645,52 @@ def SETTINGS():
             pygame.time.delay(200)
 
 
+        addictive_pull_strength_label = font.render("Strength: " + str(addictive_pull_strength_setting), True, PINK)
+        screen.blit(addictive_pull_strength_label, (296, 2940 + scroll_y))
+        addictive_pull_strength_minus_button = pygame.Rect(500, 2940 - button_offset + scroll_y, 50, 50)
+        addictive_pull_strength_plus_button = pygame.Rect(560, 2940 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, addictive_pull_strength_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=addictive_pull_strength_plus_button.center))
+        pygame.draw.rect(screen, RED, addictive_pull_strength_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=addictive_pull_strength_minus_button.center))
+        if addictive_pull_strength_plus_button.collidepoint(mouse_pos) and mouse_click:
+            addictive_pull_strength_setting += 1
+            if addictive_pull_strength_setting > 40:
+                addictive_pull_strength_setting = 40
+            pygame.time.delay(50)
+        if addictive_pull_strength_minus_button.collidepoint(mouse_pos) and mouse_click:
+            addictive_pull_strength_setting -= 1
+            if addictive_pull_strength_setting < 1:
+                addictive_pull_strength_setting = 1
+            pygame.time.delay(50)
+
+
+
+        addictive_pull_radius_label = font.render("Radius: " + str(addictive_pull_radius_setting), True, PINK)
+        screen.blit(addictive_pull_radius_label, (296, 3000 + scroll_y))
+        addictive_pull_radius_minus_button = pygame.Rect(500, 3000 - button_offset + scroll_y, 50, 50)
+        addictive_pull_radius_plus_button = pygame.Rect(560, 3000 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, addictive_pull_radius_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=addictive_pull_radius_plus_button.center))
+        pygame.draw.rect(screen, RED, addictive_pull_radius_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=addictive_pull_radius_minus_button.center))
+        if addictive_pull_radius_plus_button.collidepoint(mouse_pos) and mouse_click:
+            addictive_pull_radius_setting += 50
+            if addictive_pull_radius_setting > 1000:
+                addictive_pull_radius_setting = 1000
+            pygame.time.delay(50)
+        if addictive_pull_radius_minus_button.collidepoint(mouse_pos) and mouse_click:
+            addictive_pull_radius_setting -= 50
+            if addictive_pull_radius_setting < 100:
+                addictive_pull_radius_setting = 100
+            pygame.time.delay(50)
+
+
 
         laser_hp_label = font.render("Laser Enemy - HP: " + str(laser_hp_setting), True, TURQUOISE)
-        screen.blit(laser_hp_label, (50, 3000 + scroll_y))
-        laser_hp_minus_button = pygame.Rect(500, 3000 - button_offset + scroll_y, 50, 50)
-        laser_hp_plus_button = pygame.Rect(560, 3000 - button_offset + scroll_y, 50, 50)
+        screen.blit(laser_hp_label, (50, 3060 + scroll_y))
+        laser_hp_minus_button = pygame.Rect(500, 3060 - button_offset + scroll_y, 50, 50)
+        laser_hp_plus_button = pygame.Rect(560, 3060 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, laser_hp_plus_button, border_radius=10)
         screen.blit(plus_txt, plus_txt.get_rect(center=laser_hp_plus_button.center))
         pygame.draw.rect(screen, RED, laser_hp_minus_button, border_radius=10)
@@ -1649,7 +1706,7 @@ def SETTINGS():
                 laser_hp_setting = 1
             pygame.time.delay(50)
         laser_locks_text = font.render(enemy_locking_labels[enemy_locks[21]], True, BLACK)
-        laser_locks_button = pygame.Rect(650, 3000 - button_offset + scroll_y, 200, 50)
+        laser_locks_button = pygame.Rect(650, 3060 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, TURQUOISE, laser_locks_button, border_radius=10)
         screen.blit(laser_locks_text, laser_locks_text.get_rect(center=laser_locks_button.center))
         if laser_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -1660,9 +1717,9 @@ def SETTINGS():
 
 
         hardened_hp_label = font.render("Hardened Enemy - HP: " + str(hardened_hp_setting), True, BROWN)
-        screen.blit(hardened_hp_label, (50, 3120 + scroll_y))
-        hardened_hp_minus_button = pygame.Rect(500, 3120 - button_offset + scroll_y, 50, 50)
-        hardened_hp_plus_button = pygame.Rect(560, 3120 - button_offset + scroll_y, 50, 50)
+        screen.blit(hardened_hp_label, (50, 3180 + scroll_y))
+        hardened_hp_minus_button = pygame.Rect(500, 3180 - button_offset + scroll_y, 50, 50)
+        hardened_hp_plus_button = pygame.Rect(560, 3180 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, hardened_hp_plus_button, border_radius=10)
         screen.blit(plus_txt, plus_txt.get_rect(center=hardened_hp_plus_button.center))
         pygame.draw.rect(screen, RED, hardened_hp_minus_button, border_radius=10)
@@ -1678,7 +1735,7 @@ def SETTINGS():
                 hardened_hp_setting = 1
             pygame.time.delay(50)
         hardened_locks_text = font.render(enemy_locking_labels[enemy_locks[22]], True, BLACK)
-        hardened_locks_button = pygame.Rect(650, 3120 - button_offset + scroll_y, 200, 50)
+        hardened_locks_button = pygame.Rect(650, 3180 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, BROWN, hardened_locks_button, border_radius=10)
         screen.blit(hardened_locks_text, hardened_locks_text.get_rect(center=hardened_locks_button.center))
         if hardened_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -1891,6 +1948,27 @@ def SETTINGS():
 
 
 
+        harden_break_label = font.render("Unhardening Rate: " + str(harden_break_setting), True, WHITE)
+        screen.blit(harden_break_label, (50, 3660 + scroll_y))
+        harden_break_minus_button = pygame.Rect(500, 3660 - button_offset + scroll_y, 50, 50)
+        harden_break_plus_button = pygame.Rect(560, 3660 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, harden_break_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=harden_break_plus_button.center))
+        pygame.draw.rect(screen, RED, harden_break_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=harden_break_minus_button.center))
+        if harden_break_plus_button.collidepoint(mouse_pos) and mouse_click:
+            harden_break_setting += 1
+            if harden_break_setting > 40:
+                harden_break_setting = 40
+            pygame.time.delay(50)
+        if harden_break_minus_button.collidepoint(mouse_pos) and mouse_click:
+            harden_break_setting -= 1
+            if harden_break_setting < 1:
+                harden_break_setting = 1
+            pygame.time.delay(50)
+
+
+
         pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=6)
         pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=6)
 
@@ -1969,9 +2047,9 @@ def apply_settings():
     global charger_hp
     global rapidshooter_hp
     global frostbite_hp, frostbite_projectile_amount
-    global addictive_hp
+    global addictive_hp, addictive_pull_radius, addictive_pull_strength
     global laser_hp
-    global hardened_hp
+    global hardened_hp, harden_break
     global accelerator_hp
     global cold_hp
     global tracer_hp
@@ -2037,8 +2115,11 @@ def apply_settings():
     frostbite_hp = frostbite_hp_setting
     frostbite_projectile_amount = frostbite_projectile_amount_setting
     addictive_hp = addictive_hp_setting
+    addictive_pull_radius = addictive_pull_radius_setting
+    addictive_pull_strength = addictive_pull_strength_setting
     laser_hp = laser_hp_setting
     hardened_hp = hardened_hp_setting
+    harden_break = harden_break_setting
     accelerator_hp = accelerator_hp_setting
     cold_hp = cold_hp_setting
     tracer_hp = tracer_hp_setting
@@ -2420,7 +2501,7 @@ while running:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
-            speed_multiplier = 2.5 if closest_dist < 250 else 2/3
+            speed_multiplier = 2.5 if closest_dist < 200+enemy_size/2+player_size/2 else 2/3
             enemy["x"] += enemy["dx"] * speed_multiplier
             enemy["y"] += enemy["dy"] * speed_multiplier
             bounced = False
@@ -2475,7 +2556,7 @@ while running:
             dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
-            if closest_dist > 250:
+            if closest_dist > 200+enemy_size/2+player_size/2:
                 enemy["x"] += enemy["dx"]
                 enemy["y"] += enemy["dy"]
                 bounced = False
@@ -2584,7 +2665,6 @@ while running:
 
                     
         elif enemy["type"] == 10:
-            # Move like basic
             enemy["x"] += enemy["dx"]
             enemy["y"] += enemy["dy"]
             bounced = False
@@ -2600,7 +2680,7 @@ while running:
             # Proximity trigger – bomb kills itself and explodes
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
-            if min(dist1, dist2) < 200:
+            if min(dist1, dist2) < 150+enemy_size/2+player_size/2:
                 for i in range(bomb_projectile_amount):  # fire 8 projectiles in all directions
                     ang = i * (2 * math.pi / bomb_projectile_amount)
                     dxp = math.cos(ang) * bomb_projectile_speed
@@ -2868,7 +2948,7 @@ while running:
 
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
-            if min(dist1, dist2) < 200 and enemy["ability"] == 1:
+            if min(dist1, dist2) < 150+enemy_size/2+player_size/2 and enemy["ability"] == 1:
                 for i in range(frostbite_projectile_amount):
                     ang = i * (2 * math.pi / frostbite_projectile_amount)
                     dxp = math.cos(ang) * frostbite_projectile_speed
@@ -2899,14 +2979,14 @@ while running:
                 if enemy["health"] <= 0:
                     enemy_died = True
 
-            pull_radius = 300   # much wider area
-            base_pull_strength = 10  # stronger base pull
+            pull_radius = addictive_pull_radius
+            base_pull_strength = addictive_pull_strength
             if player_alive:
                 dxp = enemy["x"] - player_x
                 dyp = enemy["y"] - player_y
                 dist = math.hypot(dxp, dyp)
-                if dist < pull_radius and dist > 1:
-                    pull_strength = base_pull_strength * (1 - dist / pull_radius)
+                if dist < pull_radius-50+enemy_size/2+player_size/2 and dist > 1:
+                    pull_strength = base_pull_strength * (1 - dist / (pull_radius-50+enemy_size/2+player_size/2))
                     player_x += (dxp / dist) * pull_strength
                     player_y += (dyp / dist) * pull_strength
             if players == 2 and player2_alive:
@@ -3005,20 +3085,25 @@ while running:
                 enemy["dy"] *= -1
                 bounced = True
 
-            if bounced:
-                enemy["health"] -= 1
+            
 
-            hardened_dps = 0.1 * (60 / FPS)
+            hardened_dps = 0.1 * (60 / FPS) * (harden_break / 10)
 
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
 
-            if dist1 < 200 and enemy["health"] > 1.1:
+            if dist1 < 150+enemy_size/2+player_size/2:
                 enemy["health"] -= hardened_dps
-            if dist2 < 200 and enemy["health"] > 1.1:
+                if enemy["health"] < 1:
+                    enemy["health"] = 1
+            if dist2 < 150+enemy_size/2+player_size/2:
                 enemy["health"] -= hardened_dps
+                if enemy["health"] < 1:
+                    enemy["health"] = 1
+            if bounced:
+                enemy["health"] -= 1
             if enemy["health"] < 1:
-                    enemy_died = True
+                enemy_died = True
         elif enemy["type"] == 24:
             enemy["accel"] += enemy.get("accel_rate", 0.02)
             vx = enemy.get("base_dx", enemy["dx"]) * enemy["accel"]
@@ -3094,7 +3179,7 @@ while running:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
-            speed_multiplier = 2.5 if closest_dist < 250 else 2/3
+            speed_multiplier = 2.5 if closest_dist < 200+enemy_size/2+player_size/2 else 2/3
             
             target_pos = get_target_position(enemy)
             if target_pos:
@@ -3154,7 +3239,7 @@ while running:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
-            speed_multiplier = 2.5 if closest_dist < 250 else 2/3
+            speed_multiplier = 2.5 if closest_dist < 200+enemy_size/2+player_size/2 else 2/3
             enemy["x"] += enemy["dx"] * speed_multiplier
             enemy["y"] += enemy["dy"] * speed_multiplier
             bounced = False
