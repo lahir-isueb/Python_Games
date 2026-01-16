@@ -40,6 +40,7 @@ def GAME_OVER(final_score, p1, p2):
 WHITE = (255, 255, 255)
 SILVER = (175, 175, 175)
 GRAY = (100, 100, 100)
+SHADOW = (50, 50, 50) # not used?
 BLACK = (0, 0, 0) #not used?
 BROWN = (108, 65, 0)
 CRISP = (50, 0, 0) #not used?
@@ -348,6 +349,8 @@ haunter_hp_setting = 3
 stream_hp_setting = 4
 sensitive_hp_setting = 10
 
+modifiers = ["No"]
+
 def enemy_lock_setup(elock, enumber):
     global available_enemy_types
     global locked_enemy_types
@@ -414,6 +417,7 @@ def SETTINGS():
     global haunter_hp_setting
     global stream_hp_setting
     global sensitive_hp_setting
+    global modifiers
 
     SLIST = ["presets",
              "starting sd", "ending sd", "sd change",
@@ -431,7 +435,8 @@ def SETTINGS():
              "charger", "rapidshooter", "frostbite", "frostbite bullets",
              "addictive", "addictive strength", "addictive radius",
              "laser", "hardened", "accelerator", "cold", "tracer",
-             "savage", "teleporter", "haunter", "stream", "sensitive"
+             "savage", "teleporter", "haunter", "stream", "sensitive",
+             "all one color"
              ]
 
     running = True
@@ -556,6 +561,7 @@ def SETTINGS():
             haunter_hp_setting = 3
             stream_hp_setting = 4
             sensitive_hp_setting = 20
+            modifiers = ["No"]
             pygame.time.delay(200)
 
 
@@ -2052,6 +2058,18 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
+        all_enemies_one_color_text = font.render("Set All Enemies To One Color: " + modifiers[0], True, WHITE)
+        all_enemies_one_color_button = pygame.Rect(50, 180+SLIST.index("all one color")*60 - button_offset + scroll_y, 800, 50)
+        pygame.draw.rect(screen, SHADOW, all_enemies_one_color_button, border_radius=10)
+        screen.blit(all_enemies_one_color_text, all_enemies_one_color_text.get_rect(center=all_enemies_one_color_button.center))
+        if all_enemies_one_color_button.collidepoint(mouse_pos) and mouse_click:
+            if modifiers[0] == "No": modifiers[0] = "Gray"
+            elif modifiers[0] == "Gray": modifiers[0] = "Red"
+            elif modifiers[0] == "Red": modifiers[0] = "White"
+            elif modifiers[0] == "White": modifiers[0] = "No"
+            pygame.time.delay(200)
+
+
 
         pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=6)
         pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=6)
@@ -2468,9 +2486,9 @@ while running:
         elif enemy_type == 15:
             dx *= 0.35; dy *= 0.35; health = voodoo_hp
         elif enemy_type == 16:
-            dx *= 1.5; dy *= 1.5; health = blind_hp
+            dx *= 1; dy *= 1; health = blind_hp
         elif enemy_type == 17:
-            dx *= 1.5; dy *= 1.5; health = motion_hp
+            dx *= 1; dy *= 1; health = motion_hp
         elif enemy_type == 18:
             dx *= 2; dy *= 2; health = charger_hp
         elif enemy_type == 19:
@@ -3690,40 +3708,44 @@ while running:
 
     # draw enemies
     for enemy in enemies:
-        if enemy["type"] == 1: color = GRAY
-        elif enemy["type"] == 2: color = OLIVE
-        elif enemy["type"] == 3: color = RED
-        elif enemy["type"] == 4: color = TEAL
-        elif enemy["type"] == 5: color = GREEN
-        elif enemy["type"] == 6: color = VIOLET
-        elif enemy["type"] == 7: color = LAVA
-        elif enemy["type"] == 8:
-            if player_frozen == True and enemy["target"] == 1: color = ICE
-            elif player2_frozen == True and enemy["target"] == 2: color = ICE
-            else: color = WHITE
-        elif enemy["type"] == 9: color = LIME
-        elif enemy["type"] == 10: color = HOT_PINK
-        elif enemy["type"] == 11: color = BRONZE
-        elif enemy["type"] == 12: color = INDIGO
-        elif enemy["type"] == 13: color = SKY
-        elif enemy["type"] == 14: color = BRICK
-        elif enemy["type"] == 15: color = MAGENTA
-        elif enemy["type"] == 16: color = BLUE
-        elif enemy["type"] == 17: color = ORANGE
-        elif enemy["type"] == 18: color = YELLOW
-        elif enemy["type"] == 19: color = SILVER
-        elif enemy["type"] == 20: color = CYAN
-        elif enemy["type"] == 21: color = PINK
-        elif enemy["type"] == 22: color = TURQUOISE
-        elif enemy["type"] == 23: color = BROWN
-        elif enemy["type"] == 24: color = TAN
-        elif enemy["type"] == 25: color = ICE
-        elif enemy["type"] == 26: color = SULFUR
-        elif enemy["type"] == 27: color = MAROON
-        elif enemy["type"] == 28: color = PURPLE
-        elif enemy["type"] == 29: color = NAVY
-        elif enemy["type"] == 30: color = AQUA
-        elif enemy["type"] == 31: color = LAVENDER
+        if enemy["type"] == 15: color = MAGENTA
+        elif modifiers[0] == "Gray": color = GRAY
+        elif modifiers[0] == "Red": color = RED
+        elif modifiers[0] == "White": color = WHITE
+        elif modifiers[0] == "No":
+            if enemy["type"] == 1: color = GRAY
+            elif enemy["type"] == 2: color = OLIVE
+            elif enemy["type"] == 3: color = RED
+            elif enemy["type"] == 4: color = TEAL
+            elif enemy["type"] == 5: color = GREEN
+            elif enemy["type"] == 6: color = VIOLET
+            elif enemy["type"] == 7: color = LAVA
+            elif enemy["type"] == 8:
+                if player_frozen == True and enemy["target"] == 1: color = ICE
+                elif player2_frozen == True and enemy["target"] == 2: color = ICE
+                else: color = WHITE
+            elif enemy["type"] == 9: color = LIME
+            elif enemy["type"] == 10: color = HOT_PINK
+            elif enemy["type"] == 11: color = BRONZE
+            elif enemy["type"] == 12: color = INDIGO
+            elif enemy["type"] == 13: color = SKY
+            elif enemy["type"] == 14: color = BRICK
+            elif enemy["type"] == 16: color = BLUE
+            elif enemy["type"] == 17: color = ORANGE
+            elif enemy["type"] == 18: color = YELLOW
+            elif enemy["type"] == 19: color = SILVER
+            elif enemy["type"] == 20: color = CYAN
+            elif enemy["type"] == 21: color = PINK
+            elif enemy["type"] == 22: color = TURQUOISE
+            elif enemy["type"] == 23: color = BROWN
+            elif enemy["type"] == 24: color = TAN
+            elif enemy["type"] == 25: color = ICE
+            elif enemy["type"] == 26: color = SULFUR
+            elif enemy["type"] == 27: color = MAROON
+            elif enemy["type"] == 28: color = PURPLE
+            elif enemy["type"] == 29: color = NAVY
+            elif enemy["type"] == 30: color = AQUA
+            elif enemy["type"] == 31: color = LAVENDER
 
 
         
@@ -3749,7 +3771,9 @@ while running:
         if players == 1: enemy_text_color = BLACK
         elif players == 2:
             if enemy["type"] in targetting_enemies:
-                if enemy["target"] == 1: enemy_text_color = RED
+                if enemy["target"] == 1:
+                    if modifiers[0] == "Red": enemy_text_color = MAROON
+                    else: enemy_text_color = RED
                 elif enemy["target"] == 2: enemy_text_color = BLUE
             else: enemy_text_color = BLACK
         
