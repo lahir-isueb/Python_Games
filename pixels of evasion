@@ -2058,9 +2058,17 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
-        all_enemies_one_color_text = font.render("Set All Enemies To One Color: " + modifiers[0], True, WHITE)
+        all_enemies_one_color_button_color = SHADOW
+        all_enemies_one_color_text_color = WHITE
+        if modifiers[0] == "No": all_enemies_one_color_button_color = SHADOW
+        elif modifiers[0] == "Gray": all_enemies_one_color_button_color = GRAY
+        elif modifiers[0] == "Red": all_enemies_one_color_button_color = RED
+        elif modifiers[0] == "White": all_enemies_one_color_button_color = WHITE
+        if modifiers[0] == "White": all_enemies_one_color_text_color = BLACK
+        else: all_enemies_one_color_text_color = WHITE
+        all_enemies_one_color_text = font.render("Set All Enemies To One Color: " + modifiers[0], True, all_enemies_one_color_text_color)
         all_enemies_one_color_button = pygame.Rect(50, 180+SLIST.index("all one color")*60 - button_offset + scroll_y, 800, 50)
-        pygame.draw.rect(screen, SHADOW, all_enemies_one_color_button, border_radius=10)
+        pygame.draw.rect(screen, all_enemies_one_color_button_color, all_enemies_one_color_button, border_radius=10)
         screen.blit(all_enemies_one_color_text, all_enemies_one_color_text.get_rect(center=all_enemies_one_color_button.center))
         if all_enemies_one_color_button.collidepoint(mouse_pos) and mouse_click:
             if modifiers[0] == "No": modifiers[0] = "Gray"
