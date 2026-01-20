@@ -310,6 +310,7 @@ enemy_stick_setting = 2000
 projectile_fire_rate_setting = 10
 enemy_damage_setting = 1
 burst_setting = 10
+enemy_unlock_setting = 100
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -385,6 +386,7 @@ def SETTINGS():
     global projectile_fire_rate_setting
     global enemy_damage_setting
     global burst_setting
+    global enemy_unlock_setting
     global enemy_locks
     global basic_hp_setting
     global homing_hp_setting
@@ -428,7 +430,7 @@ def SETTINGS():
     global modifiers
 
     SLIST = ["presets",
-             "starting sd", "ending sd", "sd change",
+             "starting sd", "ending sd", "sd change", "enemy unlock",
              "p1 hp", "p2 hp", "regen", "invincibility",
              "player speed", "player size",
              "enemy speed", "enemy size", "enemy damage",
@@ -530,6 +532,7 @@ def SETTINGS():
             enemy_stick_setting = 2000
             projectile_fire_rate_setting = 10
             enemy_damage_setting = 1
+            enemy_unlock_setting = 100
             enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -572,7 +575,7 @@ def SETTINGS():
             teleporter_hp_setting = 6
             haunter_hp_setting = 3
             stream_hp_setting = 4
-            sensitive_hp_setting = 20
+            sensitive_hp_setting = 10
             modifiers = ["No"]
             pygame.time.delay(200)
 
@@ -972,6 +975,27 @@ def SETTINGS():
             enemy_stick_setting -= 500
             if enemy_stick_setting < 500:
                 enemy_stick_setting = 500
+            pygame.time.delay(50)
+
+
+
+        enemy_unlock_label = font.render("Enemy Unlock: " + str(enemy_unlock_setting), True, WHITE)
+        screen.blit(enemy_unlock_label, (50, 180+SLIST.index("enemy unlock")*60 + scroll_y))
+        enemy_unlock_minus_button = pygame.Rect(500, 180+SLIST.index("enemy unlock")*60 - button_offset + scroll_y, 50, 50)
+        enemy_unlock_plus_button = pygame.Rect(560, 180+SLIST.index("enemy unlock")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, enemy_unlock_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=enemy_unlock_plus_button.center))
+        pygame.draw.rect(screen, RED, enemy_unlock_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=enemy_unlock_minus_button.center))
+        if enemy_unlock_plus_button.collidepoint(mouse_pos) and mouse_click:
+            enemy_unlock_setting += 10
+            if enemy_unlock_setting > 300:
+                enemy_unlock_setting = 300
+            pygame.time.delay(50)
+        if enemy_unlock_minus_button.collidepoint(mouse_pos) and mouse_click:
+            enemy_unlock_setting -= 10
+            if enemy_unlock_setting < 10:
+                enemy_unlock_setting = 10
             pygame.time.delay(50)
 
 
@@ -1650,7 +1674,7 @@ def SETTINGS():
 
 
         burst_label = font.render("Burst: " + str(burst_setting), True, SILVER)
-        screen.blit(burst_label, (296, 180+SLIST.index("burst")*60 + scroll_y))
+        screen.blit(burst_label, (350, 180+SLIST.index("burst")*60 + scroll_y))
         burst_minus_button = pygame.Rect(500, 180+SLIST.index("burst")*60 - button_offset + scroll_y, 50, 50)
         burst_plus_button = pygame.Rect(560, 180+SLIST.index("burst")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, burst_plus_button, border_radius=10)
@@ -2193,7 +2217,7 @@ def apply_settings():
     global regen_delay, player_lives, player2_lives
     global trail_lifetime_ms, trail_interval_ms, burst
     global freeze_duration
-    global invincibility_duration
+    global invincibility_duration, enemy_unlock
     global chase_turn
     global stickiness
     global projectile_fire_rate
@@ -2265,6 +2289,7 @@ def apply_settings():
     stickiness = enemy_stick_setting
     projectile_fire_rate = projectile_fire_rate_setting
     enemy_damage = enemy_damage_setting
+    enemy_unlock = enemy_unlock_setting
     burst = burst_setting
     basic_hp = basic_hp_setting
     homing_hp = homing_hp_setting
@@ -2316,7 +2341,7 @@ def apply_settings():
     random.shuffle(locked_enemy_types)
     unlocks = 0
     for unlocked in range(len(locked_enemy_types)):
-        unlock_scores.append(100 * (1 + unlocked))
+        unlock_scores.append(enemy_unlock * (1 + unlocked))
 
     
 
