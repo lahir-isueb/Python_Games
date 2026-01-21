@@ -74,7 +74,7 @@ VIOLET = (130, 0, 130)
 MAGENTA = (255, 0, 255)
 PINK = (255, 140, 255)
 HOT_PINK = (255, 0, 106)
-CRIMSON = (150, 0, 48) #NOT USED
+CRIMSON = (190, 0, 60) #NOT USED
 
 # --- Spawner Size ---
 SPAWNER_SIZE = 50
@@ -151,6 +151,7 @@ haunter_hp = 3 # 29
 stream_hp = 4 # 30
 sensitive_hp = 10 #31
 burstshooter_hp = 3 #32
+stickyshooter_hp = 2 #33
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -196,6 +197,7 @@ sniper_delay = 5500
 shotgun_delay = 7500
 rapidshooter_delay = 200
 burstshooter_delay = 3000
+stickyshooter_delay = 500
 projectile_fire_rate = 10
 burst = 10
 
@@ -267,6 +269,10 @@ def reset_game_state():
     global score, truescore, score_p1, score_p2
     global last_spawn_time, invincible_until, player2_invincible_until
     global spawn_enabled, p1_ready, p2_ready
+    global damage_flash_time, player2_damage_flash_time
+    global heal_flash_time, player2_heal_flash_time
+    global player_frozen, player2_frozen, slow_until, player2_slow_until
+    global player_speed, player2_speed
     player_x = player_size // 2
     player_y = spawner_pos[1] + SPAWNER_SIZE // 2
     player2_x = WIDTH - player_size // 2
@@ -283,6 +289,16 @@ def reset_game_state():
     score_p1 = 0
     score_p2 = 0
     last_spawn_time = pygame.time.get_ticks()
+    damage_flash_time = 0
+    player2_damage_flash_time = 0
+    heal_flash_time = 0
+    player2_heal_flash_time = 0
+    player_frozen = False
+    player2_frozen = False
+    slow_until = 0
+    player2_slow_until = 0
+    player_speed = player_speed_base
+    player2_speed = player2_speed_base
     invincible_until = 0
     player2_invincible_until = 0
     spawn_enabled = False
@@ -314,7 +330,7 @@ enemy_unlock_setting = 100
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-               1, 1]
+               1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -355,6 +371,7 @@ haunter_hp_setting = 3
 stream_hp_setting = 4
 sensitive_hp_setting = 10
 burstshooter_hp_setting = 3
+stickyshooter_hp_setting = 2
 
 modifiers = ["No"]
 
@@ -427,6 +444,7 @@ def SETTINGS():
     global stream_hp_setting
     global sensitive_hp_setting
     global burstshooter_hp_setting
+    global stickyshooter_hp_setting
     global modifiers
 
     SLIST = ["presets",
@@ -448,7 +466,7 @@ def SETTINGS():
              "addictive", "addictive strength", "addictive radius",
              "voodoo", "impostor",
              
-             "stream", "sensitive", "savage", "haunter", "tracer",
+             "stream", "sensitive", "savage", "haunter", "tracer", "stickyshooter",
              
              "all one color"
              ]
@@ -536,7 +554,7 @@ def SETTINGS():
             enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                           1, 1]
+                           1, 1, 1]
 
             basic_hp_setting = 5
             homing_hp_setting = 2
@@ -576,6 +594,8 @@ def SETTINGS():
             haunter_hp_setting = 3
             stream_hp_setting = 4
             sensitive_hp_setting = 10
+            burstshooter_hp_setting = 3
+            stickyshooter_hp_setting = 2
             modifiers = ["No"]
             pygame.time.delay(200)
 
@@ -1064,7 +1084,7 @@ def SETTINGS():
 
 
 
-        homing_hp_label = font.render("Homing Enemy - HP: " + str(homing_hp_setting), True, OLIVE)
+        homing_hp_label = font.render("Homing Enemy - HP: " + str(homing_hp_setting), True, CRIMSON)
         screen.blit(homing_hp_label, (50, 180+SLIST.index("homing")*60 + scroll_y))
         homing_hp_minus_button = pygame.Rect(500, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 50, 50)
         homing_hp_plus_button = pygame.Rect(560, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 50, 50)
@@ -1084,7 +1104,7 @@ def SETTINGS():
             pygame.time.delay(50)
         homing_locks_text = font.render(enemy_locking_labels[enemy_locks[1]], True, BLACK)
         homing_locks_button = pygame.Rect(650, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, OLIVE, homing_locks_button, border_radius=10)
+        pygame.draw.rect(screen, CRIMSON, homing_locks_button, border_radius=10)
         screen.blit(homing_locks_text, homing_locks_text.get_rect(center=homing_locks_button.center))
         if homing_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[1] > 1: enemy_locks[1] = 0
@@ -2103,6 +2123,35 @@ def SETTINGS():
 
 
 
+        stickyshooter_hp_label = font.render("Stickyshooter Enemy - HP: " + str(stickyshooter_hp_setting), True, OLIVE)
+        screen.blit(stickyshooter_hp_label, (50, 180+SLIST.index("stickyshooter")*60 + scroll_y))
+        stickyshooter_hp_minus_button = pygame.Rect(500, 180+SLIST.index("stickyshooter")*60 - button_offset + scroll_y, 50, 50)
+        stickyshooter_hp_plus_button = pygame.Rect(560, 180+SLIST.index("stickyshooter")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, stickyshooter_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=stickyshooter_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, stickyshooter_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=stickyshooter_hp_minus_button.center))
+        if stickyshooter_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            stickyshooter_hp_setting += 1
+            if stickyshooter_hp_setting > 99:
+                stickyshooter_hp_setting = 99
+            pygame.time.delay(50)
+        if stickyshooter_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            stickyshooter_hp_setting -= 1
+            if stickyshooter_hp_setting < 1:
+                stickyshooter_hp_setting = 1
+            pygame.time.delay(50)
+        stickyshooter_locks_text = font.render(enemy_locking_labels[enemy_locks[32]], True, BLACK)
+        stickyshooter_locks_button = pygame.Rect(650, 180+SLIST.index("stickyshooter")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, OLIVE, stickyshooter_locks_button, border_radius=10)
+        screen.blit(stickyshooter_locks_text, stickyshooter_locks_text.get_rect(center=stickyshooter_locks_button.center))
+        if stickyshooter_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[32] > 1: enemy_locks[32] = 0
+            else: enemy_locks[32] = enemy_locks[32] + 1
+            pygame.time.delay(200)
+
+
+
         harden_break_label = font.render("Unhardening Rate: " + str(harden_break_setting), True, WHITE)
         screen.blit(harden_break_label, (50, 180+SLIST.index("unhardening rate")*60 + scroll_y))
         harden_break_minus_button = pygame.Rect(500, 180+SLIST.index("unhardening rate")*60 - button_offset + scroll_y, 50, 50)
@@ -2253,6 +2302,7 @@ def apply_settings():
     global haunter_hp
     global stream_hp
     global sensitive_hp
+    global stickyshooter_hp
     global burstshooter_hp
     
 
@@ -2330,6 +2380,7 @@ def apply_settings():
     stream_hp = stream_hp_setting
     sensitive_hp = sensitive_hp_setting
     burstshooter_hp = burstshooter_hp_setting
+    stickyshooter_hp = stickyshooter_hp_setting
     
     available_enemy_types.clear()
     locked_enemy_types.clear()
@@ -2621,6 +2672,9 @@ while running:
         elif enemy_type == 32:
             dx *= 1; dy *= 1; health = burstshooter_hp
             shoot_delay = burstshooter_delay
+        elif enemy_type == 33:
+            dx *= 1; dy *= 1; health = stickyshooter_hp
+            shoot_delay = stickyshooter_delay
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -2671,6 +2725,7 @@ while running:
 
     # --- Enemy Movement ---
     for enemy in enemies:
+        
         enemy_died = False
         sz = enemy.get("size", enemy_size)
         if enemy["type"] == 1:
@@ -2753,8 +2808,7 @@ while running:
 
                 if bounced:
                     enemy["health"] -= 1
-                    if enemy["health"] <= 0:
-                        enemy_died = True
+                    if enemy["health"] <= 0: enemy_died = True
                     else:
                         enemy["stopped"] = True
                         enemy["stop_start_time"] = current_time
@@ -3083,9 +3137,12 @@ while running:
                 enemy["health"] -= 1
             if enemy["bounces"] >= motion_hp or enemy["health"] <= 0:
                 enemy_died = True
-        elif enemy["type"] == 18:
+        elif enemy["type"] == 18: #Charger
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            closest_dist = min(dist1, dist2)
             if enemy["stopped"]:
-                if current_time - enemy["stop_start_time"] >= stickiness*4:
+                if current_time - enemy["stop_start_time"] >= stickiness*4 or closest_dist < 350+enemy_size/2+player_size/2:
                     enemy["stopped"] = False
             else:
                 enemy["x"] += enemy["dx"]
@@ -3530,6 +3587,54 @@ while running:
                     "color": SILVER   # add color key
                 })
                 enemy["last_shot_time"] = current_time
+        elif enemy["type"] == 33: #Stickyshooter
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            closest_dist = min(dist1, dist2)
+            if enemy["stopped"]:
+                if current_time - enemy["stop_start_time"] >= stickiness*4 or closest_dist < 350+enemy_size/2+player_size/2:
+                    enemy["stopped"] = False
+                if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"]:
+                    target_pos = get_target_position(enemy)
+                    if target_pos:
+                        tx, ty = target_pos
+                    else:
+                        tx, ty = player_x, player_y
+                    dxp = tx - (enemy["x"])
+                    dyp = ty - (enemy["y"])
+                    dist = math.hypot(dxp, dyp)
+                    dxp = dxp / dist * shooter_projectile_speed
+                    dyp = dyp / dist * shooter_projectile_speed
+                    projectiles.append({
+                        "x": enemy["x"] + projectile_size/2,
+                        "y": enemy["y"] + projectile_size/2,
+                        "dx": dxp,
+                        "dy": dyp,
+                        "color": OLIVE   # add color key
+                    })
+                    enemy["last_shot_time"] = current_time
+            else:
+                enemy["x"] += enemy["dx"]
+                enemy["y"] += enemy["dy"]
+
+                bounced = False
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
+                    enemy["dx"] *= -1
+                    bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
+                    enemy["dy"] *= -1
+                    bounced = True
+
+                if bounced:
+                    enemy["health"] -= 1
+                    if enemy["health"] <= 0:
+                        enemy_died = True
+                    else:
+                        enemy["stopped"] = True
+                        enemy["stop_start_time"] = current_time
+
+            if enemy["health"] <= 0:
+                enemy_died = True
 
 
 
@@ -3851,7 +3956,7 @@ while running:
         elif modifiers[0] == "White": color = WHITE
         elif modifiers[0] == "No":
             if enemy["type"] == 1: color = GRAY
-            elif enemy["type"] == 2: color = OLIVE
+            elif enemy["type"] == 2: color = CRIMSON
             elif enemy["type"] == 3: color = RED
             elif enemy["type"] == 4: color = TEAL
             elif enemy["type"] == 5: color = GREEN
@@ -3884,6 +3989,7 @@ while running:
             elif enemy["type"] == 30: color = AQUA
             elif enemy["type"] == 31: color = LAVENDER
             elif enemy["type"] == 32: color = SILVER
+            elif enemy["type"] == 33: color = OLIVE
 
 
         
