@@ -110,7 +110,7 @@ initial_spawn_delay = 2000 # ORIGINAL VALUE 2000
 last_spawn_time = pygame.time.get_ticks()
 enemy_speed = 5
 min_spawn_delay = 500  # ORIGINAL VALUE 500
-spawn_rate = 20
+spawn_rate = 10
 
 player_x = player_size // 2
 player_y = spawner_pos[1] + SPAWNER_SIZE // 2
@@ -197,7 +197,7 @@ sniper_delay = 5500
 shotgun_delay = 7500
 rapidshooter_delay = 200
 burstshooter_delay = 3000
-stickyshooter_delay = 500
+stickyshooter_delay = 600
 projectile_fire_rate = 10
 burst = 10
 
@@ -310,7 +310,7 @@ enemy_size_setting = 50
 projectile_size_setting = 10
 min_spawn_delay_setting = 500
 max_spawn_delay_setting = 2000
-spawn_delay_change_setting = 20
+spawn_delay_change_setting = 10
 player_speed_setting = 8
 enemy_speed_setting = 5
 projectile_speed_setting = 5
@@ -533,7 +533,7 @@ def SETTINGS():
             projectile_size_setting = 10
             min_spawn_delay_setting = 500
             max_spawn_delay_setting = 2000
-            spawn_delay_change_setting = 20
+            spawn_delay_change_setting = 10
             player_speed_setting = 8
             enemy_speed_setting = 5
             projectile_speed_setting = 5
@@ -597,7 +597,7 @@ def SETTINGS():
             pygame.time.delay(200)
 
 
-        max_spawn_delay_label = font.render("Starting Spawn Delay: " + str(max_spawn_delay_setting), True, WHITE)
+        max_spawn_delay_label = font.render("Starting Spawn Delay: " + str(max_spawn_delay_setting), True, MAROON)
         screen.blit(max_spawn_delay_label, (50, 180+SLIST.index("starting sd")*60 + scroll_y))
         max_spawn_delay_minus_button = pygame.Rect(500, 180+SLIST.index("starting sd")*60 - button_offset + scroll_y, 50, 50)
         max_spawn_delay_plus_button = pygame.Rect(560, 180+SLIST.index("starting sd")*60 - button_offset + scroll_y, 50, 50)
@@ -618,7 +618,7 @@ def SETTINGS():
 
             
 
-        min_spawn_delay_label = font.render("Ending Spawn Delay: " + str(min_spawn_delay_setting), True, WHITE)
+        min_spawn_delay_label = font.render("Ending Spawn Delay: " + str(min_spawn_delay_setting), True, MAROON)
         screen.blit(min_spawn_delay_label, (50, 180+SLIST.index("ending sd")*60 + scroll_y))
         min_spawn_delay_minus_button = pygame.Rect(500, 180+SLIST.index("ending sd")*60 - button_offset + scroll_y, 50, 50)
         min_spawn_delay_plus_button = pygame.Rect(560, 180+SLIST.index("ending sd")*60 - button_offset + scroll_y, 50, 50)
@@ -641,7 +641,7 @@ def SETTINGS():
         
 
 
-        spawn_delay_change_label = font.render("Spawn Delay Change: " + str(spawn_delay_change_setting), True, WHITE)
+        spawn_delay_change_label = font.render("Spawn Delay Change: " + str(spawn_delay_change_setting), True, MAROON)
         screen.blit(spawn_delay_change_label, (50, 180+SLIST.index("sd change")*60 + scroll_y))
         spawn_delay_change_minus_button = pygame.Rect(500, 180+SLIST.index("sd change")*60 - button_offset + scroll_y, 50, 50)
         spawn_delay_change_plus_button = pygame.Rect(560, 180+SLIST.index("sd change")*60 - button_offset + scroll_y, 50, 50)
@@ -661,7 +661,7 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
-        player_health_label = font.render("Player Health: " + str(player_health_setting), True, WHITE)
+        player_health_label = font.render("Player Health: " + str(player_health_setting), True, LIME)
         screen.blit(player_health_label, (50, 180+SLIST.index("hp")*60 + scroll_y))
         player_health_minus_button = pygame.Rect(500, 180+SLIST.index("hp")*60 - button_offset + scroll_y, 50, 50)
         player_health_plus_button = pygame.Rect(560, 180+SLIST.index("hp")*60 - button_offset + scroll_y, 50, 50)
@@ -682,8 +682,8 @@ def SETTINGS():
 
 
 
-        if regen_delay_setting == 6767: regen_delay_label = font.render("No Regen", True, WHITE)
-        else: regen_delay_label = font.render("Regen Delay: " + str(regen_delay_setting), True, WHITE)
+        if regen_delay_setting == 6767: regen_delay_label = font.render("No Regen", True, LIME)
+        else: regen_delay_label = font.render("Regen Delay: " + str(regen_delay_setting), True, LIME)
         screen.blit(regen_delay_label, (50, 180+SLIST.index("regen")*60 + scroll_y))
         regen_delay_minus_button = pygame.Rect(500, 180+SLIST.index("regen")*60 - button_offset + scroll_y, 50, 50)
         regen_delay_plus_button = pygame.Rect(560, 180+SLIST.index("regen")*60 - button_offset + scroll_y, 50, 50)
@@ -706,7 +706,7 @@ def SETTINGS():
 
 
 
-        invincibility_duration_label = font.render("Invincibility Duration: " + str(invincibility_duration_setting), True, WHITE)
+        invincibility_duration_label = font.render("Invincibility Duration: " + str(invincibility_duration_setting), True, LIME)
         screen.blit(invincibility_duration_label, (50, 180+SLIST.index("invincibility")*60 + scroll_y))
         invincibility_duration_minus_button = pygame.Rect(500, 180+SLIST.index("invincibility")*60 - button_offset + scroll_y, 50, 50)
         invincibility_duration_plus_button = pygame.Rect(560, 180+SLIST.index("invincibility")*60 - button_offset + scroll_y, 50, 50)
@@ -727,7 +727,7 @@ def SETTINGS():
 
 
 
-        freeze_duration_label = font.render("Freeze Duration: " + str(freeze_duration_setting), True, WHITE)
+        freeze_duration_label = font.render("Freeze Duration: " + str(freeze_duration_setting), True, PURPLE)
         screen.blit(freeze_duration_label, (50, 180+SLIST.index("freeze status")*60 + scroll_y))
         freeze_duration_minus_button = pygame.Rect(500, 180+SLIST.index("freeze status")*60 - button_offset + scroll_y, 50, 50)
         freeze_duration_plus_button = pygame.Rect(560, 180+SLIST.index("freeze status")*60 - button_offset + scroll_y, 50, 50)
@@ -747,7 +747,7 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
-        player_speed_label = font.render("Player Speed: " + str(player_speed_setting), True, WHITE)
+        player_speed_label = font.render("Player Speed: " + str(player_speed_setting), True, SKY)
         screen.blit(player_speed_label, (50, 180+SLIST.index("player speed")*60 + scroll_y))
         player_speed_minus_button = pygame.Rect(500, 180+SLIST.index("player speed")*60 - button_offset + scroll_y, 50, 50)
         player_speed_plus_button = pygame.Rect(560, 180+SLIST.index("player speed")*60 - button_offset + scroll_y, 50, 50)
@@ -767,7 +767,7 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
-        player_size_label = font.render("Player Size: " + str(player_size_setting), True, WHITE)
+        player_size_label = font.render("Player Size: " + str(player_size_setting), True, SKY)
         screen.blit(player_size_label, (50, 180+SLIST.index("player size")*60 + scroll_y))
         player_size_minus_button = pygame.Rect(500, 180+SLIST.index("player size")*60 - button_offset + scroll_y, 50, 50)
         player_size_plus_button = pygame.Rect(560, 180+SLIST.index("player size")*60 - button_offset + scroll_y, 50, 50)
@@ -788,7 +788,7 @@ def SETTINGS():
 
 
 
-        enemy_speed_label = font.render("Enemy Speed: " + str(enemy_speed_setting), True, WHITE)
+        enemy_speed_label = font.render("Enemy Speed: " + str(enemy_speed_setting), True, RED)
         screen.blit(enemy_speed_label, (50, 180+SLIST.index("enemy speed")*60 + scroll_y))
         enemy_speed_minus_button = pygame.Rect(500, 180+SLIST.index("enemy speed")*60 - button_offset + scroll_y, 50, 50)
         enemy_speed_plus_button = pygame.Rect(560, 180+SLIST.index("enemy speed")*60 - button_offset + scroll_y, 50, 50)
@@ -810,7 +810,7 @@ def SETTINGS():
 
 
 
-        enemy_size_label = font.render("Enemy Size: " + str(enemy_size_setting), True, WHITE)
+        enemy_size_label = font.render("Enemy Size: " + str(enemy_size_setting), True, RED)
         screen.blit(enemy_size_label, (50, 180+SLIST.index("enemy size")*60 + scroll_y))
         enemy_size_minus_button = pygame.Rect(500, 180+SLIST.index("enemy size")*60 - button_offset + scroll_y, 50, 50)
         enemy_size_plus_button = pygame.Rect(560, 180+SLIST.index("enemy size")*60 - button_offset + scroll_y, 50, 50)
@@ -831,7 +831,7 @@ def SETTINGS():
 
 
 
-        projectile_speed_label = font.render("Projectile Speed: " + str(projectile_speed_setting), True, WHITE)
+        projectile_speed_label = font.render("Projectile Speed: " + str(projectile_speed_setting), True, ORANGE)
         screen.blit(projectile_speed_label, (50, 180+SLIST.index("projectile speed")*60 + scroll_y))
         projectile_speed_minus_button = pygame.Rect(500, 180+SLIST.index("projectile speed")*60 - button_offset + scroll_y, 50, 50)
         projectile_speed_plus_button = pygame.Rect(560, 180+SLIST.index("projectile speed")*60 - button_offset + scroll_y, 50, 50)
@@ -852,7 +852,7 @@ def SETTINGS():
 
 
 
-        projectile_fire_rate_label = font.render("Projectile Fire Rate: " + str(projectile_fire_rate_setting), True, WHITE)
+        projectile_fire_rate_label = font.render("Projectile Fire Rate: " + str(projectile_fire_rate_setting), True, ORANGE)
         screen.blit(projectile_fire_rate_label, (50, 180+SLIST.index("projectile fire rate")*60 + scroll_y))
         projectile_fire_rate_minus_button = pygame.Rect(500, 180+SLIST.index("projectile fire rate")*60 - button_offset + scroll_y, 50, 50)
         projectile_fire_rate_plus_button = pygame.Rect(560, 180+SLIST.index("projectile fire rate")*60 - button_offset + scroll_y, 50, 50)
@@ -873,7 +873,7 @@ def SETTINGS():
 
         
 
-        projectile_size_label = font.render("Projectile/Trail Size: " + str(projectile_size_setting), True, WHITE)
+        projectile_size_label = font.render("Projectile/Trail Size: " + str(projectile_size_setting), True, ORANGE)
         screen.blit(projectile_size_label, (50, 180+SLIST.index("proj/trail size")*60 + scroll_y))
         projectile_size_minus_button = pygame.Rect(500, 180+SLIST.index("proj/trail size")*60 - button_offset + scroll_y, 50, 50)
         projectile_size_plus_button = pygame.Rect(560, 180+SLIST.index("proj/trail size")*60 - button_offset + scroll_y, 50, 50)
@@ -894,7 +894,7 @@ def SETTINGS():
 
 
 
-        trail_duration_label = font.render("Trail Duration: " + str(trail_duration_setting), True, WHITE)
+        trail_duration_label = font.render("Trail Duration: " + str(trail_duration_setting), True, ORANGE)
         screen.blit(trail_duration_label, (50, 180+SLIST.index("trail duration")*60 + scroll_y))
         trail_duration_minus_button = pygame.Rect(500, 180+SLIST.index("trail duration")*60 - button_offset + scroll_y, 50, 50)
         trail_duration_plus_button = pygame.Rect(560, 180+SLIST.index("trail duration")*60 - button_offset + scroll_y, 50, 50)
@@ -914,7 +914,7 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
-        trail_distance_label = font.render("Trail Distance: " + str(trail_distance_setting), True, WHITE)
+        trail_distance_label = font.render("Trail Distance: " + str(trail_distance_setting), True, ORANGE)
         screen.blit(trail_distance_label, (50, 180+SLIST.index("trail distance")*60 + scroll_y))
         trail_distance_minus_button = pygame.Rect(500, 180+SLIST.index("trail distance")*60 - button_offset + scroll_y, 50, 50)
         trail_distance_plus_button = pygame.Rect(560, 180+SLIST.index("trail distance")*60 - button_offset + scroll_y, 50, 50)
@@ -935,7 +935,7 @@ def SETTINGS():
 
 
 
-        chaser_turn_amount_label = font.render("Chaser Turn Speed: " + str(chaser_turn_amount_setting), True, WHITE)
+        chaser_turn_amount_label = font.render("Chaser Turn Speed: " + str(chaser_turn_amount_setting), True, ORANGE)
         screen.blit(chaser_turn_amount_label, (50, 180+SLIST.index("chaser turnspeed")*60 + scroll_y))
         chaser_turn_amount_minus_button = pygame.Rect(500, 180+SLIST.index("chaser turnspeed")*60 - button_offset + scroll_y, 50, 50)
         chaser_turn_amount_plus_button = pygame.Rect(560, 180+SLIST.index("chaser turnspeed")*60 - button_offset + scroll_y, 50, 50)
@@ -956,7 +956,7 @@ def SETTINGS():
 
 
 
-        enemy_stick_label = font.render("Wall Stick Duration: " + str(enemy_stick_setting), True, WHITE)
+        enemy_stick_label = font.render("Wall Stick Duration: " + str(enemy_stick_setting), True, ORANGE)
         screen.blit(enemy_stick_label, (50, 180+SLIST.index("wallstick")*60 + scroll_y))
         enemy_stick_minus_button = pygame.Rect(500, 180+SLIST.index("wallstick")*60 - button_offset + scroll_y, 50, 50)
         enemy_stick_plus_button = pygame.Rect(560, 180+SLIST.index("wallstick")*60 - button_offset + scroll_y, 50, 50)
@@ -977,7 +977,7 @@ def SETTINGS():
 
 
 
-        enemy_unlock_label = font.render("Enemy Unlock: " + str(enemy_unlock_setting), True, WHITE)
+        enemy_unlock_label = font.render("Enemy Unlock: " + str(enemy_unlock_setting), True, MAROON)
         screen.blit(enemy_unlock_label, (50, 180+SLIST.index("enemy unlock")*60 + scroll_y))
         enemy_unlock_minus_button = pygame.Rect(500, 180+SLIST.index("enemy unlock")*60 - button_offset + scroll_y, 50, 50)
         enemy_unlock_plus_button = pygame.Rect(560, 180+SLIST.index("enemy unlock")*60 - button_offset + scroll_y, 50, 50)
@@ -2130,7 +2130,7 @@ def SETTINGS():
 
 
 
-        harden_break_label = font.render("Unhardening Rate: " + str(harden_break_setting), True, WHITE)
+        harden_break_label = font.render("Unhardening Rate: " + str(harden_break_setting), True, ORANGE)
         screen.blit(harden_break_label, (50, 180+SLIST.index("unhardening rate")*60 + scroll_y))
         harden_break_minus_button = pygame.Rect(500, 180+SLIST.index("unhardening rate")*60 - button_offset + scroll_y, 50, 50)
         harden_break_plus_button = pygame.Rect(560, 180+SLIST.index("unhardening rate")*60 - button_offset + scroll_y, 50, 50)
@@ -2150,7 +2150,7 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
-        enemy_damage_label = font.render("Enemy Damage: " + str(enemy_damage_setting), True, WHITE)
+        enemy_damage_label = font.render("Enemy Damage: " + str(enemy_damage_setting), True, RED)
         screen.blit(enemy_damage_label, (50, 180+SLIST.index("enemy damage")*60 + scroll_y))
         enemy_damage_minus_button = pygame.Rect(500, 180+SLIST.index("enemy damage")*60 - button_offset + scroll_y, 50, 50)
         enemy_damage_plus_button = pygame.Rect(560, 180+SLIST.index("enemy damage")*60 - button_offset + scroll_y, 50, 50)
@@ -3243,6 +3243,7 @@ while running:
                     player2_x += (dxp / dist) * pull_strength
                     player2_y += (dyp / dist) * pull_strength
         elif enemy["type"] == 22:
+            laser_extend = (60 / FPS) * (100)
             if not enemy.get("laser_mode", False):
                 enemy["x"] += enemy["dx"]
                 enemy["y"] += enemy["dy"]
@@ -3257,67 +3258,72 @@ while running:
                     if enemy["health"] <= 0:
                         enemy["laser_mode"] = True
                         enemy["laser_start"] = pygame.time.get_ticks()
-                        enemy["damaged_p1"] = False
-                        enemy["damaged_p2"] = False
                         if hit_left or hit_right:
                             enemy["laser_orientation"] = "horizontal"
+                            enemy["laser_x"] = enemy["x"]
                             enemy["laser_y"] = enemy["y"]
+                            enemy["laser_length"] = enemy_size
                         if hit_top or hit_bottom:
                             enemy["laser_orientation"] = "vertical"
                             enemy["laser_x"] = enemy["x"]
+                            enemy["laser_y"] = enemy["y"]
+                            enemy["laser_length"] = enemy_size
                     else:
                         if hit_left or hit_right:
                             enemy["dx"] *= -1
                         if hit_top or hit_bottom:
                             enemy["dy"] *= -1
             else:
-                if current_time - enemy["laser_start"] >= 1000:
+                enemy["laser_length"] += laser_extend
+                if current_time - enemy["laser_start"] >= 2000:
                     enemy["dead"] = True
                     continue
                 laser_width = enemy_size
                 if enemy["laser_orientation"] == "vertical":
                     lx = enemy["laser_x"]
-                    if player_alive and not enemy["damaged_p1"]:
-                        if abs(player_x - lx) < (player_size/2 + laser_width/2):
+                    ly = enemy["laser_y"]
+                    if player_alive:
+                        if abs(player_x - lx) < (player_size/2 + enemy_size / 2) and abs(player_y - ly) < enemy["laser_length"] / 2:
                             if current_time >= invincible_until:
                                 player_lives -= enemy_damage
                                 p1_regen_block_until = score + regen_delay
                                 damage_flash_time = current_time
                                 invincible_until = current_time + invincibility_duration
-                                enemy["damaged_p1"] = True
                                 if player_lives <= 0: player_alive = False
 
-                    if players == 2 and player2_alive and not enemy["damaged_p2"]:
-                        if player2_x + player_size > lx and player2_x < lx + laser_width:
+                    if players == 2 and player2_alive:
+                        if abs(player2_x - lx) < (player_size/2 + enemy_size / 2) and abs(player2_y - ly) < enemy["laser_length"] / 2:
                             if current_time >= player2_invincible_until:
                                 player2_lives -= enemy_damage
                                 p2_regen_block_until = score + regen_delay
                                 player2_damage_flash_time = current_time
                                 player2_invincible_until = current_time + invincibility_duration
-                                enemy["damaged_p2"] = True
                                 if player2_lives <= 0: player2_alive = False
                 elif enemy["laser_orientation"] == "horizontal":
+                    lx = enemy["laser_x"]
                     ly = enemy["laser_y"]
-                    if player_alive and not enemy["damaged_p1"]:
-                        if abs(player_y - ly) < (player_size/2 + laser_width/2):
+                    if player_alive:
+                        if abs(player_y - ly) < (player_size/2 + enemy_size / 2) and abs(player_x - lx) < enemy["laser_length"] / 2:
                             if current_time >= invincible_until:
                                 player_lives -= enemy_damage
                                 p1_regen_block_until = score + regen_delay
                                 damage_flash_time = current_time
                                 invincible_until = current_time + invincibility_duration
-                                enemy["damaged_p1"] = True
                                 if player_lives <= 0: player_alive = False
 
-                    if players == 2 and player2_alive and not enemy["damaged_p2"]:
-                        if player2_y + player_size > ly and player2_y < ly + laser_width:
+                    if players == 2 and player2_alive:
+                        if abs(player2_y - ly) < (player_size/2 + enemy_size / 2) and abs(player2_x - lx) < enemy["laser_length"] / 2:
                             if current_time >= player2_invincible_until:
                                 player2_lives -= enemy_damage
                                 p2_regen_block_until = score + regen_delay
                                 player2_damage_flash_time = current_time
                                 player2_invincible_until = current_time + invincibility_duration
-                                enemy["damaged_p2"] = True
                                 if player2_lives <= 0: player2_alive = False
                 continue
+
+
+
+            
         elif enemy["type"] == 23:
             enemy["x"] += enemy["dx"]
             enemy["y"] += enemy["dy"]
@@ -3433,7 +3439,7 @@ while running:
             else:
                 dx, dy = 0, 0
             target_angle = math.atan2(dy, dx)
-            enemy["angle"] = rotate_toward(enemy["angle"], target_angle, chase_turn/250)
+            enemy["angle"] = rotate_toward(enemy["angle"], target_angle, chase_turn/500)
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["x"] += enemy["dx"] * speed_multiplier; enemy["y"] += enemy["dy"] * speed_multiplier
@@ -3973,10 +3979,10 @@ while running:
         
         if enemy["type"] == 22 and enemy.get("laser_mode", False):
             if enemy["laser_orientation"] == "vertical":
-                pygame.draw.rect(screen, TURQUOISE, (enemy["laser_x"]-enemy_size/2, 0, enemy_size, HEIGHT))
+                pygame.draw.rect(screen, TURQUOISE, (enemy["laser_x"]-enemy_size/2, enemy["laser_y"]-enemy["laser_length"]/2, enemy_size, enemy["laser_length"]))
 
-            elif enemy["laser_orientation"] == "horizontal":
-                pygame.draw.rect(screen, TURQUOISE, (0, enemy["laser_y"]-enemy_size/2, WIDTH, enemy_size))
+            elif enemy["laser_orientation"] == "horizontal": #enemy["laser_length"]
+                pygame.draw.rect(screen, TURQUOISE, (enemy["laser_x"]-enemy["laser_length"]/2, enemy["laser_y"]-enemy_size/2, enemy["laser_length"], enemy_size))
             continue
 
 
