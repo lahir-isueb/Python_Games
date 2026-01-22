@@ -55,6 +55,7 @@ GOLD = (255, 195, 0)
 YELLOW = (255, 255, 0)
 SULFUR = (190, 190, 0)
 OLIVE = (100, 100, 0)
+VOLT = (185, 255, 0)
 LIME = (0, 255, 0)
 GREEN = (0, 125, 0)
 FOREST = (0, 60, 0) #NOT USED
@@ -152,6 +153,7 @@ stream_hp = 4 # 30
 sensitive_hp = 10 #31
 burstshooter_hp = 3 #32
 stickyshooter_hp = 2 #33
+sparker_hp = 1 #34
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -191,6 +193,7 @@ shotgun_projectile_speed = 5
 rapidshooter_projectile_speed = 5
 burstshooter_projectile_speed = 5
 frostbite_projectile_speed = 5
+sparker_projectile_speed = 5
 projectile_size = 10
 shooter_delay = 3000
 sniper_delay = 5500
@@ -198,6 +201,7 @@ shotgun_delay = 7500
 rapidshooter_delay = 200
 burstshooter_delay = 3000
 stickyshooter_delay = 600
+sparker_delay = 100
 projectile_fire_rate = 10
 burst = 10
 
@@ -329,7 +333,7 @@ enemy_unlock_setting = 100
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-               1, 1, 1]
+               1, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -371,6 +375,7 @@ stream_hp_setting = 4
 sensitive_hp_setting = 10
 burstshooter_hp_setting = 3
 stickyshooter_hp_setting = 2
+sparker_hp_setting = 1
 
 modifiers = ["No"]
 
@@ -443,6 +448,7 @@ def SETTINGS():
     global sensitive_hp_setting
     global burstshooter_hp_setting
     global stickyshooter_hp_setting
+    global sparker_hp_setting
     global modifiers
 
     SLIST = ["presets",
@@ -460,7 +466,7 @@ def SETTINGS():
              "hardened", "homing", "splitter", "splitter splits",
              "trail", "shooter", "burstshooter", "burst", "rapidshooter",
              "sniper", "shotgun", "shotgun bullets", "bomb", "bomb bullets",
-             "frostbite", "frostbite bullets", "laser", "fatal",
+             "frostbite", "frostbite bullets", "sparker", "laser", "fatal",
              "addictive", "addictive strength", "addictive radius",
              "voodoo", "impostor",
              
@@ -551,7 +557,7 @@ def SETTINGS():
             enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                           1, 1, 1]
+                           1, 1, 1, 1]
 
             basic_hp_setting = 5
             homing_hp_setting = 2
@@ -593,6 +599,7 @@ def SETTINGS():
             sensitive_hp_setting = 10
             burstshooter_hp_setting = 3
             stickyshooter_hp_setting = 2
+            sparker_hp_setting = 1
             modifiers = ["No"]
             pygame.time.delay(200)
 
@@ -2130,6 +2137,35 @@ def SETTINGS():
 
 
 
+        sparker_hp_label = font.render("Sparker Enemy - HP: " + str(sparker_hp_setting), True, VOLT)
+        screen.blit(sparker_hp_label, (50, 180+SLIST.index("sparker")*60 + scroll_y))
+        sparker_hp_minus_button = pygame.Rect(500, 180+SLIST.index("sparker")*60 - button_offset + scroll_y, 50, 50)
+        sparker_hp_plus_button = pygame.Rect(560, 180+SLIST.index("sparker")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, sparker_hp_plus_button, border_radius=10)
+        screen.blit(plus_txt, plus_txt.get_rect(center=sparker_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, sparker_hp_minus_button, border_radius=10)
+        screen.blit(minus_txt, minus_txt.get_rect(center=sparker_hp_minus_button.center))
+        if sparker_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            sparker_hp_setting += 1
+            if sparker_hp_setting > 99:
+                sparker_hp_setting = 99
+            pygame.time.delay(50)
+        if sparker_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            sparker_hp_setting -= 1
+            if sparker_hp_setting < 1:
+                sparker_hp_setting = 1
+            pygame.time.delay(50)
+        sparker_locks_text = font.render(enemy_locking_labels[enemy_locks[33]], True, BLACK)
+        sparker_locks_button = pygame.Rect(650, 180+SLIST.index("sparker")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, VOLT, sparker_locks_button, border_radius=10)
+        screen.blit(sparker_locks_text, sparker_locks_text.get_rect(center=sparker_locks_button.center))
+        if sparker_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[33] > 1: enemy_locks[33] = 0
+            else: enemy_locks[33] = enemy_locks[33] + 1
+            pygame.time.delay(200)
+
+
+
         harden_break_label = font.render("Unhardening Rate: " + str(harden_break_setting), True, ORANGE)
         screen.blit(harden_break_label, (50, 180+SLIST.index("unhardening rate")*60 + scroll_y))
         harden_break_minus_button = pygame.Rect(500, 180+SLIST.index("unhardening rate")*60 - button_offset + scroll_y, 50, 50)
@@ -2241,6 +2277,7 @@ def apply_settings():
     global min_spawn_delay, initial_spawn_delay, spawn_rate, enemy_damage
     global player_speed, player_speed_base, player2_speed, player2_speed_base, enemy_speed
     global bomb_projectile_speed, shooter_projectile_speed, sniper_projectile_speed, shotgun_projectile_speed, rapidshooter_projectile_speed, burstshooter_projectile_speed, frostbite_projectile_speed
+    global stickyshooter_projectile_speed, sparker_projectile_speed
     global regen_delay, player_lives, player2_lives
     global trail_lifetime_ms, trail_interval_ms, burst
     global freeze_duration
@@ -2282,6 +2319,7 @@ def apply_settings():
     global sensitive_hp
     global stickyshooter_hp
     global burstshooter_hp
+    global sparker_hp
     
 
     # --- SETTINGS SET ---
@@ -2306,6 +2344,8 @@ def apply_settings():
     rapidshooter_projectile_speed = 5 * (projectile_speed_setting / 5)
     burstshooter_projectile_speed = 5 * (projectile_speed_setting / 5)
     frostbite_projectile_speed = 5 * (projectile_speed_setting / 5)
+    stickyshooter_projectile_speed = 5 * (projectile_speed_setting / 5)
+    sparker_projectile_speed = 5 * (projectile_speed_setting / 5)
     regen_delay = regen_delay_setting
     player_lives = player_health_setting
     player2_lives = player_health_setting
@@ -2359,6 +2399,7 @@ def apply_settings():
     sensitive_hp = sensitive_hp_setting
     burstshooter_hp = burstshooter_hp_setting
     stickyshooter_hp = stickyshooter_hp_setting
+    sparker_hp = sparker_hp_setting
     
     available_enemy_types.clear()
     locked_enemy_types.clear()
@@ -2653,6 +2694,9 @@ while running:
         elif enemy_type == 33:
             dx *= 1; dy *= 1; health = stickyshooter_hp
             shoot_delay = stickyshooter_delay
+        elif enemy_type == 34:
+            dx *= 1; dy *= 1; health = sparker_hp
+            shoot_delay = sparker_delay
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -3243,7 +3287,7 @@ while running:
                     player2_x += (dxp / dist) * pull_strength
                     player2_y += (dyp / dist) * pull_strength
         elif enemy["type"] == 22:
-            laser_extend = (60 / FPS) * (100)
+            laser_extend = (60 / FPS) * (90)
             if not enemy.get("laser_mode", False):
                 enemy["x"] += enemy["dx"]
                 enemy["y"] += enemy["dy"]
@@ -3343,11 +3387,11 @@ while running:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
 
-            if dist1 < 150+enemy_size/2+player_size/2:
+            if dist1 < 250+enemy_size/2+player_size/2:
                 enemy["health"] -= hardened_dps
                 if enemy["health"] < 1:
                     enemy["health"] = 1
-            if dist2 < 150+enemy_size/2+player_size/2:
+            if dist2 < 250+enemy_size/2+player_size/2:
                 enemy["health"] -= hardened_dps
                 if enemy["health"] < 1:
                     enemy["health"] = 1
@@ -3619,6 +3663,35 @@ while running:
 
             if enemy["health"] <= 0:
                 enemy_died = True
+        elif enemy["type"] == 34:
+            enemy["x"] += enemy["dx"]
+            enemy["y"] += enemy["dy"]
+            bounced = False
+            if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
+                enemy["dx"] *= -1; bounced = True
+            if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
+                enemy["dy"] *= -1; bounced = True
+            if bounced: 
+                enemy["bounces"] += 1
+                enemy["health"] -= 1
+            if enemy["bounces"] >= sparker_hp or enemy["health"] <= 0:
+                enemy_died = True
+
+            if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"]:
+                angle = random.uniform(0, math.tau)
+                dxp = math.cos(angle)
+                dyp = math.sin(angle)
+                dist = math.hypot(dxp, dyp)
+                dxp = dxp / dist * sparker_projectile_speed
+                dyp = dyp / dist * sparker_projectile_speed
+                projectiles.append({
+                    "x": enemy["x"] + projectile_size/2,
+                    "y": enemy["y"] + projectile_size/2,
+                    "dx": dxp,
+                    "dy": dyp,
+                    "color": VOLT   # add color key
+                })
+                enemy["last_shot_time"] = current_time
 
 
 
@@ -3974,6 +4047,7 @@ while running:
             elif enemy["type"] == 31: color = LAVENDER
             elif enemy["type"] == 32: color = SILVER
             elif enemy["type"] == 33: color = OLIVE
+            elif enemy["type"] == 34: color = VOLT
 
 
         
