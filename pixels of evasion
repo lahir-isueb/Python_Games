@@ -78,6 +78,21 @@ PINK = (255, 140, 255)
 HOT_PINK = (255, 0, 106)
 CRIMSON = (190, 0, 60)
 
+# --- Player Skins ---
+p1_skin_color = 0
+p2_skin_color = 0
+player_skins = [WHITE, RED, BLUE,
+                RED, ORANGE, CYAN,
+                ORANGE, YELLOW, RED,
+                YELLOW, TAN, SKY,
+                LIME, GREEN, YELLOW,
+                GREEN, LIME, BROWN,
+                CYAN, TEAL, LAVENDER,
+                BLUE, SKY, TURQUOISE,
+                PURPLE, LAVENDER, HOT_PINK,
+                PINK, MAGENTA, PURPLE,
+                GRAY, WHITE, RED]
+
 # --- Spawner Size ---
 SPAWNER_SIZE = 50
 
@@ -151,10 +166,10 @@ savage_hp = 2 # 27
 teleporter_hp = 6 # 28
 haunter_hp = 3 # 29
 stream_hp = 4 # 30
-sensitive_hp = 10 #31
-burstshooter_hp = 3 #32
-stickyshooter_hp = 2 #33
-sparker_hp = 1 #34
+sensitive_hp = 10 # 31
+burstshooter_hp = 3 # 32
+stickyshooter_hp = 2 # 33
+sparker_hp = 1 # 34
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -1272,7 +1287,7 @@ def SETTINGS():
             if impostor_hp_setting < 1:
                 impostor_hp_setting = 1
             pygame.time.delay(50)
-        impostor_locks_text = font.render(enemy_locking_labels[enemy_locks[7]], True, BLACK)
+        impostor_locks_text = font.render(enemy_locking_labels[enemy_locks[7]], True, RED)
         impostor_locks_button = pygame.Rect(650, 180+SLIST.index("impostor")*60 - button_offset + scroll_y, 200, 50)
         pygame.draw.rect(screen, WHITE, impostor_locks_button, border_radius=0)
         screen.blit(impostor_locks_text, impostor_locks_text.get_rect(center=impostor_locks_button.center))
@@ -2474,19 +2489,35 @@ def apply_settings():
 
 def TITLE_SCREEN():
     global players
+    global player_skins
+    global p1_skin_color
+    global p2_skin_color
+    
+    skin_font = pygame.font.SysFont(None, 70)
 
     start_button = pygame.Rect(WIDTH//2 - 100, 300, 200, 60)
     button_1p = pygame.Rect(WIDTH//2 - 220, 400, 200, 60)
     button_2p = pygame.Rect(WIDTH//2 + 20, 400, 200, 60)
     settings_button = pygame.Rect(WIDTH//2 - 100, 500, 200, 60)
     quit_button = pygame.Rect(WIDTH//2 - 100, 600, 200, 60)
-    
+        
+    p1_skin_button = pygame.Rect(WIDTH//2 - 160, HEIGHT - 200, 100, 100)
+    p2_skin_button = pygame.Rect(WIDTH//2 + 60, HEIGHT - 200, 100, 100)
+
+        
     waiting = True
     while waiting:
         screen.fill((0, 0, 0))
         title_text = big_font.render("Pixels Of Evasion", True, (255, 0, 0))
         screen.blit(title_text, title_text.get_rect(center=(WIDTH//2, 150)))
-
+        
+        if players == 2:
+            p1_skin_button.centerx = WIDTH / 2 - 100
+            p2_skin_button.centerx = WIDTH / 2 + 100
+        else:
+            p1_skin_button.centerx = WIDTH / 2
+            p2_skin_button.centerx = WIDTH + 67676767
+            
         mouse_pos = pygame.mouse.get_pos()
         mouse_click = pygame.mouse.get_pressed()[0]
 
@@ -2505,7 +2536,7 @@ def TITLE_SCREEN():
             reset_game_state()
             waiting = False
 
-
+        # --- Quit button ---
         if players in [1, 2]:
             color = YELLOW if quit_button.collidepoint(mouse_pos) else SULFUR
         else:
@@ -2518,6 +2549,29 @@ def TITLE_SCREEN():
         if quit_button.collidepoint(mouse_pos) and mouse_click:
             pygame.quit()
             quit()
+
+        # --- P1 Skin --
+
+        pygame.draw.rect(screen, player_skins[p1_skin_color], p1_skin_button, border_radius=0)
+        p1_skin_text = skin_font.render("P1", True, player_skins[p1_skin_color + 1])
+        screen.blit(p1_skin_text, p1_skin_text.get_rect(center=p1_skin_button.center))
+
+        if p1_skin_button.collidepoint(mouse_pos) and mouse_click:
+            if p1_skin_color+3 == len(player_skins): p1_skin_color = 0
+            else: p1_skin_color += 3
+            pygame.time.delay(200)
+
+
+        # --- P2 Skin --
+
+        pygame.draw.rect(screen, player_skins[p2_skin_color], p2_skin_button, border_radius=0)
+        p2_skin_text = skin_font.render("P2", True, player_skins[p2_skin_color + 2])
+        screen.blit(p2_skin_text, p2_skin_text.get_rect(center=p2_skin_button.center))
+
+        if p2_skin_button.collidepoint(mouse_pos) and mouse_click:
+            if p2_skin_color+3 == len(player_skins): p2_skin_color = 0
+            else: p2_skin_color += 3
+            pygame.time.delay(200)
             
 
         # --- Settings button ---
@@ -4088,6 +4142,8 @@ while running:
             elif enemy["type"] == 8:
                 if player_frozen == True and enemy["target"] == 1: color = ICE
                 elif player2_frozen == True and enemy["target"] == 2: color = ICE
+                elif enemy["target"] == 1: color = player_skins[p1_skin_color]
+                elif enemy["target"] == 2: color = player_skins[p2_skin_color]
                 else: color = WHITE
             elif enemy["type"] == 9: color = LIME
             elif enemy["type"] == 10: color = HOT_PINK
@@ -4136,13 +4192,17 @@ while running:
              sz)
         )
 
-        if players == 1: enemy_text_color = BLACK
+        if players == 1:
+            if enemy["type"] == 8: enemy_text_color = player_skins[p1_skin_color + 1]
+            else: enemy_text_color = BLACK
         elif players == 2:
             if enemy["type"] in targetting_enemies:
                 if enemy["target"] == 1:
-                    if modifiers[0] == "Red": enemy_text_color = MAROON
-                    else: enemy_text_color = RED
-                elif enemy["target"] == 2: enemy_text_color = BLUE
+                    if enemy["type"] == 8 or p1_skin_color == p2_skin_color: enemy_text_color = player_skins[p1_skin_color + 1]
+                    else: enemy_text_color = player_skins[p1_skin_color]
+                elif enemy["target"] == 2:
+                    if enemy["type"] == 8 or p1_skin_color == p2_skin_color: enemy_text_color = player_skins[p2_skin_color + 2]
+                    else: enemy_text_color = player_skins[p2_skin_color]
             else: enemy_text_color = BLACK
         
         if enemy["type"] == 8:
@@ -4164,7 +4224,7 @@ while running:
         elif player_frozen == True:
             pygame.draw.rect(screen, ICE, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         else:
-            pygame.draw.rect(screen, WHITE, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
+            pygame.draw.rect(screen, player_skins[p1_skin_color], (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         
     if players == 2 and player2_alive:
         if current_time - player2_damage_flash_time < 100:
@@ -4174,7 +4234,7 @@ while running:
         elif player2_frozen == True:
             pygame.draw.rect(screen, ICE, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
         else:
-            pygame.draw.rect(screen, WHITE, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
+            pygame.draw.rect(screen, player_skins[p2_skin_color], (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
 
     if spawn_enabled:
         score += 0.1 * (60 / FPS) #SCORE SET
@@ -4186,25 +4246,31 @@ while running:
             score_p2 = truescore
     
     # draw player lives in center
-    if players == 1: player_life_text = player_font.render(str(player_lives), True, BLACK)
-    else: player_life_text = player_font.render(str(player_lives), True, RED)
+    if players == 1: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color + 1])
+    else: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color + 1])
     player_life_rect = player_life_text.get_rect(center=(player_x, player_y))
     screen.blit(player_life_text, player_life_rect)
 
     if players == 2:
-        player2_life_text = player_font.render(str(player2_lives), True, BLUE)
+        player2_life_text = player_font.render(str(player2_lives), True, player_skins[p2_skin_color + 2])
         player2_life_rect = player2_life_text.get_rect(center=(player2_x, player2_y))
         screen.blit(player2_life_text, player2_life_rect)
 
     # draw HUD
     if players == 1:
-        p1_text = font.render(f"Score: {score_p1}", True, WHITE)
+        p1_text = font.render(f"Score: {score_p1}", True, player_skins[p1_skin_color])
         screen.blit(p1_text, (20, 20))
     elif players == 2:
-        p1_text = font.render(f"P1 Score: {score_p1}", True, RED)
-        screen.blit(p1_text, (20, 20))
-        p2_text = font.render(f"P2 Score: {score_p2}", True, BLUE)
-        screen.blit(p2_text, (20, 60))
+        if p1_skin_color == p2_skin_color:
+            p1_text = font.render(f"P1 Score: {score_p1}", True, player_skins[p1_skin_color + 1])
+            screen.blit(p1_text, (20, 20))
+            p2_text = font.render(f"P2 Score: {score_p2}", True, player_skins[p2_skin_color + 2])
+            screen.blit(p2_text, (20, 60))
+        else:
+            p1_text = font.render(f"P1 Score: {score_p1}", True, player_skins[p1_skin_color])
+            screen.blit(p1_text, (20, 20))
+            p2_text = font.render(f"P2 Score: {score_p2}", True, player_skins[p2_skin_color])
+            screen.blit(p2_text, (20, 60))
 
     if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6767:
         player_lives += 1
