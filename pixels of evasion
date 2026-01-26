@@ -49,6 +49,7 @@ BRONZE = (140, 45, 0)
 BRICK = (140, 65, 65)
 RED = (255, 0, 0)
 LAVA = (200, 60, 0)
+SALMON = (255, 125, 125)
 TAN = (155, 125, 95)
 ORANGE = (255, 120, 0)
 GOLD = (255, 195, 0)
@@ -82,16 +83,19 @@ CRIMSON = (190, 0, 60)
 p1_skin_color = 0
 p2_skin_color = 0
 player_skins = [WHITE, RED, BLUE,
+                GRAY, WHITE, RED,
+                BROWN, TAN, GREEN,
                 RED, ORANGE, CYAN,
                 ORANGE, YELLOW, RED,
                 YELLOW, TAN, SKY,
                 LIME, GREEN, YELLOW,
                 GREEN, LIME, BROWN,
+                TEAL, BLUE, YELLOW,
                 CYAN, TEAL, LAVENDER,
+                SKY, WHITE, BLUE,
                 BLUE, SKY, TURQUOISE,
                 PURPLE, LAVENDER, HOT_PINK,
-                PINK, MAGENTA, PURPLE,
-                GRAY, WHITE, RED]
+                PINK, MAGENTA, PURPLE]
 
 # --- Spawner Size ---
 SPAWNER_SIZE = 50
@@ -170,6 +174,7 @@ sensitive_hp = 10 # 31
 burstshooter_hp = 3 # 32
 stickyshooter_hp = 2 # 33
 sparker_hp = 1 # 34
+annihilator_hp = 3 # 35
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -210,6 +215,7 @@ rapidshooter_projectile_speed = 5
 burstshooter_projectile_speed = 5
 frostbite_projectile_speed = 5
 sparker_projectile_speed = 5
+annihilator_projectile_speed = 10
 projectile_size = 10
 shooter_delay = 3000
 sniper_delay = 5500
@@ -220,9 +226,9 @@ stickyshooter_delay = 600
 sparker_delay = 100
 projectile_fire_rate = 10
 burst = 10
-
 bomb_projectile_amount = 8
 frostbite_projectile_amount = 32
+annihilator_projectile_amount = 32
 
 # --- Split Amount ---
 split_amount = 2
@@ -353,7 +359,7 @@ enemy_unlock_setting = 100
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-               1, 1, 1, 1]
+               1, 1, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -398,6 +404,8 @@ sensitive_hp_setting = 10
 burstshooter_hp_setting = 3
 stickyshooter_hp_setting = 2
 sparker_hp_setting = 1
+annihilator_hp_setting = 3
+annihilator_projectile_amount_setting = 32
 
 modifiers = ["No"]
 
@@ -473,6 +481,8 @@ def SETTINGS():
     global burstshooter_hp_setting
     global stickyshooter_hp_setting
     global sparker_hp_setting
+    global annihilator_hp_setting
+    global annihilator_projectile_amount_setting
     global modifiers
 
     SLIST = ["presets",
@@ -495,7 +505,8 @@ def SETTINGS():
              "addictive", "addictive strength", "addictive radius",
              "voodoo", "impostor",
              
-             "stream", "sensitive", "savage", "haunter", "tracer", "stickyshooter",
+             "stream", "sensitive", "savage", "haunter", "tracer",
+             "stickyshooter", "annihilator", "annihilator bullets",
              
              "all one color"
              ]
@@ -582,7 +593,7 @@ def SETTINGS():
             enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                           1, 1, 1, 1]
+                           1, 1, 1, 1, 1]
 
             basic_hp_setting = 5
             homing_hp_setting = 2
@@ -627,6 +638,8 @@ def SETTINGS():
             burstshooter_hp_setting = 3
             stickyshooter_hp_setting = 2
             sparker_hp_setting = 1
+            annihilator_hp_setting = 3
+            annihilator_projectile_amount_setting = 32
             modifiers = ["No"]
             pygame.time.delay(200)
 
@@ -1348,7 +1361,7 @@ def SETTINGS():
 
 
 
-        bomb_hp_label = font.render("Bomb Enemy - HP: " + str(bomb_hp_setting), True, HOT_PINK)
+        bomb_hp_label = font.render("Bomb Enemy - HP: " + str(bomb_hp_setting), True, SALMON)
         screen.blit(bomb_hp_label, (50, 180+SLIST.index("bomb")*60 + scroll_y))
         bomb_hp_minus_button = pygame.Rect(500, 180+SLIST.index("bomb")*60 - button_offset + scroll_y, 50, 50)
         bomb_hp_plus_button = pygame.Rect(560, 180+SLIST.index("bomb")*60 - button_offset + scroll_y, 50, 50)
@@ -1368,7 +1381,7 @@ def SETTINGS():
             pygame.time.delay(50)
         bomb_locks_text = font.render(enemy_locking_labels[enemy_locks[9]], True, BLACK)
         bomb_locks_button = pygame.Rect(650, 180+SLIST.index("bomb")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, HOT_PINK, bomb_locks_button, border_radius=0)
+        pygame.draw.rect(screen, SALMON, bomb_locks_button, border_radius=0)
         screen.blit(bomb_locks_text, bomb_locks_text.get_rect(center=bomb_locks_button.center))
         if bomb_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[9] > 1: enemy_locks[9] = 0
@@ -1377,7 +1390,7 @@ def SETTINGS():
 
 
 
-        bomb_projectile_amount_label = font.render("Bullets: " + str(bomb_projectile_amount_setting), True, HOT_PINK)
+        bomb_projectile_amount_label = font.render("Bullets: " + str(bomb_projectile_amount_setting), True, SALMON)
         screen.blit(bomb_projectile_amount_label, (251, 180+SLIST.index("bomb bullets")*60 + scroll_y))
         bomb_projectile_amount_minus_button = pygame.Rect(500, 180+SLIST.index("bomb bullets")*60 - button_offset + scroll_y, 50, 50)
         bomb_projectile_amount_plus_button = pygame.Rect(560, 180+SLIST.index("bomb bullets")*60 - button_offset + scroll_y, 50, 50)
@@ -2275,6 +2288,55 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
+        annihilator_hp_label = font.render("Annihilator Enemy - HP: " + str(annihilator_hp_setting), True, HOT_PINK)
+        screen.blit(annihilator_hp_label, (50, 180+SLIST.index("annihilator")*60 + scroll_y))
+        annihilator_hp_minus_button = pygame.Rect(500, 180+SLIST.index("annihilator")*60 - button_offset + scroll_y, 50, 50)
+        annihilator_hp_plus_button = pygame.Rect(560, 180+SLIST.index("annihilator")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, annihilator_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=annihilator_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, annihilator_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=annihilator_hp_minus_button.center))
+        if annihilator_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            annihilator_hp_setting += 1
+            if annihilator_hp_setting > 99:
+                annihilator_hp_setting = 99
+            pygame.time.delay(50)
+        if annihilator_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            annihilator_hp_setting -= 1
+            if annihilator_hp_setting < 1:
+                annihilator_hp_setting = 1
+            pygame.time.delay(50)
+        annihilator_locks_text = font.render(enemy_locking_labels[enemy_locks[34]], True, BLACK)
+        annihilator_locks_button = pygame.Rect(650, 180+SLIST.index("annihilator")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, HOT_PINK, annihilator_locks_button, border_radius=0)
+        screen.blit(annihilator_locks_text, annihilator_locks_text.get_rect(center=annihilator_locks_button.center))
+        if annihilator_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[34] > 1: enemy_locks[34] = 0
+            else: enemy_locks[34] = enemy_locks[34] + 1
+            pygame.time.delay(200)
+
+
+
+        annihilator_projectile_amount_label = font.render("Bullets: " + str(annihilator_projectile_amount_setting), True, HOT_PINK)
+        screen.blit(annihilator_projectile_amount_label, (251, 180+SLIST.index("annihilator bullets")*60 + scroll_y))
+        annihilator_projectile_amount_minus_button = pygame.Rect(500, 180+SLIST.index("annihilator bullets")*60 - button_offset + scroll_y, 50, 50)
+        annihilator_projectile_amount_plus_button = pygame.Rect(560, 180+SLIST.index("annihilator bullets")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, annihilator_projectile_amount_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=annihilator_projectile_amount_plus_button.center))
+        pygame.draw.rect(screen, RED, annihilator_projectile_amount_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=annihilator_projectile_amount_minus_button.center))
+        if annihilator_projectile_amount_plus_button.collidepoint(mouse_pos) and mouse_click:
+            annihilator_projectile_amount_setting += 4
+            if annihilator_projectile_amount_setting > 128:
+                annihilator_projectile_amount_setting = 128
+            pygame.time.delay(50)
+        if annihilator_projectile_amount_minus_button.collidepoint(mouse_pos) and mouse_click:
+            annihilator_projectile_amount_setting -= 4
+            if annihilator_projectile_amount_setting < 4:
+                annihilator_projectile_amount_setting = 4
+            pygame.time.delay(50)
+
+
         all_enemies_one_color_button_color = SHADOW
         all_enemies_one_color_text_color = WHITE
         if modifiers[0] == "No": all_enemies_one_color_button_color = SHADOW
@@ -2346,7 +2408,7 @@ def apply_settings():
     global min_spawn_delay, initial_spawn_delay, spawn_rate, enemy_damage
     global player_speed, player_speed_base, player2_speed, player2_speed_base, enemy_speed
     global bomb_projectile_speed, shooter_projectile_speed, sniper_projectile_speed, shotgun_projectile_speed, rapidshooter_projectile_speed, burstshooter_projectile_speed, frostbite_projectile_speed
-    global stickyshooter_projectile_speed, sparker_projectile_speed
+    global stickyshooter_projectile_speed, sparker_projectile_speed, annihilator_projectile_speed
     global regen_delay, player_lives, player2_lives
     global trail_lifetime_ms, trail_interval_ms, burst
     global freeze_duration
@@ -2389,6 +2451,7 @@ def apply_settings():
     global stickyshooter_hp
     global burstshooter_hp
     global sparker_hp
+    global annihilator_hp, annihilator_projectile_amount
     
 
     # --- SETTINGS SET ---
@@ -2415,6 +2478,7 @@ def apply_settings():
     frostbite_projectile_speed = 5 * (projectile_speed_setting / 5)
     stickyshooter_projectile_speed = 5 * (projectile_speed_setting / 5)
     sparker_projectile_speed = 5 * (projectile_speed_setting / 5)
+    annihilator_projectile_speed = 10 * (projectile_speed_setting / 5)
     regen_delay = regen_delay_setting
     player_lives = player_health_setting
     player2_lives = player_health_setting
@@ -2471,6 +2535,8 @@ def apply_settings():
     burstshooter_hp = burstshooter_hp_setting
     stickyshooter_hp = stickyshooter_hp_setting
     sparker_hp = sparker_hp_setting
+    annihilator_hp = annihilator_hp_setting
+    annihilator_projectile_amount = annihilator_projectile_amount_setting
     
     available_enemy_types.clear()
     locked_enemy_types.clear()
@@ -2817,6 +2883,8 @@ while running:
         elif enemy_type == 34:
             dx *= 1; dy *= 1; health = sparker_hp
             shoot_delay = sparker_delay
+        elif enemy_type == 35:
+            dx *= 0.35; dy *= 0.35; health = annihilator_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -3095,7 +3163,8 @@ while running:
                         "x": enemy["x"] + projectile_size/2,
                         "y": enemy["y"] + projectile_size/2,
                         "dx": dxp,
-                        "dy": dyp
+                        "dy": dyp,
+                        "color": SALMON
                     })
                 enemy["health"] = 0
             if enemy["health"] <= 0:
@@ -3783,6 +3852,7 @@ while running:
 
             if enemy["health"] <= 0:
                 enemy_died = True
+                
         elif enemy["type"] == 34:
             enemy["x"] += enemy["dx"]
             enemy["y"] += enemy["dy"]
@@ -3812,7 +3882,98 @@ while running:
                     "color": VOLT   # add color key
                 })
                 enemy["last_shot_time"] = current_time
+        elif enemy["type"] == 35:
+            if enemy.get("shrinking"):
+                enemy["size"] = enemy.get("size", "enemy_size") * 0.85 if isinstance(enemy.get("size", None), (int, float)) else sz * 0.85
+            sz = enemy["size"]
+            laser_extend = (60 / FPS) * (90)
+            if not enemy.get("laser_mode", False):
+                enemy["x"] += enemy["dx"]
+                enemy["y"] += enemy["dy"]
 
+                hit_left = enemy["x"] <= enemy_size/2
+                hit_right = enemy["x"] >= WIDTH - enemy_size/2
+                hit_top = enemy["y"] <= enemy_size/2
+                hit_bottom = enemy["y"] >= HEIGHT - enemy_size/2
+                if hit_left or hit_right or hit_top or hit_bottom:
+                    enemy["health"] -= 1
+
+                    if enemy["health"] <= 0:
+                        for i in range(annihilator_projectile_amount):  # fire 8 projectiles in all directions
+                            ang = i * (2 * math.pi / annihilator_projectile_amount)
+                            dxp = math.cos(ang) * annihilator_projectile_speed
+                            dyp = math.sin(ang) * annihilator_projectile_speed
+                            projectiles.append({
+                                "x": enemy["x"] + projectile_size/2,
+                                "y": enemy["y"] + projectile_size/2,
+                                "dx": dxp,
+                                "dy": dyp,
+                                "color": HOT_PINK
+                            })
+                        enemy["laser_mode"] = True
+                        enemy["laser_start"] = pygame.time.get_ticks()
+                        if hit_left or hit_right:
+                            enemy["laser_orientation"] = "horizontal"
+                            enemy["laser_x"] = enemy["x"]
+                            enemy["laser_y"] = enemy["y"]
+                            enemy["laser_length"] = enemy_size
+                        if hit_top or hit_bottom:
+                            enemy["laser_orientation"] = "vertical"
+                            enemy["laser_x"] = enemy["x"]
+                            enemy["laser_y"] = enemy["y"]
+                            enemy["laser_length"] = enemy_size
+                    else:
+                        if hit_left or hit_right:
+                            enemy["dx"] *= -1
+                        if hit_top or hit_bottom:
+                            enemy["dy"] *= -1
+            else:
+                enemy["laser_length"] += laser_extend
+                if current_time - enemy["laser_start"] >= laser_duration:
+                    enemy["dead"] = True
+                    continue
+                laser_width = enemy_size
+                if enemy["laser_orientation"] == "vertical":
+                    lx = enemy["laser_x"]
+                    ly = enemy["laser_y"]
+                    if player_alive:
+                        if abs(player_x - lx) < (player_size/2 + enemy_size / 2) and abs(player_y - ly) < enemy["laser_length"] / 2:
+                            if current_time >= invincible_until:
+                                player_lives -= laser_damage
+                                p1_regen_block_until = score + regen_delay
+                                damage_flash_time = current_time
+                                invincible_until = current_time + invincibility_duration
+                                if player_lives <= 0: player_alive = False
+
+                    if players == 2 and player2_alive:
+                        if abs(player2_x - lx) < (player_size/2 + enemy_size / 2) and abs(player2_y - ly) < enemy["laser_length"] / 2:
+                            if current_time >= player2_invincible_until:
+                                player2_lives -= laser_damage
+                                p2_regen_block_until = score + regen_delay
+                                player2_damage_flash_time = current_time
+                                player2_invincible_until = current_time + invincibility_duration
+                                if player2_lives <= 0: player2_alive = False
+                elif enemy["laser_orientation"] == "horizontal":
+                    lx = enemy["laser_x"]
+                    ly = enemy["laser_y"]
+                    if player_alive:
+                        if abs(player_y - ly) < (player_size/2 + enemy_size / 2) and abs(player_x - lx) < enemy["laser_length"] / 2:
+                            if current_time >= invincible_until:
+                                player_lives -= laser_damage
+                                p1_regen_block_until = score + regen_delay
+                                damage_flash_time = current_time
+                                invincible_until = current_time + invincibility_duration
+                                if player_lives <= 0: player_alive = False
+
+                    if players == 2 and player2_alive:
+                        if abs(player2_y - ly) < (player_size/2 + enemy_size / 2) and abs(player2_x - lx) < enemy["laser_length"] / 2:
+                            if current_time >= player2_invincible_until:
+                                player2_lives -= laser_damage
+                                p2_regen_block_until = score + regen_delay
+                                player2_damage_flash_time = current_time
+                                player2_invincible_until = current_time + invincibility_duration
+                                if player2_lives <= 0: player2_alive = False
+                continue
 
 
 
@@ -3850,7 +4011,7 @@ while running:
                         if player_lives <= 0:
                             player_alive = False
                 continue
-            elif enemy["type"] == 15:
+            elif enemy["type"] == 15 or enemy["type"] == 35:
                 if not enemy.get("shrinking", False):
                     enemy["shrinking"] = True
                 continue
@@ -3908,7 +4069,7 @@ while running:
                         if player2_lives <= 0:
                             player2_alive = False
                 continue
-            elif enemy["type"] == 15:
+            elif enemy["type"] == 15 or enemy["type"] == 35:
                 if not enemy.get("shrinking", False):
                     enemy["shrinking"] = True
                 continue
@@ -4146,7 +4307,7 @@ while running:
                 elif enemy["target"] == 2: color = player_skins[p2_skin_color]
                 else: color = WHITE
             elif enemy["type"] == 9: color = LIME
-            elif enemy["type"] == 10: color = HOT_PINK
+            elif enemy["type"] == 10: color = SALMON
             elif enemy["type"] == 11: color = BRONZE
             elif enemy["type"] == 12: color = INDIGO
             elif enemy["type"] == 13: color = SKY
@@ -4170,6 +4331,7 @@ while running:
             elif enemy["type"] == 32: color = SILVER
             elif enemy["type"] == 33: color = OLIVE
             elif enemy["type"] == 34: color = VOLT
+            elif enemy["type"] == 35: color = HOT_PINK
 
 
         
@@ -4179,6 +4341,14 @@ while running:
 
             elif enemy["laser_orientation"] == "horizontal": #enemy["laser_length"]
                 pygame.draw.rect(screen, TURQUOISE, (enemy["laser_x"]-enemy["laser_length"]/2, enemy["laser_y"]-enemy_size/2, enemy["laser_length"], enemy_size))
+            continue
+
+        if enemy["type"] == 35 and enemy.get("laser_mode", False):
+            if enemy["laser_orientation"] == "vertical":
+                pygame.draw.rect(screen, HOT_PINK, (enemy["laser_x"]-enemy_size/2, enemy["laser_y"]-enemy["laser_length"]/2, enemy_size, enemy["laser_length"]))
+
+            elif enemy["laser_orientation"] == "horizontal": #enemy["laser_length"]
+                pygame.draw.rect(screen, HOT_PINK, (enemy["laser_x"]-enemy["laser_length"]/2, enemy["laser_y"]-enemy_size/2, enemy["laser_length"], enemy_size))
             continue
 
 
