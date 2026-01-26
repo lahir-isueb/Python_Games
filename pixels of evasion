@@ -491,7 +491,8 @@ def SETTINGS():
              "player speed", "player size",
              "enemy speed", "enemy size", "enemy damage",
              "projectile speed", "projectile fire rate", "trail duration", "trail distance", "proj/trail size", 
-             "chaser turnspeed", "wallstick", "unhardening rate",
+             "wallstick", "unhardening rate", "chaser turnspeed", 
+             "laser damage", "laser duration",
              "freeze status",
              "set locks",
              
@@ -501,7 +502,7 @@ def SETTINGS():
              "trail", "shooter", "burstshooter", "burst", "rapidshooter",
              "sniper", "shotgun", "shotgun bullets", "bomb", "bomb bullets",
              "frostbite", "frostbite bullets", "sparker",
-             "laser", "laser damage", "laser duration", "fatal",
+             "laser", "fatal",
              "addictive", "addictive strength", "addictive radius",
              "voodoo", "impostor",
              
@@ -1887,8 +1888,8 @@ def SETTINGS():
 
 
 
-        laser_damage_label = font.render("Damage: " + str(laser_damage_setting), True, TURQUOISE)
-        screen.blit(laser_damage_label, (248, 180+SLIST.index("laser damage")*60 + scroll_y))
+        laser_damage_label = font.render("Laser Damage: " + str(laser_damage_setting), True, ORANGE)
+        screen.blit(laser_damage_label, (50, 180+SLIST.index("laser damage")*60 + scroll_y))
         laser_damage_minus_button = pygame.Rect(500, 180+SLIST.index("laser damage")*60 - button_offset + scroll_y, 50, 50)
         laser_damage_plus_button = pygame.Rect(560, 180+SLIST.index("laser damage")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, laser_damage_plus_button, border_radius=0)
@@ -1908,8 +1909,8 @@ def SETTINGS():
 
 
 
-        laser_duration_label = font.render("Duration: " + str(laser_duration_setting), True, TURQUOISE)
-        screen.blit(laser_duration_label, (248, 180+SLIST.index("laser duration")*60 + scroll_y))
+        laser_duration_label = font.render("Laser Duration: " + str(laser_duration_setting), True, ORANGE)
+        screen.blit(laser_duration_label, (50, 180+SLIST.index("laser duration")*60 + scroll_y))
         laser_duration_minus_button = pygame.Rect(500, 180+SLIST.index("laser duration")*60 - button_offset + scroll_y, 50, 50)
         laser_duration_plus_button = pygame.Rect(560, 180+SLIST.index("laser duration")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, laser_duration_plus_button, border_radius=0)
@@ -3442,6 +3443,15 @@ while running:
             if enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 21:
+            if enemy.get("shrinking"):
+                enemy["size"] = enemy.get("size", "enemy_size") * 0.85 if isinstance(enemy.get("size", None), (int, float)) else sz * 0.85
+                # update local size variable for subsequent checks/drawing
+                sz = enemy["size"]
+                if enemy["size"] < 2:
+                    # remove immediately once tiny
+                    if enemy in enemies:
+                        enemy["dead"] = True
+                    continue
             enemy["x"] += enemy["dx"]
             enemy["y"] += enemy["dy"]
 
@@ -3886,6 +3896,11 @@ while running:
             if enemy.get("shrinking"):
                 enemy["size"] = enemy.get("size", "enemy_size") * 0.85 if isinstance(enemy.get("size", None), (int, float)) else sz * 0.85
             sz = enemy["size"]
+            if enemy["size"] < 2:
+                # remove immediately once tiny
+                if enemy in enemies:
+                    enemy["dead"] = True
+                continue
             laser_extend = (60 / FPS) * (90)
             if not enemy.get("laser_mode", False):
                 enemy["x"] += enemy["dx"]
@@ -4011,12 +4026,9 @@ while running:
                         if player_lives <= 0:
                             player_alive = False
                 continue
-            elif enemy["type"] == 15 or enemy["type"] == 35:
+            elif enemy["type"] == 15 or enemy["type"] == 35 or enemy["type"] == 21:
                 if not enemy.get("shrinking", False):
                     enemy["shrinking"] = True
-                continue
-            elif enemy["type"] == 21:                
-                enemy["dead"] = True
                 continue
             elif enemy["type"] == 22:
                 if current_time >= invincible_until:
@@ -4069,12 +4081,9 @@ while running:
                         if player2_lives <= 0:
                             player2_alive = False
                 continue
-            elif enemy["type"] == 15 or enemy["type"] == 35:
+            elif enemy["type"] == 15 or enemy["type"] == 35 or enemy["type"] == 21:
                 if not enemy.get("shrinking", False):
                     enemy["shrinking"] = True
-                continue
-            elif enemy["type"] == 21:
-                enemy["dead"] = True
                 continue
             elif enemy["type"] == 22:
                 if current_time >= player2_invincible_until:
