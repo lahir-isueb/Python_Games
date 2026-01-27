@@ -71,7 +71,7 @@ BLUE = (0, 0, 255)
 NAVY = (0, 0, 100)
 INDIGO = (110, 0, 200)
 MAUVE = (145, 95, 140) #NOT USED
-LAVENDER = (225, 175, 255)
+LAVENDER = (210, 130, 255)
 PURPLE = (162, 0, 255)
 VIOLET = (130, 0, 130)
 MAGENTA = (255, 0, 255)
@@ -87,15 +87,19 @@ player_skins = [WHITE, RED, BLUE,
                 BROWN, TAN, GREEN,
                 RED, ORANGE, CYAN,
                 ORANGE, YELLOW, RED,
+                TAN, BROWN, ORANGE,
                 YELLOW, TAN, SKY,
                 LIME, GREEN, YELLOW,
                 GREEN, LIME, BROWN,
                 TEAL, BLUE, YELLOW,
+                TURQUOISE, BLUE, GREEN,
                 CYAN, TEAL, LAVENDER,
                 SKY, WHITE, BLUE,
                 BLUE, SKY, TURQUOISE,
                 PURPLE, LAVENDER, HOT_PINK,
-                PINK, MAGENTA, PURPLE]
+                LAVENDER, PURPLE, BLUE,
+                PINK, HOT_PINK, PURPLE,
+                HOT_PINK, PINK, VIOLET]
 
 # --- Spawner Size ---
 SPAWNER_SIZE = 50
@@ -1110,7 +1114,7 @@ def SETTINGS():
 
 
 
-        homing_hp_label = font.render("Homing Enemy - HP: " + str(homing_hp_setting), True, CRIMSON)
+        homing_hp_label = font.render("Homing Enemy - HP: " + str(homing_hp_setting), True, SALMON)
         screen.blit(homing_hp_label, (50, 180+SLIST.index("homing")*60 + scroll_y))
         homing_hp_minus_button = pygame.Rect(500, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 50, 50)
         homing_hp_plus_button = pygame.Rect(560, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 50, 50)
@@ -1130,7 +1134,7 @@ def SETTINGS():
             pygame.time.delay(50)
         homing_locks_text = font.render(enemy_locking_labels[enemy_locks[1]], True, BLACK)
         homing_locks_button = pygame.Rect(650, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, CRIMSON, homing_locks_button, border_radius=0)
+        pygame.draw.rect(screen, SALMON, homing_locks_button, border_radius=0)
         screen.blit(homing_locks_text, homing_locks_text.get_rect(center=homing_locks_button.center))
         if homing_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[1] > 1: enemy_locks[1] = 0
@@ -1362,7 +1366,7 @@ def SETTINGS():
 
 
 
-        bomb_hp_label = font.render("Bomb Enemy - HP: " + str(bomb_hp_setting), True, SALMON)
+        bomb_hp_label = font.render("Bomb Enemy - HP: " + str(bomb_hp_setting), True, MAUVE)
         screen.blit(bomb_hp_label, (50, 180+SLIST.index("bomb")*60 + scroll_y))
         bomb_hp_minus_button = pygame.Rect(500, 180+SLIST.index("bomb")*60 - button_offset + scroll_y, 50, 50)
         bomb_hp_plus_button = pygame.Rect(560, 180+SLIST.index("bomb")*60 - button_offset + scroll_y, 50, 50)
@@ -1382,7 +1386,7 @@ def SETTINGS():
             pygame.time.delay(50)
         bomb_locks_text = font.render(enemy_locking_labels[enemy_locks[9]], True, BLACK)
         bomb_locks_button = pygame.Rect(650, 180+SLIST.index("bomb")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, SALMON, bomb_locks_button, border_radius=0)
+        pygame.draw.rect(screen, MAUVE, bomb_locks_button, border_radius=0)
         screen.blit(bomb_locks_text, bomb_locks_text.get_rect(center=bomb_locks_button.center))
         if bomb_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[9] > 1: enemy_locks[9] = 0
@@ -1391,7 +1395,7 @@ def SETTINGS():
 
 
 
-        bomb_projectile_amount_label = font.render("Bullets: " + str(bomb_projectile_amount_setting), True, SALMON)
+        bomb_projectile_amount_label = font.render("Bullets: " + str(bomb_projectile_amount_setting), True, MAUVE)
         screen.blit(bomb_projectile_amount_label, (251, 180+SLIST.index("bomb bullets")*60 + scroll_y))
         bomb_projectile_amount_minus_button = pygame.Rect(500, 180+SLIST.index("bomb bullets")*60 - button_offset + scroll_y, 50, 50)
         bomb_projectile_amount_plus_button = pygame.Rect(560, 180+SLIST.index("bomb bullets")*60 - button_offset + scroll_y, 50, 50)
@@ -2319,7 +2323,7 @@ def SETTINGS():
 
 
         annihilator_projectile_amount_label = font.render("Bullets: " + str(annihilator_projectile_amount_setting), True, HOT_PINK)
-        screen.blit(annihilator_projectile_amount_label, (251, 180+SLIST.index("annihilator bullets")*60 + scroll_y))
+        screen.blit(annihilator_projectile_amount_label, (326, 180+SLIST.index("annihilator bullets")*60 + scroll_y))
         annihilator_projectile_amount_minus_button = pygame.Rect(500, 180+SLIST.index("annihilator bullets")*60 - button_offset + scroll_y, 50, 50)
         annihilator_projectile_amount_plus_button = pygame.Rect(560, 180+SLIST.index("annihilator bullets")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, annihilator_projectile_amount_plus_button, border_radius=0)
@@ -3165,7 +3169,7 @@ while running:
                         "y": enemy["y"] + projectile_size/2,
                         "dx": dxp,
                         "dy": dyp,
-                        "color": SALMON
+                        "color": MAUVE
                     })
                 enemy["health"] = 0
             if enemy["health"] <= 0:
@@ -4303,7 +4307,7 @@ while running:
         elif modifiers[0] == "White": color = WHITE
         elif modifiers[0] == "No":
             if enemy["type"] == 1: color = GRAY
-            elif enemy["type"] == 2: color = CRIMSON
+            elif enemy["type"] == 2: color = SALMON
             elif enemy["type"] == 3: color = RED
             elif enemy["type"] == 4: color = TEAL
             elif enemy["type"] == 5: color = GREEN
@@ -4316,7 +4320,7 @@ while running:
                 elif enemy["target"] == 2: color = player_skins[p2_skin_color]
                 else: color = WHITE
             elif enemy["type"] == 9: color = LIME
-            elif enemy["type"] == 10: color = SALMON
+            elif enemy["type"] == 10: color = MAUVE
             elif enemy["type"] == 11: color = BRONZE
             elif enemy["type"] == 12: color = INDIGO
             elif enemy["type"] == 13: color = SKY
