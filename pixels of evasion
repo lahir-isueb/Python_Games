@@ -99,7 +99,8 @@ player_skins = [WHITE, RED, BLUE,
                 PURPLE, LAVENDER, HOT_PINK,
                 LAVENDER, PURPLE, BLUE,
                 PINK, HOT_PINK, PURPLE,
-                HOT_PINK, PINK, VIOLET]
+                HOT_PINK, PINK, VIOLET,
+                MAUVE, CYAN, LAVENDER]
 
 # --- Spawner Size ---
 SPAWNER_SIZE = 50
@@ -594,6 +595,7 @@ def SETTINGS():
             enemy_stick_setting = 2000
             projectile_fire_rate_setting = 10
             enemy_damage_setting = 1
+            burst_setting = 10
             enemy_unlock_setting = 100
             enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -646,6 +648,29 @@ def SETTINGS():
             annihilator_hp_setting = 3
             annihilator_projectile_amount_setting = 32
             modifiers = ["No"]
+            pygame.time.delay(200)
+
+        shooter_set_text = font.render("Bullet Survival", True, WHITE)
+        shooter_set_button = pygame.Rect(300, 180+SLIST.index("presets")*60 - button_offset + scroll_y, 225, 50)
+        pygame.draw.rect(screen, MAROON, shooter_set_button, border_radius=0)
+        screen.blit(shooter_set_text, shooter_set_text.get_rect(center=shooter_set_button.center))
+        if shooter_set_button.collidepoint(mouse_pos) and mouse_click:
+            regen_delay_setting = 10
+            player_health_setting = 99
+            trail_distance_setting = 50
+            invincibility_duration_setting = 0
+            enemy_stick_setting = 5000
+            projectile_fire_rate_setting = 40
+            enemy_damage_setting = 10
+            burst_setting = 10
+            enemy_locks = [2, 2, 2, 2, 2, 2, 0, 2, 2, 0,
+                           0, 0, 2, 0, 2, 2, 2, 2, 0, 2,
+                           2, 1, 2, 2, 2, 1, 2, 2, 2, 2,
+                           2, 0, 0, 0, 1]
+            bomb_projectile_amount_setting = 64
+            shotgun_bullets_setting = 21
+            laser_damage_setting = 1
+            annihilator_projectile_amount_setting = 128
             pygame.time.delay(200)
 
 
@@ -734,7 +759,7 @@ def SETTINGS():
 
 
 
-        if regen_delay_setting == 6767: regen_delay_label = font.render("No Regen", True, LIME)
+        if regen_delay_setting == 6969: regen_delay_label = font.render("No Regen", True, LIME)
         else: regen_delay_label = font.render("Regen Delay: " + str(regen_delay_setting), True, LIME)
         screen.blit(regen_delay_label, (50, 180+SLIST.index("regen")*60 + scroll_y))
         regen_delay_minus_button = pygame.Rect(500, 180+SLIST.index("regen")*60 - button_offset + scroll_y, 50, 50)
@@ -746,10 +771,10 @@ def SETTINGS():
         if regen_delay_plus_button.collidepoint(mouse_pos) and mouse_click:
             regen_delay_setting += 5
             if regen_delay_setting > 150:
-                regen_delay_setting = 6767
+                regen_delay_setting = 6969
             pygame.time.delay(50)
         if regen_delay_minus_button.collidepoint(mouse_pos) and mouse_click:
-            if regen_delay_setting == 6767:
+            if regen_delay_setting == 6969:
                 regen_delay_setting = 150
             else: regen_delay_setting -= 5
             if regen_delay_setting < 5:
@@ -1018,8 +1043,8 @@ def SETTINGS():
         screen.blit(minus_txt, minus_txt.get_rect(center=enemy_stick_minus_button.center))
         if enemy_stick_plus_button.collidepoint(mouse_pos) and mouse_click:
             enemy_stick_setting += 500
-            if enemy_stick_setting > 4000:
-                enemy_stick_setting = 4000
+            if enemy_stick_setting > 5000:
+                enemy_stick_setting = 5000
             pygame.time.delay(50)
         if enemy_stick_minus_button.collidepoint(mouse_pos) and mouse_click:
             enemy_stick_setting -= 500
@@ -2587,7 +2612,7 @@ def TITLE_SCREEN():
             p2_skin_button.centerx = WIDTH / 2 + 100
         else:
             p1_skin_button.centerx = WIDTH / 2
-            p2_skin_button.centerx = WIDTH + 67676767
+            p2_skin_button.centerx = WIDTH + 69696969
             
         mouse_pos = pygame.mouse.get_pos()
         mouse_click = pygame.mouse.get_pressed()[0]
@@ -3059,7 +3084,7 @@ while running:
                     "x": int(enemy["x"]),
                     "y": int(enemy["y"]),
                     "spawn": current_time,
-                    "health": 3,
+                    "health": 1,
                     "color": LAVA
                 })
                 enemy["last_trail_time"] = current_time
@@ -3668,7 +3693,7 @@ while running:
                     "x": int(enemy["x"]),
                     "y": int(enemy["y"]),
                     "spawn": current_time,
-                    "health": 3,
+                    "health": 1,
                     "color": SULFUR
                 })
                 enemy["last_trail_time"] = current_time
@@ -4455,12 +4480,12 @@ while running:
             p2_text = font.render(f"P2 Score: {score_p2}", True, player_skins[p2_skin_color])
             screen.blit(p2_text, (20, 60))
 
-    if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6767:
+    if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6969:
         player_lives += 1
         heal_flash_time = current_time
         p1_regen_block_until = score + regen_delay
 
-    if players == 2 and player2_alive and score >= p2_regen_block_until and player2_lives < player_health_setting and regen_delay != 6767:
+    if players == 2 and player2_alive and score >= p2_regen_block_until and player2_lives < player_health_setting and regen_delay != 6969:
         player2_lives += 1
         player2_heal_flash_time = current_time
         p2_regen_block_until = score + regen_delay
