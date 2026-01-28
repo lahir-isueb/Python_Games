@@ -87,6 +87,7 @@ player_skins = [WHITE, RED, BLUE,
                 GRAY, WHITE, RED,
                 BROWN, TAN, GREEN,
                 RED, ORANGE, CYAN,
+                LAVA, ORANGE, CRISP,
                 ORANGE, YELLOW, RED,
                 TAN, BROWN, ORANGE,
                 YELLOW, TAN, SKY,
@@ -98,10 +99,10 @@ player_skins = [WHITE, RED, BLUE,
                 SKY, WHITE, BLUE,
                 BLUE, SKY, TURQUOISE,
                 PURPLE, LAVENDER, HOT_PINK,
+                MAUVE, LAVENDER, CYAN,
                 LAVENDER, PURPLE, BLUE,
                 PINK, HOT_PINK, PURPLE,
-                HOT_PINK, PINK, VIOLET,
-                MAUVE, CYAN, LAVENDER]
+                HOT_PINK, PINK, VIOLET]
 
 # --- Spawner Size ---
 SPAWNER_SIZE = 50
@@ -237,6 +238,7 @@ burst = 10
 bomb_projectile_amount = 8
 frostbite_projectile_amount = 32
 annihilator_projectile_amount = 32
+extra_sniper_damage = 1
 
 # --- Split Amount ---
 split_amount = 2
@@ -384,6 +386,7 @@ bomb_hp_setting = 8
 bomb_projectile_amount_setting = 8
 shooter_hp_setting = 4
 sniper_hp_setting = 1
+extra_sniper_damage_setting = 1
 speedy_hp_setting = 5
 shotgun_hp_setting = 4
 shotgun_bullets_setting = 5
@@ -464,6 +467,7 @@ def SETTINGS():
     global bomb_projectile_amount_setting
     global shooter_hp_setting
     global sniper_hp_setting
+    global extra_sniper_damage_setting
     global speedy_hp_setting
     global shotgun_hp_setting
     global shotgun_bullets_setting
@@ -515,7 +519,8 @@ def SETTINGS():
              "blind", "motion", "cold", "accelerator", "teleporter",
              "hardened", "homing", "splitter", "splitter splits",
              "trail", "shooter", "burstshooter", "burst", "rapidshooter",
-             "sniper", "shotgun", "shotgun bullets", "bomb", "bomb bullets",
+             "sniper", "xtra sniper damage", "shotgun", "shotgun bullets",
+             "bomb", "bomb bullets",
              "frostbite", "frostbite bullets", "sparker",
              "laser", "fatal",
              "addictive", "addictive strength", "addictive radius",
@@ -627,6 +632,7 @@ def SETTINGS():
             bomb_projectile_amount_setting = 8
             shooter_hp_setting = 4
             sniper_hp_setting = 1
+            extra_sniper_damage_setting = 1
             speedy_hp_setting = 5
             shotgun_hp_setting = 4
             shotgun_bullets_setting = 5
@@ -671,8 +677,9 @@ def SETTINGS():
             player_health_setting = 99
             trail_distance_setting = 50
             invincibility_duration_setting = 0
-            projectile_damage_setting
+            projectile_damage_setting = 1
             enemy_stick_setting = 5000
+            extra_sniper_damage_setting = 1
             projectile_fire_rate_setting = 40
             enemy_damage_setting = 10
             burst_setting = 10
@@ -1529,6 +1536,28 @@ def SETTINGS():
             if enemy_locks[11] > 1: enemy_locks[11] = 0
             else: enemy_locks[11] = enemy_locks[11] + 1
             pygame.time.delay(200)
+
+
+
+        extra_sniper_damage_label = font.render("Extra Damage: " + str(extra_sniper_damage_setting), True, INDIGO)
+        screen.blit(extra_sniper_damage_label, (264, 180+SLIST.index("xtra sniper damage")*60 + scroll_y))
+        extra_sniper_damage_minus_button = pygame.Rect(500, 180+SLIST.index("xtra sniper damage")*60 - button_offset + scroll_y, 50, 50)
+        extra_sniper_damage_plus_button = pygame.Rect(560, 180+SLIST.index("xtra sniper damage")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, extra_sniper_damage_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=extra_sniper_damage_plus_button.center))
+        pygame.draw.rect(screen, RED, extra_sniper_damage_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=extra_sniper_damage_minus_button.center))
+        if extra_sniper_damage_plus_button.collidepoint(mouse_pos) and mouse_click:
+            extra_sniper_damage_setting += 1
+            if extra_sniper_damage_setting > 98:
+                extra_sniper_damage_setting = 98
+            pygame.time.delay(50)
+        if extra_sniper_damage_minus_button.collidepoint(mouse_pos) and mouse_click:
+            extra_sniper_damage_setting -= 1
+            if extra_sniper_damage_setting < 0:
+                extra_sniper_damage_setting = 0
+            pygame.time.delay(50)
+
 
 
         speedy_hp_label = font.render("Speedy Enemy - HP: " + str(speedy_hp_setting), True, SKY)
@@ -2461,7 +2490,7 @@ def SETTINGS():
                 scroll_y = max(min(scroll_y, 0), -max_scroll)
             if event.type == pygame.QUIT:
                 pygame.quit(); exit()
-            if event.type == pygame.KEYDOWN and (event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE):
+            if event.type == pygame.KEYDOWN and (event.key == pygame.K_ESCAPE):
                 if 0 in enemy_locks: running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if scrollbar_handle.collidepoint(event.pos):
@@ -2519,7 +2548,7 @@ def apply_settings():
     global splitter_hp, split_amount
     global bomb_hp, bomb_projectile_amount
     global shooter_hp
-    global sniper_hp
+    global sniper_hp, extra_sniper_damage
     global speedy_hp
     global shotgun_hp
     global shotgun_bullets
@@ -2600,6 +2629,7 @@ def apply_settings():
     bomb_projectile_amount = bomb_projectile_amount_setting
     shooter_hp = shooter_hp_setting
     sniper_hp = sniper_hp_setting
+    extra_sniper_damage = extra_sniper_damage_setting
     speedy_hp = speedy_hp_setting
     shotgun_hp = shotgun_hp_setting
     shotgun_bullets = shotgun_bullets_setting
@@ -4349,6 +4379,16 @@ while running:
                 slow_until = current_time + freeze_duration  # 10 seconds
                 player_speed = player_speed_base / 2
                 player_frozen = True
+            elif p.get("color") == INDIGO:
+                if current_time >= invincible_until:
+                    player_lives -= projectile_damage + extra_sniper_damage
+                    p1_regen_block_until = score + regen_delay
+                    damage_flash_time = current_time
+                    invincible_until = current_time + invincibility_duration
+                    if player_lives <= 0:
+                        player_alive = False
+                        break
+                continue
             else:
                 if current_time >= invincible_until:
                     player_lives -= projectile_damage
