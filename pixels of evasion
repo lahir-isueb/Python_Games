@@ -665,7 +665,7 @@ def SETTINGS():
             sparker_hp_setting = 1
             annihilator_hp_setting = 3
             annihilator_projectile_amount_setting = 32
-            frostbeam_hp_setting = 2
+            frostbeam_hp_setting = 1
             modifiers = [0]
             pygame.time.delay(200)
 
