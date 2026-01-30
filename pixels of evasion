@@ -103,7 +103,8 @@ player_skins = [WHITE, RED, BLUE,
                 MAUVE, LAVENDER, CYAN,
                 LAVENDER, PURPLE, BLUE,
                 PINK, HOT_PINK, PURPLE,
-                HOT_PINK, PINK, VIOLET]
+                HOT_PINK, PINK, VIOLET,
+                SHADOW, PINK, CYAN]
 
 # --- Spawner Size ---
 SPAWNER_SIZE = 50
@@ -710,7 +711,8 @@ def SETTINGS():
                                  teleporter_hp_setting, haunter_hp_setting, stream_hp_setting,
                                  sensitive_hp_setting, burstshooter_hp_setting, stickyshooter_hp_setting,
                                  sparker_hp_setting, annihilator_hp_setting,
-                                 annihilator_projectile_amount_setting, frostbeam_hp_setting, modifiers[0]]
+                                 annihilator_projectile_amount_setting, frostbeam_hp_setting, modifiers[0],
+                                 player_health_setting]
 
             
             for x in copy_setting_list: copied += f"{x}."
@@ -822,7 +824,6 @@ def SETTINGS():
                         case 91: cold_hp_setting = int(chara)
                         case 92: tracer_hp_setting = int(chara)
                         case 93: savage_hp_setting = int(chara)
-
                         case 94: teleporter_hp_setting = int(chara)
                         case 95: haunter_hp_setting = int(chara)
                         case 96: stream_hp_setting = int(chara)
@@ -834,6 +835,7 @@ def SETTINGS():
                         case 102: annihilator_projectile_amount_setting = int(chara)
                         case 103: frostbeam_hp_setting = int(chara)
                         case 104: modifiers[0] = int(chara)
+                        case 105: player_health_setting = int(chara)
                     scount += 1
                     chara = ""
                 else: chara += c
@@ -4578,6 +4580,16 @@ while running:
                     player2_slow_until = current_time + freeze_duration
                     player2_speed = player2_speed_base / 2
                     player2_frozen = True
+                elif p.get("color") == INDIGO:
+                    if current_time >= player2_invincible_until:
+                        player2_lives -= projectile_damage + extra_sniper_damage
+                        p2_regen_block_until = score + regen_delay
+                        player2_damage_flash_time = current_time
+                        player2_invincible_until = current_time + invincibility_duration
+                        if player2_lives <= 0:
+                            player2_alive = False
+                            break
+                    continue
                 else:
                     if current_time >= player2_invincible_until:
                         player2_lives -= projectile_damage
