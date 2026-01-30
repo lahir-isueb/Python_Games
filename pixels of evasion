@@ -2879,6 +2879,7 @@ def TITLE_SCREEN():
     global player_skins
     global p1_skin_color
     global p2_skin_color
+    global skin_match
     
     skin_font = pygame.font.SysFont(None, 70)
 
