@@ -671,7 +671,7 @@ def SETTINGS():
             pygame.time.delay(200)
 
 
-        copy_seed_text = font.render("Copy Seed", True, WHITE)
+        copy_seed_text = font.render("Copy Settings", True, WHITE)
         copy_seed_button = pygame.Rect(300, 180+SLIST.index("presets")*60 - button_offset + scroll_y, 225, 50)
         pygame.draw.rect(screen, SILVER, copy_seed_button, border_radius=0)
         screen.blit(copy_seed_text, copy_seed_text.get_rect(center=copy_seed_button.center))
@@ -719,7 +719,7 @@ def SETTINGS():
             pyperclip.copy(copied)
             pygame.time.delay(200)
 
-        paste_seed_text = font.render("Paste Seed", True, WHITE)
+        paste_seed_text = font.render("Paste Settings", True, WHITE)
         paste_seed_button = pygame.Rect(550, 180+SLIST.index("presets")*60 - button_offset + scroll_y, 225, 50)
         pygame.draw.rect(screen, SILVER, paste_seed_button, border_radius=0)
         screen.blit(paste_seed_text, paste_seed_text.get_rect(center=paste_seed_button.center))
@@ -866,6 +866,31 @@ def SETTINGS():
             annihilator_projectile_amount_setting = 128
             pygame.time.delay(200)
 
+
+        frostgame_set_text = font.render("Frostbite Frenzy", True, TEAL)
+        frostgame_set_button = pygame.Rect(300, 180+SLIST.index("modes")*60 - button_offset + scroll_y, 225, 50)
+        pygame.draw.rect(screen, CYAN, frostgame_set_button, border_radius=0)
+        screen.blit(frostgame_set_text, frostgame_set_text.get_rect(center=frostgame_set_button.center))
+        if frostgame_set_button.collidepoint(mouse_pos) and mouse_click:
+            projectile_size_setting = 50
+            projectile_speed_setting = 1
+            freeze_duration_setting = 0
+            enemy_unlock_setting = 200
+            projectile_damage_setting = 1
+            enemy_locks = [2, 2, 2, 0, 2, 2, 2, 1, 2, 2,
+                           2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
+                           2, 2, 2, 0, 2, 2, 2, 2, 1, 2,
+                           2, 2, 2, 2, 2, 1]
+
+            flow_hp_setting = 3
+            impostor_hp_setting = 5
+            frostbite_hp_setting = 4
+            frostbite_projectile_amount_setting = 128
+            accelerator_hp_setting = 5
+            haunter_hp_setting = 2
+            frostbeam_hp_setting = 1
+            modifiers = [0]
+            pygame.time.delay(200)
 
         max_spawn_delay_label = font.render("Starting Spawn Delay: " + str(max_spawn_delay_setting), True, MAROON)
         screen.blit(max_spawn_delay_label, (50, 180+SLIST.index("starting sd")*60 + scroll_y))
