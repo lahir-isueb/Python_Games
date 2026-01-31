@@ -89,7 +89,7 @@ player_skins = [WHITE, RED, BLUE,
                 BLUE, SKY, TURQUOISE,
                 GREEN, LIME, FOREST,
                 YELLOW, ORANGE, BROWN,
-                ORANGE, YELLOW, RED,
+                ORANGE, YELLOW, CRIMSON,
                 PURPLE, LAVENDER, BLUE,
                 CYAN, TEAL, LAVENDER,
                 PINK, HOT_PINK, PURPLE,
@@ -4846,17 +4846,21 @@ while running:
     # draw player (flash red if hit)
     if player_alive:
         if current_time - damage_flash_time < 100:
-            pygame.draw.rect(screen, RED, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
+            if p1_skin_color == 3: pygame.draw.rect(screen, CRIMSON, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
+            else: pygame.draw.rect(screen, RED, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         elif current_time - heal_flash_time < 150:
-            pygame.draw.rect(screen, LIME, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
+            if p1_skin_color == 39: pygame.draw.rect(screen, YELLOW, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
+            else: pygame.draw.rect(screen, LIME, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         else:
             pygame.draw.rect(screen, player_skins[p1_skin_color], (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         
     if players == 2 and player2_alive:
         if current_time - player2_damage_flash_time < 100:
-            pygame.draw.rect(screen, RED, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
+            if p2_skin_color == 3: pygame.draw.rect(screen, CRIMSON, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
+            else: pygame.draw.rect(screen, RED, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
         elif current_time - player2_heal_flash_time < 150:
-            pygame.draw.rect(screen, LIME, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
+            if p2_skin_color == 39: pygame.draw.rect(screen, YELLOW, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
+            else: pygame.draw.rect(screen, LIME, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
         else:
             pygame.draw.rect(screen, player_skins[p2_skin_color], (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
 
@@ -4898,16 +4902,10 @@ while running:
         p1_text = font.render(f"Score: {score_p1}", True, player_skins[p1_skin_color])
         screen.blit(p1_text, (20, 20))
     elif players == 2:
-        if p1_skin_color == p2_skin_color:
-            p1_text = font.render(f"P1 Score: {score_p1}", True, player_skins[p1_skin_color + 1])
-            screen.blit(p1_text, (20, 20))
-            p2_text = font.render(f"P2 Score: {score_p2}", True, player_skins[p2_skin_color + skin_match])
-            screen.blit(p2_text, (20, 60))
-        else:
-            p1_text = font.render(f"P1 Score: {score_p1}", True, player_skins[p1_skin_color])
-            screen.blit(p1_text, (20, 20))
-            p2_text = font.render(f"P2 Score: {score_p2}", True, player_skins[p2_skin_color])
-            screen.blit(p2_text, (20, 60))
+        p1_text = font.render(f"P1 Score: {score_p1}", True, player_skins[p1_skin_color])
+        screen.blit(p1_text, (20, 20))
+        p2_text = font.render(f"P2 Score: {score_p2}", True, player_skins[p2_skin_color])
+        screen.blit(p2_text, (20, 60))
 
     if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6969:
         player_lives += 1
