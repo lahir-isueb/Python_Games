@@ -3925,7 +3925,7 @@ while running:
             if dist1 < 250+enemy_size/2+player_size/2:
                 enemy["health"] -= hardened_dps
                 if enemy["health"] < 1:
-                    enemy["health"] = 1
+                    enemy_died = True
             if dist2 < 250+enemy_size/2+player_size/2:
                 enemy["health"] -= hardened_dps
                 if enemy["health"] < 1:
@@ -4106,7 +4106,7 @@ while running:
             if dist1 < 200+enemy_size/2+player_size/2:
                 enemy["health"] -= hardened_dps
                 if enemy["health"] < 1:
-                    enemy["health"] = 1
+                    enemy_died = True
             if dist2 < 150+enemy_size/2+player_size/2:
                 enemy["health"] -= hardened_dps
                 if enemy["health"] < 1:
