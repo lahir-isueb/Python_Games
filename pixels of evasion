@@ -3878,7 +3878,7 @@ while running:
                     ly = enemy["laser_y"]
                     if player_alive:
                         if abs(player_x - lx) < (player_size/2 + enemy_size / 2) and abs(player_y - ly) < enemy["laser_length"] / 2:
-                            if current_time >= invincible_until:
+                            if current_time >= invincible_until + 100:
                                 player_lives -= laser_damage
                                 p1_regen_block_until = score + regen_delay
                                 damage_flash_time = current_time
@@ -3887,7 +3887,7 @@ while running:
 
                     if players == 2 and player2_alive:
                         if abs(player2_x - lx) < (player_size/2 + enemy_size / 2) and abs(player2_y - ly) < enemy["laser_length"] / 2:
-                            if current_time >= player2_invincible_until:
+                            if current_time >= player2_invincible_until + 100:
                                 player2_lives -= laser_damage
                                 p2_regen_block_until = score + regen_delay
                                 player2_damage_flash_time = current_time
@@ -3898,7 +3898,7 @@ while running:
                     ly = enemy["laser_y"]
                     if player_alive:
                         if abs(player_y - ly) < (player_size/2 + enemy_size / 2) and abs(player_x - lx) < enemy["laser_length"] / 2:
-                            if current_time >= invincible_until:
+                            if current_time >= invincible_until + 100:
                                 player_lives -= laser_damage
                                 p1_regen_block_until = score + regen_delay
                                 damage_flash_time = current_time
@@ -3907,7 +3907,7 @@ while running:
 
                     if players == 2 and player2_alive:
                         if abs(player2_y - ly) < (player_size/2 + enemy_size / 2) and abs(player2_x - lx) < enemy["laser_length"] / 2:
-                            if current_time >= player2_invincible_until:
+                            if current_time >= player2_invincible_until + 100:
                                 player2_lives -= laser_damage
                                 p2_regen_block_until = score + regen_delay
                                 player2_damage_flash_time = current_time
