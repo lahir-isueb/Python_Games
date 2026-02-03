@@ -318,6 +318,9 @@ def reset_game_state():
     global heal_flash_time, player2_heal_flash_time
     global player_frozen, player2_frozen, slow_until, player2_slow_until
     global player_speed, player2_speed
+    global everyone_died_at, death_explosion, p2_death_explosion
+    global FPS
+    FPS = 60
     player_x = player_size // 2
     player_y = spawner_pos[1] + SPAWNER_SIZE // 2
     player2_x = WIDTH - player_size // 2
@@ -349,6 +352,9 @@ def reset_game_state():
     spawn_enabled = False
     p1_ready = False
     p2_ready = False
+    everyone_died_at = 0
+    death_explosion = 0
+    p2_death_explosion = 0
 
 player_size_setting = 50
 enemy_size_setting = 50
@@ -877,7 +883,7 @@ def SETTINGS():
         pygame.draw.rect(screen, PURPLE, telporty_set_button, border_radius=0)
         screen.blit(telporty_set_text, telporty_set_text.get_rect(center=telporty_set_button.center))
         if telporty_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.10.100.1000.2.8.5.5.15.3000.50.10000.1000.5.2000.10.1.10.100.1.2.2.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1.2.0.1.1.2.2.2.1.2.2.5.2.1.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.3.1.2000.30.10.5.6.1.2.99.2.7.10.3.2.1.3.32.1.0.3.0.")
+            give_seed("50.50.10.100.1000.2.8.5.5.15.3000.50.10000.500.5.2000.10.1.10.100.1.2.2.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1.2.0.1.1.2.2.2.1.2.2.5.2.1.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.3.1.2000.30.10.5.6.1.2.99.2.7.10.3.2.1.3.32.1.0.3.0.")
             pygame.time.delay(200)
 
         shooter_set_text = font.render("Bullet Survival", True, RED)
@@ -3051,6 +3057,7 @@ TITLE_SCREEN()
 spawn_enabled = False
 p1_ready = False
 p2_ready = False
+everyone_died_at = 0
 
 running = True
 while running:
@@ -3533,7 +3540,8 @@ while running:
                         "y": enemy["y"] + projectile_size/2,
                         "dx": dxp,
                         "dy": dyp,
-                        "color": MAUVE
+                        "color": MAUVE,
+                        "ability": None
                     })
                 enemy["health"] = 0
             if enemy["health"] <= 0:
@@ -3569,7 +3577,8 @@ while running:
                     "y": enemy["y"] + projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
-                    "color": BRONZE   # add color key
+                    "color": BRONZE,
+                    "ability": None
                 })
                 enemy["last_shot_time"] = current_time
         elif enemy["type"] == 12:  # Get Sniped
@@ -3602,7 +3611,8 @@ while running:
                     "y": enemy["y"] + projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
-                    "color": INDIGO
+                    "color": INDIGO,
+                    "ability": "snipe"
                 })
                 enemy["last_shot_time"] = current_time
         elif enemy["type"] == 13:
@@ -3645,7 +3655,8 @@ while running:
                         "y": enemy["y"] + projectile_size/2,
                         "dx": math.cos(ang) * shotgun_projectile_speed,
                         "dy": math.sin(ang) * shotgun_projectile_speed,
-                        "color": BRICK
+                        "color": BRICK,
+                        "ability": None
                     })
                 enemy["last_shot_time"] = current_time
         elif enemy["type"] == 15:  # Magenta Voodoo
@@ -3777,7 +3788,8 @@ while running:
                     "y": enemy["y"] + projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
-                    "color": GOLD   # add color key
+                    "color": GOLD,
+                    "ability": None
                 })
                 enemy["last_shot_time"] = current_time
         elif enemy["type"] == 20:  # Frostbite
@@ -3805,7 +3817,8 @@ while running:
                         "y": enemy["y"] + projectile_size/2,
                         "dx": dxp,
                         "dy": dyp,
-                        "color": CYAN
+                        "color": CYAN,
+                        "ability": "freeze"
                     })
                 enemy["ability"] = 0
             if enemy["health"] <= 0:
@@ -4179,7 +4192,8 @@ while running:
                     "y": enemy["y"] + projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
-                    "color": SILVER   # add color key
+                    "color": SILVER,
+                    "ability": None
                 })
                 enemy["last_shot_time"] = current_time
         elif enemy["type"] == 33: #Stickyshooter
@@ -4205,7 +4219,8 @@ while running:
                         "y": enemy["y"] + projectile_size/2,
                         "dx": dxp,
                         "dy": dyp,
-                        "color": OLIVE   # add color key
+                        "color": OLIVE,
+                        "ability": None
                     })
                     enemy["last_shot_time"] = current_time
             else:
@@ -4257,7 +4272,8 @@ while running:
                     "y": enemy["y"] + projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
-                    "color": VOLT   # add color key
+                    "color": VOLT,
+                    "ability": None
                 })
                 enemy["last_shot_time"] = current_time
         elif enemy["type"] == 35:
@@ -4291,7 +4307,8 @@ while running:
                                 "y": enemy["y"] + projectile_size/2,
                                 "dx": dxp,
                                 "dy": dyp,
-                                "color": HOT_PINK
+                                "color": HOT_PINK,
+                                "ability": None
                             })
                         enemy["laser_mode"] = True
                         enemy["laser_start"] = pygame.time.get_ticks()
@@ -4551,15 +4568,6 @@ while running:
                     if player2_lives <= 0:
                         player2_alive = False
             continue
-        if not player_alive and (players == 1 or not player2_alive):
-            result = GAME_OVER(truescore, score_p1, score_p2)
-            if result == "TITLE":
-                TITLE_SCREEN()
-                continue
-            running = False
-            break
-
-        
         if enemy_died:
             if enemy in enemies:
                 enemy["dead"] = True
@@ -4617,11 +4625,11 @@ while running:
         # collision if distance < sum of radii
         if player_alive and centered_rect_collision(player_x, player_y, player_size,
                                                     p["x"] - projectile_size/2, p["y"] - projectile_size/2, projectile_size):
-            if p.get("color") == CYAN:
+            if p.get("ability") == "freeze":
                 slow_until = current_time + freeze_duration  # 10 seconds
                 player_speed = player_speed_base / 2
                 player_frozen = True
-            elif p.get("color") == INDIGO:
+            elif p.get("ability") == "snipe":
                 if current_time >= invincible_until:
                     player_lives -= projectile_damage + extra_sniper_damage
                     p1_regen_block_until = score + regen_delay
@@ -4646,11 +4654,11 @@ while running:
             player2_cy = player2_y + player_size / 2
             if player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
                                                     p["x"] - projectile_size/2, p["y"] - projectile_size/2, projectile_size):
-                if p.get("color") == CYAN:
+                if p.get("ability") == "freeze":
                     player2_slow_until = current_time + freeze_duration
                     player2_speed = player2_speed_base / 2
                     player2_frozen = True
-                elif p.get("color") == INDIGO:
+                elif p.get("ability") == "snipe":
                     if current_time >= player2_invincible_until:
                         player2_lives -= projectile_damage + extra_sniper_damage
                         p2_regen_block_until = score + regen_delay
@@ -4739,8 +4747,11 @@ while running:
         pygame.draw.circle(screen, pulse_color, center, SPAWNER_SIZE // 2, 2)
 
 
-    frost_overlay = pygame.Surface((player_size + 10, player_size + 10), pygame.SRCALPHA)
+    frost_overlay = pygame.Surface((player_size * 1.2, player_size * 1.2), pygame.SRCALPHA)
     frost_overlay.fill((175, 255, 255, 180))
+
+    impostor_frost_overlay = pygame.Surface((enemy_size * 1.2, enemy_size * 1.2), pygame.SRCALPHA)
+    impostor_frost_overlay.fill((175, 255, 255, 180))
 
 
     # --- spawner core ---
@@ -4863,15 +4874,15 @@ while running:
         if enemy["type"] == 8:
             if player_frozen == True and enemy["target"] == 1:
                 screen.blit(
-                    frost_overlay,
-                    (enemy["x"] - frost_overlay.get_width() // 2,
-                     enemy["y"] - frost_overlay.get_height() // 2)
+                    impostor_frost_overlay,
+                    (enemy["x"] - impostor_frost_overlay.get_width() // 2,
+                     enemy["y"] - impostor_frost_overlay.get_height() // 2)
                 )
             elif player2_frozen == True and enemy["target"] == 2:
                 screen.blit(
-                    frost_overlay,
-                    (enemy["x"] - frost_overlay.get_width() // 2,
-                     enemy["y"] - frost_overlay.get_height() // 2)
+                    impostor_frost_overlay,
+                    (enemy["x"] - impostor_frost_overlay.get_width() // 2,
+                     enemy["y"] - impostor_frost_overlay.get_height() // 2)
                 )
 
     
@@ -4906,23 +4917,25 @@ while running:
             score_p2 = truescore
     
     # draw player lives in center
-    if players == 1: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color + 1])
-    else: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color + 1])
-    player_life_rect = player_life_text.get_rect(center=(player_x, player_y))
-    screen.blit(player_life_text, player_life_rect)
+    if player_alive:
+        if players == 1: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color + 1])
+        else: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color + 1])
+        player_life_rect = player_life_text.get_rect(center=(player_x, player_y))
+        screen.blit(player_life_text, player_life_rect)
 
-    if players == 2:
-        player2_life_text = player_font.render(str(player2_lives), True, player_skins[p2_skin_color + skin_match])
-        player2_life_rect = player2_life_text.get_rect(center=(player2_x, player2_y))
-        screen.blit(player2_life_text, player2_life_rect)
+    if player2_alive:
+        if players == 2:
+            player2_life_text = player_font.render(str(player2_lives), True, player_skins[p2_skin_color + skin_match])
+            player2_life_rect = player2_life_text.get_rect(center=(player2_x, player2_y))
+            screen.blit(player2_life_text, player2_life_rect)
 
-    if player_frozen:
+    if player_frozen and player_alive:
         screen.blit(
             frost_overlay,
             (player_x - frost_overlay.get_width() // 2,
              player_y - frost_overlay.get_height() // 2)
         )
-    if player2_frozen:
+    if player2_frozen and players == 2 and player2_alive:
         screen.blit(
             frost_overlay,
             (player2_x - frost_overlay.get_width() // 2,
@@ -4949,7 +4962,44 @@ while running:
         player2_heal_flash_time = current_time
         p2_regen_block_until = score + regen_delay
 
-    if not player_alive and (players == 1 or not player2_alive):
+    if not player_alive and death_explosion == 0:
+        for i in range(16):  # fire 8 projectiles in all directions
+            ang = i * (2 * math.pi / 16)
+            dxp = math.cos(ang) * 5
+            dyp = math.sin(ang) * 5
+            projectiles.append({
+                "x": player_x + projectile_size/2,
+                "y": player_y + projectile_size/2,
+                "dx": dxp,
+                "dy": dyp,
+                "color": player_skins[p1_skin_color],
+                "ability": None
+            })
+            death_explosion = 1
+
+    if players == 2 and not player2_alive and p2_death_explosion == 0:
+        for i in range(16):  # fire 8 projectiles in all directions
+            ang = i * (2 * math.pi / 16)
+            dxp = math.cos(ang) * 5
+            dyp = math.sin(ang) * 5
+            projectiles.append({
+                "x": player2_x + projectile_size/2,
+                "y": player2_y + projectile_size/2,
+                "dx": dxp,
+                "dy": dyp,
+                "color": player_skins[p2_skin_color],
+                "ability": None
+            })
+            p2_death_explosion = 1
+
+    if not player_alive and (players == 1 or not player2_alive) and everyone_died_at == 0:
+        everyone_died_at = current_time + 2700
+
+    if not player_alive and not player2_alive and FPS > 20:
+        FPS -= 1
+        
+
+    if current_time > everyone_died_at and everyone_died_at != 0:
         result = GAME_OVER(truescore, score_p1, score_p2)
         if result == "TITLE":
             TITLE_SCREEN()
