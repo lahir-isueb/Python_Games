@@ -4995,9 +4995,9 @@ while running:
     if not player_alive and (players == 1 or not player2_alive) and everyone_died_at == 0:
         everyone_died_at = current_time + 2700
 
-    if not player_alive and not player2_alive and FPS > 20:
-        FPS -= 1
-        
+    if FPS > 20:
+        if players == 1 and not player_alive: FPS -= 1
+        if players == 2 and not player_alive and not player2_alive: FPS -= 1
 
     if current_time > everyone_died_at and everyone_died_at != 0:
         result = GAME_OVER(truescore, score_p1, score_p2)
