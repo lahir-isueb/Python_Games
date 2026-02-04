@@ -12,10 +12,10 @@ pygame.display.set_caption("Pixels Of Evasion")
 def GAME_OVER(final_score, p1, p2): 
     screen.fill(BLACK)
     over_text = big_font.render("GAME OVER", True, RED)
-    if players == 1: score_text = font.render(f"Final Score: {p1}", True, WHITE)
+    if players == 1: score_text = font.render(f"Final Score: {final_score}", True, WHITE)
     elif p1 > p2: score_text = font.render(f"Player 1 wins by {p1}-{p2}.", True, WHITE)
     elif p1 < p2: score_text = font.render(f"Player 2 wins by {p2}-{p1}.", True, WHITE)
-    elif p1 == p2: score_text = font.render(f"Both players tied with a score of {p1}", True, WHITE)
+    elif p1 == p2: score_text = font.render(f"Both players tied with a score of {final_score}", True, WHITE)
     instr_text = font.render("Press space to return", True, GRAY)
 
     screen.blit(over_text, over_text.get_rect(center=(WIDTH//2, HEIGHT//2 - 50)))
@@ -40,7 +40,6 @@ def GAME_OVER(final_score, p1, p2):
 # --- Colors ---
 WHITE = (255, 255, 255)
 SILVER = (175, 175, 175) #TARGETS
-CLOUD = (150, 175, 190)
 GRAY = (100, 100, 100)
 SHADOW = (50, 50, 50) #not used?
 BLACK = (0, 0, 0) #not used?
@@ -201,7 +200,7 @@ p2_regen_block_until = 0
 unlock_scores = []
 
 # --- Weather ---
-weathers = ["None", "Rain", "Heavy Rain", "Storm", "Snow", "Blizzard", "Windy", "Sandstorm", "Blood Rain"]
+weathers = ["None", "Rain", "Heavy Rain", "Storm", "Snow", "Blizzard", "Sandstorm", "Blood Rain"]
 weather = 0
 
 # --- Font Size ---
@@ -259,13 +258,18 @@ accel_rate = 0.02
 
 # --- Harden ---
 harden_break = 10
-unharden_death = 0
 
 # --- Turn Speed ---
 chase_turn = 5
 
 # --- Stickiness ---
 stickiness = 2000
+
+# --- Type Settings ---
+charger_type = 1
+unharden_death = 0
+target_type = 1
+current_target = 1
 
 # --- Addiction ---
 addictive_pull_radius = 300
@@ -418,6 +422,7 @@ voodoo_hp_setting = 5
 blind_hp_setting = 6
 motion_hp_setting = 7
 charger_hp_setting = 3
+charger_type_setting = 1
 rapidshooter_hp_setting = 1
 frostbite_hp_setting = 4
 frostbite_projectile_amount_setting = 32
@@ -500,7 +505,7 @@ def SETTINGS():
     global voodoo_hp_setting
     global blind_hp_setting
     global motion_hp_setting
-    global charger_hp_setting
+    global charger_hp_setting, charger_type_setting
     global rapidshooter_hp_setting
     global frostbite_hp_setting
     global frostbite_projectile_amount_setting
@@ -568,7 +573,7 @@ def SETTINGS():
         global voodoo_hp_setting
         global blind_hp_setting
         global motion_hp_setting
-        global charger_hp_setting
+        global charger_hp_setting, charger_type_setting
         global rapidshooter_hp_setting
         global frostbite_hp_setting
         global frostbite_projectile_amount_setting
@@ -709,6 +714,7 @@ def SETTINGS():
                     case 106: unharden_death_setting = int(chara)
                     case 107: target_setting = int(chara)
                     case 108: modifiers[1] = int(chara)
+                    case 109: charger_type_setting = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -730,7 +736,7 @@ def SETTINGS():
              "freeze status",
              "set locks",
              
-             "basic", "speedy", "sticky", "charger", "gloomy", "flow",
+             "basic", "speedy", "sticky", "charger", "charge type", "gloomy", "flow",
              "blind", "motion", "cold", "accelerator", "teleporter",
              "hardened", "homing", "splitter", "splitter splits",
              "trail", "shooter", "burstshooter", "burst", "rapidshooter",
@@ -807,7 +813,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GRAY, default_set_button, border_radius=0)
         screen.blit(default_set_text, default_set_text.get_rect(center=default_set_button.center))
         if default_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.10.500.2000.10.8.5.5.50.3000.450.10000.1000.5.2000.10.1.10.100.1.0.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.5.2.3.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.1.0.")
+            give_seed("50.50.10.500.2000.10.8.5.5.50.3000.450.10000.1000.5.2000.10.1.10.100.1.0.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.5.2.3.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.1.0.1.")
             pygame.time.delay(200)
 
 
@@ -853,7 +859,7 @@ def SETTINGS():
                                  sparker_hp_setting, annihilator_hp_setting,
                                  annihilator_projectile_amount_setting, frostbeam_hp_setting, modifiers[0],
                                  player_health_setting, unharden_death_setting, target_setting,
-                                 modifiers[1]]
+                                 modifiers[1], charger_type_setting]
 
             
             for x in copy_setting_list: copied += f"{x}."
@@ -874,7 +880,7 @@ def SETTINGS():
         pygame.draw.rect(screen, LAVA, blazegame_set_button, border_radius=0)
         screen.blit(blazegame_set_text, blazegame_set_text.get_rect(center=blazegame_set_button.center))
         if blazegame_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.20.500.2000.10.8.10.5.50.4000.250.10000.1000.3.2000.20.1.10.200.1.2.2.0.2.2.2.0.2.2.2.2.2.2.1.2.2.0.2.2.2.2.2.2.2.2.2.0.2.2.2.2.2.2.2.1.2.5.2.3.3.7.9.4.5.3.2.8.8.4.1.1.5.4.21.5.6.12.3.1.4.32.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.1.0.")
+            give_seed("50.50.20.500.2000.10.8.10.5.50.4000.250.10000.1000.3.2000.20.1.10.200.1.2.2.0.2.2.2.0.2.2.2.2.2.2.1.2.2.0.2.2.2.2.2.2.2.2.2.0.2.2.2.2.2.2.2.1.2.5.2.3.3.7.9.4.5.3.2.8.8.4.1.1.5.4.21.5.6.12.3.1.4.32.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.1.0.1.")
             pygame.time.delay(200)
         
         
@@ -883,7 +889,7 @@ def SETTINGS():
         pygame.draw.rect(screen, CYAN, frostgame_set_button, border_radius=0)
         screen.blit(frostgame_set_text, frostgame_set_text.get_rect(center=frostgame_set_button.center))
         if frostgame_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.50.500.2000.10.8.5.1.50.3000.450.0.1000.5.2000.10.1.10.200.1.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.0.2.2.2.2.1.2.2.2.2.2.2.1.5.2.3.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.128.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.0.0.")
+            give_seed("50.50.50.500.2000.10.8.5.1.50.3000.450.0.1000.5.2000.10.1.10.200.1.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.0.2.2.2.2.1.2.2.2.2.2.2.1.5.2.3.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.128.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.0.0.1.")
             pygame.time.delay(200)
 
 
@@ -892,7 +898,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GREEN, sticky_set_button, border_radius=0)
         screen.blit(sticky_set_text, sticky_set_text.get_rect(center=sticky_set_button.center))
         if sticky_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("10.150.50.500.2000.10.8.2.5.50.3000.450.10000.1000.5.3500.10.1.10.100.1.2.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.5.2.3.3.4.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.0.0.")
+            give_seed("10.150.50.500.2000.10.8.2.5.50.3000.450.10000.1000.5.3500.10.1.10.100.1.2.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.5.2.3.3.4.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.0.0.1.")
             pygame.time.delay(200)
 
 
@@ -901,7 +907,7 @@ def SETTINGS():
         pygame.draw.rect(screen, PURPLE, telporty_set_button, border_radius=0)
         screen.blit(telporty_set_text, telporty_set_text.get_rect(center=telporty_set_button.center))
         if telporty_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.10.100.1000.2.8.5.5.15.3000.50.10000.500.5.2000.10.1.10.100.1.2.2.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1.2.0.1.1.2.2.2.1.2.2.5.2.1.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.3.1.2000.30.10.5.6.1.2.99.2.7.10.3.2.1.3.32.1.0.3.0.1.0.")
+            give_seed("50.50.10.100.1000.2.8.5.5.15.3000.50.10000.500.5.2000.10.1.10.100.1.2.2.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1.2.0.1.1.2.2.2.1.2.2.5.2.1.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.3.1.2000.30.10.5.6.1.2.99.2.7.10.3.2.1.3.32.1.0.3.0.1.0.1.")
             pygame.time.delay(200)
 
         shooter_set_text = font.render("Bullet Survival", True, RED)
@@ -909,7 +915,7 @@ def SETTINGS():
         pygame.draw.rect(screen, MAROON, shooter_set_button, border_radius=0)
         screen.blit(shooter_set_text, shooter_set_text.get_rect(center=shooter_set_button.center))
         if shooter_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.10.500.2000.10.8.5.5.10.3000.50.10000.0.5.5000.40.10.10.100.1.2.2.2.2.2.2.0.2.2.0.0.0.2.0.2.2.2.2.0.2.2.1.2.2.2.1.2.2.2.2.2.0.0.0.1.1.5.2.3.3.7.9.3.5.3.2.8.64.4.1.5.5.4.21.5.6.7.3.1.4.32.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.128.1.0.99.0.0.0.")
+            give_seed("50.50.10.500.2000.10.8.5.5.10.3000.50.10000.0.5.5000.40.10.10.100.1.2.2.2.2.2.2.0.2.2.0.0.0.2.0.2.2.2.2.0.2.2.1.2.2.2.1.2.2.2.2.2.0.0.0.1.1.5.2.3.3.7.9.3.5.3.2.8.64.4.1.5.5.4.21.5.6.7.3.1.4.32.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.128.1.0.99.0.0.0.1.")
             pygame.time.delay(200)
 
 
@@ -918,7 +924,7 @@ def SETTINGS():
         pygame.draw.rect(screen, TURQUOISE, laserblast_set_button, border_radius=0)
         screen.blit(laserblast_set_text, laserblast_set_text.get_rect(center=laserblast_set_button.center))
         if laserblast_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.10.400.1500.16.8.8.5.5.3000.450.5000.0.5.2000.10.5.10.100.2.2.2.2.2.2.2.2.2.2.1.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.1.0.0.5.2.3.3.7.9.3.5.3.2.8.16.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.1.2.3000.30.10.5.6.1.2.6.3.4.10.3.2.2.1.32.1.0.50.0.1.0.")
+            give_seed("50.50.10.400.1500.16.8.8.5.5.3000.450.5000.0.5.2000.10.5.10.100.2.2.2.2.2.2.2.2.2.2.1.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.1.0.0.5.2.3.3.7.9.3.5.3.2.8.16.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.1.2.3000.30.10.5.6.1.2.6.3.4.10.3.2.2.1.32.1.0.50.0.1.0.1.")
             pygame.time.delay(200)
 
 
@@ -1980,6 +1986,16 @@ def SETTINGS():
             else: enemy_locks[17] = enemy_locks[17] + 1
             pygame.time.delay(200)
 
+        charger_type_label = font.render("Repel: " + str(true_or_false[charger_type_setting]), True, YELLOW)
+        screen.blit(charger_type_label, (287, 180+SLIST.index("charge type")*60 + scroll_y))
+        charger_type_true_or_false_button = pygame.Rect(500, 180+SLIST.index("charge type")*60 - button_offset + scroll_y, 110, 50)
+        pygame.draw.rect(screen, YELLOW, charger_type_true_or_false_button, border_radius=0)
+        screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=charger_type_true_or_false_button.center))
+        if charger_type_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
+            if charger_type_setting == 0: charger_type_setting = 1
+            else: charger_type_setting = 0
+            pygame.time.delay(200)
+
 
         rapidshooter_hp_label = font.render("Rapidshooter Enemy - HP: " + str(rapidshooter_hp_setting), True, GOLD)
         screen.blit(rapidshooter_hp_label, (50, 180+SLIST.index("rapidshooter")*60 + scroll_y))
@@ -2735,11 +2751,10 @@ def SETTINGS():
         elif modifiers[1] == 3: weather_button_color = SULFUR
         elif modifiers[1] == 4: weather_button_color = ICE
         elif modifiers[1] == 5: weather_button_color = CYAN
-        elif modifiers[1] == 6: weather_button_color = CLOUD
-        elif modifiers[1] == 7: weather_button_color = TAN
-        elif modifiers[1] == 8: weather_button_color = RED
+        elif modifiers[1] == 6: weather_button_color = TAN
+        elif modifiers[1] == 7: weather_button_color = RED
         weather_text_color = WHITE
-        weather_list = ["None", "Rain", "Heavy Rain", "Storm", "Snow", "Blizzard", "Windy", "Sandstorm", "Blood Rain"]
+        weather_list = ["None", "Rain", "Heavy Rain", "Storm", "Snow", "Blizzard", "Sandstorm", "Blood Rain"]
         weather_text = font.render("Weather: " + str(weather_list[modifiers[1]]), True, weather_text_color)
         weather_button = pygame.Rect(50, 180+SLIST.index("weather")*60 - button_offset + scroll_y, 800, 50)
         pygame.draw.rect(screen, weather_button_color, weather_button, border_radius=0)
@@ -2829,7 +2844,7 @@ def apply_settings():
     global voodoo_hp
     global blind_hp
     global motion_hp
-    global charger_hp
+    global charger_hp, charger_type
     global rapidshooter_hp
     global frostbite_hp, frostbite_projectile_amount
     global addictive_hp, addictive_pull_radius, addictive_pull_strength
@@ -2911,6 +2926,7 @@ def apply_settings():
     blind_hp = blind_hp_setting
     motion_hp = motion_hp_setting
     charger_hp = charger_hp_setting
+    charger_type = charger_type_setting
     rapidshooter_hp = rapidshooter_hp_setting
     frostbite_hp = frostbite_hp_setting
     frostbite_projectile_amount = frostbite_projectile_amount_setting
@@ -3046,7 +3062,7 @@ def TITLE_SCREEN():
             pygame.time.delay(200)
 
 
-        # --- Player Skin Toggle (With keys) --
+        # --- Keyboard Controls for title --
         for event in pygame.event.get():
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)) and players == 1:
                 if p1_skin_color-3 < 0: p1_skin_color = len(player_skins)-3
@@ -3066,6 +3082,13 @@ def TITLE_SCREEN():
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_l) and players == 2):
                 if p2_skin_color+3 == len(player_skins): p2_skin_color = 0
                 else: p2_skin_color += 3
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_SPACE)):
+                apply_settings()
+                reset_game_state()
+                waiting = False
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_ESCAPE)):
+                pygame.quit()
+                quit()
             
 
         # --- Settings button ---
@@ -3192,7 +3215,7 @@ while running:
 
     player_moving = (p1_dx != 0 or p1_dy != 0)
     
-    if spawn_enabled and weathers[weather] == "Windy" or weathers[weather] == "Sandstorm":
+    if spawn_enabled and weathers[weather] == "Sandstorm":
         player_x += sandstorm_direction * 3
         player2_x += sandstorm_direction * 3
 
@@ -3799,7 +3822,7 @@ while running:
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             if enemy["stopped"]:
-                if current_time - enemy["stop_start_time"] >= stickiness*4 or closest_dist < 350+enemy_size/2+player_size/2:
+                if current_time - enemy["stop_start_time"] >= stickiness*4 or (closest_dist < 350+enemy_size/2+player_size/2 and charger_type == 1):
                     enemy["stopped"] = False
             else:
                 enemy["x"] += enemy["dx"]
@@ -5115,18 +5138,6 @@ while running:
                     "ability": "freeze"
                 })
 
-        if weathers[weather] == "Windy":
-            if current_time >= weather_timer:
-                weather_timer = current_time + 250
-                projectiles.append({
-                    "x": (WIDTH/2) - sandstorm_direction * (WIDTH/2),
-                    "y": random.uniform(0, HEIGHT),
-                    "dx": 5*sandstorm_direction,
-                    "dy": 0,
-                    "color": CLOUD,
-                    "ability": None
-                })
-        
         if weathers[weather] == "Sandstorm":
             if current_time >= weather_timer:
                 weather_timer = current_time + 150
