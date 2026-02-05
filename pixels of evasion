@@ -106,7 +106,7 @@ player_skins = [WHITE, RED, BLUE,
                 SHADOW, PINK, CYAN]
 
 # --- Spawner Size ---
-SPAWNER_SIZE = 50
+spawner_size = 50
 
 # --- Player ---
 players = 1
@@ -136,7 +136,7 @@ target_type = 1
 current_target = 1
 
 # --- Spawner ---
-spawner_pos = (WIDTH // 2 - SPAWNER_SIZE // 2, HEIGHT // 2 - SPAWNER_SIZE // 2)
+spawner_pos = (WIDTH // 2 - spawner_size // 2, HEIGHT // 2 - spawner_size // 2)
 initial_spawn_delay = 2000 # ORIGINAL VALUE 2000
 last_spawn_time = pygame.time.get_ticks()
 enemy_speed = 5
@@ -144,10 +144,10 @@ min_spawn_delay = 500  # ORIGINAL VALUE 500
 spawn_rate = 10
 
 player_x = player_size // 2
-player_y = spawner_pos[1] + SPAWNER_SIZE // 2
+player_y = spawner_pos[1] + spawner_size // 2
 
 player2_x = WIDTH - player_size // 2
-player2_y = spawner_pos[1] + SPAWNER_SIZE // 2
+player2_y = spawner_pos[1] + spawner_size // 2
 
 # --- Enemy Health ---
 basic_hp = 5 # 1
@@ -334,9 +334,9 @@ def reset_game_state():
     global weather_timer, storm_timer, sandstorm_direction
     FPS = 60
     player_x = player_size // 2
-    player_y = spawner_pos[1] + SPAWNER_SIZE // 2
+    player_y = spawner_pos[1] + spawner_size // 2
     player2_x = WIDTH - player_size // 2
-    player2_y = spawner_pos[1] + SPAWNER_SIZE // 2
+    player2_y = spawner_pos[1] + spawner_size // 2
     player_lives = player_health_setting
     player2_lives = player_health_setting
     player_alive = True
@@ -2871,6 +2871,7 @@ y_pos = HEIGHT - button_height - margin - 400
 
 def apply_settings():
     global player_size, player_font, enemy_size, enemy_font, projectile_size, projectile_damage, trail_size
+    global spawner_size, spawner_pos
     global min_spawn_delay, initial_spawn_delay, spawn_rate, enemy_damage
     global player_speed, player_speed_base, player2_speed, player2_speed_base, enemy_speed
     global bomb_projectile_speed, shooter_projectile_speed, sniper_projectile_speed, shotgun_projectile_speed, rapidshooter_projectile_speed, burstshooter_projectile_speed, frostbite_projectile_speed
@@ -2928,6 +2929,8 @@ def apply_settings():
     player_size = player_size_setting
     player_font = pygame.font.SysFont(None, int(0.96 * player_size))
     enemy_size = enemy_size_setting
+    spawner_size = enemy_size_setting
+    spawner_pos = (WIDTH // 2 - spawner_size // 2, HEIGHT // 2 - spawner_size // 2)
     enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size))
     min_spawn_delay = min_spawn_delay_setting
     initial_spawn_delay = max_spawn_delay_setting
@@ -3424,8 +3427,8 @@ while running:
 
         enemies.append({
             "dead": False,
-            "x": spawner_pos[0]+25,
-            "y": spawner_pos[1]+25,
+            "x": spawner_pos[0]+enemy_size/2,
+            "y": spawner_pos[1]+enemy_size/2,
             "target": target,
             "dx": dx,
             "dy": dy,
@@ -4887,13 +4890,13 @@ while running:
     screen.fill(BLACK)
 
     # draw spawner
-    pygame.draw.rect(screen, BLACK, (*spawner_pos, SPAWNER_SIZE, SPAWNER_SIZE))
-    pygame.draw.rect(screen, CRISP, (*spawner_pos, SPAWNER_SIZE, SPAWNER_SIZE), 3)
+    pygame.draw.rect(screen, BLACK, (*spawner_pos, spawner_size, spawner_size))
+    pygame.draw.rect(screen, CRISP, (*spawner_pos, spawner_size, spawner_size), 3)
 
 
         # --- FULL SPAWNER INDICATOR --
-    center = (spawner_pos[0] + SPAWNER_SIZE // 2,
-        spawner_pos[1] + SPAWNER_SIZE // 2)
+    center = (spawner_pos[0] + spawner_size // 2,
+        spawner_pos[1] + spawner_size // 2)
 
     if spawn_enabled:
         # Normal pulse + rotation once spawning starts
@@ -4905,11 +4908,11 @@ while running:
         pulse_color = lerp_color(CRISP, RED, indicator_ratio)
 
         # Glow
-        glow_size = SPAWNER_SIZE * 4
+        glow_size = spawner_size * 4
         glow_surface = pygame.Surface((glow_size, glow_size), pygame.SRCALPHA).convert_alpha()
         alpha = int(40 + 180 * indicator_ratio)
-        start_glow_radius = SPAWNER_SIZE * 2
-        end_glow_radius = SPAWNER_SIZE // 2
+        start_glow_radius = spawner_size * 2
+        end_glow_radius = spawner_size // 2
         glow_radius = int(start_glow_radius * (1 - indicator_ratio) + end_glow_radius * indicator_ratio)
         r, g, b = pulse_color[:3]
         r = max(0, min(255, int(r)))
@@ -4938,8 +4941,8 @@ while running:
     else:
         # Dormant look before player moves
         pulse_color = CRISP
-        pygame.draw.rect(screen, pulse_color, (*spawner_pos, SPAWNER_SIZE, SPAWNER_SIZE), 3)
-        pygame.draw.circle(screen, pulse_color, center, SPAWNER_SIZE // 2, 2)
+        pygame.draw.rect(screen, pulse_color, (*spawner_pos, spawner_size, enemy_size/2), 3)
+        pygame.draw.circle(screen, pulse_color, center, spawner_size // 2, 2)
 
 
     frost_overlay = pygame.Surface((player_size * 1.2, player_size * 1.2), pygame.SRCALPHA)
@@ -4950,8 +4953,8 @@ while running:
 
 
     # --- spawner core ---
-    pygame.draw.rect(screen, BLACK, (*spawner_pos, SPAWNER_SIZE, SPAWNER_SIZE))
-    pygame.draw.rect(screen, CRISP, (*spawner_pos, SPAWNER_SIZE, SPAWNER_SIZE), 3)
+    pygame.draw.rect(screen, BLACK, (*spawner_pos, spawner_size, spawner_size))
+    pygame.draw.rect(screen, CRISP, (*spawner_pos, spawner_size, spawner_size), 3)
 
     # draw trail squares
     for sq in trail_squares:
