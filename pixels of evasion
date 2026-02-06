@@ -100,7 +100,7 @@ player_skins = [WHITE, RED, BLUE,
                 BROWN, TAN, GREEN,
                 LIME, GREEN, YELLOW,
                 TEAL, BLUE, YELLOW,
-                TURQUOISE, HOT_PINK, GREEN,
+                TURQUOISE, BLUE, GREEN,
                 LAVENDER, PURPLE, BLUE,
                 GRAY, WHITE, BLACK]
 
@@ -200,6 +200,10 @@ regen_delay = 50
 p1_regen_block_until = 0
 p2_regen_block_until = 0
 unlock_scores = []
+
+# --- Colorblind ---
+colorblind_list = [WHITE, WHITE, GRAY, RED, ORANGE, YELLOW, LIME, GREEN, TURQUOISE, CYAN, BLUE, PURPLE, PINK]
+colorblind = 0
 
 # --- Weather ---
 weathers = ["None", "Rain", "Heavy Rain", "Storm", "Snow", "Blizzard", "Windy", "Sandstorm", "Blood Rain"]
@@ -2818,18 +2822,27 @@ def SETTINGS():
         all_enemies_one_color_button_color = SHADOW
         all_enemies_one_color_text_color = WHITE
         if modifiers[0] == 0: all_enemies_one_color_button_color = SHADOW
-        elif modifiers[0] == 1: all_enemies_one_color_button_color = GRAY
-        elif modifiers[0] == 2: all_enemies_one_color_button_color = RED
-        elif modifiers[0] == 3: all_enemies_one_color_button_color = WHITE
-        if modifiers[0] == 3: all_enemies_one_color_text_color = BLACK
+        elif modifiers[0] == 1: all_enemies_one_color_button_color = WHITE
+        elif modifiers[0] == 2: all_enemies_one_color_button_color = GRAY
+        elif modifiers[0] == 3: all_enemies_one_color_button_color = RED
+        elif modifiers[0] == 4: all_enemies_one_color_button_color = ORANGE
+        elif modifiers[0] == 5: all_enemies_one_color_button_color = YELLOW
+        elif modifiers[0] == 6: all_enemies_one_color_button_color = LIME
+        elif modifiers[0] == 7: all_enemies_one_color_button_color = GREEN
+        elif modifiers[0] == 8: all_enemies_one_color_button_color = TURQUOISE
+        elif modifiers[0] == 9: all_enemies_one_color_button_color = CYAN
+        elif modifiers[0] == 10: all_enemies_one_color_button_color = BLUE
+        elif modifiers[0] == 11: all_enemies_one_color_button_color = PURPLE
+        elif modifiers[0] == 12: all_enemies_one_color_button_color = PINK
+        if modifiers[0] == 1: all_enemies_one_color_text_color = BLACK
         else: all_enemies_one_color_text_color = WHITE
-        all_enemies_one_color_list = ["No", "Gray", "Red", "White"]
-        all_enemies_one_color_text = font.render("Set All Enemies To One Color: " + str(all_enemies_one_color_list[modifiers[0]]), True, all_enemies_one_color_text_color)
+        all_enemies_one_color_list = ["No", "White", "Gray", "Red", "Orange", "Yellow", "Lime", "Green", "Turquoise", "Cyan", "Blue", "Purple", "Pink"]
+        all_enemies_one_color_text = font.render("Colorblind: " + str(all_enemies_one_color_list[modifiers[0]]), True, all_enemies_one_color_text_color)
         all_enemies_one_color_button = pygame.Rect(50, 180+SLIST.index("all one color")*60 - button_offset + scroll_y, 800, 50)
         pygame.draw.rect(screen, all_enemies_one_color_button_color, all_enemies_one_color_button, border_radius=0)
         screen.blit(all_enemies_one_color_text, all_enemies_one_color_text.get_rect(center=all_enemies_one_color_button.center))
         if all_enemies_one_color_button.collidepoint(mouse_pos) and mouse_click:
-            if modifiers[0] == 3: modifiers[0] = 0
+            if modifiers[0] == 12: modifiers[0] = 0
             else: modifiers[0] += 1
             pygame.time.delay(200)
 
@@ -2918,6 +2931,7 @@ def apply_settings():
     global chase_turn
     global stickiness
     global projectile_fire_rate
+    global colorblind
     global weather
     global basic_hp
     global homing_hp
@@ -3000,6 +3014,7 @@ def apply_settings():
     projectile_fire_rate = projectile_fire_rate_setting
     enemy_damage = enemy_damage_setting
     enemy_unlock = enemy_unlock_setting
+    target_type = target_setting
     burst = burst_setting
     basic_hp = basic_hp_setting
     homing_hp = homing_hp_setting
@@ -3053,7 +3068,7 @@ def apply_settings():
     frostbeam_hp = frostbeam_hp_setting
     forecast_hp = forecast_hp_setting
     assassin_hp = assassin_hp_setting
-    target_type = target_setting
+    colorblind = modifiers[0]
     weather = modifiers[1]
     
     available_enemy_types.clear()
@@ -3627,7 +3642,7 @@ while running:
                     "y": int(enemy["y"]),
                     "spawn": current_time,
                     "health": 1,
-                    "color": LAVA
+                    "color": colorblind_list[colorblind] if colorblind != 0 else LAVA
                 })
                 enemy["last_trail_time"] = current_time
             if enemy["health"] <= 0: enemy_died = True
@@ -3736,7 +3751,7 @@ while running:
                         "y": enemy["y"] + projectile_size/2,
                         "dx": dxp,
                         "dy": dyp,
-                        "color": MAUVE,
+                        "color": colorblind_list[colorblind] if colorblind != 0 else MAUVE,
                         "ability": None
                     })
                 enemy["health"] = 0
@@ -3773,7 +3788,7 @@ while running:
                     "y": enemy["y"] + projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
-                    "color": BRONZE,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else BRONZE,
                     "ability": None
                 })
                 enemy["last_shot_time"] = current_time
@@ -3807,7 +3822,7 @@ while running:
                     "y": enemy["y"] + projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
-                    "color": INDIGO,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else INDIGO,
                     "ability": "snipe"
                 })
                 enemy["last_shot_time"] = current_time
@@ -3851,7 +3866,7 @@ while running:
                         "y": enemy["y"] + projectile_size/2,
                         "dx": math.cos(ang) * shotgun_projectile_speed,
                         "dy": math.sin(ang) * shotgun_projectile_speed,
-                        "color": BRICK,
+                        "color": colorblind_list[colorblind] if colorblind != 0 else BRICK,
                         "ability": None
                     })
                 enemy["last_shot_time"] = current_time
@@ -3984,7 +3999,7 @@ while running:
                     "y": enemy["y"] + projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
-                    "color": GOLD,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else GOLD,
                     "ability": None
                 })
                 enemy["last_shot_time"] = current_time
@@ -4013,7 +4028,7 @@ while running:
                         "y": enemy["y"] + projectile_size/2,
                         "dx": dxp,
                         "dy": dyp,
-                        "color": CYAN,
+                        "color": colorblind_list[colorblind] if colorblind != 0 else CYAN,
                         "ability": "freeze"
                     })
                 enemy["ability"] = 0
@@ -4240,7 +4255,7 @@ while running:
                     "y": int(enemy["y"]),
                     "spawn": current_time,
                     "health": 1,
-                    "color": SULFUR
+                    "color": colorblind_list[colorblind] if colorblind != 0 else SULFUR
                 })
                 enemy["last_trail_time"] = current_time
             if enemy["bounces"] >= tracer_hp: enemy_died = True
@@ -4388,7 +4403,7 @@ while running:
                     "y": enemy["y"] + projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
-                    "color": SILVER,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else SILVER,
                     "ability": None
                 })
                 enemy["last_shot_time"] = current_time
@@ -4415,7 +4430,7 @@ while running:
                         "y": enemy["y"] + projectile_size/2,
                         "dx": dxp,
                         "dy": dyp,
-                        "color": OLIVE,
+                        "color": colorblind_list[colorblind] if colorblind != 0 else OLIVE,
                         "ability": None
                     })
                     enemy["last_shot_time"] = current_time
@@ -4468,7 +4483,7 @@ while running:
                     "y": enemy["y"] + projectile_size/2,
                     "dx": dxp,
                     "dy": dyp,
-                    "color": VOLT,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else VOLT,
                     "ability": None
                 })
                 enemy["last_shot_time"] = current_time
@@ -4503,7 +4518,7 @@ while running:
                                 "y": enemy["y"] + projectile_size/2,
                                 "dx": dxp,
                                 "dy": dyp,
-                                "color": HOT_PINK,
+                                "color": colorblind_list[colorblind] if colorblind != 0 else HOT_PINK,
                                 "ability": None
                             })
                         enemy["laser_mode"] = True
@@ -5030,10 +5045,8 @@ while running:
     # draw enemies
     for enemy in enemies:
         if enemy["type"] == 15: color = MAGENTA
-        elif modifiers[0] == 1: color = GRAY
-        elif modifiers[0] == 2: color = RED
-        elif modifiers[0] == 3: color = WHITE
-        elif modifiers[0] == 0:
+        elif colorblind != 0: color = colorblind_list[colorblind]
+        else:
             if enemy["type"] == 1: color = GRAY
             elif enemy["type"] == 2: color = SALMON
             elif enemy["type"] == 3: color = RED
@@ -5079,26 +5092,26 @@ while running:
         
         if enemy["type"] == 22 and enemy.get("laser_mode", False):
             if enemy["laser_orientation"] == "vertical":
-                pygame.draw.rect(screen, TURQUOISE, (enemy["laser_x"]-enemy_size/2, enemy["laser_y"]-enemy["laser_length"]/2, enemy_size, enemy["laser_length"]))
+                pygame.draw.rect(screen, colorblind_list[colorblind] if colorblind != 0 else TURQUOISE, (enemy["laser_x"]-enemy_size/2, enemy["laser_y"]-enemy["laser_length"]/2, enemy_size, enemy["laser_length"]))
 
             elif enemy["laser_orientation"] == "horizontal": #enemy["laser_length"]
-                pygame.draw.rect(screen, TURQUOISE, (enemy["laser_x"]-enemy["laser_length"]/2, enemy["laser_y"]-enemy_size/2, enemy["laser_length"], enemy_size))
+                pygame.draw.rect(screen, colorblind_list[colorblind] if colorblind != 0 else TURQUOISE, (enemy["laser_x"]-enemy["laser_length"]/2, enemy["laser_y"]-enemy_size/2, enemy["laser_length"], enemy_size))
             continue
 
         if enemy["type"] == 35 and enemy.get("laser_mode", False):
             if enemy["laser_orientation"] == "vertical":
-                pygame.draw.rect(screen, HOT_PINK, (enemy["laser_x"]-enemy_size/2, enemy["laser_y"]-enemy["laser_length"]/2, enemy_size, enemy["laser_length"]))
+                pygame.draw.rect(screen, colorblind_list[colorblind] if colorblind != 0 else HOT_PINK, (enemy["laser_x"]-enemy_size/2, enemy["laser_y"]-enemy["laser_length"]/2, enemy_size, enemy["laser_length"]))
 
             elif enemy["laser_orientation"] == "horizontal": #enemy["laser_length"]
-                pygame.draw.rect(screen, HOT_PINK, (enemy["laser_x"]-enemy["laser_length"]/2, enemy["laser_y"]-enemy_size/2, enemy["laser_length"], enemy_size))
+                pygame.draw.rect(screen, colorblind_list[colorblind] if colorblind != 0 else HOT_PINK, (enemy["laser_x"]-enemy["laser_length"]/2, enemy["laser_y"]-enemy_size/2, enemy["laser_length"], enemy_size))
             continue
         
         if enemy["type"] == 36 and enemy.get("laser_mode", False):
             if enemy["laser_orientation"] == "vertical":
-                pygame.draw.rect(screen, ICE, (enemy["laser_x"]-enemy_size/2, enemy["laser_y"]-enemy["laser_length"]/2, enemy_size, enemy["laser_length"]))
+                pygame.draw.rect(screen, colorblind_list[colorblind] if colorblind != 0 else ICE, (enemy["laser_x"]-enemy_size/2, enemy["laser_y"]-enemy["laser_length"]/2, enemy_size, enemy["laser_length"]))
 
             elif enemy["laser_orientation"] == "horizontal": #enemy["laser_length"]
-                pygame.draw.rect(screen, ICE, (enemy["laser_x"]-enemy["laser_length"]/2, enemy["laser_y"]-enemy_size/2, enemy["laser_length"], enemy_size))
+                pygame.draw.rect(screen, colorblind_list[colorblind] if colorblind != 0 else ICE, (enemy["laser_x"]-enemy["laser_length"]/2, enemy["laser_y"]-enemy_size/2, enemy["laser_length"], enemy_size))
             continue
 
 
@@ -5271,7 +5284,7 @@ while running:
                     "y": 0,
                     "dx": 0,
                     "dy": 5,
-                    "color": BLUE,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else BLUE,
                     "ability": None
                 })
 
@@ -5285,7 +5298,7 @@ while running:
                         "y": 0,
                         "dx": random.uniform(-2, 2),
                         "dy": random.uniform(10, 15),
-                        "color": YELLOW,
+                        "color": colorblind_list[colorblind] if colorblind != 0 else YELLOW,
                         "ability": "snipe"
                     })
 
@@ -5298,7 +5311,7 @@ while running:
                     "y": 0,
                     "dx": 0,
                     "dy": 5,
-                    "color": CYAN,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else CYAN,
                     "ability": "freeze"
                 })
 
@@ -5310,7 +5323,7 @@ while running:
                     "y": random.uniform(0, HEIGHT),
                     "dx": 5*sandstorm_direction,
                     "dy": 0,
-                    "color": CLOUD,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else ClOUD,
                     "ability": None
                 })
         
@@ -5322,7 +5335,7 @@ while running:
                     "y": random.uniform(0, HEIGHT),
                     "dx": 5*sandstorm_direction,
                     "dy": 0,
-                    "color": TAN,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else TAN,
                     "ability": None
                 })
 
@@ -5334,7 +5347,7 @@ while running:
                     "y": 0,
                     "dx": 0,
                     "dy": 5,
-                    "color": RED,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else RED,
                     "ability": "fatal"
                 })
 
