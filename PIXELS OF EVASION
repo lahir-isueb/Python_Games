@@ -5331,7 +5331,7 @@ while running:
                     "y": random.uniform(projectile_size, HEIGHT),
                     "dx": 5*sandstorm_direction,
                     "dy": 0,
-                    "color": colorblind_list[colorblind] if colorblind != 0 else ClOUD,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else CLOUD,
                     "ability": None
                 })
         
