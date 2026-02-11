@@ -5160,15 +5160,16 @@ while running:
                 if enemy["type"] == 8 or p1_skin_color == p2_skin_color: enemy_text_color = player_skins[p2_skin_color + skin_match]
                 else: enemy_text_color = player_skins[p2_skin_color]
         else: enemy_text_color = BLACK
-        
-        if enemy["type"] == 8:
-            if enemy["target"] == 1: text_surface = enemy_font.render(str(player_lives), True, enemy_text_color)
-            elif enemy["target"] == 2: text_surface = enemy_font.render(str(player2_lives), True, enemy_text_color)
-        else:
-            text_surface = enemy_font.render(str(max(int(enemy.get("health", 0)), 0)), True, enemy_text_color)
 
-        text_rect = text_surface.get_rect(center=(enemy["x"], enemy["y"]))
-        screen.blit(text_surface, text_rect)
+        if not enemy.get("shrinking", False):
+            if enemy["type"] == 8:
+                if enemy["target"] == 1: text_surface = enemy_font.render(str(player_lives), True, enemy_text_color)
+                elif enemy["target"] == 2: text_surface = enemy_font.render(str(player2_lives), True, enemy_text_color)
+            else:
+                text_surface = enemy_font.render(str(max(int(enemy.get("health", 0)), 0)), True, enemy_text_color)
+
+            text_rect = text_surface.get_rect(center=(enemy["x"], enemy["y"]))
+            screen.blit(text_surface, text_rect)
 
         if enemy["type"] == 8:
             if player_frozen == True and enemy["target"] == 1:
