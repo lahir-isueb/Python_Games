@@ -54,6 +54,7 @@ LAVA = (200, 60, 0)
 SALMON = (255, 125, 125) #TARGETS
 TAN = (155, 125, 95)
 ORANGE = (255, 120, 0)
+TANGERINE = (255, 155, 60) # NOT USED
 GOLD = (255, 195, 0) #TARGETS
 SULFUR = (190, 190, 0) #TARGETS
 OLIVE = (100, 100, 0) #TARGETS
@@ -167,7 +168,7 @@ sniper_hp = 1 # 12
 speedy_hp = 5 # 13
 shotgun_hp = 4 # 14
 voodoo_hp = 5 # 15
-blind_hp = 6 # 16
+blind_hp = 9 # 16
 motion_hp = 7 # 17
 charger_hp = 3 # 18
 rapidshooter_hp = 1 # 19
@@ -190,6 +191,7 @@ annihilator_hp = 3 # 35
 frostbeam_hp = 1 # 36
 forecast_hp = 3 # 37
 assassin_hp = 5 # 38
+unstable_hp = 15 # 39
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -406,7 +408,7 @@ target_setting = 1
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-               1, 1, 1, 1, 1, 1, 2, 1]
+               1, 1, 1, 1, 1, 1, 2, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -428,7 +430,7 @@ speedy_hp_setting = 5
 shotgun_hp_setting = 4
 shotgun_bullets_setting = 5
 voodoo_hp_setting = 5
-blind_hp_setting = 6
+blind_hp_setting = 9
 motion_hp_setting = 7
 charger_hp_setting = 3
 charger_sensitive_setting = 1
@@ -459,6 +461,7 @@ annihilator_projectile_amount_setting = 32
 frostbeam_hp_setting = 1
 forecast_hp_setting = 3
 assassin_hp_setting = 5
+unstable_hp_setting = 15
 
 modifiers = [0, 0]
 
@@ -544,6 +547,7 @@ def SETTINGS():
     global frostbeam_hp_setting
     global forecast_hp_setting
     global assassin_hp_setting
+    global unstable_hp_setting
     global modifiers
 
     def give_seed(pasted):
@@ -614,11 +618,12 @@ def SETTINGS():
         global frostbeam_hp_setting
         global forecast_hp_setting
         global assassin_hp_setting
+        global unstable_hp_setting
         global modifiers
         scount = 0
         chara = ""
         for c in pasted:
-            if c == ".":
+            if c == "_":
                 match scount:
                     case 0: player_size_setting = int(chara)
                     case 1: enemy_size_setting = int(chara)
@@ -735,6 +740,8 @@ def SETTINGS():
                     case 112: enemy_locks[36] = int(chara)
                     case 113: assassin_hp_setting = int(chara)
                     case 114: enemy_locks[37] = int(chara)
+                    case 115: unstable_hp_setting = int(chara)
+                    case 116: enemy_locks[38] = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -758,7 +765,7 @@ def SETTINGS():
              
              "basic", "speedy", "sticky", "sticky sensitive",
              "charger", "charger sensitive", "gloomy", "flow",
-             "blind", "motion", "cold", "accelerator", "teleporter",
+             "motion", "cold", "accelerator", "teleporter",
              "hardened", "homing", "splitter", "splitter splits",
              "trail", "shooter", "burstshooter", "burst", "rapidshooter",
              "sniper", "xtra sniper damage", "shotgun", "shotgun bullets",
@@ -768,7 +775,7 @@ def SETTINGS():
              "addictive", "addictive strength", "addictive radius",
              "voodoo", "impostor", "assassin",
              
-             "stream", "sensitive", "savage", "haunter", "tracer",
+             "stream", "sensitive", "unstable", "blind", "savage", "haunter", "tracer",
              "stickyshooter", "frostbeam", "annihilator", "annihilator bullets",
 
              "forecast",
@@ -836,7 +843,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GRAY, default_set_button, border_radius=0)
         screen.blit(default_set_text, default_set_text.get_rect(center=default_set_button.center))
         if default_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.10.500.2000.10.8.5.5.50.3000.450.10000.1000.5.2000.10.1.10.100.1.0.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.5.2.3.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.3.1.2000.30.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.1.0.0.1.3.2.5.1.")
+            give_seed("50_50_10_500_2000_10_8_5_5_50_3000_450_10000_1000_5_2000_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_3_1_2000_30_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_5_1_15_1_")
             pygame.time.delay(200)
 
 
@@ -883,10 +890,11 @@ def SETTINGS():
                                  annihilator_projectile_amount_setting, frostbeam_hp_setting, modifiers[0],
                                  player_health_setting, unharden_death_setting, target_setting,
                                  modifiers[1], sticky_sensitive_setting, charger_sensitive_setting,
-                                 forecast_hp_setting, enemy_locks[36], assassin_hp_setting, enemy_locks[37]]
+                                 forecast_hp_setting, enemy_locks[36], assassin_hp_setting, enemy_locks[37],
+                                 unstable_hp_setting, enemy_locks[38]]
 
             
-            for x in copy_setting_list: copied += f"{x}."
+            for x in copy_setting_list: copied += f"{x}_"
             pyperclip.copy(copied)
             pygame.time.delay(200)
 
@@ -904,7 +912,7 @@ def SETTINGS():
         pygame.draw.rect(screen, LAVA, blazegame_set_button, border_radius=0)
         screen.blit(blazegame_set_text, blazegame_set_text.get_rect(center=blazegame_set_button.center))
         if blazegame_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.20.500.2000.10.8.10.5.50.4000.250.10000.1000.3.2000.20.1.10.200.1.2.2.0.2.2.2.0.2.2.2.2.2.2.1.2.2.0.2.2.2.2.2.2.2.2.2.0.2.2.2.2.2.2.2.1.2.5.2.3.3.7.9.4.5.3.2.8.8.4.1.1.5.4.21.5.6.12.3.1.4.32.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.1.0.0.1.3.2.5.2.")
+            give_seed("50_50_20_500_2000_10_8_10_5_50_4000_250_10000_1000_3_2000_20_1_10_200_1_2_2_0_2_2_2_0_2_2_2_2_2_2_1_2_2_0_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_1_2_5_2_3_3_7_9_4_5_3_2_8_8_4_1_1_5_4_21_5_9_12_3_1_4_32_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_5_2_20_1_")
             pygame.time.delay(200)
         
         
@@ -913,7 +921,7 @@ def SETTINGS():
         pygame.draw.rect(screen, CYAN, frostgame_set_button, border_radius=0)
         screen.blit(frostgame_set_text, frostgame_set_text.get_rect(center=frostgame_set_button.center))
         if frostgame_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.50.500.2000.10.8.5.1.50.3000.450.0.1000.5.2000.10.1.10.200.1.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.0.2.2.2.2.1.2.2.2.2.2.2.1.5.2.3.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.128.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.0.0.0.1.3.2.5.2.")
+            give_seed("50_50_50_500_2000_10_8_5_1_50_3000_450_0_1000_5_2000_10_1_10_200_1_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_0_2_2_2_2_1_2_2_2_2_2_2_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_128_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_0_0_0_1_3_2_5_2_15_2_")
             pygame.time.delay(200)
 
 
@@ -922,7 +930,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GREEN, sticky_set_button, border_radius=0)
         screen.blit(sticky_set_text, sticky_set_text.get_rect(center=sticky_set_button.center))
         if sticky_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("10.150.50.500.2000.10.8.2.5.50.3000.450.10000.1000.5.3500.10.1.10.300.1.2.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1.2.2.2.5.2.3.3.4.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.32.1.0.3.0.0.0.0.1.3.2.5.2.")
+            give_seed("10_150_50_500_2000_10_8_2_5_50_3000_450_10000_1000_5_3500_10_1_10_300_1_2_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_2_2_2_1_2_2_2_5_2_3_3_4_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_0_0_0_1_3_2_5_2_15_2_")
             pygame.time.delay(200)
 
 
@@ -931,7 +939,7 @@ def SETTINGS():
         pygame.draw.rect(screen, PURPLE, telporty_set_button, border_radius=0)
         screen.blit(telporty_set_text, telporty_set_text.get_rect(center=telporty_set_button.center))
         if telporty_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.10.100.1000.2.8.5.5.15.3000.50.10000.500.5.2000.10.1.10.100.1.2.2.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1.2.0.1.1.2.2.2.1.2.2.5.2.1.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.3.1.2000.30.10.5.6.1.2.99.2.7.10.3.2.1.3.32.1.0.3.0.1.0.0.1.3.2.5.2.")
+            give_seed("50_50_10_100_1000_2_8_5_5_15_3000_50_10000_500_5_2000_10_1_10_100_1_2_2_1_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_1_2_0_1_1_2_2_2_1_2_2_5_2_1_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_3_1_2000_30_10_5_6_1_2_99_2_7_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_5_2_15_2_")
             pygame.time.delay(200)
 
         shooter_set_text = font.render("Bullet Survival", True, RED)
@@ -939,7 +947,7 @@ def SETTINGS():
         pygame.draw.rect(screen, MAROON, shooter_set_button, border_radius=0)
         screen.blit(shooter_set_text, shooter_set_text.get_rect(center=shooter_set_button.center))
         if shooter_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.10.500.2000.10.8.5.5.5.3000.50.10000.0.5.5000.40.10.10.100.1.2.2.2.2.2.2.0.2.2.0.0.0.2.0.2.2.2.2.0.2.2.1.2.2.2.1.2.2.2.2.2.0.0.0.1.1.5.2.3.3.7.9.3.5.3.2.8.64.4.1.5.5.4.21.5.6.7.3.1.4.32.7.10.300.3.1.2000.40.10.5.6.1.2.6.3.4.10.3.2.1.3.128.1.0.99.0.0.0.0.1.3.2.5.2.")
+            give_seed("50_50_10_500_2000_10_8_5_5_5_3000_50_10000_0_5_5000_40_10_10_100_1_2_2_2_2_2_2_0_2_2_0_0_0_2_0_2_2_2_2_0_2_2_1_2_2_2_1_2_2_2_2_2_0_0_0_1_1_5_2_3_3_7_9_3_5_3_2_8_64_4_1_5_5_4_21_5_9_7_3_1_4_32_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_128_1_0_99_0_0_0_0_1_3_2_5_2_15_2_")
             pygame.time.delay(200)
 
 
@@ -948,7 +956,7 @@ def SETTINGS():
         pygame.draw.rect(screen, TURQUOISE, laserblast_set_button, border_radius=0)
         screen.blit(laserblast_set_text, laserblast_set_text.get_rect(center=laserblast_set_button.center))
         if laserblast_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.10.300.1500.16.8.8.5.5.3000.450.5000.0.5.2000.10.5.10.100.2.2.2.2.2.2.2.2.2.2.1.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.2.2.2.2.2.2.2.2.1.0.0.5.2.3.3.7.9.3.5.3.2.8.16.4.1.1.5.4.5.5.6.7.3.1.4.32.7.10.300.1.2.3000.30.10.5.6.1.2.6.3.4.10.3.2.2.1.32.1.0.50.0.1.0.0.1.3.2.5.2.")
+            give_seed("50_50_10_300_1500_12_8_8_5_5_3000_450_5000_0_5_2000_10_5_10_100_2_2_2_2_2_2_2_2_2_2_1_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_1_0_0_5_2_3_3_7_9_3_5_3_2_8_16_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_1_2_3000_30_10_5_6_1_2_6_3_4_10_3_2_2_1_32_1_0_50_0_1_0_0_1_3_2_5_2_15_2_")
             pygame.time.delay(200)
 
 
@@ -957,7 +965,7 @@ def SETTINGS():
         pygame.draw.rect(screen, SULFUR, stormybreakout_set_button, border_radius=0)
         screen.blit(stormybreakout_set_text, stormybreakout_set_text.get_rect(center=stormybreakout_set_button.center))
         if stormybreakout_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50.50.10.1500.5000.20.15.5.10.30.3000.450.10000.1000.5.500.10.1.15.200.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.0.1.2.2.0.2.2.2.1.2.2.2.2.2.1.2.0.2.2.5.2.3.3.7.9.3.5.3.2.8.8.4.1.3.5.4.5.5.6.7.5.2.4.32.7.10.300.3.2.2000.30.10.5.6.1.2.6.3.4.10.5.2.2.3.32.1.0.5.0.1.3.0.0.3.2.5.2.")
+            give_seed("50_50_10_1500_5000_20_15_5_10_30_3000_450_10000_1000_5_500_10_1_15_200_1_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_0_1_2_2_0_2_2_2_1_2_2_2_2_2_1_2_0_2_2_5_2_3_3_7_9_3_5_3_2_8_8_4_1_3_5_4_5_5_9_7_5_2_4_32_7_10_300_3_2_2000_30_10_5_6_1_2_6_3_4_10_5_2_2_3_32_1_0_5_0_1_3_0_0_3_2_5_2_15_2_")
             pygame.time.delay(200)
 
 
@@ -966,7 +974,7 @@ def SETTINGS():
         pygame.draw.rect(screen, CLOUD, weatherchaos_set_button, border_radius=0)
         screen.blit(weatherchaos_set_text, weatherchaos_set_text.get_rect(center=weatherchaos_set_button.center))
         if weatherchaos_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("30.50.30.700.2000.20.10.5.5.30.3000.450.10000.1000.5.2000.10.1.10.300.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.0.2.2.2.2.2.2.2.0.2.2.2.2.2.2.2.1.2.2.2.2.2.5.2.3.3.7.9.3.5.3.2.8.8.4.1.1.5.4.5.7.6.7.3.1.4.32.7.10.300.3.1.2000.50.20.5.6.1.2.6.3.4.20.3.2.1.3.32.1.0.3.1.1.1.0.1.99.0.5.2.")
+            give_seed("30_50_30_700_2000_20_10_5_5_30_3000_450_10000_1000_5_2000_10_1_10_300_1_2_2_2_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_1_2_2_2_2_2_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_7_9_7_3_1_4_32_7_10_300_3_1_2000_50_20_5_6_1_2_6_3_4_20_3_2_1_3_32_1_0_3_1_1_1_0_1_99_0_5_2_15_2_")
             pygame.time.delay(200)
 
 
@@ -2840,6 +2848,35 @@ def SETTINGS():
             pygame.time.delay(200)
 
 
+
+        unstable_hp_label = font.render("Unstable Enemy - HP: " + str(unstable_hp_setting), True, TANGERINE)
+        screen.blit(unstable_hp_label, (50, 180+SLIST.index("unstable")*60 + scroll_y))
+        unstable_hp_minus_button = pygame.Rect(500, 180+SLIST.index("unstable")*60 - button_offset + scroll_y, 50, 50)
+        unstable_hp_plus_button = pygame.Rect(560, 180+SLIST.index("unstable")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, unstable_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=unstable_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, unstable_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=unstable_hp_minus_button.center))
+        if unstable_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            unstable_hp_setting += 1
+            if unstable_hp_setting > 99:
+                unstable_hp_setting = 99
+            pygame.time.delay(50)
+        if unstable_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            unstable_hp_setting -= 1
+            if unstable_hp_setting < 1:
+                unstable_hp_setting = 1
+            pygame.time.delay(50)
+        unstable_locks_text = font.render(enemy_locking_labels[enemy_locks[38]], True, BLACK)
+        unstable_locks_button = pygame.Rect(650, 180+SLIST.index("unstable")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, TANGERINE, unstable_locks_button, border_radius=0)
+        screen.blit(unstable_locks_text, unstable_locks_text.get_rect(center=unstable_locks_button.center))
+        if unstable_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[38] > 1: enemy_locks[38] = 0
+            else: enemy_locks[38] = enemy_locks[38] + 1
+            pygame.time.delay(200)
+
+
         all_enemies_one_color_button_color = SHADOW
         all_enemies_one_color_text_color = WHITE
         if modifiers[0] == 0: all_enemies_one_color_button_color = SHADOW
@@ -2993,6 +3030,7 @@ def apply_settings():
     global frostbeam_hp
     global forecast_hp
     global assassin_hp
+    global unstable_hp
     
 
     # --- SETTINGS SET ---
@@ -3089,6 +3127,7 @@ def apply_settings():
     frostbeam_hp = frostbeam_hp_setting
     forecast_hp = forecast_hp_setting
     assassin_hp = assassin_hp_setting
+    unstable_hp = unstable_hp_setting
     colorblind = modifiers[0]
     weather = modifiers[1]
     
@@ -3483,6 +3522,8 @@ while running:
             dx *= 1; dy *= 1; health = forecast_hp
         elif enemy_type == 38:
             health = assassin_hp
+        elif enemy_type == 39:
+            dx *= 1; dy *= 1; health = unstable_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -3946,7 +3987,7 @@ while running:
             if bounced:
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= blind_hp or enemy["health"] <= 0:
+            if enemy["bounces"] >= blind_hp or enemy["health"] < 1:
                 enemy_died = True
         elif enemy["type"] == 17:
             enemy["x"] += enemy["dx"]
@@ -4746,6 +4787,21 @@ while running:
                 enemy["health"] -= 1
             if enemy["bounces"] >= assassin_hp or enemy["health"] <= 0:
                 enemy_died = True
+        elif enemy["type"] == 39:
+            enemy["x"] += enemy["dx"]
+            enemy["y"] += enemy["dy"]
+            bounced = False
+            if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
+                enemy["dx"] *= -1
+                bounced = True
+            if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
+                enemy["dy"] *= -1
+                bounced = True
+            if bounced:
+                enemy["bounces"] += 1
+                enemy["health"] -= 1
+            if enemy["bounces"] >= unstable_hp or enemy["health"] < 1:
+                enemy_died = True
 
 
 
@@ -4761,7 +4817,7 @@ while running:
 
         if player_alive and centered_rect_collision(player_x, player_y, player_size,
                                             enemy["x"], enemy["y"], enemy_size):
-            if enemy["type"] == 17:
+            if enemy["type"] == 17 or enemy["type"] == 39:
                 if not player_moving:  # Only damages if player is still
                     if current_time >= invincible_until:
                         player_lives -= enemy_damage
@@ -4771,6 +4827,12 @@ while running:
                         enemy["dead"] = True
                         if player_lives <= 0:
                             player_alive = False
+                if enemy["type"] == 39:
+                    undertale_hardened_dps = 0.1 * (60 / FPS) * (harden_break / 5)
+                    enemy["health"] -= undertale_hardened_dps
+                    if enemy["health"] < 1:
+                        if unharden_death == 0: enemy["health"] = 1
+                        elif unharden_death == 1: enemy_died = True
                 continue
             elif enemy["type"] == 16:
                 if player_moving:  # Only damages if player is moving
@@ -4782,6 +4844,12 @@ while running:
                         enemy["dead"] = True
                         if player_lives <= 0:
                             player_alive = False
+                undertale_hardened_dps = 0.1 * (60 / FPS) * (harden_break / 5)
+                enemy["health"] -= undertale_hardened_dps
+                if enemy["health"] < 1:
+                    if unharden_death == 0: enemy["health"] = 1
+                    elif unharden_death == 1: enemy_died = True
+
                 continue
             elif enemy["type"] == 15 or enemy["type"] == 35 or enemy["type"] == 21:
                 if not enemy.get("shrinking", False):
@@ -4813,7 +4881,7 @@ while running:
                                 
         if players == 2 and player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
                                                                       enemy["x"], enemy["y"], enemy_size):
-            if enemy["type"] == 17:
+            if enemy["type"] == 17 or enemy["type"] == 39:
                 if p2_dx == 0 and p2_dy == 0:  # not moving
                     if current_time >= player2_invincible_until:
                         player2_lives -= enemy_damage
@@ -4823,6 +4891,12 @@ while running:
                         enemy["dead"] = True
                         if player2_lives <= 0:
                             player2_alive = False
+                if enemy["type"] == 39:
+                    undertale_hardened_dps = 0.1 * (60 / FPS) * (harden_break / 5)
+                    enemy["health"] -= undertale_hardened_dps
+                    if enemy["health"] < 1:
+                        if unharden_death == 0: enemy["health"] = 1
+                        elif unharden_death == 1: enemy_died = True
                 continue
             elif enemy["type"] == 16:
                 if (p2_dx != 0 or p2_dy != 0):
@@ -4834,6 +4908,11 @@ while running:
                         enemy["dead"] = True
                         if player2_lives <= 0:
                             player2_alive = False
+                undertale_hardened_dps = 0.1 * (60 / FPS) * (harden_break / 5)
+                enemy["health"] -= undertale_hardened_dps
+                if enemy["health"] < 1:
+                    if unharden_death == 0: enemy["health"] = 1
+                    elif unharden_death == 1: enemy_died = True
                 continue
             elif enemy["type"] == 15 or enemy["type"] == 35 or enemy["type"] == 21:
                 if not enemy.get("shrinking", False):
@@ -5115,6 +5194,7 @@ while running:
             elif enemy["type"] == 36: color = ICE
             elif enemy["type"] == 37: color = CLOUD
             elif enemy["type"] == 38: color = SHADOW
+            elif enemy["type"] == 39: color = TANGERINE
 
 
         
