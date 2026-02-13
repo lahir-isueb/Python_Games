@@ -3382,8 +3382,8 @@ while running:
     player_y += p1_dy
     if player_x < player_size / 2:
         if walleffect == 0 or 1: player_x = player_size / 2
-        elif walleffect == 2: player_lives = 0; player_alive = False
-        elif walleffect == 3: player_x = WIDTH - player_size / 2
+        if walleffect == 2: player_lives = 0; player_alive = False
+        if walleffect == 3: player_x = WIDTH - player_size / 2
         if walleffect == 1:
             if current_time >= invincible_until + 100:
                 player_lives -= 1
@@ -3393,8 +3393,8 @@ while running:
                 if player_lives <= 0: player_alive = False
     if player_x > WIDTH - player_size / 2:
         if walleffect == 0 or 1: player_x = WIDTH - player_size / 2
-        elif walleffect == 2: player_lives = 0; player_alive = False
-        elif walleffect == 3: player_x = player_size / 2
+        if walleffect == 2: player_lives = 0; player_alive = False
+        if walleffect == 3: player_x = player_size / 2
         if walleffect == 1:
             if current_time >= invincible_until + 100:
                 player_lives -= 1
@@ -3404,8 +3404,8 @@ while running:
                 if player_lives <= 0: player_alive = False
     if player_y < player_size / 2:
         if walleffect == 0 or 1: player_y = player_size / 2
-        elif walleffect == 2: player_lives = 0; player_alive = False
-        elif walleffect == 3: player_y = HEIGHT - player_size / 2
+        if walleffect == 2: player_lives = 0; player_alive = False
+        if walleffect == 3: player_y = HEIGHT - player_size / 2
         if walleffect == 1:
             if current_time >= invincible_until + 100:
                 player_lives -= 1
@@ -3415,8 +3415,8 @@ while running:
                 if player_lives <= 0: player_alive = False
     if player_y > HEIGHT - player_size / 2:
         if walleffect == 0 or 1: player_y = HEIGHT - player_size / 2
-        elif walleffect == 2: player_lives = 0; player_alive = False
-        elif walleffect == 3: player_y = player_size / 2
+        if walleffect == 2: player_lives = 0; player_alive = False
+        if walleffect == 3: player_y = player_size / 2
         if walleffect == 1:
             if current_time >= invincible_until + 100:
                 player_lives -= 1
@@ -3431,8 +3431,8 @@ while running:
         player2_y += p2_dy
         if player2_x < player_size / 2:
             if walleffect == 0 or 1: player2_x = player_size / 2
-            elif walleffect == 2: player2_lives = 0; player2_alive = False
-            elif walleffect == 3: player2_x = WIDTH - player_size / 2
+            if walleffect == 2: player2_lives = 0; player2_alive = False
+            if walleffect == 3: player2_x = WIDTH - player_size / 2
             if walleffect == 1:
                 if current_time >= player2_invincible_until + 100:
                     player2_lives -= 1
@@ -3442,8 +3442,8 @@ while running:
                     if player2_lives <= 0: player2_alive = False
         if player2_x > WIDTH - player_size / 2:
             if walleffect == 0 or 1: player2_x = WIDTH - player_size / 2
-            elif walleffect == 2: player2_lives = 0; player2_alive = False
-            elif walleffect == 3: player2_x = player_size / 2
+            if walleffect == 2: player2_lives = 0; player2_alive = False
+            if walleffect == 3: player2_x = player_size / 2
             if walleffect == 1:
                 if current_time >= player2_invincible_until + 100:
                     player2_lives -= 1
@@ -3453,8 +3453,8 @@ while running:
                     if player2_lives <= 0: player2_alive = False
         if player2_y < player_size / 2:
             if walleffect == 0 or 1: player2_y = player_size / 2
-            elif walleffect == 2: player2_lives = 0; player2_alive = False
-            elif walleffect == 3: player2_y = HEIGHT - player_size / 2
+            if walleffect == 2: player2_lives = 0; player2_alive = False
+            if walleffect == 3: player2_y = HEIGHT - player_size / 2
             if walleffect == 1:
                 if current_time >= player2_invincible_until + 100:
                     player2_lives -= 1
@@ -3464,8 +3464,8 @@ while running:
                     if player2_lives <= 0: player2_alive = False
         if player2_y > HEIGHT - player_size / 2:
             if walleffect == 0 or 1: player2_y = HEIGHT - player_size / 2
-            elif walleffect == 2: player2_lives = 0; player2_alive = False
-            elif walleffect == 3: player2_y = player_size / 2
+            if walleffect == 2: player2_lives = 0; player2_alive = False
+            if walleffect == 3: player2_y = player_size / 2
             if walleffect == 1:
                 if current_time >= player2_invincible_until + 100:
                     player2_lives -= 1
