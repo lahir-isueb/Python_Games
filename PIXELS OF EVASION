@@ -5344,7 +5344,7 @@ while running:
 
         if enemy["type"] in targetting_enemies:
             if enemy["target"] == 1:
-                if enemy["type"] == 8 or p1_skin_color == p2_skin_color or players == 1: enemy_text_color = player_skins[p1_skin_color + 1]
+                if enemy["type"] == 8 or (p1_skin_color == p2_skin_color and players == 2): enemy_text_color = player_skins[p1_skin_color + 1]
                 else: enemy_text_color = player_skins[p1_skin_color]
             elif enemy["target"] == 2:
                 if enemy["type"] == 8 or p1_skin_color == p2_skin_color: enemy_text_color = player_skins[p2_skin_color + skin_match]
