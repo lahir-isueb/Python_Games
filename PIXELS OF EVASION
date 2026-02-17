@@ -63,7 +63,7 @@ CREAM = (255, 255, 180) #NOT USED
 VOLT = (185, 255, 0)
 LIME = (0, 255, 0)
 GREEN = (0, 125, 0)
-FOREST = (0, 60, 0) #NOT USED
+FOREST = (0, 60, 0)
 TEAL = (0, 130, 130)
 AQUA = (0, 190, 160)
 TURQUOISE = (0, 255, 180)
@@ -181,7 +181,7 @@ cold_hp = 6 # 25
 tracer_hp = 1 # 26
 savage_hp = 2 # 27
 teleporter_hp = 6 # 28
-haunter_hp = 3 # 29
+phantom_hp = 3 # 29
 stream_hp = 4 # 30
 sensitive_hp = 10 # 31
 burstshooter_hp = 3 # 32
@@ -192,6 +192,7 @@ frostbeam_hp = 1 # 36
 forecast_hp = 3 # 37
 assassin_hp = 5 # 38
 unstable_hp = 15 # 39
+invisibility_hp = 4 # 40
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -411,7 +412,7 @@ target_setting = 1
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-               1, 1, 1, 1, 1, 1, 2, 1, 1]
+               1, 1, 1, 1, 1, 1, 2, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -453,7 +454,7 @@ cold_hp_setting = 6
 tracer_hp_setting = 1
 savage_hp_setting = 2
 teleporter_hp_setting = 6
-haunter_hp_setting = 3
+phantom_hp_setting = 3
 stream_hp_setting = 4
 sensitive_hp_setting = 10
 burstshooter_hp_setting = 3
@@ -465,6 +466,7 @@ frostbeam_hp_setting = 1
 forecast_hp_setting = 3
 assassin_hp_setting = 5
 unstable_hp_setting = 15
+invisibility_hp_setting = 4
 
 modifiers = [0, 0, 0]
 
@@ -539,7 +541,7 @@ def SETTINGS():
     global tracer_hp_setting
     global savage_hp_setting
     global teleporter_hp_setting
-    global haunter_hp_setting
+    global phantom_hp_setting
     global stream_hp_setting
     global sensitive_hp_setting
     global burstshooter_hp_setting
@@ -551,6 +553,7 @@ def SETTINGS():
     global forecast_hp_setting
     global assassin_hp_setting
     global unstable_hp_setting
+    global invisibility_hp_setting
     global modifiers
 
     def give_seed(pasted):
@@ -610,7 +613,7 @@ def SETTINGS():
         global tracer_hp_setting
         global savage_hp_setting
         global teleporter_hp_setting
-        global haunter_hp_setting
+        global phantom_hp_setting
         global stream_hp_setting
         global sensitive_hp_setting
         global burstshooter_hp_setting
@@ -622,6 +625,7 @@ def SETTINGS():
         global forecast_hp_setting
         global assassin_hp_setting
         global unstable_hp_setting
+        global invisibility_hp_setting
         global modifiers
         scount = 0
         chara = ""
@@ -723,7 +727,7 @@ def SETTINGS():
                     case 92: tracer_hp_setting = int(chara)
                     case 93: savage_hp_setting = int(chara)
                     case 94: teleporter_hp_setting = int(chara)
-                    case 95: haunter_hp_setting = int(chara)
+                    case 95: phantom_hp_setting = int(chara)
                     case 96: stream_hp_setting = int(chara)
                     case 97: sensitive_hp_setting = int(chara)
                     case 98: burstshooter_hp_setting = int(chara)
@@ -746,6 +750,8 @@ def SETTINGS():
                     case 115: unstable_hp_setting = int(chara)
                     case 116: enemy_locks[38] = int(chara)
                     case 117: modifiers[2] = int(chara)
+                    case 118: invisibility_hp_setting = int(chara)
+                    case 119: enemy_locks[39] = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -771,6 +777,7 @@ def SETTINGS():
              "charger", "charger sensitive", "gloomy", "flow",
              "motion", "cold", "accelerator", "teleporter",
              "hardened", "homing", "splitter", "splitter splits",
+             "invisibility",
              "trail", "shooter", "burstshooter", "burst", "rapidshooter",
              "sniper", "xtra sniper damage", "shotgun", "shotgun bullets",
              "bomb", "bomb bullets",
@@ -779,8 +786,9 @@ def SETTINGS():
              "addictive", "addictive strength", "addictive radius",
              "voodoo", "impostor", "assassin",
              
-             "stream", "sensitive", "unstable", "blind", "savage", "haunter", "tracer",
-             "stickyshooter", "frostbeam", "annihilator", "annihilator bullets",
+             "stream", "sensitive", "unstable", "blind", "savage", "tracer",
+             "stickyshooter", "frostbeam",
+             "phantom", "annihilator", "annihilator bullets",
 
              "forecast",
              
@@ -847,7 +855,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GRAY, default_set_button, border_radius=0)
         screen.blit(default_set_text, default_set_text.get_rect(center=default_set_button.center))
         if default_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_500_2000_10_8_5_5_50_3000_450_10000_1000_5_2000_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_3_1_2000_30_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_5_1_15_1_0_")
+            give_seed("50_50_10_500_2000_10_8_5_5_50_3000_450_10000_1000_5_2000_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_3_1_2000_30_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_5_1_15_1_0_4_1_")
             pygame.time.delay(200)
 
 
@@ -888,14 +896,15 @@ def SETTINGS():
                                  laser_hp_setting, laser_damage_setting, laser_duration_setting,
                                  hardened_hp_setting, harden_break_setting, accelerator_hp_setting,
                                  cold_hp_setting, tracer_hp_setting, savage_hp_setting,
-                                 teleporter_hp_setting, haunter_hp_setting, stream_hp_setting,
+                                 teleporter_hp_setting, phantom_hp_setting, stream_hp_setting,
                                  sensitive_hp_setting, burstshooter_hp_setting, stickyshooter_hp_setting,
                                  sparker_hp_setting, annihilator_hp_setting,
                                  annihilator_projectile_amount_setting, frostbeam_hp_setting, modifiers[0],
                                  player_health_setting, unharden_death_setting, target_setting,
                                  modifiers[1], sticky_sensitive_setting, charger_sensitive_setting,
                                  forecast_hp_setting, enemy_locks[36], assassin_hp_setting, enemy_locks[37],
-                                 unstable_hp_setting, enemy_locks[38], modifiers[2]]
+                                 unstable_hp_setting, enemy_locks[38], modifiers[2], invisibility_hp_setting,
+                                 enemy_locks[39]]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -916,7 +925,7 @@ def SETTINGS():
         pygame.draw.rect(screen, LAVA, blazegame_set_button, border_radius=0)
         screen.blit(blazegame_set_text, blazegame_set_text.get_rect(center=blazegame_set_button.center))
         if blazegame_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_20_500_2000_10_8_10_5_50_4000_250_10000_1000_3_2000_20_1_10_200_1_2_2_0_2_2_2_0_2_2_2_2_2_2_1_2_2_0_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_1_2_5_2_3_3_7_9_4_5_3_2_8_8_4_1_1_5_4_21_5_9_12_3_1_4_32_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_5_2_20_1_0_")
+            give_seed("50_50_20_500_2000_10_8_10_5_50_4000_250_10000_1000_3_2000_20_1_10_200_1_2_2_0_2_2_2_0_2_2_2_2_2_2_1_2_2_0_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_1_2_5_2_3_3_7_9_4_5_3_2_8_8_4_1_1_5_4_21_5_9_12_3_1_4_32_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_5_2_20_1_0_4_2_")
             pygame.time.delay(200)
         
         
@@ -925,7 +934,7 @@ def SETTINGS():
         pygame.draw.rect(screen, CYAN, frostgame_set_button, border_radius=0)
         screen.blit(frostgame_set_text, frostgame_set_text.get_rect(center=frostgame_set_button.center))
         if frostgame_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_50_500_2000_10_8_5_1_50_3000_450_0_1000_5_2000_10_1_10_200_1_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_0_2_2_2_2_1_2_2_2_2_2_2_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_128_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_0_0_0_1_3_2_5_2_15_2_0_")
+            give_seed("50_50_50_500_2000_10_8_5_1_50_3000_450_0_1000_5_2000_10_1_10_200_1_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_0_2_2_2_2_1_2_2_2_2_2_2_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_128_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_0_0_0_1_3_2_5_2_15_2_0_4_2_")
             pygame.time.delay(200)
 
 
@@ -934,7 +943,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GREEN, sticky_set_button, border_radius=0)
         screen.blit(sticky_set_text, sticky_set_text.get_rect(center=sticky_set_button.center))
         if sticky_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("10_150_50_500_2000_10_8_2_5_50_3000_450_10000_1000_5_3500_10_1_10_300_1_2_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_2_2_2_1_2_2_2_5_2_3_3_4_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_0_0_0_1_3_2_5_2_15_2_0_")
+            give_seed("10_150_50_500_2000_10_8_2_5_50_3000_450_10000_1000_5_3500_10_1_10_300_1_2_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_2_2_2_1_2_2_2_5_2_3_3_4_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_32_1_0_3_0_0_0_0_1_3_2_5_2_15_2_0_4_2_")
             pygame.time.delay(200)
 
 
@@ -943,7 +952,7 @@ def SETTINGS():
         pygame.draw.rect(screen, PURPLE, telporty_set_button, border_radius=0)
         screen.blit(telporty_set_text, telporty_set_text.get_rect(center=telporty_set_button.center))
         if telporty_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_100_1000_2_8_5_5_15_3000_50_10000_500_5_2000_10_1_10_100_1_2_2_1_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_1_2_0_1_1_2_2_2_1_2_2_5_2_1_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_3_1_2000_30_10_5_6_1_2_99_2_7_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_5_2_15_2_0_")
+            give_seed("50_50_10_100_1000_2_8_5_5_15_3000_50_10000_500_5_2000_10_1_10_100_1_2_2_1_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_1_2_0_1_1_2_2_2_1_2_2_5_2_1_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_3_1_2000_30_10_5_6_1_2_99_2_7_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_5_2_15_2_0_4_2_")
             pygame.time.delay(200)
 
         shooter_set_text = font.render("Bullet Survival", True, RED)
@@ -951,7 +960,7 @@ def SETTINGS():
         pygame.draw.rect(screen, MAROON, shooter_set_button, border_radius=0)
         screen.blit(shooter_set_text, shooter_set_text.get_rect(center=shooter_set_button.center))
         if shooter_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_500_2000_10_8_5_5_5_3000_50_10000_0_5_5000_40_10_10_100_1_2_2_2_2_2_2_0_2_2_0_0_0_2_0_2_2_2_2_0_2_2_1_2_2_2_2_2_2_2_2_2_0_0_0_1_1_5_2_3_3_7_9_3_5_3_2_8_64_4_1_5_5_4_21_5_9_7_3_1_4_32_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_128_1_0_99_0_0_0_0_1_3_2_5_2_15_2_0_")
+            give_seed("50_50_10_500_2000_10_8_5_5_5_3000_50_10000_0_5_5000_40_10_10_100_1_2_2_2_2_2_2_0_2_2_0_0_0_2_0_2_2_2_2_0_2_2_1_2_2_2_2_2_2_2_2_2_0_0_0_1_1_5_2_3_3_7_9_3_5_3_2_8_64_4_1_5_5_4_21_5_9_7_3_1_4_32_7_10_300_3_1_2000_40_10_5_6_1_2_6_3_4_10_3_2_1_3_128_1_0_99_0_0_0_0_1_3_2_5_2_15_2_0_4_2_")
             pygame.time.delay(200)
 
 
@@ -960,7 +969,7 @@ def SETTINGS():
         pygame.draw.rect(screen, TURQUOISE, laserblast_set_button, border_radius=0)
         screen.blit(laserblast_set_text, laserblast_set_text.get_rect(center=laserblast_set_button.center))
         if laserblast_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_300_1500_12_8_8_5_5_3000_450_5000_0_5_2000_10_5_10_100_2_2_2_2_2_2_2_2_2_2_1_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_1_0_0_5_2_3_3_7_9_3_5_3_2_8_12_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_1_2_3000_30_10_5_6_1_2_6_3_4_10_3_2_2_1_64_1_0_50_0_1_0_0_1_3_2_5_2_15_2_3_")
+            give_seed("50_50_10_300_1500_12_8_8_5_5_3000_450_5000_0_5_2000_10_5_10_100_2_2_2_2_2_2_2_2_2_2_1_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_2_2_2_2_1_0_0_5_2_3_3_7_9_3_5_3_2_8_12_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_1_2_3000_30_10_5_6_1_2_6_3_4_10_3_2_2_1_64_1_0_50_0_1_0_0_1_3_2_5_2_15_2_3_4_2_")
             pygame.time.delay(200)
 
 
@@ -969,7 +978,7 @@ def SETTINGS():
         pygame.draw.rect(screen, SULFUR, stormybreakout_set_button, border_radius=0)
         screen.blit(stormybreakout_set_text, stormybreakout_set_text.get_rect(center=stormybreakout_set_button.center))
         if stormybreakout_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_1500_5000_20_15_5_10_30_3000_450_10000_1000_5_500_10_1_15_200_1_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_0_1_2_2_0_2_2_2_1_2_2_2_2_2_1_2_0_2_2_5_2_3_3_7_9_3_5_3_2_8_8_4_1_3_5_4_5_5_9_7_5_2_4_32_7_10_300_3_2_2000_30_10_5_6_1_2_6_3_4_10_5_2_2_3_32_1_0_5_0_1_3_0_0_3_2_5_2_15_2_0_")
+            give_seed("50_50_10_1500_5000_20_15_5_10_30_3000_450_10000_1000_5_500_10_1_15_200_1_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_0_1_2_2_0_2_2_2_1_2_2_2_2_2_1_2_0_2_2_5_2_3_3_7_9_3_5_3_2_8_8_4_1_3_5_4_5_5_9_7_5_2_4_32_7_10_300_3_2_2000_30_10_5_6_1_2_6_3_4_10_5_2_2_3_32_1_0_5_0_1_3_0_0_3_2_5_2_15_2_0_4_2_")
             pygame.time.delay(200)
 
 
@@ -978,7 +987,7 @@ def SETTINGS():
         pygame.draw.rect(screen, CLOUD, weatherchaos_set_button, border_radius=0)
         screen.blit(weatherchaos_set_text, weatherchaos_set_text.get_rect(center=weatherchaos_set_button.center))
         if weatherchaos_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("30_50_30_700_2000_20_10_5_5_30_3000_450_10000_1000_5_2000_10_1_10_300_1_2_2_2_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_1_2_2_2_2_2_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_7_9_7_3_1_4_32_7_10_300_3_1_2000_50_20_5_6_1_2_6_3_4_20_3_2_1_3_32_1_0_3_1_1_1_0_1_99_0_5_2_15_2_0_")
+            give_seed("30_50_30_700_2000_20_10_5_5_30_3000_450_10000_1000_5_2000_10_1_10_300_1_2_2_2_2_2_2_2_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_0_2_2_2_2_2_2_2_1_2_2_2_2_2_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_7_9_7_3_1_4_32_7_10_300_3_1_2000_50_20_5_6_1_2_6_3_4_20_3_2_1_3_32_1_0_3_1_1_1_0_1_99_0_5_2_15_2_0_4_2_")
             pygame.time.delay(200)
 
 
@@ -2509,29 +2518,29 @@ def SETTINGS():
 
 
 
-        haunter_hp_label = font.render("Haunter Enemy - HP: " + str(haunter_hp_setting), True, NAVY)
-        screen.blit(haunter_hp_label, (50, 180+SLIST.index("haunter")*60 + scroll_y))
-        haunter_hp_minus_button = pygame.Rect(500, 180+SLIST.index("haunter")*60 - button_offset + scroll_y, 50, 50)
-        haunter_hp_plus_button = pygame.Rect(560, 180+SLIST.index("haunter")*60 - button_offset + scroll_y, 50, 50)
-        pygame.draw.rect(screen, GREEN, haunter_hp_plus_button, border_radius=0)
-        screen.blit(plus_txt, plus_txt.get_rect(center=haunter_hp_plus_button.center))
-        pygame.draw.rect(screen, RED, haunter_hp_minus_button, border_radius=0)
-        screen.blit(minus_txt, minus_txt.get_rect(center=haunter_hp_minus_button.center))
-        if haunter_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
-            haunter_hp_setting += 1
-            if haunter_hp_setting > 99:
-                haunter_hp_setting = 99
+        phantom_hp_label = font.render("Phantom Enemy - HP: " + str(phantom_hp_setting), True, NAVY)
+        screen.blit(phantom_hp_label, (50, 180+SLIST.index("phantom")*60 + scroll_y))
+        phantom_hp_minus_button = pygame.Rect(500, 180+SLIST.index("phantom")*60 - button_offset + scroll_y, 50, 50)
+        phantom_hp_plus_button = pygame.Rect(560, 180+SLIST.index("phantom")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, phantom_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=phantom_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, phantom_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=phantom_hp_minus_button.center))
+        if phantom_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            phantom_hp_setting += 1
+            if phantom_hp_setting > 99:
+                phantom_hp_setting = 99
             pygame.time.delay(50)
-        if haunter_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
-            haunter_hp_setting -= 1
-            if haunter_hp_setting < 1:
-                haunter_hp_setting = 1
+        if phantom_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            phantom_hp_setting -= 1
+            if phantom_hp_setting < 1:
+                phantom_hp_setting = 1
             pygame.time.delay(50)
-        haunter_locks_text = font.render(enemy_locking_labels[enemy_locks[28]], True, BLACK)
-        haunter_locks_button = pygame.Rect(650, 180+SLIST.index("haunter")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, NAVY, haunter_locks_button, border_radius=0)
-        screen.blit(haunter_locks_text, haunter_locks_text.get_rect(center=haunter_locks_button.center))
-        if haunter_locks_button.collidepoint(mouse_pos) and mouse_click:
+        phantom_locks_text = font.render(enemy_locking_labels[enemy_locks[28]], True, BLACK)
+        phantom_locks_button = pygame.Rect(650, 180+SLIST.index("phantom")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, NAVY, phantom_locks_button, border_radius=0)
+        screen.blit(phantom_locks_text, phantom_locks_text.get_rect(center=phantom_locks_button.center))
+        if phantom_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[28] > 1: enemy_locks[28] = 0
             else: enemy_locks[28] = enemy_locks[28] + 1
             pygame.time.delay(200)
@@ -2881,6 +2890,34 @@ def SETTINGS():
             pygame.time.delay(200)
 
 
+        invisibility_hp_label = font.render("Invisibility Enemy - HP: " + str(invisibility_hp_setting), True, FOREST)
+        screen.blit(invisibility_hp_label, (50, 180+SLIST.index("invisibility")*60 + scroll_y))
+        invisibility_hp_minus_button = pygame.Rect(500, 180+SLIST.index("invisibility")*60 - button_offset + scroll_y, 50, 50)
+        invisibility_hp_plus_button = pygame.Rect(560, 180+SLIST.index("invisibility")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, invisibility_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=invisibility_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, invisibility_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=invisibility_hp_minus_button.center))
+        if invisibility_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            invisibility_hp_setting += 1
+            if invisibility_hp_setting > 99:
+                invisibility_hp_setting = 99
+            pygame.time.delay(50)
+        if invisibility_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            invisibility_hp_setting -= 1
+            if invisibility_hp_setting < 1:
+                invisibility_hp_setting = 1
+            pygame.time.delay(50)
+        invisibility_locks_text = font.render(enemy_locking_labels[enemy_locks[39]], True, BLACK)
+        invisibility_locks_button = pygame.Rect(650, 180+SLIST.index("invisibility")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, FOREST, invisibility_locks_button, border_radius=0)
+        screen.blit(invisibility_locks_text, invisibility_locks_text.get_rect(center=invisibility_locks_button.center))
+        if invisibility_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[39] > 1: enemy_locks[39] = 0
+            else: enemy_locks[39] = enemy_locks[39] + 1
+            pygame.time.delay(200)
+
+
         all_enemies_one_color_button_color = SHADOW
         all_enemies_one_color_text_color = WHITE
         if modifiers[0] == 0: all_enemies_one_color_button_color = SHADOW
@@ -3044,7 +3081,7 @@ def apply_settings():
     global tracer_hp
     global savage_hp
     global teleporter_hp
-    global haunter_hp
+    global phantom_hp
     global stream_hp
     global sensitive_hp
     global stickyshooter_hp
@@ -3055,6 +3092,7 @@ def apply_settings():
     global forecast_hp
     global assassin_hp
     global unstable_hp
+    global invisibility_hp
     
 
     # --- SETTINGS SET ---
@@ -3140,7 +3178,7 @@ def apply_settings():
     tracer_hp = tracer_hp_setting
     savage_hp = savage_hp_setting
     teleporter_hp = teleporter_hp_setting
-    haunter_hp = haunter_hp_setting
+    phantom_hp = phantom_hp_setting
     stream_hp = stream_hp_setting
     sensitive_hp = sensitive_hp_setting
     burstshooter_hp = burstshooter_hp_setting
@@ -3152,6 +3190,7 @@ def apply_settings():
     forecast_hp = forecast_hp_setting
     assassin_hp = assassin_hp_setting
     unstable_hp = unstable_hp_setting
+    invisibility_hp = invisibility_hp_setting
     colorblind = modifiers[0]
     weather = modifiers[1]
     walleffect = modifiers[2]
@@ -3609,7 +3648,7 @@ while running:
         elif enemy_type == 28:
             dx *= 1; dy *= 1; health = teleporter_hp
         elif enemy_type == 29:
-            dx *= 0.7; dy *= 0.7; health = haunter_hp
+            dx *= 0.7; dy *= 0.7; health = phantom_hp
         elif enemy_type == 30:
             dx *= 2/3; dy *= 2/3; health = stream_hp
         elif enemy_type == 31:
@@ -3633,6 +3672,8 @@ while running:
             health = assassin_hp
         elif enemy_type == 39:
             dx *= 1; dy *= 1; health = unstable_hp
+        elif enemy_type == 40:
+            dx *= 1; dy *= 1; health = invisibility_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -4494,7 +4535,7 @@ while running:
                 enemy["health"] -= 1
                 enemy["x"] = spawner_pos[0]+25
                 enemy["y"] = spawner_pos[1]+25
-            if enemy["bounces"] >= haunter_hp: enemy_died = True
+            if enemy["bounces"] >= phantom_hp: enemy_died = True
         elif enemy["type"] == 30:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
@@ -4911,6 +4952,13 @@ while running:
                 enemy["health"] -= 1
             if enemy["bounces"] >= unstable_hp or enemy["health"] < 1:
                 enemy_died = True
+        if enemy["type"] == 40:
+            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            bounced = False
+            if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
+            if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
+            if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
+            if enemy["bounces"] >= invisibility_hp: enemy_died = True
 
 
 
@@ -5304,6 +5352,7 @@ while running:
             elif enemy["type"] == 37: color = CLOUD
             elif enemy["type"] == 38: color = SHADOW
             elif enemy["type"] == 39: color = TANGERINE
+            elif enemy["type"] == 40: color = FOREST
 
 
         
@@ -5331,16 +5380,22 @@ while running:
                 pygame.draw.rect(screen, colorblind_list[colorblind] if colorblind != 0 else ICE, (enemy["laser_x"]-enemy["laser_length"]/2, enemy["laser_y"]-enemy_size/2, enemy["laser_length"], enemy_size))
             continue
 
-
-        sz = int(enemy.get("size", enemy_size))
-        pygame.draw.rect(
-            screen,
-            color,
-            (enemy["x"] - sz // 2,
-             enemy["y"] - sz // 2,
-             sz,
-             sz)
-        )
+        enemy_visibility = 255
+        if enemy["type"] == 40 or enemy["type"] == 29:
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            closest_dist = min(dist1, dist2)
+            reveal_dist = 500
+            if closest_dist < reveal_dist:
+                enemy_visibility = int(255 * min(1, (1 - closest_dist / reveal_dist)))
+            else:
+                enemy_visibility = 0
+        else: enemy_visibility = 255
+        
+        enemy_surface = pygame.Surface((enemy_size, enemy_size), pygame.SRCALPHA)
+        enemy_surface.fill((color[0], color[1], color[2], enemy_visibility))
+        screen.blit(enemy_surface, (enemy["x"] - sz // 2,
+                              enemy["y"] - sz // 2))
 
         if enemy["type"] in targetting_enemies:
             if enemy["target"] == 1:
@@ -5357,6 +5412,8 @@ while running:
                 elif enemy["target"] == 2: text_surface = enemy_font.render(str(player2_lives), True, enemy_text_color)
             else:
                 text_surface = enemy_font.render(str(max(int(enemy.get("health", 0)), 0)), True, enemy_text_color)
+                text_surface = text_surface.convert_alpha()
+                text_surface.set_alpha(enemy_visibility)
 
             text_rect = text_surface.get_rect(center=(enemy["x"], enemy["y"]))
             screen.blit(text_surface, text_rect)
