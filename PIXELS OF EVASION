@@ -86,27 +86,28 @@ CRIMSON = (190, 0, 60) #NOT USED
 # --- Player Skins --- (NOTE: Try not to use any colors that apply to targeting enemies)
 p1_skin_color = 0
 p2_skin_color = 0
-player_skins = [WHITE, RED, BLUE,
-                RED, YELLOW, WHITE,
-                BLUE, SKY, TURQUOISE,
-                YELLOW, ORANGE, BROWN,
-                LIME, GREEN, YELLOW,
-                ORANGE, YELLOW, CRIMSON,
-                CYAN, TEAL, LAVENDER,
-                GREEN, LIME, FOREST,
-                PURPLE, LAVENDER, BLUE,
-                CRIMSON, RED, PINK,
-                TURQUOISE, HOT_PINK, GREEN,
-                CLOUD, AZURE, MAGENTA,
-                VOLT, AZURE, GREEN,
-                LAVENDER, PURPLE, BLUE,
-                BROWN, TAN, GREEN,
-                PINK, HOT_PINK, PURPLE,
-                HOT_PINK, PINK, VIOLET,
-                SKY, WHITE, BLUE,
-                TEAL, BLUE, YELLOW,
-                MAUVE, CYAN, LAVENDER,
-                GRAY, WHITE, BLACK]
+player_skins = [[WHITE, RED, BLUE, "Default"],
+                [RED, YELLOW, WHITE, "Red"],
+                [BLUE, SKY, TURQUOISE, "Mr. Blue"],
+                [YELLOW, ORANGE, BROWN, "Yellow"],
+                [LIME, GREEN, YELLOW, "Green"],
+                [GRAY, WHITE, BLACK, "Basic Monotone"],
+                [LAVA, GOLD, ORANGE, "Blazer"],
+                [CYAN, TEAL, LAVENDER, "Frozen B."],
+                [GREEN, LIME, FOREST, "Phobic Sticker"],
+                [PURPLE, LAVENDER, BLUE, "Telee"],
+                [MAROON, RED, CRIMSON, "Bullet Man"],
+                [TURQUOISE, HOT_PINK, GREEN, "The Laserer"],
+                [VOLT, AZURE, GREEN, "Stormy"],
+                [CLOUD, AZURE, MAGENTA, "Defuser"],
+                [ORANGE, YELLOW, CRIMSON, "Orange Crush Soda"],
+                [LAVENDER, PURPLE, BLUE, "?"],
+                [BROWN, TAN, GREEN, "?"],
+                [PINK, HOT_PINK, PURPLE, "?"],
+                [HOT_PINK, PINK, VIOLET, "?"],
+                [SKY, WHITE, BLUE, "?"],
+                [TEAL, BLUE, YELLOW, "?"],
+                [MAUVE, CYAN, LAVENDER, "THE MAUVE BLOCK"]]
 
 # --- Spawner Size ---
 spawner_size = 50
@@ -3276,51 +3277,51 @@ def TITLE_SCREEN():
 
         # --- P1 Skin --
 
-        pygame.draw.rect(screen, player_skins[p1_skin_color], p1_skin_button, border_radius=0)
-        p1_skin_text = skin_font.render("P1", True, player_skins[p1_skin_color + 1])
+        pygame.draw.rect(screen, player_skins[p1_skin_color][0], p1_skin_button, border_radius=0)
+        p1_skin_text = skin_font.render("P1", True, player_skins[p1_skin_color][1])
         screen.blit(p1_skin_text, p1_skin_text.get_rect(center=p1_skin_button.center))
 
         if p1_skin_button.collidepoint(mouse_pos) and mouse_click:
-            if p1_skin_color+3 == len(player_skins): p1_skin_color = 0
-            else: p1_skin_color += 3
+            if p1_skin_color+1 == len(player_skins): p1_skin_color = 0
+            else: p1_skin_color += 1
             pygame.time.delay(200)
 
 
         # --- P2 Skin --
 
         skin_match = 1
-        pygame.draw.rect(screen, player_skins[p2_skin_color], p2_skin_button, border_radius=0)
+        pygame.draw.rect(screen, player_skins[p2_skin_color][0], p2_skin_button, border_radius=0)
         if p1_skin_color == p2_skin_color or p2_skin_color == 0: skin_match = 2
         else: skin_match = 1
-        p2_skin_text = skin_font.render("P2", True, player_skins[p2_skin_color + skin_match])
+        p2_skin_text = skin_font.render("P2", True, player_skins[p2_skin_color][skin_match])
         screen.blit(p2_skin_text, p2_skin_text.get_rect(center=p2_skin_button.center))
 
         if p2_skin_button.collidepoint(mouse_pos) and mouse_click:
-            if p2_skin_color+3 == len(player_skins): p2_skin_color = 0
-            else: p2_skin_color += 3
+            if p2_skin_color+1 == len(player_skins): p2_skin_color = 0
+            else: p2_skin_color += 1
             pygame.time.delay(200)
 
 
         # --- Keyboard Controls for title --
         for event in pygame.event.get():
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)) and players == 1:
-                if p1_skin_color-3 < 0: p1_skin_color = len(player_skins)-3
-                else: p1_skin_color -= 3
+                if p1_skin_color-1 < 0: p1_skin_color = len(player_skins)-1
+                else: p1_skin_color -= 1
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_a)):
-                if p1_skin_color-3 < 0: p1_skin_color = len(player_skins)-3
-                else: p1_skin_color -= 3
+                if p1_skin_color-1 < 0: p1_skin_color = len(player_skins)-1
+                else: p1_skin_color -= 1
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT) and players == 1):
-                if p1_skin_color+3 == len(player_skins): p1_skin_color = 0
-                else: p1_skin_color += 3
+                if p1_skin_color+1 == len(player_skins): p1_skin_color = 0
+                else: p1_skin_color += 1
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_d)):
-                if p1_skin_color+3 == len(player_skins): p1_skin_color = 0
-                else: p1_skin_color += 3
+                if p1_skin_color+1 == len(player_skins): p1_skin_color = 0
+                else: p1_skin_color += 1
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_j) and players == 2):
-                if p2_skin_color-3 < 0: p2_skin_color = len(player_skins)-3
-                else: p2_skin_color -= 3
+                if p2_skin_color-1 < 0: p2_skin_color = len(player_skins)-1
+                else: p2_skin_color -= 1
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_l) and players == 2):
-                if p2_skin_color+3 == len(player_skins): p2_skin_color = 0
-                else: p2_skin_color += 3
+                if p2_skin_color+1 == len(player_skins): p2_skin_color = 0
+                else: p2_skin_color += 1
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_SPACE)):
                 apply_settings()
                 reset_game_state()
@@ -5320,8 +5321,8 @@ while running:
             elif enemy["type"] == 6: color = VIOLET
             elif enemy["type"] == 7: color = LAVA
             elif enemy["type"] == 8:
-                if enemy["target"] == 1: color = player_skins[p1_skin_color]
-                elif enemy["target"] == 2: color = player_skins[p2_skin_color]
+                if enemy["target"] == 1: color = player_skins[p1_skin_color][0]
+                elif enemy["target"] == 2: color = player_skins[p2_skin_color][0]
                 else: color = WHITE
             elif enemy["type"] == 9: color = LIME
             elif enemy["type"] == 10: color = MAGENTA
@@ -5400,11 +5401,11 @@ while running:
 
         if enemy["type"] in targetting_enemies:
             if enemy["target"] == 1:
-                if enemy["type"] == 8 or (p1_skin_color == p2_skin_color and players == 2): enemy_text_color = player_skins[p1_skin_color + 1]
-                else: enemy_text_color = player_skins[p1_skin_color]
+                if enemy["type"] == 8 or (p1_skin_color == p2_skin_color and players == 2): enemy_text_color = player_skins[p1_skin_color][1]
+                else: enemy_text_color = player_skins[p1_skin_color][0]
             elif enemy["target"] == 2:
-                if enemy["type"] == 8 or p1_skin_color == p2_skin_color: enemy_text_color = player_skins[p2_skin_color + skin_match]
-                else: enemy_text_color = player_skins[p2_skin_color]
+                if enemy["type"] == 8 or p1_skin_color == p2_skin_color: enemy_text_color = player_skins[p2_skin_color][skin_match]
+                else: enemy_text_color = player_skins[p2_skin_color][0]
         else: enemy_text_color = BLACK
 
         if not enemy.get("shrinking", False):
@@ -5443,7 +5444,7 @@ while running:
             if p1_skin_color == 39: pygame.draw.rect(screen, YELLOW, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
             else: pygame.draw.rect(screen, LIME, (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         else:
-            pygame.draw.rect(screen, player_skins[p1_skin_color], (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
+            pygame.draw.rect(screen, player_skins[p1_skin_color][0], (player_x - player_size//2, player_y - player_size//2, player_size, player_size))
         
     if players == 2 and player2_alive:
         if current_time - player2_damage_flash_time < 100:
@@ -5453,7 +5454,7 @@ while running:
             if p2_skin_color == 39: pygame.draw.rect(screen, YELLOW, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
             else: pygame.draw.rect(screen, LIME, (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
         else:
-            pygame.draw.rect(screen, player_skins[p2_skin_color], (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
+            pygame.draw.rect(screen, player_skins[p2_skin_color][0], (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
 
     if spawn_enabled:
         score += 0.1 * (60 / FPS) #SCORE SET
@@ -5466,14 +5467,14 @@ while running:
     
     # draw player lives in center
     if player_alive:
-        if players == 1: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color + 1])
-        else: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color + 1])
+        if players == 1: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color][1])
+        else: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color][1])
         player_life_rect = player_life_text.get_rect(center=(player_x, player_y))
         screen.blit(player_life_text, player_life_rect)
 
     if player2_alive:
         if players == 2:
-            player2_life_text = player_font.render(str(player2_lives), True, player_skins[p2_skin_color + skin_match])
+            player2_life_text = player_font.render(str(player2_lives), True, player_skins[p2_skin_color][skin_match])
             player2_life_rect = player2_life_text.get_rect(center=(player2_x, player2_y))
             screen.blit(player2_life_text, player2_life_rect)
 
@@ -5492,12 +5493,12 @@ while running:
 
     # draw HUD
     if players == 1:
-        p1_text = font.render(f"Score: {score_p1}", True, player_skins[p1_skin_color])
+        p1_text = font.render(f"Score: {score_p1}", True, player_skins[p1_skin_color][0])
         screen.blit(p1_text, (20, 20))
     elif players == 2:
-        p1_text = font.render(f"P1 Score: {score_p1}", True, player_skins[p1_skin_color])
+        p1_text = font.render(f"P1 Score: {score_p1}", True, player_skins[p1_skin_color][0])
         screen.blit(p1_text, (20, 20))
-        p2_text = font.render(f"P2 Score: {score_p2}", True, player_skins[p2_skin_color])
+        p2_text = font.render(f"P2 Score: {score_p2}", True, player_skins[p2_skin_color][0])
         screen.blit(p2_text, (20, 60))
 
     if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6969:
@@ -5520,7 +5521,7 @@ while running:
                 "y": player_y + projectile_size/2,
                 "dx": dxp,
                 "dy": dyp,
-                "color": player_skins[p1_skin_color],
+                "color": player_skins[p1_skin_color][0],
                 "ability": None
             })
             death_explosion = 1
@@ -5535,7 +5536,7 @@ while running:
                 "y": player2_y + projectile_size/2,
                 "dx": dxp,
                 "dy": dyp,
-                "color": player_skins[p2_skin_color],
+                "color": player_skins[p2_skin_color][0],
                 "ability": None
             })
             p2_death_explosion = 1
