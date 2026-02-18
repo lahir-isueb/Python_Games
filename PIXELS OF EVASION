@@ -3925,6 +3925,7 @@ while running:
                                 "y": max(1 + enemy_size/2, min(HEIGHT - enemy_size/2 - 1, enemy["y"])),
                                 "dx": dx,
                                 "dy": dy,
+                                "size": enemy_size,
                                 "type": 9,
                                 "angle": angle,
                                 "bounces": 0,
