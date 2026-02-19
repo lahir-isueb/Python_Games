@@ -5475,10 +5475,7 @@ while running:
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             reveal_dist = 500
-            if closest_dist < reveal_dist:
-                enemy_visibility = int(255 * min(1, (1 - closest_dist / reveal_dist)))
-            else:
-                enemy_visibility = 0
+            enemy_visibility = int(max(0, 255 * min(1, (2 - 2*closest_dist / reveal_dist))))
         else: enemy_visibility = 255
         
         enemy_surface = pygame.Surface((enemy["size"], enemy["size"]), pygame.SRCALPHA)
