@@ -83,7 +83,7 @@ PINK = (255, 140, 255)
 HOT_PINK = (255, 0, 106)
 CRIMSON = (190, 0, 60) #NOT USED
 
-# --- Player Skins --- (NOTE: Try not to use any colors that apply to targeting enemies)
+# --- Player Skins ---
 p1_skin_color = 0
 p2_skin_color = 0
 player_skins = [[WHITE, RED, BLUE, "Default"],
@@ -111,6 +111,9 @@ player_skins = [[WHITE, RED, BLUE, "Default"],
 
 # --- Spawner Size ---
 spawner_size = 50
+
+# --- Game Speed ---
+game_speed = 1
 
 # --- Player ---
 players = 1
@@ -354,6 +357,7 @@ def reset_game_state():
     global FPS
     global weather_timer, storm_timer, sandstorm_direction
     global ambush_score
+    global game_speed
     FPS = 60
     player_x = player_size // 2
     player_y = spawner_pos[1] + spawner_size // 2
@@ -394,6 +398,7 @@ def reset_game_state():
     storm_timer = 0
     sandstorm_direction = random.choice([-1, 1])
     ambush_score = ambush_per_score
+    game_speed = 1
 
 player_size_setting = 50
 enemy_size_setting = 50
@@ -3674,7 +3679,7 @@ while running:
         min_spawn_delay,
         initial_spawn_delay - int(adjusted_score * spawn_rate)
     )
-    if spawn_enabled and (current_time - last_spawn_time >= spawn_delay or ambushes > 0):
+    if spawn_enabled and ((current_time - last_spawn_time)*game_speed >= spawn_delay or ambushes > 0):
         enemy_type = random.choice(available_enemy_types)
         if len(ambush_enemy_types) > 0 and ambushes > 0:
             enemy_type = random.choice(ambush_enemy_types)
@@ -3842,7 +3847,7 @@ while running:
         enemy_died = False
         sz = enemy.get("size", enemy_size)
         if enemy["type"] == 1:
-            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
@@ -3860,7 +3865,7 @@ while running:
             enemy["angle"] = rotate_toward(enemy["angle"], target_angle, chase_turn/250)#THIS IS THE TURN SPEED 0.02
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
-            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
@@ -3868,7 +3873,7 @@ while running:
             if enemy["bounces"] >= homing_hp: enemy_died = True
 
         elif enemy["type"] == 3:
-            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
@@ -3880,8 +3885,8 @@ while running:
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             speed_multiplier = 2.5 if closest_dist < 200+enemy_size/2+player_size/2 else 2/3
-            enemy["x"] += enemy["dx"] * speed_multiplier
-            enemy["y"] += enemy["dy"] * speed_multiplier
+            enemy["x"] += enemy["dx"] * speed_multiplier * game_speed
+            enemy["y"] += enemy["dy"] * speed_multiplier * game_speed
             bounced = False
             # X-axis bounce
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
@@ -3914,8 +3919,8 @@ while running:
                 if current_time - enemy["stop_start_time"] >= stickiness or (closest_dist < 350 + enemy_size / 2 + player_size / 2 and sticky_sensitive == 1):
                     enemy["stopped"] = False
             else:
-                enemy["x"] += enemy["dx"]
-                enemy["y"] += enemy["dy"]
+                enemy["x"] += enemy["dx"] * game_speed
+                enemy["y"] += enemy["dy"] * game_speed
 
                 bounced = False
                 if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
@@ -3940,8 +3945,8 @@ while running:
             dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             if closest_dist > 200+enemy_size/2+player_size/2:
-                enemy["x"] += enemy["dx"]
-                enemy["y"] += enemy["dy"]
+                enemy["x"] += enemy["dx"] * game_speed
+                enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
                 if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: 
                     enemy["dx"] *= -1; bounced = True
@@ -3953,7 +3958,7 @@ while running:
 
 
         elif enemy["type"] == 7:
-            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
@@ -3975,14 +3980,14 @@ while running:
                 tx, ty = target_pos
                 if (enemy["target"] == 1 and (p1_dx or p1_dy)) or (enemy["target"] == 2 and (p2_dx or p2_dy)):
                     if player_frozen == True and enemy["target"] == 1:
-                        enemy["x"] += enemy["sussy_dx"] * 0.5
-                        enemy["y"] += enemy["sussy_dy"] * 0.5
+                        enemy["x"] += enemy["sussy_dx"] * 0.5 * game_speed
+                        enemy["y"] += enemy["sussy_dy"] * 0.5 * game_speed
                     elif player2_frozen == True and enemy["target"] == 2:
-                        enemy["x"] += enemy["sussy_dx"] * 0.5
-                        enemy["y"] += enemy["sussy_dy"] * 0.5
+                        enemy["x"] += enemy["sussy_dx"] * 0.5 * game_speed
+                        enemy["y"] += enemy["sussy_dy"] * 0.5 * game_speed
                     else:
-                        enemy["x"] += enemy["sussy_dx"]
-                        enemy["y"] += enemy["sussy_dy"]
+                        enemy["x"] += enemy["sussy_dx"] * game_speed
+                        enemy["y"] += enemy["sussy_dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["sussy_dx"] *= -1
@@ -3997,8 +4002,8 @@ while running:
                 enemy_died = True
 
         elif enemy["type"] == 9:
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
 
             if enemy.get("spawn_protected"):
                 if pygame.time.get_ticks() - enemy["spawn_time"] > 500:
@@ -4049,8 +4054,8 @@ while running:
 
                     
         elif enemy["type"] == 10:
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1
@@ -4081,8 +4086,8 @@ while running:
             if enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 11:
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1; bounced = True
@@ -4116,8 +4121,8 @@ while running:
                 })
                 enemy["last_shot_time"] = current_time
         elif enemy["type"] == 12:  # Get Sniped
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1; bounced = True
@@ -4150,15 +4155,15 @@ while running:
                 })
                 enemy["last_shot_time"] = current_time
         elif enemy["type"] == 13:
-            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
             if enemy["bounces"] >= speedy_hp: enemy_died = True
         elif enemy["type"] == 14:
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1; bounced = True
@@ -4204,8 +4209,8 @@ while running:
                         enemy["dead"] = True
                     continue
             # movement using current size (sz)
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= sz/2 or enemy["x"] >= WIDTH - sz/2:
                 enemy["dx"] *= -1
@@ -4233,8 +4238,8 @@ while running:
                             player2_alive = False
                     enemy_died = True
         elif enemy["type"] == 16:
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1
@@ -4248,8 +4253,8 @@ while running:
             if enemy["bounces"] >= blind_hp or enemy["health"] < 1:
                 enemy_died = True
         elif enemy["type"] == 17:
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1
@@ -4270,8 +4275,8 @@ while running:
                 if current_time - enemy["stop_start_time"] >= stickiness*4 or (closest_dist < 350 + enemy_size / 2 + player_size / 2 and charger_sensitive == 1):
                     enemy["stopped"] = False
             else:
-                enemy["x"] += enemy["dx"]
-                enemy["y"] += enemy["dy"]
+                enemy["x"] += enemy["dx"] * game_speed
+                enemy["y"] += enemy["dy"] * game_speed
 
                 bounced = False
                 if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
@@ -4292,8 +4297,8 @@ while running:
             if enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 19:  # Rapid Shooter
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1; bounced = True
@@ -4327,8 +4332,8 @@ while running:
                 })
                 enemy["last_shot_time"] = current_time
         elif enemy["type"] == 20:  # Frostbite
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1
@@ -4367,8 +4372,8 @@ while running:
                     if enemy in enemies:
                         enemy["dead"] = True
                     continue
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
 
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
@@ -4403,8 +4408,8 @@ while running:
         elif enemy["type"] == 22:
             laser_extend = (60 / FPS) * (90)
             if not enemy.get("laser_mode", False):
-                enemy["x"] += enemy["dx"]
-                enemy["y"] += enemy["dy"]
+                enemy["x"] += enemy["dx"] * game_speed
+                enemy["y"] += enemy["dy"] * game_speed
 
                 hit_left = enemy["x"] <= enemy_size/2
                 hit_right = enemy["x"] >= WIDTH - enemy_size/2
@@ -4432,7 +4437,7 @@ while running:
                         if hit_top or hit_bottom:
                             enemy["dy"] *= -1
             else:
-                enemy["laser_length"] += laser_extend
+                enemy["laser_length"] += laser_extend * game_speed
                 if current_time - enemy["laser_start"] >= laser_duration:
                     enemy["dead"] = True
                     continue
@@ -4483,8 +4488,8 @@ while running:
 
             
         elif enemy["type"] == 23:
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
 
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
@@ -4525,8 +4530,8 @@ while running:
 
             enemy["dx"] = vx
             enemy["dy"] = vy
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
 
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
@@ -4550,7 +4555,7 @@ while running:
             if enemy["bounces"] >= accelerator_hp or enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 25:
-            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
@@ -4567,7 +4572,7 @@ while running:
             enemy["angle"] = rotate_toward(enemy["angle"], target_angle, chase_turn/250)
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
-            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
@@ -4598,7 +4603,8 @@ while running:
             enemy["angle"] = rotate_toward(enemy["angle"], target_angle, chase_turn/500)
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
-            enemy["x"] += enemy["dx"] * speed_multiplier; enemy["y"] += enemy["dy"] * speed_multiplier
+            enemy["x"] += enemy["dx"] * speed_multiplier * game_speed
+            enemy["y"] += enemy["dy"] * speed_multiplier * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["angle"] = math.pi - enemy["angle"]; bounced = True
@@ -4613,7 +4619,8 @@ while running:
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
             if enemy["bounces"] >= savage_hp: enemy_died = True
         elif enemy["type"] == 28:
-            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"]
+            enemy["y"] += enemy["dy"]
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: bounced = True
@@ -4634,7 +4641,8 @@ while running:
             enemy["angle"] = rotate_toward(enemy["angle"], target_angle, chase_turn/250)
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
-            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
@@ -4649,8 +4657,8 @@ while running:
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             speed_multiplier = 2.5 if closest_dist < 200+enemy_size/2+player_size/2 else 2/3
-            enemy["x"] += enemy["dx"] * speed_multiplier
-            enemy["y"] += enemy["dy"] * speed_multiplier
+            enemy["x"] += enemy["dx"] * speed_multiplier * game_speed
+            enemy["y"] += enemy["dy"] * speed_multiplier * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
@@ -4666,8 +4674,8 @@ while running:
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             speed_multiplier = 2.5 if closest_dist < 200+enemy_size/2+player_size/2 else 2/3
-            enemy["x"] += enemy["dx"] * speed_multiplier
-            enemy["y"] += enemy["dy"] * speed_multiplier
+            enemy["x"] += enemy["dx"] * speed_multiplier * game_speed
+            enemy["y"] += enemy["dy"] * speed_multiplier * game_speed
             bounced = False
             # X-axis bounce
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
@@ -4700,8 +4708,8 @@ while running:
             if enemy["health"] < 1:
                 enemy_died = True
         elif enemy["type"] == 32:
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1; bounced = True
@@ -4762,8 +4770,8 @@ while running:
                     })
                     enemy["last_shot_time"] = current_time
             else:
-                enemy["x"] += enemy["dx"]
-                enemy["y"] += enemy["dy"]
+                enemy["x"] += enemy["dx"] * game_speed
+                enemy["y"] += enemy["dy"] * game_speed
 
                 bounced = False
                 if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
@@ -4785,8 +4793,8 @@ while running:
                 enemy_died = True
                 
         elif enemy["type"] == 34:
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1; bounced = True
@@ -4825,8 +4833,8 @@ while running:
                 continue
             laser_extend = (60 / FPS) * (90)
             if not enemy.get("laser_mode", False):
-                enemy["x"] += enemy["dx"]
-                enemy["y"] += enemy["dy"]
+                enemy["x"] += enemy["dx"] * game_speed
+                enemy["y"] += enemy["dy"] * game_speed
 
                 hit_left = enemy["x"] <= enemy_size/2
                 hit_right = enemy["x"] >= WIDTH - enemy_size/2
@@ -4866,7 +4874,7 @@ while running:
                         if hit_top or hit_bottom:
                             enemy["dy"] *= -1
             else:
-                enemy["laser_length"] += laser_extend
+                enemy["laser_length"] += laser_extend * game_speed
                 if current_time - enemy["laser_start"] >= laser_duration:
                     enemy["dead"] = True
                     continue
@@ -4915,8 +4923,8 @@ while running:
         elif enemy["type"] == 36:
             laser_extend = (60 / FPS) * (90)
             if not enemy.get("laser_mode", False):
-                enemy["x"] += enemy["dx"]
-                enemy["y"] += enemy["dy"]
+                enemy["x"] += enemy["dx"] * game_speed
+                enemy["y"] += enemy["dy"] * game_speed
 
                 hit_left = enemy["x"] <= enemy_size/2
                 hit_right = enemy["x"] >= WIDTH - enemy_size/2
@@ -4944,7 +4952,7 @@ while running:
                         if hit_top or hit_bottom:
                             enemy["dy"] *= -1
             else:
-                enemy["laser_length"] += laser_extend
+                enemy["laser_length"] += laser_extend * game_speed
                 if current_time - enemy["laser_start"] >= laser_duration:
                     enemy["dead"] = True
                     continue
@@ -5012,8 +5020,8 @@ while running:
                     if enemy in enemies:
                         enemy["dead"] = True
                     continue
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= sz/2 or enemy["x"] >= WIDTH - sz/2:
                 enemy["dx"] *= -1
@@ -5031,8 +5039,8 @@ while running:
             if target_pos:
                 tx, ty = target_pos
                 if (enemy["target"] == 1 and (not p1_dx and not p1_dy)) or (enemy["target"] == 2 and (not p2_dx and not p2_dy)):
-                        enemy["x"] += enemy["sussy_dx"]
-                        enemy["y"] += enemy["sussy_dy"]
+                        enemy["x"] += enemy["sussy_dx"] * game_speed
+                        enemy["y"] += enemy["sussy_dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["sussy_dx"] *= -1
@@ -5046,8 +5054,8 @@ while running:
             if enemy["bounces"] >= assassin_hp or enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 39:
-            enemy["x"] += enemy["dx"]
-            enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
                 enemy["dx"] *= -1
@@ -5061,7 +5069,7 @@ while running:
             if enemy["bounces"] >= unstable_hp or enemy["health"] < 1:
                 enemy_died = True
         if enemy["type"] == 40:
-            enemy["x"] += enemy["dx"]; enemy["y"] += enemy["dy"]
+            enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
@@ -5251,8 +5259,8 @@ while running:
     new_projectiles = []
     for p in projectiles:
         # move (p stores center coordinates)
-        p["x"] += p["dx"]
-        p["y"] += p["dy"]
+        p["x"] += p["dx"] * game_speed
+        p["y"] += p["dy"] * game_speed
 
         # center-to-center collision test (more reliable with mixed coordinate conventions)
         player_cx = player_x + player_size / 2
@@ -5346,7 +5354,7 @@ while running:
 
     if spawn_enabled:
         # Normal pulse + rotation once spawning starts
-        indicator_ratio = min(1.0, (current_time - last_spawn_time) / spawn_delay)
+        indicator_ratio = min(1.0, (current_time - last_spawn_time) / spawn_delay*game_speed)
 
         def lerp_color(c1, c2, t):
             return tuple(int(c1[i] + (c2[i] - c1[i]) * t) for i in range(3))
@@ -5370,7 +5378,7 @@ while running:
         screen.blit(glow_surface, (center[0] - glow_size // 2, center[1] - glow_size // 2))
 
         # Rotating arcs
-        angle_progress = current_time / 500.0
+        angle_progress = current_time / (500.0/game_speed)
         arc_radius = glow_radius + 5
         for i in range(3):
             start_angle = angle_progress + i * (2 * math.pi / 3)
@@ -5490,11 +5498,11 @@ while running:
 
         enemy_visibility = 255
         if enemy["type"] == 40 or enemy["type"] == 29 or enemy["type"] == 38 or modifiers[3] == 1:
-            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
-            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) - enemy["size"]/2 - player_size/2 if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) - enemy["size"]/2 - player_size/2 if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             reveal_dist = 500
-            enemy_visibility = int(max(0, 255 * min(1, (2 - 2*closest_dist / reveal_dist))))
+            enemy_visibility = int(max(0, 255 * min(1, (1.5 - 1.5*closest_dist / reveal_dist))))
         else: enemy_visibility = 255
         
         enemy_surface = pygame.Surface((enemy["size"], enemy["size"]), pygame.SRCALPHA)
@@ -5645,11 +5653,10 @@ while running:
             p2_death_explosion = 1
 
     if not player_alive and (players == 1 or not player2_alive) and everyone_died_at == 0:
-        everyone_died_at = current_time + 2700
+        everyone_died_at = current_time + 3000
 
-    if FPS > 20:
-        if players == 1 and not player_alive: FPS -= 1
-        if players == 2 and not player_alive and not player2_alive: FPS -= 1
+    if (players == 1 and not player_alive) or (players == 2 and not player_alive and not player2_alive):
+        game_speed = max(game_speed * 0.98, 0.0001)
 
 
     if spawn_enabled == True:
