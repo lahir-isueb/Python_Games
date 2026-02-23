@@ -4602,7 +4602,7 @@ while running:
                 trail_squares.append({
                     "x": int(enemy["x"]),
                     "y": int(enemy["y"]),
-                    "spawn": current_time,
+                    "lifetime": trail_lifetime_ms,
                     "health": 1,
                     "color": colorblind_list[colorblind] if colorblind != 0 else SULFUR
                 })
