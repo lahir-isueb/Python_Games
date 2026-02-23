@@ -238,6 +238,8 @@ slightly_small_font = pygame.font.SysFont(None, 35)
 font = pygame.font.SysFont(None, 40)
 big_font = pygame.font.SysFont(None, 120)
 enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size))
+impostor_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * enemy_size))
+impostor2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * enemy_size))
 player_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * player_size))
 player2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * player_size))
 
@@ -3136,7 +3138,7 @@ y_pos = HEIGHT - button_height - margin - 400
 
 
 def apply_settings():
-    global player_size, player_font, player2_font, enemy_size, enemy_font, projectile_size, projectile_damage, trail_size
+    global player_size, player_font, player2_font, enemy_size, enemy_font, impostor_font, impostor2_font, projectile_size, projectile_damage, trail_size
     global spawner_size, spawner_pos
     global min_spawn_delay, initial_spawn_delay, spawn_rate, enemy_damage
     global player_speed, player_speed_base, player2_speed, player2_speed_base, enemy_speed
@@ -3205,6 +3207,8 @@ def apply_settings():
     spawner_size = enemy_size_setting
     spawner_pos = (WIDTH // 2 - spawner_size // 2, HEIGHT // 2 - spawner_size // 2)
     enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size))
+    impostor_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * enemy_size))
+    impostor2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * enemy_size))
     min_spawn_delay = min_spawn_delay_setting
     initial_spawn_delay = max_spawn_delay_setting
     projectile_size = projectile_size_setting
@@ -5545,8 +5549,8 @@ while running:
 
         if not enemy.get("shrinking", False):
             if enemy["type"] == 8:
-                if enemy["target"] == 1: text_surface = enemy_font.render(str(player_lives), True, enemy_text_color)
-                elif enemy["target"] == 2: text_surface = enemy_font.render(str(player2_lives), True, enemy_text_color)
+                if enemy["target"] == 1: text_surface = impostor_font.render(str(player_lives), True, enemy_text_color)
+                elif enemy["target"] == 2: text_surface = impostor2_font.render(str(player2_lives), True, enemy_text_color)
             else:
                 text_surface = enemy_font.render(str(max(int(enemy.get("health", 0)), 0)), True, enemy_text_color)
             text_surface = text_surface.convert_alpha()
