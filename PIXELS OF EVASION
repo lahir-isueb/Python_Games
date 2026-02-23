@@ -101,15 +101,16 @@ player_skins = [
                 [TURQUOISE, HOT_PINK, GREEN, "none"],
                 [VOLT, AZURE, GREEN, "none"],
                 [CLOUD, AZURE, MAGENTA, "none"],
-                [SHADOW, PINK, CYAN, "none"],
+                [SHADOW, PINK, CYAN, "chiller"],
                 [ORANGE, YELLOW, CRIMSON, "none"],
-                [SKY, WHITE, BLUE, "none"],
+                [SKY, WHITE, BLUE, "comic sans"],
                 [BROWN, TAN, GREEN, "none"],
                 [LAVENDER, PURPLE, BLUE, "none"],
                 [PINK, HOT_PINK, PURPLE, "none"],
                 [HOT_PINK, PINK, VIOLET, "none"],
                 [TEAL, BLUE, YELLOW, "none"],
-                [MAUVE, CYAN, LAVENDER, "none"]
+                [MAUVE, CYAN, LAVENDER, "none"],
+                [MAGENTA, VIOLET, SALMON, "none"]
                 ]
 
 # --- Spawner Size ---
@@ -416,7 +417,7 @@ projectile_speed_setting = 5
 regen_delay_setting = 50
 player_health_setting = 3
 trail_duration_setting = 3000
-trail_distance_setting = 450
+trail_distance_setting = 25
 freeze_duration_setting = 10000
 invincibility_duration_setting = 1000
 chaser_turn_amount_setting = 5
@@ -1412,14 +1413,14 @@ def SETTINGS():
         pygame.draw.rect(screen, RED, trail_distance_minus_button, border_radius=0)
         screen.blit(minus_txt, minus_txt.get_rect(center=trail_distance_minus_button.center))
         if trail_distance_plus_button.collidepoint(mouse_pos) and mouse_click:
-            trail_distance_setting += 100
-            if trail_distance_setting > 950:
-                trail_distance_setting = 950
+            trail_distance_setting += 1
+            if trail_distance_setting > 50:
+                trail_distance_setting = 50
             pygame.time.delay(50)
         if trail_distance_minus_button.collidepoint(mouse_pos) and mouse_click:
-            trail_distance_setting -= 100
-            if trail_distance_setting < 50:
-                trail_distance_setting = 50
+            trail_distance_setting -= 1
+            if trail_distance_setting < 1:
+                trail_distance_setting = 1
             pygame.time.delay(50)
 
 
@@ -3840,6 +3841,7 @@ while running:
             "stop_start_time": None,
             "last_trail_time": current_time,
             "last_shot_time": current_time,
+            "trail/shot_charge": 0,
             "shoot_delay": shoot_delay/(projectile_fire_rate/10),
             "bursts": burst,
             "bursts left": 0,
@@ -3972,12 +3974,13 @@ while running:
 
 
         elif enemy["type"] == 7:
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
             bounced = False
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
-            if current_time - enemy["last_trail_time"] >= trail_interval_ms:
+            if enemy["trail/shot_charge"] >= trail_interval_ms:
                 trail_squares.append({
                     "x": int(enemy["x"]),
                     "y": int(enemy["y"]),
@@ -3985,7 +3988,7 @@ while running:
                     "health": 1,
                     "color": colorblind_list[colorblind] if colorblind != 0 else LAVA
                 })
-                enemy["last_trail_time"] = current_time
+                enemy["trail/shot_charge"] = 0
             if enemy["health"] <= 0: enemy_died = True
 
         elif enemy["type"] == 8:
@@ -5247,7 +5250,7 @@ while running:
                 invincible_until = current_time + invincibility_duration
                 if player_lives <= 0:
                     player_alive = False
-                    break
+                    continue
             sq["health"] -= 1
             if sq["health"] > 0:
                 new_trails.append(sq)
@@ -5261,7 +5264,7 @@ while running:
                 player2_invincible_until = current_time + invincibility_duration
                 if player2_lives <= 0:
                     player2_alive = False
-                    break
+                    continue
             sq["health"] -= 1
             if sq["health"] > 0:
                 new_trails.append(sq)
