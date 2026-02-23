@@ -266,13 +266,13 @@ frostbite_projectile_speed = 5
 sparker_projectile_speed = 5
 annihilator_projectile_speed = 10
 projectile_size = 10
-shooter_delay = 3000
-sniper_delay = 5500
-shotgun_delay = 7500
-rapidshooter_delay = 200
-burstshooter_delay = 3000
-stickyshooter_delay = 600
-sparker_delay = 100
+shooter_delay = 150
+sniper_delay = 275
+shotgun_delay = 375
+rapidshooter_delay = 10
+burstshooter_delay = 150
+stickyshooter_delay = 30
+sparker_delay = 5
 projectile_fire_rate = 10
 burst = 10
 bomb_projectile_amount = 8
@@ -3839,7 +3839,6 @@ while running:
             "ability": 1,
             "stopped": False,
             "stop_start_time": None,
-            "last_trail_time": current_time,
             "last_shot_time": current_time,
             "trail/shot_charge": 0,
             "shoot_delay": shoot_delay/(projectile_fire_rate/10),
@@ -4103,6 +4102,7 @@ while running:
             if enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 11:
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
             bounced = False
@@ -4117,7 +4117,7 @@ while running:
                 enemy_died = True
 
             # Shoot at player
-            if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"]:
+            if enemy["trail/shot_charge"] >= enemy["shoot_delay"]:
                 target_pos = get_target_position(enemy)
                 if target_pos:
                     tx, ty = target_pos
@@ -4136,8 +4136,9 @@ while running:
                     "color": colorblind_list[colorblind] if colorblind != 0 else BRONZE,
                     "ability": None
                 })
-                enemy["last_shot_time"] = current_time
+                enemy["trail/shot_charge"] = 0
         elif enemy["type"] == 12:  # Get Sniped
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
             bounced = False
@@ -4151,7 +4152,7 @@ while running:
             if enemy["bounces"] >= sniper_hp or enemy["health"] <= 0:
                 enemy_died = True
             # Shoot at player
-            if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"]:
+            if enemy["trail/shot_charge"] >= enemy["shoot_delay"]:
                 target_pos = get_target_position(enemy)
                 if target_pos:
                     tx, ty = target_pos
@@ -4170,7 +4171,7 @@ while running:
                     "color": colorblind_list[colorblind] if colorblind != 0 else INDIGO,
                     "ability": "snipe"
                 })
-                enemy["last_shot_time"] = current_time
+                enemy["trail/shot_charge"] = 0
         elif enemy["type"] == 13:
             enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
             bounced = False
@@ -4179,6 +4180,7 @@ while running:
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
             if enemy["bounces"] >= speedy_hp: enemy_died = True
         elif enemy["type"] == 14:
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
             bounced = False
@@ -4193,7 +4195,7 @@ while running:
                 enemy_died = True
 
             # --- Fire 5 bullets in a spread ---
-            if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"]:
+            if enemy["trail/shot_charge"] >= enemy["shoot_delay"]:
                 target_pos = get_target_position(enemy)
                 if target_pos:
                     tx, ty = target_pos
@@ -4214,7 +4216,7 @@ while running:
                         "color": colorblind_list[colorblind] if colorblind != 0 else BRICK,
                         "ability": None
                     })
-                enemy["last_shot_time"] = current_time
+                enemy["trail/shot_charge"] = 0
         elif enemy["type"] == 15:
             if enemy.get("shrinking"):
                 enemy["size"] = enemy.get("size", "enemy_size") * 0.85 if isinstance(enemy.get("size", None), (int, float)) else sz * 0.85
@@ -4314,6 +4316,7 @@ while running:
             if enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 19:  # Rapid Shooter
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
             bounced = False
@@ -4328,7 +4331,7 @@ while running:
                 enemy_died = True
 
             # Shoot at player
-            if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"]:
+            if enemy["trail/shot_charge"] >= enemy["shoot_delay"]:
                 target_pos = get_target_position(enemy)
                 if target_pos:
                     tx, ty = target_pos
@@ -4347,7 +4350,7 @@ while running:
                     "color": colorblind_list[colorblind] if colorblind != 0 else GOLD,
                     "ability": None
                 })
-                enemy["last_shot_time"] = current_time
+                enemy["trail/shot_charge"] = 0
         elif enemy["type"] == 20:  # Frostbite
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
@@ -4579,6 +4582,7 @@ while running:
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
             if enemy["bounces"] >= cold_hp: enemy_died = True
         elif enemy["type"] == 26:
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             target_pos = get_target_position(enemy)
             if target_pos:
                 tx, ty = target_pos
@@ -4594,7 +4598,7 @@ while running:
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
-            if current_time - enemy["last_trail_time"] >= trail_interval_ms:
+            if enemy["trail/shot_charge"] >= trail_interval_ms:
                 trail_squares.append({
                     "x": int(enemy["x"]),
                     "y": int(enemy["y"]),
@@ -4602,7 +4606,7 @@ while running:
                     "health": 1,
                     "color": colorblind_list[colorblind] if colorblind != 0 else SULFUR
                 })
-                enemy["last_trail_time"] = current_time
+                enemy["trail/shot_charge"] = 0
             if enemy["bounces"] >= tracer_hp: enemy_died = True
         elif enemy["type"] == 27:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
@@ -4725,6 +4729,7 @@ while running:
             if enemy["health"] < 1:
                 enemy_died = True
         elif enemy["type"] == 32:
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
             bounced = False
@@ -4737,7 +4742,7 @@ while running:
                 enemy["health"] -= 1
             if enemy["bounces"] >= burstshooter_hp or enemy["health"] <= 0:
                 enemy_died = True
-            if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"] or (current_time - enemy["last_shot_time"] >= 50 and enemy["bursts left"] > 1):
+            if enemy["trail/shot_charge"] >= enemy["shoot_delay"] or (enemy["trail/shot_charge"] >= 4 and enemy["bursts left"] > 1):
                 if enemy["bursts left"] < 2: enemy["bursts left"] = enemy["bursts"]
                 else: enemy["bursts left"] -= 1
                 target_pos = get_target_position(enemy)
@@ -4758,15 +4763,16 @@ while running:
                     "color": colorblind_list[colorblind] if colorblind != 0 else SILVER,
                     "ability": None
                 })
-                enemy["last_shot_time"] = current_time
+                enemy["trail/shot_charge"] = 0
         elif enemy["type"] == 33: #Stickyshooter
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             if enemy["stopped"]:
                 if current_time - enemy["stop_start_time"] >= stickiness*4 or closest_dist < 350+enemy_size/2+player_size/2:
                     enemy["stopped"] = False
-                if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"]:
+                if enemy["trail/shot_charge"] >= enemy["shoot_delay"]:
                     target_pos = get_target_position(enemy)
                     if target_pos:
                         tx, ty = target_pos
@@ -4785,7 +4791,7 @@ while running:
                         "color": colorblind_list[colorblind] if colorblind != 0 else OLIVE,
                         "ability": None
                     })
-                    enemy["last_shot_time"] = current_time
+                    enemy["trail/shot_charge"] = 0
             else:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
@@ -4810,6 +4816,7 @@ while running:
                 enemy_died = True
                 
         elif enemy["type"] == 34:
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
             bounced = False
@@ -4823,7 +4830,7 @@ while running:
             if enemy["bounces"] >= sparker_hp or enemy["health"] <= 0:
                 enemy_died = True
 
-            if current_time - enemy["last_shot_time"] >= enemy["shoot_delay"]:
+            if enemy["trail/shot_charge"] >= enemy["shoot_delay"]:
                 angle = random.uniform(0, math.tau)
                 dxp = math.cos(angle)
                 dyp = math.sin(angle)
@@ -4838,7 +4845,7 @@ while running:
                     "color": colorblind_list[colorblind] if colorblind != 0 else VOLT,
                     "ability": None
                 })
-                enemy["last_shot_time"] = current_time
+                enemy["trail/shot_charge"] = 0
         elif enemy["type"] == 35:
             if enemy.get("shrinking"):
                 enemy["size"] = enemy.get("size", "enemy_size") * 0.85 if isinstance(enemy.get("size", None), (int, float)) else sz * 0.85
