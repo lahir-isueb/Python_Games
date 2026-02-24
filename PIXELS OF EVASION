@@ -470,7 +470,7 @@ addictive_pull_strength_setting = 10
 addictive_pull_radius_setting = 300
 laser_hp_setting = 3
 laser_damage_setting = 1
-laser_duration_setting = 2000
+laser_duration_setting = 100
 hardened_hp_setting = 30
 harden_break_setting = 10
 accelerator_hp_setting = 5
@@ -2418,14 +2418,14 @@ def SETTINGS():
         pygame.draw.rect(screen, RED, laser_duration_minus_button, border_radius=0)
         screen.blit(minus_txt, minus_txt.get_rect(center=laser_duration_minus_button.center))
         if laser_duration_plus_button.collidepoint(mouse_pos) and mouse_click:
-            laser_duration_setting += 100
-            if laser_duration_setting > 5000:
-                laser_duration_setting = 5000
+            laser_duration_setting += 10
+            if laser_duration_setting > 500:
+                laser_duration_setting = 500
             pygame.time.delay(50)
         if laser_duration_minus_button.collidepoint(mouse_pos) and mouse_click:
-            laser_duration_setting -= 100
-            if laser_duration_setting < 1500:
-                laser_duration_setting = 1500
+            laser_duration_setting -= 10
+            if laser_duration_setting < 50:
+                laser_duration_setting = 50
             pygame.time.delay(50)
 
 
@@ -4465,7 +4465,7 @@ while running:
             else:
                 enemy["laser_lifetime"] -= (60 / FPS) * game_speed
                 enemy["laser_length"] += laser_extend * game_speed
-                if laser_duration < 0:
+                if enemy["laser_lifetime"] < 0:
                     enemy["dead"] = True
                     continue
                 laser_width = enemy_size
@@ -4895,11 +4895,13 @@ while running:
                             enemy["laser_x"] = enemy["x"]
                             enemy["laser_y"] = enemy["y"]
                             enemy["laser_length"] = enemy_size
+                            enemy["laser_lifetime"] = laser_duration
                         if hit_top or hit_bottom:
                             enemy["laser_orientation"] = "vertical"
                             enemy["laser_x"] = enemy["x"]
                             enemy["laser_y"] = enemy["y"]
                             enemy["laser_length"] = enemy_size
+                            enemy["laser_lifetime"] = laser_duration
                     else:
                         if hit_left or hit_right:
                             enemy["dx"] *= -1
@@ -4907,7 +4909,8 @@ while running:
                             enemy["dy"] *= -1
             else:
                 enemy["laser_length"] += laser_extend * game_speed
-                if current_time - enemy["laser_start"] >= laser_duration:
+                enemy["laser_length"] += laser_extend * game_speed
+                if enemy["laser_lifetime"] < 0:
                     enemy["dead"] = True
                     continue
                 laser_width = enemy_size
@@ -4973,19 +4976,22 @@ while running:
                             enemy["laser_x"] = enemy["x"]
                             enemy["laser_y"] = enemy["y"]
                             enemy["laser_length"] = enemy_size
+                            enemy["laser_lifetime"] = laser_duration
                         if hit_top or hit_bottom:
                             enemy["laser_orientation"] = "vertical"
                             enemy["laser_x"] = enemy["x"]
                             enemy["laser_y"] = enemy["y"]
                             enemy["laser_length"] = enemy_size
+                            enemy["laser_lifetime"] = laser_duration
                     else:
                         if hit_left or hit_right:
                             enemy["dx"] *= -1
                         if hit_top or hit_bottom:
                             enemy["dy"] *= -1
             else:
+                enemy["laser_lifetime"] -= (60 / FPS) * game_speed
                 enemy["laser_length"] += laser_extend * game_speed
-                if current_time - enemy["laser_start"] >= laser_duration:
+                if enemy["laser_lifetime"] < 0:
                     enemy["dead"] = True
                     continue
                 laser_width = enemy_size
