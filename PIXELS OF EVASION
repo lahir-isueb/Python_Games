@@ -420,7 +420,7 @@ regen_delay_setting = 50
 player_health_setting = 3
 trail_duration_setting = 200
 trail_distance_setting = 25
-freeze_duration_setting = 10000
+freeze_duration_setting = 500
 invincibility_duration_setting = 1000
 chaser_turn_amount_setting = 5
 enemy_stick_setting = 100
@@ -1208,12 +1208,12 @@ def SETTINGS():
         pygame.draw.rect(screen, RED, freeze_duration_minus_button, border_radius=0)
         screen.blit(minus_txt, minus_txt.get_rect(center=freeze_duration_minus_button.center))
         if freeze_duration_plus_button.collidepoint(mouse_pos) and mouse_click:
-            freeze_duration_setting += 500
-            if freeze_duration_setting > 20000:
-                freeze_duration_setting = 20000
+            freeze_duration_setting += 50
+            if freeze_duration_setting > 2000:
+                freeze_duration_setting = 2000
             pygame.time.delay(50)
         if freeze_duration_minus_button.collidepoint(mouse_pos) and mouse_click:
-            freeze_duration_setting -= 500
+            freeze_duration_setting -= 50
             if freeze_duration_setting < 0:
                 freeze_duration_setting = 0
             pygame.time.delay(50)
@@ -3662,10 +3662,10 @@ while running:
         player_x += sandstorm_direction * 3 * game_speed
         player2_x += sandstorm_direction * 3 * game_speed
 
-    if current_time > slow_until:
+    if slow_until < 0:
         player_speed = player_speed_base
         player_frozen = False
-    if players == 2 and current_time > player2_slow_until:
+    if players == 2 and player2_slow_until < 0:
         player2_speed = player2_speed_base
         player2_frozen = False
 
@@ -4450,19 +4450,22 @@ while running:
                             enemy["laser_x"] = enemy["x"]
                             enemy["laser_y"] = enemy["y"]
                             enemy["laser_length"] = enemy_size
+                            enemy["laser_lifetime"] = laser_duration
                         if hit_top or hit_bottom:
                             enemy["laser_orientation"] = "vertical"
                             enemy["laser_x"] = enemy["x"]
                             enemy["laser_y"] = enemy["y"]
                             enemy["laser_length"] = enemy_size
+                            enemy["laser_lifetime"] = laser_duration
                     else:
                         if hit_left or hit_right:
                             enemy["dx"] *= -1
                         if hit_top or hit_bottom:
                             enemy["dy"] *= -1
             else:
+                enemy["laser_lifetime"] -= (60 / FPS) * game_speed
                 enemy["laser_length"] += laser_extend * game_speed
-                if current_time - enemy["laser_start"] >= laser_duration:
+                if laser_duration < 0:
                     enemy["dead"] = True
                     continue
                 laser_width = enemy_size
@@ -4991,7 +4994,7 @@ while running:
                     ly = enemy["laser_y"]
                     if player_alive:
                         if abs(player_x - lx) < (player_size/2 + enemy_size / 2) and abs(player_y - ly) < enemy["laser_length"] / 2:
-                            slow_until = current_time + freeze_duration
+                            slow_until = freeze_duration
                             player_speed = player_speed_base / 2
                             player_frozen = True
                             if current_time >= invincible_until + 100:
@@ -5003,7 +5006,7 @@ while running:
 
                     if players == 2 and player2_alive:
                         if abs(player2_x - lx) < (player_size/2 + enemy_size / 2) and abs(player2_y - ly) < enemy["laser_length"] / 2:
-                            player2_slow_until = current_time + freeze_duration
+                            player2_slow_until = freeze_duration
                             player2_speed = player2_speed_base / 2
                             player2_frozen = True
                             if current_time >= player2_invincible_until + 100:
@@ -5017,7 +5020,7 @@ while running:
                     ly = enemy["laser_y"]
                     if player_alive:
                         if abs(player_y - ly) < (player_size/2 + enemy_size / 2) and abs(player_x - lx) < enemy["laser_length"] / 2:
-                            slow_until = current_time + freeze_duration
+                            slow_until = freeze_duration
                             player_speed = player_speed_base / 2
                             player_frozen = True
                             if current_time >= invincible_until + 100:
@@ -5029,7 +5032,7 @@ while running:
 
                     if players == 2 and player2_alive:
                         if abs(player2_y - ly) < (player_size/2 + enemy_size / 2) and abs(player2_x - lx) < enemy["laser_length"] / 2:
-                            player2_slow_until = current_time + freeze_duration
+                            player2_slow_until = freeze_duration
                             player2_speed = player2_speed_base / 2
                             player2_frozen = True
                             if current_time >= player2_invincible_until + 100:
@@ -5158,7 +5161,7 @@ while running:
                     enemy["shrinking"] = True
                 continue
             elif enemy["type"] == 25:
-                slow_until = current_time + freeze_duration
+                slow_until = freeze_duration
                 player_speed = player_speed_base / 2
                 player_frozen = True
             elif enemy["type"] == 3:
@@ -5221,7 +5224,7 @@ while running:
                     enemy["shrinking"] = True
                 continue
             elif enemy["type"] == 25:
-                player2_slow_until = current_time + freeze_duration
+                player2_slow_until = freeze_duration
                 player2_speed = player2_speed_base / 2
                 player2_frozen = True
             elif enemy["type"] == 3:
@@ -5302,7 +5305,7 @@ while running:
         if player_alive and centered_rect_collision(player_x, player_y, player_size,
                                                     p["x"] - projectile_size/2, p["y"] - projectile_size/2, projectile_size):
             if p.get("ability") == "freeze":
-                slow_until = current_time + freeze_duration  # 10 seconds
+                slow_until = freeze_duration  # 10 seconds
                 player_speed = player_speed_base / 2
                 player_frozen = True
             elif p.get("ability") == "snipe":
@@ -5334,7 +5337,7 @@ while running:
             if player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
                                                     p["x"] - projectile_size/2, p["y"] - projectile_size/2, projectile_size):
                 if p.get("ability") == "freeze":
-                    player2_slow_until = current_time + freeze_duration
+                    player2_slow_until = freeze_duration
                     player2_speed = player2_speed_base / 2
                     player2_frozen = True
                 elif p.get("ability") == "snipe":
@@ -5688,6 +5691,9 @@ while running:
     if (players == 1 and not player_alive) or (players == 2 and not player_alive and not player2_alive):
         game_speed = max(game_speed * 0.98, 0.0001)
 
+    slow_until -= (60 / FPS) * game_speed
+    player2_slow_until -= (60 / FPS) * game_speed
+    
     weather_timer += (60 / FPS) * game_speed
     storm_timer += (60 / FPS) * game_speed
     
