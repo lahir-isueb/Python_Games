@@ -3147,8 +3147,8 @@ def SETTINGS():
 
 
 
-        pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=6)
-        pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=6)
+        pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=0)
+        pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=0)
 
         
 
