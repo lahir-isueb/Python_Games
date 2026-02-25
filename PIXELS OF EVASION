@@ -5229,13 +5229,13 @@ while running:
                         player_lives -= enemy_damage
                         p1_regen_block_until = score + regen_delay
                         damage_flash_time = current_time
-                        player2_invincible_until = current_time + invincibility_duration
+                        invincible_until = current_time + invincibility_duration
                         if player_lives <= 0:
                             player_alive = False
                 hot_until = freeze_duration
                 slow_until = 0
                 player_burnt = True
-                enemy["dead"] = True
+                if current_time >= invincible_until: enemy["dead"] = True
             else:
                 if current_time >= invincible_until:
                     player_lives -= enemy_damage
@@ -5312,7 +5312,7 @@ while running:
                 player2_hot_until = freeze_duration
                 player2_slow_until = 0
                 player2_burnt = True
-                enemy["dead"] = True
+                if current_time >= player2_invincible_until: enemy["dead"] = True
             else:
                 if current_time >= player2_invincible_until:
                     player2_lives -= enemy_damage
