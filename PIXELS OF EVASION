@@ -184,7 +184,7 @@ speedy_hp = 5 # 13
 shotgun_hp = 4 # 14
 voodoo_hp = 5 # 15
 blind_hp = 9 # 16
-magma_hp = 7 # 17
+magma_hp = 4 # 17
 charger_hp = 3 # 18
 rapidshooter_hp = 1 # 19
 frostbite_hp = 4 # 20
@@ -261,7 +261,6 @@ trail_lifetime_ms = 3000 # this is the length of the trail
 trail_interval_ms = 450 # this is the distance between trail particles
 trail_size = 10
 
-
 # --- Projectiles ---
 projectiles = []
 projectile_damage = 1
@@ -288,6 +287,11 @@ bomb_projectile_amount = 8
 frostbite_projectile_amount = 32
 annihilator_projectile_amount = 32
 extra_sniper_damage = 1
+
+# --- Burn Particles ---
+burn_particles = []
+burn_timer = 0
+burn_timer2 = 0
 
 # --- Split Amount ---
 split_amount = 2
@@ -362,7 +366,7 @@ def reset_game_state():
     global player_x, player_y, player2_x, player2_y
     global player_lives, player2_lives
     global player_alive, player2_alive
-    global enemies, projectiles, trail_squares
+    global enemies, projectiles, trail_squares, burn_particles, burn_timer, burn_timer2
     global score, truescore, score_p1, score_p2
     global last_spawn_time, invincible_until, player2_invincible_until
     global spawn_enabled, p1_ready, p2_ready
@@ -388,6 +392,9 @@ def reset_game_state():
     enemies.clear()
     projectiles.clear()
     trail_squares.clear()
+    burn_particles.clear()
+    burn_timer = 0
+    burn_timer2 = 0
     current_target = 1
     score = 0
     truescore = 0
@@ -477,7 +484,7 @@ shotgun_hp_setting = 4
 shotgun_bullets_setting = 5
 voodoo_hp_setting = 5
 blind_hp_setting = 9
-magma_hp_setting = 7
+magma_hp_setting = 4
 charger_hp_setting = 3
 charger_sensitive_setting = 1
 rapidshooter_hp_setting = 1
@@ -5012,6 +5019,7 @@ while running:
                     if player_alive:
                         if abs(player_x - lx) < (player_size/2 + enemy_size / 2) and abs(player_y - ly) < enemy["laser_length"] / 2:
                             slow_until = freeze_duration
+                            hot_until = 0
                             player_speed = player_speed_base / 2
                             player_frozen = True
                             if current_time >= invincible_until + 100:
@@ -5024,6 +5032,7 @@ while running:
                     if players == 2 and player2_alive:
                         if abs(player2_x - lx) < (player_size/2 + enemy_size / 2) and abs(player2_y - ly) < enemy["laser_length"] / 2:
                             player2_slow_until = freeze_duration
+                            player2_hot_until = 0
                             player2_speed = player2_speed_base / 2
                             player2_frozen = True
                             if current_time >= player2_invincible_until + 100:
@@ -5038,6 +5047,7 @@ while running:
                     if player_alive:
                         if abs(player_y - ly) < (player_size/2 + enemy_size / 2) and abs(player_x - lx) < enemy["laser_length"] / 2:
                             slow_until = freeze_duration
+                            hot_until = 0
                             player_speed = player_speed_base / 2
                             player_frozen = True
                             if current_time >= invincible_until + 100:
@@ -5050,6 +5060,7 @@ while running:
                     if players == 2 and player2_alive:
                         if abs(player2_y - ly) < (player_size/2 + enemy_size / 2) and abs(player2_x - lx) < enemy["laser_length"] / 2:
                             player2_slow_until = freeze_duration
+                            player2_hot_until = 0
                             player2_speed = player2_speed_base / 2
                             player2_frozen = True
                             if current_time >= player2_invincible_until + 100:
@@ -5200,11 +5211,9 @@ while running:
                 continue
             elif enemy["type"] == 25:
                 slow_until = freeze_duration
+                hot_until = 0
                 player_speed = player_speed_base / 2
                 player_frozen = True
-            elif enemy["type"] == 17:
-                hot_until = freeze_duration
-                player_burnt = True
             elif enemy["type"] == 3:
                 player_lives = 0
                 player_alive = False
@@ -5214,6 +5223,19 @@ while running:
                     weather = random.randint(0, len(weathers)-1)
                     enemy["shrinking"] = True
                 continue
+            elif enemy["type"] == 17:
+                if slow_until < 0:
+                    if current_time >= invincible_until:
+                        player_lives -= enemy_damage
+                        p1_regen_block_until = score + regen_delay
+                        damage_flash_time = current_time
+                        player2_invincible_until = current_time + invincibility_duration
+                        if player_lives <= 0:
+                            player_alive = False
+                hot_until = freeze_duration
+                slow_until = 0
+                player_burnt = True
+                enemy["dead"] = True
             else:
                 if current_time >= invincible_until:
                     player_lives -= enemy_damage
@@ -5266,11 +5288,9 @@ while running:
                 continue
             elif enemy["type"] == 25:
                 player2_slow_until = freeze_duration
+                player2_hot_until = 0
                 player2_speed = player2_speed_base / 2
                 player2_frozen = True
-            elif enemy["type"] == 17:
-                player2_hot_until = freeze_duration
-                player2_burnt = True
             elif enemy["type"] == 3:
                 player2_lives = 0
                 player2_alive = False
@@ -5280,6 +5300,19 @@ while running:
                     weather = random.randint(0, len(weathers)-1)
                     enemy["shrinking"] = True
                 continue
+            elif enemy["type"] == 17:
+                if player2_slow_until < 0:
+                    if current_time >= player2_invincible_until:
+                        player2_lives -= enemy_damage
+                        p2_regen_block_until = score + regen_delay
+                        player2_damage_flash_time = current_time
+                        player2_invincible_until = current_time + invincibility_duration
+                        if player2_lives <= 0:
+                            player2_alive = False
+                player2_hot_until = freeze_duration
+                player2_slow_until = 0
+                player2_burnt = True
+                enemy["dead"] = True
             else:
                 if current_time >= player2_invincible_until:
                     player2_lives -= enemy_damage
@@ -5350,6 +5383,7 @@ while running:
                                                     p["x"] - projectile_size/2, p["y"] - projectile_size/2, projectile_size):
             if p.get("ability") == "freeze":
                 slow_until = freeze_duration  # 10 seconds
+                hot_until = 0
                 player_speed = player_speed_base / 2
                 player_frozen = True
             elif p.get("ability") == "snipe":
@@ -5382,6 +5416,7 @@ while running:
                                                     p["x"] - projectile_size/2, p["y"] - projectile_size/2, projectile_size):
                 if p.get("ability") == "freeze":
                     player2_slow_until = freeze_duration
+                    player2_hot_until = 0
                     player2_speed = player2_speed_base / 2
                     player2_frozen = True
                 elif p.get("ability") == "snipe":
@@ -5419,36 +5454,39 @@ while running:
     new_burns = []
     for b in burn_particles:
         b["lifetime"] -= (60 / FPS) * game_speed
+        b["harmless timer"] -= (60 / FPS) * game_speed
         if b["lifetime"] <= 0:
             continue
         if player_alive and centered_rect_collision(player_x, player_y, player_size,
                                                     b["x"], b["y"], trail_size):
-            if current_time >= invincible_until:
-                player_lives -= projectile_damage
-                p1_regen_block_until = score + regen_delay
-                damage_flash_time = current_time
-                invincible_until = current_time + invincibility_duration
-                if player_lives <= 0:
-                    player_alive = False
-                    continue
-            b["health"] -= 1
-            if b["health"] > 0:
-                new_burns.append(sq)
-            continue
+            if b["harmless timer"] <= 0:
+                if current_time >= invincible_until:
+                    player_lives -= projectile_damage
+                    p1_regen_block_until = score + regen_delay
+                    damage_flash_time = current_time
+                    invincible_until = current_time + invincibility_duration
+                    if player_lives <= 0:
+                        player_alive = False
+                        continue
+                b["health"] -= 1
+                if b["health"] > 0:
+                    new_burns.append(sq)
+                continue
         if players == 2 and player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
                                                               b["x"], b["y"], trail_size):
-            if current_time >= player2_invincible_until:
-                player2_lives -= projectile_damage
-                p2_regen_block_until = score + regen_delay
-                player2_damage_flash_time = current_time
-                player2_invincible_until = current_time + invincibility_duration
-                if player2_lives <= 0:
-                    player2_alive = False
-                    continue
-            b["health"] -= 1
-            if b["health"] > 0:
-                new_burns.append(sq)
-            continue
+            if b["harmless timer"] <= 0:
+                if current_time >= player2_invincible_until and b["harmless timer"] <= 0:
+                    player2_lives -= projectile_damage
+                    p2_regen_block_until = score + regen_delay
+                    player2_damage_flash_time = current_time
+                    player2_invincible_until = current_time + invincibility_duration
+                    if player2_lives <= 0:
+                        player2_alive = False
+                        continue
+                b["health"] -= 1
+                if b["health"] > 0:
+                    new_burns.append(sq)
+                continue
         new_burns.append(b)
     burn_particles = new_burns
 
@@ -5522,31 +5560,36 @@ while running:
     impostor_frost_overlay = pygame.Surface((enemy_size * 1.2, enemy_size * 1.2), pygame.SRCALPHA)
     impostor_frost_overlay.fill((175, 255, 255, 180))
 
-    burn_color += game_speed/2
-    if burn_color > 60: burn_color = 0
+    burn_color += game_speed
+    if burn_color > 100: burn_color = 0
 
     burn_overlay = pygame.Surface((player_size, player_size), pygame.SRCALPHA)
     burn_overlay.fill((255, burn_color, 0, 150))
 
-    if hot_until > 0:
+    burn_timer += (60 / FPS) * game_speed
+    burn_timer2 += (60 / FPS) * game_speed
+    
+    if hot_until > 0 and burn_timer > 10 and player_lives > 0:
         burn_particles.append({
                 "x": int(player_x),
                 "y": int(player_y),
-                "harmless timer": player_size * (FPS/60)
+                "harmless timer": player_size * (FPS/60) * 0.175,
                 "lifetime": trail_lifetime_ms,
                 "health": 1,
                 "color": LAVA
             })
+        burn_timer = 0
 
-    if player2_hot_until > 0:
+    if player2_hot_until > 0 and burn_timer2 > 10 and players == 2 and player2_lives > 0:
         burn_particles.append({
                 "x": int(player2_x),
                 "y": int(player2_y),
-                "harmless timer": player_size * (FPS/60)
+                "harmless timer": player_size * (FPS/60) * 0.175,
                 "lifetime": trail_lifetime_ms,
                 "health": 1,
                 "color": LAVA
             })
+        burn_timer2 = 0
 
     # --- spawner core ---
     pygame.draw.rect(screen, BLACK, (*spawner_pos, spawner_size, spawner_size))
