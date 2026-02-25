@@ -130,9 +130,14 @@ player_alive = True
 player2_alive = True
 player_frozen = False
 player2_frozen = False
+player_burnt = False
+player2_burnt = False
 slow_until = 0
-player_speed_base = player_speed
 player2_slow_until = 0
+hot_until = 0
+player2_hot_until = 0
+burn_color = 0
+player_speed_base = player_speed
 player2_speed_base = player_speed
 player_speed = player_speed_base
 player2_speed = player2_speed_base
@@ -179,7 +184,7 @@ speedy_hp = 5 # 13
 shotgun_hp = 4 # 14
 voodoo_hp = 5 # 15
 blind_hp = 9 # 16
-motion_hp = 7 # 17
+magma_hp = 7 # 17
 charger_hp = 3 # 18
 rapidshooter_hp = 1 # 19
 frostbite_hp = 4 # 20
@@ -201,7 +206,7 @@ annihilator_hp = 3 # 35
 frostbeam_hp = 1 # 36
 forecast_hp = 3 # 37
 assassin_hp = 3 # 38
-unstable_hp = 15 # 39
+motion_hp = 15 # 39
 invisibility_hp = 4 # 40
 whirly_hp = 5 # 41
 
@@ -364,6 +369,7 @@ def reset_game_state():
     global damage_flash_time, player2_damage_flash_time
     global heal_flash_time, player2_heal_flash_time
     global player_frozen, player2_frozen, slow_until, player2_slow_until
+    global player_burnt, player2_burnt, hot_until, player2_hot_until, burn_color
     global player_speed, player2_speed
     global everyone_died_at, death_explosion, p2_death_explosion, current_target
     global FPS
@@ -392,10 +398,15 @@ def reset_game_state():
     player2_damage_flash_time = 0
     heal_flash_time = 0
     player2_heal_flash_time = 0
+    burn_color = 0
     player_frozen = False
     player2_frozen = False
+    player_burnt = False
+    player2_burnt = False
     slow_until = 0
     player2_slow_until = 0
+    hot_until = 0
+    player2_hot_until = 0
     player_speed = player_speed_base
     player2_speed = player2_speed_base
     invincible_until = 0
@@ -438,7 +449,7 @@ unharden_death_setting = 0
 target_setting = 1
 insta_spawn_setting = 0
 teleport_angle_change_setting = 1
-ambush_per_score_setting = 500
+ambush_per_score_setting = 100
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -466,7 +477,7 @@ shotgun_hp_setting = 4
 shotgun_bullets_setting = 5
 voodoo_hp_setting = 5
 blind_hp_setting = 9
-motion_hp_setting = 7
+magma_hp_setting = 7
 charger_hp_setting = 3
 charger_sensitive_setting = 1
 rapidshooter_hp_setting = 1
@@ -496,7 +507,7 @@ annihilator_projectile_amount_setting = 32
 frostbeam_hp_setting = 1
 forecast_hp_setting = 3
 assassin_hp_setting = 3
-unstable_hp_setting = 15
+motion_hp_setting = 15
 invisibility_hp_setting = 4
 whirly_hp_setting = 5
 
@@ -560,7 +571,7 @@ def SETTINGS():
     global shotgun_bullets_setting
     global voodoo_hp_setting
     global blind_hp_setting
-    global motion_hp_setting
+    global magma_hp_setting
     global charger_hp_setting, charger_sensitive_setting
     global rapidshooter_hp_setting
     global frostbite_hp_setting
@@ -589,7 +600,7 @@ def SETTINGS():
     global frostbeam_hp_setting
     global forecast_hp_setting
     global assassin_hp_setting
-    global unstable_hp_setting
+    global motion_hp_setting
     global invisibility_hp_setting
     global whirly_hp_setting
     global modifiers
@@ -636,7 +647,7 @@ def SETTINGS():
         global shotgun_bullets_setting
         global voodoo_hp_setting
         global blind_hp_setting
-        global motion_hp_setting
+        global magma_hp_setting
         global charger_hp_setting, charger_sensitive_setting
         global rapidshooter_hp_setting
         global frostbite_hp_setting
@@ -665,7 +676,7 @@ def SETTINGS():
         global frostbeam_hp_setting
         global forecast_hp_setting
         global assassin_hp_setting
-        global unstable_hp_setting
+        global motion_hp_setting
         global invisibility_hp_setting
         global whirly_hp_setting
         global modifiers
@@ -751,7 +762,7 @@ def SETTINGS():
                     case 74: shotgun_bullets_setting = int(chara)
                     case 75: voodoo_hp_setting = int(chara)
                     case 76: blind_hp_setting = int(chara)
-                    case 77: motion_hp_setting = int(chara)
+                    case 77: magma_hp_setting = int(chara)
                     case 78: charger_hp_setting = int(chara)
                     case 79: rapidshooter_hp_setting = int(chara)
                     case 80: frostbite_hp_setting = int(chara)
@@ -789,7 +800,7 @@ def SETTINGS():
                     case 112: enemy_locks[36] = int(chara)
                     case 113: assassin_hp_setting = int(chara)
                     case 114: enemy_locks[37] = int(chara)
-                    case 115: unstable_hp_setting = int(chara)
+                    case 115: motion_hp_setting = int(chara)
                     case 116: enemy_locks[38] = int(chara)
                     case 117: modifiers[2] = int(chara)
                     case 118: invisibility_hp_setting = int(chara)
@@ -823,7 +834,7 @@ def SETTINGS():
              
              "basic", "speedy", "sticky", "sticky sensitive",
              "charger", "charger sensitive", "gloomy", "flow",
-             "motion", "cold", "accelerator", "teleporter",
+             "magma", "cold", "accelerator", "teleporter",
              "hardened", "homing", "splitter", "splitter splits",
              "invisibility",
              "trail", "shooter", "burstshooter", "burst", "rapidshooter",
@@ -834,7 +845,7 @@ def SETTINGS():
              "addictive", "addictive strength", "addictive radius",
              "voodoo", "impostor", "assassin",
              
-             "whirly", "stream", "sensitive", "unstable", "blind",
+             "whirly", "stream", "sensitive", "motion", "blind",
              "savage", "tracer", "stickyshooter", "frostbeam",
              "phantom", "annihilator", "annihilator bullets",
 
@@ -937,7 +948,7 @@ def SETTINGS():
                                  split_amount_setting, bomb_hp_setting, bomb_projectile_amount_setting,
                                  shooter_hp_setting, sniper_hp_setting, extra_sniper_damage_setting,
                                  speedy_hp_setting, shotgun_hp_setting, shotgun_bullets_setting,
-                                 voodoo_hp_setting, blind_hp_setting, motion_hp_setting, charger_hp_setting,
+                                 voodoo_hp_setting, blind_hp_setting, magma_hp_setting, charger_hp_setting,
                                  rapidshooter_hp_setting, frostbite_hp_setting,
                                  frostbite_projectile_amount_setting, addictive_hp_setting,
                                  addictive_pull_strength_setting, addictive_pull_radius_setting,
@@ -951,7 +962,7 @@ def SETTINGS():
                                  player_health_setting, unharden_death_setting, target_setting,
                                  modifiers[1], sticky_sensitive_setting, charger_sensitive_setting,
                                  forecast_hp_setting, enemy_locks[36], assassin_hp_setting, enemy_locks[37],
-                                 unstable_hp_setting, enemy_locks[38], modifiers[2], invisibility_hp_setting,
+                                 motion_hp_setting, enemy_locks[38], modifiers[2], invisibility_hp_setting,
                                  enemy_locks[39], insta_spawn_setting, ambush_per_score_setting,
                                  modifiers[3], whirly_hp_setting, enemy_locks[40], teleport_angle_change_setting]
 
@@ -1043,8 +1054,8 @@ def SETTINGS():
         screen.blit(minus_txt, minus_txt.get_rect(center=insta_spawn_minus_button.center))
         if insta_spawn_plus_button.collidepoint(mouse_pos) and mouse_click:
             insta_spawn_setting += 1
-            if insta_spawn_setting > 500:
-                insta_spawn_setting = 500
+            if insta_spawn_setting > 300:
+                insta_spawn_setting = 300
             pygame.time.delay(50)
         if insta_spawn_minus_button.collidepoint(mouse_pos) and mouse_click:
             insta_spawn_setting -= 1
@@ -1071,8 +1082,8 @@ def SETTINGS():
             if ambush_per_score_setting == 6969:
                 ambush_per_score_setting = 1000
             else: ambush_per_score_setting -= 10
-            if ambush_per_score_setting < 100:
-                ambush_per_score_setting = 100
+            if ambush_per_score_setting < 50:
+                ambush_per_score_setting = 50
             pygame.time.delay(50)
 
 
@@ -1674,7 +1685,7 @@ def SETTINGS():
 
 
 
-        trail_hp_label = font.render("Trail Enemy - HP: " + str(trail_hp_setting), True, LAVA)
+        trail_hp_label = font.render("Trail Enemy - HP: " + str(trail_hp_setting), True, TANGERINE)
         screen.blit(trail_hp_label, (50, 180+SLIST.index("trail")*60 + scroll_y))
         trail_hp_minus_button = pygame.Rect(500, 180+SLIST.index("trail")*60 - button_offset + scroll_y, 50, 50)
         trail_hp_plus_button = pygame.Rect(560, 180+SLIST.index("trail")*60 - button_offset + scroll_y, 50, 50)
@@ -1694,7 +1705,7 @@ def SETTINGS():
             pygame.time.delay(50)
         trail_locks_text = font.render(enemy_locking_labels[enemy_locks[6]], True, BLACK)
         trail_locks_button = pygame.Rect(650, 180+SLIST.index("trail")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, LAVA, trail_locks_button, border_radius=0)
+        pygame.draw.rect(screen, TANGERINE, trail_locks_button, border_radius=0)
         screen.blit(trail_locks_text, trail_locks_text.get_rect(center=trail_locks_button.center))
         if trail_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[6] > (len(enemy_locking_labels) - 2): enemy_locks[6] = 0
@@ -2048,29 +2059,29 @@ def SETTINGS():
 
 
 
-        motion_hp_label = font.render("Motion Enemy - HP: " + str(motion_hp_setting), True, ORANGE)
-        screen.blit(motion_hp_label, (50, 180+SLIST.index("motion")*60 + scroll_y))
-        motion_hp_minus_button = pygame.Rect(500, 180+SLIST.index("motion")*60 - button_offset + scroll_y, 50, 50)
-        motion_hp_plus_button = pygame.Rect(560, 180+SLIST.index("motion")*60 - button_offset + scroll_y, 50, 50)
-        pygame.draw.rect(screen, GREEN, motion_hp_plus_button, border_radius=0)
-        screen.blit(plus_txt, plus_txt.get_rect(center=motion_hp_plus_button.center))
-        pygame.draw.rect(screen, RED, motion_hp_minus_button, border_radius=0)
-        screen.blit(minus_txt, minus_txt.get_rect(center=motion_hp_minus_button.center))
-        if motion_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
-            motion_hp_setting += 1
-            if motion_hp_setting > 99:
-                motion_hp_setting = 99
+        magma_hp_label = font.render("Magma Enemy - HP: " + str(magma_hp_setting), True, LAVA)
+        screen.blit(magma_hp_label, (50, 180+SLIST.index("magma")*60 + scroll_y))
+        magma_hp_minus_button = pygame.Rect(500, 180+SLIST.index("magma")*60 - button_offset + scroll_y, 50, 50)
+        magma_hp_plus_button = pygame.Rect(560, 180+SLIST.index("magma")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, magma_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=magma_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, magma_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=magma_hp_minus_button.center))
+        if magma_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            magma_hp_setting += 1
+            if magma_hp_setting > 99:
+                magma_hp_setting = 99
             pygame.time.delay(50)
-        if motion_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
-            motion_hp_setting -= 1
-            if motion_hp_setting < 1:
-                motion_hp_setting = 1
+        if magma_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            magma_hp_setting -= 1
+            if magma_hp_setting < 1:
+                magma_hp_setting = 1
             pygame.time.delay(50)
-        motion_locks_text = font.render(enemy_locking_labels[enemy_locks[16]], True, BLACK)
-        motion_locks_button = pygame.Rect(650, 180+SLIST.index("motion")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, ORANGE, motion_locks_button, border_radius=0)
-        screen.blit(motion_locks_text, motion_locks_text.get_rect(center=motion_locks_button.center))
-        if motion_locks_button.collidepoint(mouse_pos) and mouse_click:
+        magma_locks_text = font.render(enemy_locking_labels[enemy_locks[16]], True, BLACK)
+        magma_locks_button = pygame.Rect(650, 180+SLIST.index("magma")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, LAVA, magma_locks_button, border_radius=0)
+        screen.blit(magma_locks_text, magma_locks_text.get_rect(center=magma_locks_button.center))
+        if magma_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[16] > (len(enemy_locking_labels) - 2): enemy_locks[16] = 0
             else: enemy_locks[16] = enemy_locks[16] + 1
             pygame.time.delay(200)
@@ -2902,29 +2913,29 @@ def SETTINGS():
 
 
 
-        unstable_hp_label = font.render("Unstable Enemy - HP: " + str(unstable_hp_setting), True, TANGERINE)
-        screen.blit(unstable_hp_label, (50, 180+SLIST.index("unstable")*60 + scroll_y))
-        unstable_hp_minus_button = pygame.Rect(500, 180+SLIST.index("unstable")*60 - button_offset + scroll_y, 50, 50)
-        unstable_hp_plus_button = pygame.Rect(560, 180+SLIST.index("unstable")*60 - button_offset + scroll_y, 50, 50)
-        pygame.draw.rect(screen, GREEN, unstable_hp_plus_button, border_radius=0)
-        screen.blit(plus_txt, plus_txt.get_rect(center=unstable_hp_plus_button.center))
-        pygame.draw.rect(screen, RED, unstable_hp_minus_button, border_radius=0)
-        screen.blit(minus_txt, minus_txt.get_rect(center=unstable_hp_minus_button.center))
-        if unstable_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
-            unstable_hp_setting += 1
-            if unstable_hp_setting > 99:
-                unstable_hp_setting = 99
+        motion_hp_label = font.render("Motion Enemy - HP: " + str(motion_hp_setting), True, ORANGE)
+        screen.blit(motion_hp_label, (50, 180+SLIST.index("motion")*60 + scroll_y))
+        motion_hp_minus_button = pygame.Rect(500, 180+SLIST.index("motion")*60 - button_offset + scroll_y, 50, 50)
+        motion_hp_plus_button = pygame.Rect(560, 180+SLIST.index("motion")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, motion_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=motion_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, motion_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=motion_hp_minus_button.center))
+        if motion_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            motion_hp_setting += 1
+            if motion_hp_setting > 99:
+                motion_hp_setting = 99
             pygame.time.delay(50)
-        if unstable_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
-            unstable_hp_setting -= 1
-            if unstable_hp_setting < 1:
-                unstable_hp_setting = 1
+        if motion_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            motion_hp_setting -= 1
+            if motion_hp_setting < 1:
+                motion_hp_setting = 1
             pygame.time.delay(50)
-        unstable_locks_text = font.render(enemy_locking_labels[enemy_locks[38]], True, BLACK)
-        unstable_locks_button = pygame.Rect(650, 180+SLIST.index("unstable")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, TANGERINE, unstable_locks_button, border_radius=0)
-        screen.blit(unstable_locks_text, unstable_locks_text.get_rect(center=unstable_locks_button.center))
-        if unstable_locks_button.collidepoint(mouse_pos) and mouse_click:
+        motion_locks_text = font.render(enemy_locking_labels[enemy_locks[38]], True, BLACK)
+        motion_locks_button = pygame.Rect(650, 180+SLIST.index("motion")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, ORANGE, motion_locks_button, border_radius=0)
+        screen.blit(motion_locks_text, motion_locks_text.get_rect(center=motion_locks_button.center))
+        if motion_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[38] > (len(enemy_locking_labels) - 2): enemy_locks[38] = 0
             else: enemy_locks[38] = enemy_locks[38] + 1
             pygame.time.delay(200)
@@ -3155,7 +3166,7 @@ def apply_settings():
     global shotgun_bullets
     global voodoo_hp
     global blind_hp
-    global motion_hp
+    global magma_hp
     global charger_hp, charger_sensitive
     global rapidshooter_hp
     global frostbite_hp, frostbite_projectile_amount
@@ -3177,7 +3188,7 @@ def apply_settings():
     global frostbeam_hp
     global forecast_hp
     global assassin_hp
-    global unstable_hp
+    global motion_hp
     global invisibility_hp
     global whirly_hp
     
@@ -3252,7 +3263,7 @@ def apply_settings():
     shotgun_bullets = shotgun_bullets_setting
     voodoo_hp = voodoo_hp_setting
     blind_hp = blind_hp_setting
-    motion_hp = motion_hp_setting
+    magma_hp = magma_hp_setting
     charger_hp = charger_hp_setting
     charger_sensitive = charger_sensitive_setting
     rapidshooter_hp = rapidshooter_hp_setting
@@ -3283,7 +3294,7 @@ def apply_settings():
     frostbeam_hp = frostbeam_hp_setting
     forecast_hp = forecast_hp_setting
     assassin_hp = assassin_hp_setting
-    unstable_hp = unstable_hp_setting
+    motion_hp = motion_hp_setting
     invisibility_hp = invisibility_hp_setting
     whirly_hp = whirly_hp_setting
     colorblind = modifiers[0]
@@ -3653,6 +3664,11 @@ while running:
     if players == 2 and player2_slow_until < 0:
         player2_speed = player2_speed_base
         player2_frozen = False
+        
+    if hot_until < 0:
+        player_burnt = False
+    if players == 2 and player2_hot_until < 0:
+        player2_burnt = False
 
     if truescore >= ambush_score and ambush_per_score != 6969:
         ambushes = insta_spawn
@@ -3735,7 +3751,7 @@ while running:
         elif enemy_type == 16:
             dx *= 1; dy *= 1; health = blind_hp
         elif enemy_type == 17:
-            dx *= 1; dy *= 1; health = motion_hp
+            dx *= 1; dy *= 1; health = magma_hp
         elif enemy_type == 18:
             dx *= 2; dy *= 2; health = charger_hp
         elif enemy_type == 19:
@@ -3785,7 +3801,7 @@ while running:
         elif enemy_type == 38:
             health = assassin_hp
         elif enemy_type == 39:
-            dx *= 1; dy *= 1; health = unstable_hp
+            dx *= 1; dy *= 1; health = motion_hp
         elif enemy_type == 40:
             dx *= 1; dy *= 1; health = invisibility_hp
         elif enemy_type == 41:
@@ -3976,7 +3992,7 @@ while running:
                     "y": int(enemy["y"]),
                     "lifetime": trail_lifetime_ms,
                     "health": 1,
-                    "color": colorblind_list[colorblind] if colorblind != 0 else LAVA
+                    "color": colorblind_list[colorblind] if colorblind != 0 else TANGERINE
                 })
                 enemy["trail/shot_charge"] = 0
             if enemy["health"] <= 0: enemy_died = True
@@ -4275,7 +4291,7 @@ while running:
             if bounced:
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= motion_hp or enemy["health"] <= 0:
+            if enemy["bounces"] >= magma_hp or enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 18: #Charger
             enemy["stop_start_time"] += (60 / FPS) * game_speed
@@ -5099,7 +5115,7 @@ while running:
             if bounced:
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= unstable_hp or enemy["health"] < 1:
+            if enemy["bounces"] >= motion_hp or enemy["health"] < 1:
                 enemy_died = True
         if enemy["type"] == 40:
             enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
@@ -5144,7 +5160,7 @@ while running:
 
         if player_alive and centered_rect_collision(player_x, player_y, player_size,
                                             enemy["x"], enemy["y"], enemy_size):
-            if enemy["type"] == 17 or enemy["type"] == 39:
+            if enemy["type"] == 39:
                 if not player_moving:  # Only damages if player is still
                     if current_time >= invincible_until:
                         player_lives -= enemy_damage
@@ -5186,6 +5202,9 @@ while running:
                 slow_until = freeze_duration
                 player_speed = player_speed_base / 2
                 player_frozen = True
+            elif enemy["type"] == 17:
+                hot_until = freeze_duration
+                player_burnt = True
             elif enemy["type"] == 3:
                 player_lives = 0
                 player_alive = False
@@ -5208,7 +5227,7 @@ while running:
                                 
         if players == 2 and player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
                                                                       enemy["x"], enemy["y"], enemy_size):
-            if enemy["type"] == 17 or enemy["type"] == 39:
+            if enemy["type"] == 39:
                 if p2_dx == 0 and p2_dy == 0:  # not moving
                     if current_time >= player2_invincible_until:
                         player2_lives -= enemy_damage
@@ -5249,6 +5268,9 @@ while running:
                 player2_slow_until = freeze_duration
                 player2_speed = player2_speed_base / 2
                 player2_frozen = True
+            elif enemy["type"] == 17:
+                player2_hot_until = freeze_duration
+                player2_burnt = True
             elif enemy["type"] == 3:
                 player2_lives = 0
                 player2_alive = False
@@ -5392,6 +5414,46 @@ while running:
 
     projectiles = new_projectiles
 
+    
+    # --- Burning particles update ---
+    new_burns = []
+    for b in burn_particles:
+        b["lifetime"] -= (60 / FPS) * game_speed
+        if b["lifetime"] <= 0:
+            continue
+        if player_alive and centered_rect_collision(player_x, player_y, player_size,
+                                                    b["x"], b["y"], trail_size):
+            if current_time >= invincible_until:
+                player_lives -= projectile_damage
+                p1_regen_block_until = score + regen_delay
+                damage_flash_time = current_time
+                invincible_until = current_time + invincibility_duration
+                if player_lives <= 0:
+                    player_alive = False
+                    continue
+            b["health"] -= 1
+            if b["health"] > 0:
+                new_burns.append(sq)
+            continue
+        if players == 2 and player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
+                                                              b["x"], b["y"], trail_size):
+            if current_time >= player2_invincible_until:
+                player2_lives -= projectile_damage
+                p2_regen_block_until = score + regen_delay
+                player2_damage_flash_time = current_time
+                player2_invincible_until = current_time + invincibility_duration
+                if player2_lives <= 0:
+                    player2_alive = False
+                    continue
+            b["health"] -= 1
+            if b["health"] > 0:
+                new_burns.append(sq)
+            continue
+        new_burns.append(b)
+    burn_particles = new_burns
+
+    
+
     enemies[:] = [e for e in enemies if not e.get("dead", False)]
 
 
@@ -5460,6 +5522,31 @@ while running:
     impostor_frost_overlay = pygame.Surface((enemy_size * 1.2, enemy_size * 1.2), pygame.SRCALPHA)
     impostor_frost_overlay.fill((175, 255, 255, 180))
 
+    burn_color += game_speed/2
+    if burn_color > 60: burn_color = 0
+
+    burn_overlay = pygame.Surface((player_size, player_size), pygame.SRCALPHA)
+    burn_overlay.fill((255, burn_color, 0, 150))
+
+    if hot_until > 0:
+        burn_particles.append({
+                "x": int(player_x),
+                "y": int(player_y),
+                "harmless timer": player_size * (FPS/60)
+                "lifetime": trail_lifetime_ms,
+                "health": 1,
+                "color": LAVA
+            })
+
+    if player2_hot_until > 0:
+        burn_particles.append({
+                "x": int(player2_x),
+                "y": int(player2_y),
+                "harmless timer": player_size * (FPS/60)
+                "lifetime": trail_lifetime_ms,
+                "health": 1,
+                "color": LAVA
+            })
 
     # --- spawner core ---
     pygame.draw.rect(screen, BLACK, (*spawner_pos, spawner_size, spawner_size))
@@ -5467,7 +5554,7 @@ while running:
 
     # draw trail squares
     for sq in trail_squares:
-        color = sq.get("color", LAVA)
+        color = sq.get("color", TANGERINE)
         pygame.draw.rect(screen, color, (sq["x"] - trail_size // 2, sq["y"] - trail_size // 2, trail_size, trail_size))
 
     # draw projectiles
@@ -5476,6 +5563,10 @@ while running:
         draw_x = int(p["x"] - projectile_size / 2)
         draw_y = int(p["y"] - projectile_size / 2)
         pygame.draw.rect(screen, color, (draw_x - projectile_size//2, draw_y - projectile_size//2, projectile_size, projectile_size))
+
+    # draw burn particles
+    for b in burn_particles:
+        pygame.draw.rect(screen, LAVA, (b["x"] - trail_size // 2, b["y"] - trail_size // 2, trail_size, trail_size))
 
     # draw enemies
     for enemy in enemies:
@@ -5488,7 +5579,7 @@ while running:
             elif enemy["type"] == 4: color = AZURE
             elif enemy["type"] == 5: color = GREEN
             elif enemy["type"] == 6: color = VIOLET
-            elif enemy["type"] == 7: color = LAVA
+            elif enemy["type"] == 7: color = TANGERINE
             elif enemy["type"] == 8:
                 if enemy["target"] == 1: color = player_skins[p1_skin_color][0]
                 elif enemy["target"] == 2: color = player_skins[p2_skin_color][0]
@@ -5500,7 +5591,7 @@ while running:
             elif enemy["type"] == 13: color = SKY
             elif enemy["type"] == 14: color = BRICK
             elif enemy["type"] == 16: color = BLUE
-            elif enemy["type"] == 17: color = ORANGE
+            elif enemy["type"] == 17: color = LAVA
             elif enemy["type"] == 18: color = YELLOW
             elif enemy["type"] == 19: color = GOLD
             elif enemy["type"] == 20: color = CYAN
@@ -5522,7 +5613,7 @@ while running:
             elif enemy["type"] == 36: color = ICE
             elif enemy["type"] == 37: color = CLOUD
             elif enemy["type"] == 38: color = SHADOW
-            elif enemy["type"] == 39: color = TANGERINE
+            elif enemy["type"] == 39: color = ORANGE
             elif enemy["type"] == 40: color = FOREST
             elif enemy["type"] == 41: color = CREAM
 
@@ -5658,6 +5749,19 @@ while running:
              player2_y - frost_overlay.get_height() // 2)
         )
 
+    if player_burnt and player_alive:
+        screen.blit(
+            burn_overlay,
+            (player_x - burn_overlay.get_width() // 2,
+             player_y - burn_overlay.get_height() // 2)
+        )
+    if player2_burnt and players == 2 and player2_alive:
+        screen.blit(
+            burn_overlay,
+            (player2_x - burn_overlay.get_width() // 2,
+             player2_y - burn_overlay.get_height() // 2)
+        )
+
     # draw HUD
     if players == 1:
         p1_text = font.render(f"Score: {score_p1}", True, player_skins[p1_skin_color][0])
@@ -5716,6 +5820,8 @@ while running:
 
     slow_until -= (60 / FPS) * game_speed
     player2_slow_until -= (60 / FPS) * game_speed
+    hot_until -= (60 / FPS) * game_speed
+    player2_hot_until -= (60 / FPS) * game_speed
     
     weather_timer += (60 / FPS) * game_speed
     storm_timer += (60 / FPS) * game_speed
