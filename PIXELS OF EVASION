@@ -142,6 +142,7 @@ player2_speed_base = player_speed
 player_speed = player_speed_base
 player2_speed = player2_speed_base
 freeze_duration = 10000
+burn_duration = 10000
 
 # --- Enemy ---
 enemy_size = 50 # ORIGINAL VALUE 50
@@ -209,6 +210,8 @@ assassin_hp = 3 # 38
 motion_hp = 15 # 39
 invisibility_hp = 4 # 40
 whirly_hp = 5 # 41
+volcanic_hp = 2 # 42
+pyrobeam_hp = 1 # 43
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -292,6 +295,7 @@ extra_sniper_damage = 1
 burn_particles = []
 burn_timer = 0
 burn_timer2 = 0
+burn_particle_lifetime = 3000
 
 # --- Split Amount ---
 split_amount = 2
@@ -444,6 +448,7 @@ player_health_setting = 3
 trail_duration_setting = 200
 trail_distance_setting = 25
 freeze_duration_setting = 500
+burn_duration_setting = 500
 invincibility_duration_setting = 1000
 chaser_turn_amount_setting = 5
 enemy_stick_setting = 100
@@ -457,6 +462,7 @@ target_setting = 1
 insta_spawn_setting = 0
 teleport_angle_change_setting = 1
 ambush_per_score_setting = 100
+burn_particle_lifetime_setting = 100
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -543,6 +549,7 @@ def SETTINGS():
     global trail_duration_setting
     global trail_distance_setting
     global freeze_duration_setting
+    global burn_duration_setting
     global invincibility_duration_setting
     global chaser_turn_amount_setting
     global enemy_stick_setting
@@ -556,6 +563,7 @@ def SETTINGS():
     global insta_spawn_setting
     global ambush_per_score_setting
     global teleport_angle_change_setting
+    global burn_particle_lifetime_setting
     global enemy_locks
     
     global basic_hp_setting
@@ -619,6 +627,7 @@ def SETTINGS():
         global trail_duration_setting
         global trail_distance_setting
         global freeze_duration_setting
+        global burn_duration_setting
         global invincibility_duration_setting
         global chaser_turn_amount_setting
         global enemy_stick_setting
@@ -632,6 +641,7 @@ def SETTINGS():
         global insta_spawn_setting
         global ambush_per_score_setting
         global teleport_angle_change_setting
+        global burn_particle_lifetime_setting
         global enemy_locks
         
         global basic_hp_setting
@@ -818,6 +828,8 @@ def SETTINGS():
                     case 123: whirly_hp_setting = int(chara)
                     case 124: enemy_locks[40] = int(chara)
                     case 125: teleport_angle_change_setting = int(chara)
+                    case 126: burn_duration_setting = int(chara)
+                    case 127: burn_particle_lifetime_setting = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -836,12 +848,12 @@ def SETTINGS():
              "wallstick", "teleanglechange", "unhardening rate",
              "unharden death", "chaser turnspeed", 
              "laser damage", "laser duration",
-             "freeze status",
+             "freeze status", "burn status", "burn duration",
              "set locks", "set locks 2",
              
              "basic", "speedy", "sticky", "sticky sensitive",
              "charger", "charger sensitive", "gloomy", "flow",
-             "magma", "cold", "accelerator", "teleporter",
+             "cold", "magma", "accelerator", "teleporter",
              "hardened", "homing", "splitter", "splitter splits",
              "invisibility",
              "trail", "shooter", "burstshooter", "burst", "rapidshooter",
@@ -971,7 +983,8 @@ def SETTINGS():
                                  forecast_hp_setting, enemy_locks[36], assassin_hp_setting, enemy_locks[37],
                                  motion_hp_setting, enemy_locks[38], modifiers[2], invisibility_hp_setting,
                                  enemy_locks[39], insta_spawn_setting, ambush_per_score_setting,
-                                 modifiers[3], whirly_hp_setting, enemy_locks[40], teleport_angle_change_setting]
+                                 modifiers[3], whirly_hp_setting, enemy_locks[40], teleport_angle_change_setting,
+                                 burn_duration_setting, burn_particle_lifetime_setting]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -1051,7 +1064,7 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
-        insta_spawn_label = font.render("Enemies Ambushing: " + str(insta_spawn_setting), True, LAVA)
+        insta_spawn_label = font.render("Enemies Ambushing: " + str(insta_spawn_setting), True, OLIVE)
         screen.blit(insta_spawn_label, (50, 180+SLIST.index("instaspawn")*60 + scroll_y))
         insta_spawn_minus_button = pygame.Rect(500, 180+SLIST.index("instaspawn")*60 - button_offset + scroll_y, 50, 50)
         insta_spawn_plus_button = pygame.Rect(560, 180+SLIST.index("instaspawn")*60 - button_offset + scroll_y, 50, 50)
@@ -1071,8 +1084,8 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
-        if ambush_per_score_setting == 6969: ambush_per_score_label = font.render("Only Ambush At Beginning", True, LAVA)
-        else: ambush_per_score_label = font.render("Ambush Per Score: " + str(ambush_per_score_setting), True, LAVA)
+        if ambush_per_score_setting == 6969: ambush_per_score_label = font.render("Only Ambush At Beginning", True, OLIVE)
+        else: ambush_per_score_label = font.render("Ambush Per Score: " + str(ambush_per_score_setting), True, OLIVE)
         screen.blit(ambush_per_score_label, (50, 180+SLIST.index("instaspawn score")*60 + scroll_y))
         ambush_per_score_minus_button = pygame.Rect(500, 180+SLIST.index("instaspawn score")*60 - button_offset + scroll_y, 50, 50)
         ambush_per_score_plus_button = pygame.Rect(560, 180+SLIST.index("instaspawn score")*60 - button_offset + scroll_y, 50, 50)
@@ -1177,6 +1190,26 @@ def SETTINGS():
             freeze_duration_setting -= 50
             if freeze_duration_setting < 0:
                 freeze_duration_setting = 0
+            pygame.time.delay(50)
+
+
+        burn_duration_label = font.render("Burn Duration: " + str(burn_duration_setting), True, LAVA)
+        screen.blit(burn_duration_label, (50, 180+SLIST.index("burn status")*60 + scroll_y))
+        burn_duration_minus_button = pygame.Rect(500, 180+SLIST.index("burn status")*60 - button_offset + scroll_y, 50, 50)
+        burn_duration_plus_button = pygame.Rect(560, 180+SLIST.index("burn status")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, burn_duration_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=burn_duration_plus_button.center))
+        pygame.draw.rect(screen, RED, burn_duration_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=burn_duration_minus_button.center))
+        if burn_duration_plus_button.collidepoint(mouse_pos) and mouse_click:
+            burn_duration_setting += 50
+            if burn_duration_setting > 2000:
+                burn_duration_setting = 2000
+            pygame.time.delay(50)
+        if burn_duration_minus_button.collidepoint(mouse_pos) and mouse_click:
+            burn_duration_setting -= 50
+            if burn_duration_setting < 0:
+                burn_duration_setting = 0
             pygame.time.delay(50)
 
 
@@ -1364,6 +1397,26 @@ def SETTINGS():
             trail_duration_setting -= 5
             if trail_duration_setting < 50:
                 trail_duration_setting = 50
+            pygame.time.delay(50)
+
+
+        burn_particle_lifetime_label = font.render("Burn Particle Duration: " + str(burn_particle_lifetime_setting), True, LAVA)
+        screen.blit(burn_particle_lifetime_label, (50, 180+SLIST.index("burn duration")*60 + scroll_y))
+        burn_particle_lifetime_minus_button = pygame.Rect(500, 180+SLIST.index("burn duration")*60 - button_offset + scroll_y, 50, 50)
+        burn_particle_lifetime_plus_button = pygame.Rect(560, 180+SLIST.index("burn duration")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, burn_particle_lifetime_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=burn_particle_lifetime_plus_button.center))
+        pygame.draw.rect(screen, RED, burn_particle_lifetime_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=burn_particle_lifetime_minus_button.center))
+        if burn_particle_lifetime_plus_button.collidepoint(mouse_pos) and mouse_click:
+            burn_particle_lifetime_setting += 5
+            if burn_particle_lifetime_setting > 1000:
+                burn_particle_lifetime_setting = 1000
+            pygame.time.delay(50)
+        if burn_particle_lifetime_minus_button.collidepoint(mouse_pos) and mouse_click:
+            burn_particle_lifetime_setting -= 5
+            if burn_particle_lifetime_setting < 50:
+                burn_particle_lifetime_setting = 50
             pygame.time.delay(50)
 
 
@@ -2752,7 +2805,7 @@ def SETTINGS():
             pygame.time.delay(200)
             
 
-        target_label = font.render("Randomized Targeting: " + str(true_or_false[target_setting]), True, CRIMSON)
+        target_label = font.render("Randomized Targeting: " + str(true_or_false[target_setting]), True, MAGENTA)
         screen.blit(target_label, (50, 180+SLIST.index("target")*60 + scroll_y))
         target_true_or_false_button = pygame.Rect(500, 180+SLIST.index("target")*60 - button_offset + scroll_y, 110, 50)
         pygame.draw.rect(screen, YELLOW, target_true_or_false_button, border_radius=0)
@@ -3147,7 +3200,7 @@ def apply_settings():
     global regen_delay, player_lives, player2_lives
     global trail_lifetime_ms, trail_interval_ms, burst, teleanglechange
     global target_type
-    global freeze_duration
+    global freeze_duration, burn_duration, burn_particle_lifetime
     global invincibility_duration, enemy_unlock
     global chase_turn
     global stickiness
@@ -3237,10 +3290,12 @@ def apply_settings():
     regen_delay = regen_delay_setting
     player_lives = player_health_setting
     player2_lives = player_health_setting
+    burn_particle_lifetime = burn_particle_lifetime_setting
     trail_lifetime_ms = trail_duration_setting
     trail_interval_ms = trail_distance_setting
     teleanglechange = teleport_angle_change_setting
     freeze_duration = freeze_duration_setting
+    burn_duration = burn_duration_setting
     invincibility_duration = invincibility_duration_setting
     chase_turn = chaser_turn_amount_setting
     stickiness = enemy_stick_setting
@@ -3727,7 +3782,7 @@ while running:
         elif enemy_type == 2:
             dx *= 0.7; dy *= 0.7; health = homing_hp
         elif enemy_type == 3:
-            dx *= 0.5; dy *= 0.5; health = fatal_hp
+            dx *= 0.75; dy *= 0.75; health = fatal_hp
         elif enemy_type == 4:
             dx *= 2/3; dy *= 2/3; health = flow_hp
         elif enemy_type == 5:
@@ -5224,6 +5279,7 @@ while running:
                     enemy["shrinking"] = True
                 continue
             elif enemy["type"] == 17:
+                if current_time >= invincible_until: enemy["dead"] = True
                 if slow_until < 0:
                     if current_time >= invincible_until:
                         player_lives -= enemy_damage
@@ -5232,10 +5288,9 @@ while running:
                         invincible_until = current_time + invincibility_duration
                         if player_lives <= 0:
                             player_alive = False
-                hot_until = freeze_duration
+                hot_until = burn_duration
                 slow_until = 0
                 player_burnt = True
-                if current_time >= invincible_until: enemy["dead"] = True
             else:
                 if current_time >= invincible_until:
                     player_lives -= enemy_damage
@@ -5301,6 +5356,7 @@ while running:
                     enemy["shrinking"] = True
                 continue
             elif enemy["type"] == 17:
+                if current_time >= player2_invincible_until: enemy["dead"] = True
                 if player2_slow_until < 0:
                     if current_time >= player2_invincible_until:
                         player2_lives -= enemy_damage
@@ -5309,10 +5365,9 @@ while running:
                         player2_invincible_until = current_time + invincibility_duration
                         if player2_lives <= 0:
                             player2_alive = False
-                player2_hot_until = freeze_duration
+                player2_hot_until = burn_duration
                 player2_slow_until = 0
                 player2_burnt = True
-                if current_time >= player2_invincible_until: enemy["dead"] = True
             else:
                 if current_time >= player2_invincible_until:
                     player2_lives -= enemy_damage
@@ -5569,23 +5624,23 @@ while running:
     burn_timer += (60 / FPS) * game_speed
     burn_timer2 += (60 / FPS) * game_speed
     
-    if hot_until > 0 and burn_timer > 10 and player_lives > 0:
+    if hot_until > 0 and burn_timer > 14 and player_lives > 0:
         burn_particles.append({
                 "x": int(player_x),
                 "y": int(player_y),
                 "harmless timer": player_size * (FPS/60) * 0.175,
-                "lifetime": trail_lifetime_ms,
+                "lifetime": burn_particle_lifetime,
                 "health": 1,
                 "color": LAVA
             })
         burn_timer = 0
 
-    if player2_hot_until > 0 and burn_timer2 > 10 and players == 2 and player2_lives > 0:
+    if player2_hot_until > 0 and burn_timer2 > 14 and players == 2 and player2_lives > 0:
         burn_particles.append({
                 "x": int(player2_x),
                 "y": int(player2_y),
                 "harmless timer": player_size * (FPS/60) * 0.175,
-                "lifetime": trail_lifetime_ms,
+                "lifetime": burn_particle_lifetime,
                 "health": 1,
                 "color": LAVA
             })
