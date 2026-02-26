@@ -43,9 +43,9 @@ SILVER = (175, 175, 175)
 CLOUD = (150, 175, 190)
 GRAY = (100, 100, 100)
 SHADOW = (50, 50, 50)
-BLACK = (0, 0, 0) #not used?
+BLACK = (0, 0, 0)
 BROWN = (108, 65, 0)
-CRISP = (50, 0, 0) #not used?
+CRISP = (50, 0, 0)
 MAROON = (120, 0, 0)
 BRONZE = (140, 45, 0)
 BRICK = (140, 65, 65)
@@ -68,11 +68,12 @@ GREEN = (0, 125, 0)
 FOREST = (0, 60, 0)
 TEAL = (0, 130, 130)
 AQUA = (0, 190, 160)
+TUNDRA = (125, 200, 200)
 TURQUOISE = (0, 255, 180)
 ICE = (175, 255, 255)
 CYAN = (0, 255, 255)
 SKY = (125, 170, 225)
-AZURE = (0, 140, 255)
+AZURE = (0, 140, 255) #NOT USED
 BLUE = (0, 0, 255)
 NAVY = (0, 0, 100)
 INDIGO = (110, 0, 200)
@@ -84,6 +85,25 @@ MAGENTA = (255, 0, 255)
 PINK = (255, 140, 255)
 HOT_PINK = (255, 0, 106)
 CRIMSON = (165, 0, 50)
+
+color_list = [WHITE, SILVER, CLOUD, GRAY, SHADOW,
+              BROWN, BRONZE, MAROON, BRICK, RED,
+              LAVA, SALMON, CORAL, TAN, ORANGE,
+              TANGERINE, GOLD, SULFUR, OLIVE, YELLOW,
+              CREAM, CHARTREUSE, VOLT, LIME, GREEN,
+              FOREST, TEAL, AQUA, TUNDRA, TURQUOISE,
+              ICE, CYAN, SKY, AZURE, BLUE, NAVY,
+              INDIGO, MAUVE, LAVENDER, PURPLE, VIOLET,
+              MAGENTA, PINK, HOT_PINK, CRIMSON]
+colorword_list = ["White", "Silver", "Cloud", "Gray", "Shadow",
+                  "Brown", "Bronze", "Maroon", "Brick", "Red",
+                  "Lava", "Salmon", "Coral", "Tan", "Orange",
+                  "Tangerine", "Gold", "Sulfur", "Olive", "Yellow",
+                  "Cream", "Chartreuse", "Volt", "Lime", "Green",
+                  "Forest", "Teal", "Aqua", "Tundra", "Turquoise",
+                  "Ice", "Cyan", "Sky", "Azure", "Blue", "Navy",
+                  "Indigo", "Mauve", "Lavender", "Purple", "Violet",
+                  "Magenta", "Pink", "Hot Pink", "Crimson"]
 
 # --- Player Skins ---
 p1_skin_color = 0
@@ -117,7 +137,7 @@ player_skins = [
 
 # --- Spawner ---
 spawner_size = 50
-spawner_color = CYAN
+spawner_color = RED # RED IS DEFAULT
 
 # --- Game Speed ---
 game_speed = 1
@@ -195,7 +215,7 @@ addictive_hp = 7 # 21
 laser_hp = 3 # 22
 hardened_hp = 30 # 23
 accelerator_hp = 5 # 24
-cold_hp = 6 # 25
+cold_hp = 5 # 25
 tracer_hp = 1 # 26
 savage_hp = 2 # 27
 teleporter_hp = 6 # 28
@@ -508,7 +528,7 @@ laser_duration_setting = 100
 hardened_hp_setting = 30
 harden_break_setting = 10
 accelerator_hp_setting = 5
-cold_hp_setting = 6
+cold_hp_setting = 5
 tracer_hp_setting = 1
 savage_hp_setting = 2
 teleporter_hp_setting = 6
@@ -626,6 +646,8 @@ def SETTINGS():
     global volcanic_hp_setting
     global pyrobeam_hp_setting
     global modifiers
+    global colorword_list
+    global color_list
 
     def give_seed(pasted):
         global player_size_setting, enemy_size_setting, projectile_size_setting, min_spawn_delay_setting, max_spawn_delay_setting, spawn_delay_change_setting
@@ -946,7 +968,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GRAY, default_set_button, border_radius=0)
         screen.blit(default_set_text, default_set_text.get_rect(center=default_set_button.center))
         if default_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_7_3_1_4_32_7_10_300_3_1_100_30_10_5_6_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_500_0_5_1_1_")
+            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_100_2_1_1_1_")
             pygame.time.delay(200)
 
 
@@ -1053,9 +1075,6 @@ def SETTINGS():
             if min_spawn_delay_setting < 100:
                 min_spawn_delay_setting = 100
             pygame.time.delay(50)
-
-
-        
 
 
         spawn_delay_change_label = font.render("Spawn Delay Change: " + str(spawn_delay_change_setting), True, MAROON)
@@ -1672,7 +1691,7 @@ def SETTINGS():
 
 
 
-        flow_hp_label = font.render("Flow Enemy - HP: " + str(flow_hp_setting), True, AZURE)
+        flow_hp_label = font.render("Flow Enemy - HP: " + str(flow_hp_setting), True, TEAL)
         screen.blit(flow_hp_label, (50, 180+SLIST.index("flow")*60 + scroll_y))
         flow_hp_minus_button = pygame.Rect(500, 180+SLIST.index("flow")*60 - button_offset + scroll_y, 50, 50)
         flow_hp_plus_button = pygame.Rect(560, 180+SLIST.index("flow")*60 - button_offset + scroll_y, 50, 50)
@@ -1692,7 +1711,7 @@ def SETTINGS():
             pygame.time.delay(50)
         flow_locks_text = font.render(enemy_locking_labels[enemy_locks[3]], True, BLACK)
         flow_locks_button = pygame.Rect(650, 180+SLIST.index("flow")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, AZURE, flow_locks_button, border_radius=0)
+        pygame.draw.rect(screen, TEAL, flow_locks_button, border_radius=0)
         screen.blit(flow_locks_text, flow_locks_text.get_rect(center=flow_locks_button.center))
         if flow_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[3] > (len(enemy_locking_labels) - 2): enemy_locks[3] = 0
@@ -2515,7 +2534,7 @@ def SETTINGS():
 
 
 
-        cold_hp_label = font.render("Cold Enemy - HP: " + str(cold_hp_setting), True, TEAL)
+        cold_hp_label = font.render("Cold Enemy - HP: " + str(cold_hp_setting), True, TUNDRA)
         screen.blit(cold_hp_label, (50, 180+SLIST.index("cold")*60 + scroll_y))
         cold_hp_minus_button = pygame.Rect(500, 180+SLIST.index("cold")*60 - button_offset + scroll_y, 50, 50)
         cold_hp_plus_button = pygame.Rect(560, 180+SLIST.index("cold")*60 - button_offset + scroll_y, 50, 50)
@@ -2535,7 +2554,7 @@ def SETTINGS():
             pygame.time.delay(50)
         cold_locks_text = font.render(enemy_locking_labels[enemy_locks[24]], True, BLACK)
         cold_locks_button = pygame.Rect(650, 180+SLIST.index("cold")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, TEAL, cold_locks_button, border_radius=0)
+        pygame.draw.rect(screen, TUNDRA, cold_locks_button, border_radius=0)
         screen.blit(cold_locks_text, cold_locks_text.get_rect(center=cold_locks_button.center))
         if cold_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[24] > (len(enemy_locking_labels) - 2): enemy_locks[24] = 0
@@ -3151,7 +3170,7 @@ def SETTINGS():
         pygame.draw.rect(screen, all_enemies_one_color_button_color, all_enemies_one_color_button, border_radius=0)
         screen.blit(all_enemies_one_color_text, all_enemies_one_color_text.get_rect(center=all_enemies_one_color_button.center))
         if all_enemies_one_color_button.collidepoint(mouse_pos) and mouse_click:
-            if modifiers[0] == 13: modifiers[0] = 0
+            if modifiers[0] == len(all_enemies_one_color_list)-1: modifiers[0] = 0
             else: modifiers[0] += 1
             pygame.time.delay(200)
 
@@ -4525,7 +4544,7 @@ while running:
                         "y": enemy["y"] + projectile_size/2,
                         "dx": dxp,
                         "dy": dyp,
-                        "color": colorblind_list[colorblind] if colorblind != 0 else CYAN,
+                        "color": colorblind_list[colorblind] if colorblind != 0 else TUNDRA,
                         "ability": "freeze"
                     })
                 enemy["ability"] = 0
@@ -5909,7 +5928,7 @@ while running:
             if enemy["type"] == 1: color = GRAY
             elif enemy["type"] == 2: color = SALMON
             elif enemy["type"] == 3: color = RED
-            elif enemy["type"] == 4: color = AZURE
+            elif enemy["type"] == 4: color = TEAL
             elif enemy["type"] == 5: color = GREEN
             elif enemy["type"] == 6: color = VIOLET
             elif enemy["type"] == 7: color = TANGERINE
@@ -5932,7 +5951,7 @@ while running:
             elif enemy["type"] == 22: color = TURQUOISE
             elif enemy["type"] == 23: color = BROWN
             elif enemy["type"] == 24: color = TAN
-            elif enemy["type"] == 25: color = TEAL
+            elif enemy["type"] == 25: color = TUNDRA
             elif enemy["type"] == 26: color = SULFUR
             elif enemy["type"] == 27: color = MAROON
             elif enemy["type"] == 28: color = PURPLE
@@ -6204,7 +6223,7 @@ while running:
                     "y": 0,
                     "dx": 0,
                     "dy": 5,
-                    "color": colorblind_list[colorblind] if colorblind != 0 else CYAN,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else TUNDRA,
                     "ability": "freeze"
                 })
 
