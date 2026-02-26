@@ -115,8 +115,9 @@ player_skins = [
                 [MAGENTA, VIOLET, SALMON, "none"]
                 ]
 
-# --- Spawner Size ---
+# --- Spawner ---
 spawner_size = 50
+spawner_color = CYAN
 
 # --- Game Speed ---
 game_speed = 1
@@ -5789,7 +5790,7 @@ while running:
 
     # draw spawner
     pygame.draw.rect(screen, BLACK, (*spawner_pos, spawner_size, spawner_size))
-    pygame.draw.rect(screen, CRISP, (*spawner_pos, spawner_size, spawner_size), 3)
+    pygame.draw.rect(screen, (spawner_color[0]/2, spawner_color[1]/2, spawner_color[2]/2), (*spawner_pos, spawner_size, spawner_size), 3)
 
 
         # --- FULL SPAWNER INDICATOR --
@@ -5803,7 +5804,7 @@ while running:
         def lerp_color(c1, c2, t):
             return tuple(int(c1[i] + (c2[i] - c1[i]) * t) for i in range(3))
 
-        pulse_color = lerp_color(CRISP, RED, indicator_ratio)
+        pulse_color = lerp_color((spawner_color[0]/2, spawner_color[1]/2, spawner_color[2]/2), spawner_color, indicator_ratio)
 
         # Glow
         glow_size = spawner_size * 4
@@ -5838,7 +5839,7 @@ while running:
                             start_angle, end_angle, 5)
     else:
         # Dormant look before player moves
-        pulse_color = CRISP
+        pulse_color = (spawner_color[0]/2, spawner_color[1]/2, spawner_color[2]/2)
         pygame.draw.rect(screen, pulse_color, (*spawner_pos, spawner_size, enemy_size/2), 3)
         pygame.draw.circle(screen, pulse_color, center, spawner_size // 2, 2)
 
@@ -5882,7 +5883,7 @@ while running:
 
     # --- spawner core ---
     pygame.draw.rect(screen, BLACK, (*spawner_pos, spawner_size, spawner_size))
-    pygame.draw.rect(screen, CRISP, (*spawner_pos, spawner_size, spawner_size), 3)
+    pygame.draw.rect(screen, spawner_color, (*spawner_pos, spawner_size, spawner_size), 3)
 
     # draw trail squares
     for sq in trail_squares:
