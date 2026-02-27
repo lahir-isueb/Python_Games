@@ -4043,7 +4043,7 @@ while running:
             else:
                 dx, dy = 0, 0
             target_angle = math.atan2(dy, dx)
-            enemy["angle"] = rotate_toward(enemy["angle"], target_angle, chase_turn/250)#THIS IS THE TURN SPEED 0.02
+            enemy["angle"] = rotate_toward(enemy["angle"], target_angle, (chase_turn * game_speed)/250)#THIS IS THE TURN SPEED 0.02
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
@@ -4761,7 +4761,7 @@ while running:
             else:
                 dx, dy = 0, 0
             target_angle = math.atan2(dy, dx)
-            enemy["angle"] = rotate_toward(enemy["angle"], target_angle, chase_turn/250)
+            enemy["angle"] = rotate_toward(enemy["angle"], target_angle, (chase_turn * game_speed)/250)
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
@@ -4792,7 +4792,7 @@ while running:
             else:
                 dx, dy = 0, 0
             target_angle = math.atan2(dy, dx)
-            enemy["angle"] = rotate_toward(enemy["angle"], target_angle, chase_turn/500)
+            enemy["angle"] = rotate_toward(enemy["angle"], target_angle, (chase_turn * game_speed)/500)
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["x"] += enemy["dx"] * speed_multiplier * game_speed
@@ -4833,7 +4833,7 @@ while running:
             else:
                 dx, dy = 0, 0
             target_angle = math.atan2(dy, dx)
-            enemy["angle"] = rotate_toward(enemy["angle"], target_angle, chase_turn/250)
+            enemy["angle"] = rotate_toward(enemy["angle"], target_angle, (chase_turn * game_speed)/250)
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
             enemy["x"] += enemy["dx"] * game_speed
@@ -5290,7 +5290,7 @@ while running:
             if enemy["bounces"] >= invisibility_hp: enemy_died = True
         elif enemy["type"] == 41:
             enemy["whirl"] *= 0.99
-            enemy["angle"] += enemy["whirl"]
+            enemy["angle"] += enemy["whirl"] * game_speed
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed * 1.5)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 1.5)
             enemy["x"] += enemy["dx"] * game_speed
