@@ -5912,7 +5912,7 @@ while running:
         burn_particles.append({
                 "x": int(player_x),
                 "y": int(player_y),
-                "harmless timer": player_size * (FPS/60) * 0.175,
+                "harmless timer": player_size * (FPS/60) * 0.2,
                 "lifetime": burn_particle_lifetime,
                 "health": 1,
                 "color": LAVA
@@ -5923,7 +5923,7 @@ while running:
         burn_particles.append({
                 "x": int(player2_x),
                 "y": int(player2_y),
-                "harmless timer": player_size * (FPS/60) * 0.175,
+                "harmless timer": player_size * (FPS/60) * 0.2,
                 "lifetime": burn_particle_lifetime,
                 "health": 1,
                 "color": LAVA
