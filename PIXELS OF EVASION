@@ -4,7 +4,7 @@ import math
 import pyperclip
 
 pygame.init()
-screen = pygame.display.set_mode((1920, 1080)) #(1920, 1080)
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #(1920, 1080)
 WIDTH, HEIGHT = screen.get_size()
 pygame.display.set_caption("Pixels Of Evasion")
 
@@ -137,7 +137,7 @@ player_skins = [
 
 # --- Spawner ---
 spawner_size = 50
-spawner_color = RED # RED IS DEFAULT
+spawner_color = Red # RED IS DEFAULT
 
 # --- Game Speed ---
 game_speed = 1
@@ -2449,8 +2449,8 @@ def SETTINGS():
             pygame.time.delay(50)
         if laser_damage_minus_button.collidepoint(mouse_pos) and mouse_click:
             laser_damage_setting -= 1
-            if laser_damage_setting < 1:
-                laser_damage_setting = 1
+            if laser_damage_setting < 0:
+                laser_damage_setting = 0
             pygame.time.delay(50)
 
 
@@ -3451,7 +3451,7 @@ def apply_settings():
     invisibility_hp = invisibility_hp_setting
     whirly_hp = whirly_hp_setting
     volcanic_hp = volcanic_hp_setting
-    pyrobeam = pyrobeam_hp_setting
+    pyrobeam_hp = pyrobeam_hp_setting
     colorblind = modifiers[0]
     weather = modifiers[1]
     walleffect = modifiers[2]
@@ -4010,6 +4010,7 @@ while running:
             "bursts": burst,
             "whirl": random.choice([-1, 1]),
             "bursts left": 0,
+            "burn timer": 0,
             "spawn_protected": True,
             "spawn_time": current_time
         })
@@ -4183,6 +4184,32 @@ while running:
                 enemy["health"] -= 1
             if enemy["bounces"] >= impostor_hp or enemy["health"] <= 0:
                 enemy_died = True
+
+            enemy["burn timer"] += (60 / FPS) * game_speed
+
+            if enemy["target"] == 1 and hot_until > 0 and enemy["burn timer"] > 14 and player_lives > 0:
+                burn_particles.append({
+                        "x": int(enemy["x"]),
+                        "y": int(enemy["y"]),
+                        "harmless timer": 0,
+                        "lifetime": burn_particle_lifetime,
+                        "health": 1,
+                        "color": LAVA
+                    })
+                enemy["burn timer"] = 0
+
+            if enemy["target"] == 2 and player2_hot_until > 0 and enemy["burn timer"] > 14 and players == 2 and player2_lives > 0:
+                burn_particles.append({
+                        "x": int(enemy["x"]),
+                        "y": int(enemy["y"]),
+                        "harmless timer": 0,
+                        "lifetime": burn_particle_lifetime,
+                        "health": 1,
+                        "color": LAVA
+                    })
+                enemy["burn timer"] = 0
+
+                    
 
         elif enemy["type"] == 9:
             enemy["x"] += enemy["dx"] * game_speed
@@ -5732,7 +5759,7 @@ while running:
                     if current_time >= player2_invincible_until:
                         player2_hot_until = burn_duration
                         player2_slow_until = 0
-                        player_burnt = True
+                        player2_burnt = True
                         player2_lives -= projectile_damage
                         p2_regen_block_until = score + regen_delay
                         player2_damage_flash_time = current_time
@@ -5874,6 +5901,9 @@ while running:
 
     burn_overlay = pygame.Surface((player_size, player_size), pygame.SRCALPHA)
     burn_overlay.fill((255, burn_color, 0, 150))
+
+    impostor_burn_overlay = pygame.Surface((enemy_size, enemy_size), pygame.SRCALPHA)
+    impostor_burn_overlay.fill((255, burn_color, 0, 150))
 
     burn_timer += (60 / FPS) * game_speed
     burn_timer2 += (60 / FPS) * game_speed
@@ -6052,6 +6082,18 @@ while running:
                     impostor_frost_overlay,
                     (enemy["x"] - impostor_frost_overlay.get_width() // 2,
                      enemy["y"] - impostor_frost_overlay.get_height() // 2)
+                )
+            if player_burnt == True and enemy["target"] == 1:
+                screen.blit(
+                    impostor_burn_overlay,
+                    (enemy["x"] - impostor_burn_overlay.get_width() // 2,
+                     enemy["y"] - impostor_burn_overlay.get_height() // 2)
+                )
+            if player2_burnt == True and enemy["target"] == 2:
+                screen.blit(
+                    impostor_burn_overlay,
+                    (enemy["x"] - impostor_burn_overlay.get_width() // 2,
+                     enemy["y"] - impostor_burn_overlay.get_height() // 2)
                 )
 
     
