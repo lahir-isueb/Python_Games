@@ -549,7 +549,7 @@ whirly_hp_setting = 5
 volcanic_hp_setting = 2
 pyrobeam_hp_setting = 1
 
-modifiers = [0, 0, 0, 0]
+modifiers = [0, 0, 0, 0, 0]
 
 def enemy_lock_setup(elock, enumber):
     global available_enemy_types
@@ -865,6 +865,7 @@ def SETTINGS():
                     case 129: pyrobeam_hp_setting = int(chara)
                     case 130: enemy_locks[41] = int(chara)
                     case 131: enemy_locks[42] = int(chara)
+                    case 132: modifiers[4] = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -905,7 +906,7 @@ def SETTINGS():
 
              "forecast",
              
-             "walleffect", "weather", "all one color", "invisenemies"
+             "status", "walleffect", "weather", "all one color", "invisenemies"
              ]
     true_or_false = ["False", "True"]
     running = True
@@ -1020,7 +1021,7 @@ def SETTINGS():
                                  enemy_locks[39], insta_spawn_setting, ambush_per_score_setting,
                                  modifiers[3], whirly_hp_setting, enemy_locks[40], teleport_angle_change_setting,
                                  burn_duration_setting, burn_particle_lifetime_setting, volcanic_hp_setting,
-                                 pyrobeam_hp_setting, enemy_locks[41], enemy_locks[42]]
+                                 pyrobeam_hp_setting, enemy_locks[41], enemy_locks[42], modifiers[4]]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -3233,6 +3234,23 @@ def SETTINGS():
             pygame.time.delay(200)
 
 
+        defaultstatus_button_color = SHADOW
+        defaultstatus_text_color = WHITE
+        if modifiers[4] == 0: defaultstatus_button_color = SHADOW
+        elif modifiers[4] == 1: defaultstatus_button_color = TUNDRA
+        elif modifiers[4] == 2: defaultstatus_button_color = LAVA
+        defaultstatus_text_color = WHITE
+        defaultstatus_list = ["None", "Freeze", "Burn"]
+        defaultstatus_text = font.render("Default Status Effect: " + str(defaultstatus_list[modifiers[4]]), True, defaultstatus_text_color)
+        defaultstatus_button = pygame.Rect(50, 180+SLIST.index("status")*60 - button_offset + scroll_y, 800, 50)
+        pygame.draw.rect(screen, defaultstatus_button_color, defaultstatus_button, border_radius=0)
+        screen.blit(defaultstatus_text, defaultstatus_text.get_rect(center=defaultstatus_button.center))
+        if defaultstatus_button.collidepoint(mouse_pos) and mouse_click:
+            if modifiers[4] == 2: modifiers[4] = 0
+            else: modifiers[4] += 1
+            pygame.time.delay(200)
+
+
 
         pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=0)
         pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=0)
@@ -4187,25 +4205,25 @@ while running:
 
             enemy["burn timer"] += (60 / FPS) * game_speed
 
-            if enemy["target"] == 1 and hot_until > 0 and enemy["burn timer"] > 14 and player_lives > 0:
+            if enemy["target"] == 1 and hot_until > 0 and enemy["burn timer"] > 20 and player_lives > 0:
                 burn_particles.append({
                         "x": int(enemy["x"]),
                         "y": int(enemy["y"]),
                         "harmless timer": 0,
                         "lifetime": burn_particle_lifetime,
                         "health": 1,
-                        "color": LAVA
+                        "color": GOLD
                     })
                 enemy["burn timer"] = 0
 
-            if enemy["target"] == 2 and player2_hot_until > 0 and enemy["burn timer"] > 14 and players == 2 and player2_lives > 0:
+            if enemy["target"] == 2 and player2_hot_until > 0 and enemy["burn timer"] > 20 and players == 2 and player2_lives > 0:
                 burn_particles.append({
                         "x": int(enemy["x"]),
                         "y": int(enemy["y"]),
                         "harmless timer": 0,
                         "lifetime": burn_particle_lifetime,
                         "health": 1,
-                        "color": LAVA
+                        "color": GOLD
                     })
                 enemy["burn timer"] = 0
 
@@ -5789,6 +5807,7 @@ while running:
     # --- Burning particles update ---
     new_burns = []
     for b in burn_particles:
+        if b["harmless timer"] <= 0: b["color"] = LAVA
         b["lifetime"] -= (60 / FPS) * game_speed
         b["harmless timer"] -= (60 / FPS) * game_speed
         if b["lifetime"] <= 0:
@@ -5908,25 +5927,25 @@ while running:
     burn_timer += (60 / FPS) * game_speed
     burn_timer2 += (60 / FPS) * game_speed
     
-    if hot_until > 0 and burn_timer > 14 and player_lives > 0:
+    if hot_until > 0 and burn_timer > 20 and player_lives > 0:
         burn_particles.append({
                 "x": int(player_x),
                 "y": int(player_y),
-                "harmless timer": player_size * (FPS/60) * 0.225,
+                "harmless timer": player_size * (FPS/60) * 0.25,
                 "lifetime": burn_particle_lifetime,
                 "health": 1,
-                "color": LAVA
+                "color": GOLD
             })
         burn_timer = 0
 
-    if player2_hot_until > 0 and burn_timer2 > 14 and players == 2 and player2_lives > 0:
+    if player2_hot_until > 0 and burn_timer2 > 20 and players == 2 and player2_lives > 0:
         burn_particles.append({
                 "x": int(player2_x),
                 "y": int(player2_y),
-                "harmless timer": player_size * (FPS/60) * 0.225,
+                "harmless timer": player_size * (FPS/60) * 0.25,
                 "lifetime": burn_particle_lifetime,
                 "health": 1,
-                "color": LAVA
+                "color": GOLD
             })
         burn_timer2 = 0
 
@@ -5948,7 +5967,7 @@ while running:
 
     # draw burn particles
     for b in burn_particles:
-        pygame.draw.rect(screen, LAVA, (b["x"] - trail_size // 2, b["y"] - trail_size // 2, trail_size, trail_size))
+        pygame.draw.rect(screen, b["color"], (b["x"] - trail_size // 2, b["y"] - trail_size // 2, trail_size, trail_size))
 
     # draw enemies
     for enemy in enemies:
@@ -6226,6 +6245,22 @@ while running:
     player2_slow_until -= (60 / FPS) * game_speed
     hot_until -= (60 / FPS) * game_speed
     player2_hot_until -= (60 / FPS) * game_speed
+    if spawn_enabled == True:
+        if modifiers[4] == 1:
+            if slow_until < 1: slow_until = 1; player_frozen = True
+            if player2_slow_until < 1: player2_slow_until = 1; player2_frozen = True
+            hot_until = 0; player2_hot_until = 0
+            player_speed = player_speed_base / 2
+            player2_speed = player2_speed_base / 2
+        if modifiers[4] == 2:
+            if hot_until < 1: hot_until = 1; player_burnt = True
+            if player2_hot_until < 1: player2_hot_until = 1; player2_burnt = True
+            slow_until = 0; player2_slow_until = 0
+            player_frozen = False; player2_frozen = False
+            player_speed = player_speed_base
+            player2_speed = player2_speed_base
+
+
     
     weather_timer += (60 / FPS) * game_speed
     storm_timer += (60 / FPS) * game_speed
