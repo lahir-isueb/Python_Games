@@ -4052,7 +4052,7 @@ while running:
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
-            if enemy["bounces"] >= basic_hp: enemy_died = True
+            if enemy["health"] <= 0: enemy_died = True
 
         elif enemy["type"] == 2:
             target_pos = get_target_position(enemy)
@@ -4070,7 +4070,7 @@ while running:
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
-            if enemy["bounces"] >= homing_hp: enemy_died = True
+            if enemy["health"] <= 0: enemy_died = True
 
         elif enemy["type"] == 3:
             enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
@@ -4078,7 +4078,7 @@ while running:
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
-            if enemy["bounces"] >= fatal_hp: enemy_died = True
+            if enemy["health"] <= 0: enemy_died = True
 
         elif enemy["type"] == 4:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
@@ -4108,7 +4108,7 @@ while running:
                 enemy["health"] -= 1
                 
             # Remove enemy if health depleted
-            if enemy["bounces"] >= flow_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
                 
         elif enemy["type"] == 5:
@@ -4200,27 +4200,27 @@ while running:
             if bounced:
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= impostor_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
 
             enemy["burn timer"] += (60 / FPS) * game_speed
 
-            if enemy["target"] == 1 and hot_until > 0 and enemy["burn timer"] > 20 and player_lives > 0:
+            if enemy["target"] == 1 and hot_until > 0 and enemy["burn timer"] > 4 and player_lives > 0:
                 burn_particles.append({
                         "x": int(enemy["x"]),
                         "y": int(enemy["y"]),
-                        "harmless timer": 0,
+                        "harmless timer": enemy_size * (FPS/60) * 0.5,
                         "lifetime": burn_particle_lifetime,
                         "health": 1,
                         "color": GOLD
                     })
                 enemy["burn timer"] = 0
 
-            if enemy["target"] == 2 and player2_hot_until > 0 and enemy["burn timer"] > 20 and players == 2 and player2_lives > 0:
+            if enemy["target"] == 2 and player2_hot_until > 0 and enemy["burn timer"] > 4 and players == 2 and player2_lives > 0:
                 burn_particles.append({
                         "x": int(enemy["x"]),
                         "y": int(enemy["y"]),
-                        "harmless timer": 0,
+                        "harmless timer": enemy_size * (FPS/60) * 0.5,
                         "lifetime": burn_particle_lifetime,
                         "health": 1,
                         "color": GOLD
@@ -4325,7 +4325,7 @@ while running:
             if bounced: 
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= shooter_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
 
             # Shoot at player
@@ -4361,7 +4361,7 @@ while running:
             if bounced: 
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= sniper_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
             # Shoot at player
             if enemy["trail/shot_charge"] >= enemy["shoot_delay"]:
@@ -4390,7 +4390,7 @@ while running:
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
-            if enemy["bounces"] >= speedy_hp: enemy_died = True
+            if enemy["health"] <= 0: enemy_died = True
         elif enemy["type"] == 14:
             enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             enemy["x"] += enemy["dx"] * game_speed
@@ -4403,7 +4403,7 @@ while running:
             if bounced:
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= shotgun_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
 
             # --- Fire 5 bullets in a spread ---
@@ -4481,7 +4481,7 @@ while running:
             if bounced:
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= blind_hp or enemy["health"] < 1:
+            if enemy["health"] < 1:
                 enemy_died = True
         elif enemy["type"] == 17:
             enemy["x"] += enemy["dx"] * game_speed
@@ -4496,7 +4496,7 @@ while running:
             if bounced:
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= magma_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 18: #Charger
             enemy["stop_start_time"] += (60 / FPS) * game_speed
@@ -4540,7 +4540,7 @@ while running:
             if bounced: 
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= rapidshooter_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
 
             # Shoot at player
@@ -4788,7 +4788,7 @@ while running:
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
 
-            if enemy["bounces"] >= accelerator_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 25:
             enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
@@ -4796,7 +4796,7 @@ while running:
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
-            if enemy["bounces"] >= cold_hp: enemy_died = True
+            if enemy["health"] <= 0: enemy_died = True
         elif enemy["type"] == 26:
             enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             target_pos = get_target_position(enemy)
@@ -4823,7 +4823,7 @@ while running:
                     "color": colorblind_list[colorblind] if colorblind != 0 else SULFUR
                 })
                 enemy["trail/shot_charge"] = 0
-            if enemy["bounces"] >= tracer_hp: enemy_died = True
+            if enemy["health"] <= 0: enemy_died = True
         elif enemy["type"] == 27:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
@@ -4854,7 +4854,7 @@ while running:
                 elif enemy["y"] >= HEIGHT - enemy_size: enemy["y"] = HEIGHT - enemy_size/2
                 enemy["x"] -= enemy["dx"] * 2.5
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
-            if enemy["bounces"] >= savage_hp: enemy_died = True
+            if enemy["health"] <= 0: enemy_died = True
         elif enemy["type"] == 28:
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed)
@@ -4869,7 +4869,7 @@ while running:
                 enemy["x"] = spawner_pos[0]+25
                 enemy["y"] = spawner_pos[1]+25
                 if teleanglechange == 1: enemy["angle"] = random.uniform(0, 2 * math.pi)
-            if enemy["bounces"] >= teleporter_hp: enemy_died = True
+            if enemy["health"] <= 0: enemy_died = True
         elif enemy["type"] == 29:
             target_pos = get_target_position(enemy)
             if target_pos:
@@ -4892,7 +4892,7 @@ while running:
                 enemy["x"] = spawner_pos[0]+25
                 enemy["y"] = spawner_pos[1]+25
                 if teleanglechange == 1: enemy["angle"] = random.uniform(0, 2 * math.pi)
-            if enemy["bounces"] >= phantom_hp: enemy_died = True
+            if enemy["health"] <= 0: enemy_died = True
         elif enemy["type"] == 30:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
@@ -4911,7 +4911,7 @@ while running:
                 enemy["x"] = spawner_pos[0]+25
                 enemy["y"] = spawner_pos[1]+25
                 if teleanglechange == 1: enemy["angle"] = random.uniform(0, 2 * math.pi)
-            if enemy["bounces"] >= stream_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 31:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
@@ -4963,7 +4963,7 @@ while running:
             if bounced: 
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= burstshooter_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
             if enemy["trail/shot_charge"] >= enemy["shoot_delay"] or (enemy["trail/shot_charge"] >= 4 and enemy["bursts left"] > 1):
                 if enemy["bursts left"] < 2: enemy["bursts left"] = enemy["bursts"]
@@ -5051,7 +5051,7 @@ while running:
             if bounced: 
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= sparker_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
 
             if enemy["trail/shot_charge"] >= enemy["shoot_delay"]:
@@ -5309,7 +5309,7 @@ while running:
             if bounced:
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= assassin_hp or enemy["health"] <= 0:
+            if enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 39:
             enemy["x"] += enemy["dx"] * game_speed
@@ -5324,7 +5324,7 @@ while running:
             if bounced:
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
-            if enemy["bounces"] >= motion_hp or enemy["health"] < 1:
+            if enemy["health"] < 1:
                 enemy_died = True
         if enemy["type"] == 40:
             enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
@@ -5332,7 +5332,7 @@ while running:
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
-            if enemy["bounces"] >= invisibility_hp: enemy_died = True
+            if enemy["health"] <= 0: enemy_died = True
         elif enemy["type"] == 41:
             enemy["whirl"] *= 0.99
             enemy["angle"] += enemy["whirl"] * game_speed
@@ -5351,7 +5351,7 @@ while running:
                 enemy["angle"] = random.uniform(0, 2 * math.pi)
                 if enemy["whirl"] > 0: enemy["whirl"] = 1
                 elif enemy["whirl"] < 0: enemy["whirl"] = -1
-            if enemy["bounces"] >= whirly_hp: enemy_died = True
+            if enemy["health"] <= 0: enemy_died = True
         elif enemy["type"] == 42:  # Volcanic
             enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             enemy["x"] += enemy["dx"] * game_speed
@@ -5845,6 +5845,20 @@ while running:
         new_burns.append(b)
     burn_particles = new_burns
 
+
+    for b in burn_particles[:]:
+        for enemy in enemies:
+
+            if b["harmless timer"] <= 0 and centered_rect_collision(
+                b["x"], b["y"], 6,
+                enemy["x"], enemy["y"], enemy.get("size", enemy_size)
+            ):
+
+                enemy["health"] -= 1
+                b["health"] = 0
+                break
+    burn_particles = [p for p in burn_particles if p["health"] > 0]
+
     
 
     enemies[:] = [e for e in enemies if not e.get("dead", False)]
@@ -5927,22 +5941,22 @@ while running:
     burn_timer += (60 / FPS) * game_speed
     burn_timer2 += (60 / FPS) * game_speed
     
-    if hot_until > 0 and burn_timer > 20 and player_lives > 0:
+    if hot_until > 0 and burn_timer > 4 and player_lives > 0:
         burn_particles.append({
                 "x": int(player_x),
                 "y": int(player_y),
-                "harmless timer": player_size * (FPS/60) * 0.25,
+                "harmless timer": player_size * (FPS/60) * 0.5,
                 "lifetime": burn_particle_lifetime,
                 "health": 1,
                 "color": GOLD
             })
         burn_timer = 0
 
-    if player2_hot_until > 0 and burn_timer2 > 20 and players == 2 and player2_lives > 0:
+    if player2_hot_until > 0 and burn_timer2 > 4 and players == 2 and player2_lives > 0:
         burn_particles.append({
                 "x": int(player2_x),
                 "y": int(player2_y),
-                "harmless timer": player_size * (FPS/60) * 0.25,
+                "harmless timer": player_size * (FPS/60) * 0.5,
                 "lifetime": burn_particle_lifetime,
                 "health": 1,
                 "color": GOLD
