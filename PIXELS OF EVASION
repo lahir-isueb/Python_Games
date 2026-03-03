@@ -3714,7 +3714,7 @@ while running:
     # Determine movement for Player 1
     if not spawn_enabled:
         p1_slip_dx = 0
-        p2_slip_dy = 0
+        p1_slip_dy = 0
     if players == 1:
         p1_dx = (keys[pygame.K_d] or keys[pygame.K_RIGHT]) - (keys[pygame.K_a] or keys[pygame.K_LEFT])
         p1_dy = (keys[pygame.K_s] or keys[pygame.K_DOWN]) - (keys[pygame.K_w] or keys[pygame.K_UP])
@@ -3722,7 +3722,7 @@ while running:
         p1_dx = (keys[pygame.K_d]) - (keys[pygame.K_a])
         p1_dy = (keys[pygame.K_s]) - (keys[pygame.K_w])
     if p1_dx != 0: p1_slip_dx = p1_dx
-    if p1_dy != 0: p2_slip_dy = p1_dy
+    if p1_dy != 0: p1_slip_dy = p1_dy
     frostslip_x = min(max(frostslip_x + 0.05*p1_dx, -1.6), 1.6)
     frostslip_y = min(max(frostslip_y + 0.05*p1_dy, -1.6), 1.6)
     if p1_dx == 0 or not cold_until > 0:
@@ -3730,7 +3730,7 @@ while running:
     if p1_dy == 0 or not cold_until > 0:
         frostslip_y *= 0.95
     if cold_until > 0:
-        length1 = math.hypot(p1_slip_dx, p2_slip_dy)
+        length1 = math.hypot(p1_slip_dx, p1_slip_dy)
         p1_dx = (frostslip_x / length1) * player_speed
         p1_dy = (frostslip_y / length1) * player_speed
     elif p1_dx != 0 or p1_dy != 0:
@@ -3739,16 +3739,31 @@ while running:
         p1_dy = (p1_dy / length1) * player_speed
 
     keys2 = pygame.key.get_pressed()
-    
-    # Determine movement for Player 2 (if exists)
-    p2_dx, p2_dy = 0, 0
+
+    if not spawn_enabled:
+        p2_slip_dx = 0
+        p2_slip_dy = 0
     if players == 2:
         p2_dx = ((keys[pygame.K_l]) - (keys[pygame.K_j]))
         p2_dy = ((keys[pygame.K_k]) - (keys[pygame.K_i]))
-        if p2_dx != 0 or p2_dy != 0:
-            length2 = math.hypot(p2_dx, p2_dy)
-            p2_dx = p2_dx / length2 * player2_speed
-            p2_dy = p2_dy / length2 * player2_speed
+    if p2_dx != 0: p2_slip_dx = p2_dx
+    if p2_dy != 0: p2_slip_dy = p2_dy
+    frostslip2_x = min(max(frostslip2_x + 0.05*p2_dx, -1.6), 1.6)
+    frostslip2_y = min(max(frostslip2_y + 0.05*p2_dy, -1.6), 1.6)
+    if p2_dx == 0 or not player2_cold_until > 0:
+        frostslip2_x *= 0.95
+    if p2_dy == 0 or not player2_cold_until > 0:
+        frostslip2_y *= 0.95
+    if player2_cold_until > 0:
+        length2 = math.hypot(p2_slip_dx, p2_slip_dy)
+        p2_dx = (frostslip2_x / length2) * player2_speed
+        p2_dy = (frostslip2_y / length2) * player2_speed
+    elif p2_dx != 0 or p2_dy != 0:
+        length2 = math.hypot(p2_dx, p2_dy)
+        p2_dx = (p2_dx / length2) * player2_speed
+        p2_dy = (p2_dy / length2) * player2_speed
+
+
 
     # Move players
     if p1_dx != 0 or p1_dy != 0: p1_ready = True
