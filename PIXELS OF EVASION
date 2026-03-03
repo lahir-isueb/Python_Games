@@ -3739,28 +3739,29 @@ while running:
         p1_dy = (p1_dy / length1) * player_speed
 
     keys2 = pygame.key.get_pressed()
-
-    if not spawn_enabled:
-        p2_slip_dx = 0
-        p2_slip_dy = 0
-    p2_dx = ((keys[pygame.K_l]) - (keys[pygame.K_j]))
-    p2_dy = ((keys[pygame.K_k]) - (keys[pygame.K_i]))
-    if p2_dx != 0: p2_slip_dx = p2_dx
-    if p2_dy != 0: p2_slip_dy = p2_dy
-    frostslip2_x = min(max(frostslip2_x + 0.05*p2_dx, -1.6), 1.6)
-    frostslip2_y = min(max(frostslip2_y + 0.05*p2_dy, -1.6), 1.6)
-    if p2_dx == 0 or not player2_cold_until > 0:
-        frostslip2_x *= 0.95
-    if p2_dy == 0 or not player2_cold_until > 0:
-        frostslip2_y *= 0.95
-    if player2_cold_until > 0:
-        length2 = math.hypot(p2_slip_dx, p2_slip_dy)
-        p2_dx = (frostslip2_x / length2) * player2_speed
-        p2_dy = (frostslip2_y / length2) * player2_speed
-    elif p2_dx != 0 or p2_dy != 0:
-        length2 = math.hypot(p2_dx, p2_dy)
-        p2_dx = (p2_dx / length2) * player2_speed
-        p2_dy = (p2_dy / length2) * player2_speed
+    
+    if players == 2:
+        if not spawn_enabled:
+            p2_slip_dx = 0
+            p2_slip_dy = 0
+        p2_dx = ((keys[pygame.K_l]) - (keys[pygame.K_j]))
+        p2_dy = ((keys[pygame.K_k]) - (keys[pygame.K_i]))
+        if p2_dx != 0: p2_slip_dx = p2_dx
+        if p2_dy != 0: p2_slip_dy = p2_dy
+        frostslip2_x = min(max(frostslip2_x + 0.05*p2_dx, -1.6), 1.6)
+        frostslip2_y = min(max(frostslip2_y + 0.05*p2_dy, -1.6), 1.6)
+        if p2_dx == 0 or not player2_cold_until > 0:
+            frostslip2_x *= 0.95
+        if p2_dy == 0 or not player2_cold_until > 0:
+            frostslip2_y *= 0.95
+        if player2_cold_until > 0:
+            length2 = math.hypot(p2_slip_dx, p2_slip_dy)
+            p2_dx = (frostslip2_x / length2) * player2_speed
+            p2_dy = (frostslip2_y / length2) * player2_speed
+        elif p2_dx != 0 or p2_dy != 0:
+            length2 = math.hypot(p2_dx, p2_dy)
+            p2_dx = (p2_dx / length2) * player2_speed
+            p2_dy = (p2_dy / length2) * player2_speed
 
 
 
@@ -6335,7 +6336,7 @@ while running:
                 player_burnt = True
                 player_speed = player_speed_base
             if player2_cold_until < 0:
-                player2_cold_until = 1
+                player2_hot_until = 1
                 player2_burnt = True
                 player2_speed = player2_speed_base
 
