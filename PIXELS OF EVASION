@@ -3743,9 +3743,8 @@ while running:
     if not spawn_enabled:
         p2_slip_dx = 0
         p2_slip_dy = 0
-    if players == 2:
-        p2_dx = ((keys[pygame.K_l]) - (keys[pygame.K_j]))
-        p2_dy = ((keys[pygame.K_k]) - (keys[pygame.K_i]))
+    p2_dx = ((keys[pygame.K_l]) - (keys[pygame.K_j]))
+    p2_dy = ((keys[pygame.K_k]) - (keys[pygame.K_i]))
     if p2_dx != 0: p2_slip_dx = p2_dx
     if p2_dy != 0: p2_slip_dy = p2_dy
     frostslip2_x = min(max(frostslip2_x + 0.05*p2_dx, -1.6), 1.6)
