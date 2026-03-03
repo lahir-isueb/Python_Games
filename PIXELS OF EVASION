@@ -321,6 +321,12 @@ burn_timer = 0
 burn_timer2 = 0
 burn_particle_lifetime = 3000
 
+# --- Frozen Slipperiness ---
+frostslip_x = 0
+frostslip_y = 0
+frostslip2_x = 0
+frostslip2_y = 0
+
 # --- Split Amount ---
 split_amount = 2
 
@@ -402,6 +408,7 @@ def reset_game_state():
     global heal_flash_time, player2_heal_flash_time
     global player_frozen, player2_frozen, cold_until, player2_cold_until
     global player_burnt, player2_burnt, hot_until, player2_hot_until, burn_color
+    global frostslip_x, frostslip_y, frostslip2_x, frostslip2_y
     global player_speed, player2_speed
     global everyone_died_at, death_explosion, p2_death_explosion, current_target
     global FPS
@@ -434,6 +441,10 @@ def reset_game_state():
     heal_flash_time = 0
     player2_heal_flash_time = 0
     burn_color = 0
+    frostslip_x = 0
+    frostslip_y = 0
+    frostslip2_x = 0
+    frostslip2_y = 0
     player_frozen = False
     player2_frozen = False
     player_burnt = False
@@ -3701,13 +3712,28 @@ while running:
     keys = pygame.key.get_pressed()
 
     # Determine movement for Player 1
+    if not spawn_enabled:
+        p1_slip_dx = 0
+        p2_slip_dy = 0
     if players == 1:
         p1_dx = (keys[pygame.K_d] or keys[pygame.K_RIGHT]) - (keys[pygame.K_a] or keys[pygame.K_LEFT])
         p1_dy = (keys[pygame.K_s] or keys[pygame.K_DOWN]) - (keys[pygame.K_w] or keys[pygame.K_UP])
     else:
         p1_dx = (keys[pygame.K_d]) - (keys[pygame.K_a])
         p1_dy = (keys[pygame.K_s]) - (keys[pygame.K_w])
-    if p1_dx != 0 or p1_dy != 0:
+    if p1_dx != 0: p1_slip_dx = p1_dx
+    if p1_dy != 0: p2_slip_dy = p1_dy
+    frostslip_x = min(max(frostslip_x + 0.05*p1_dx, -1.6), 1.6)
+    frostslip_y = min(max(frostslip_y + 0.05*p1_dy, -1.6), 1.6)
+    if p1_dx == 0 or not cold_until > 0:
+        frostslip_x *= 0.95
+    if p1_dy == 0 or not cold_until > 0:
+        frostslip_y *= 0.95
+    if cold_until > 0:
+        length1 = math.hypot(p1_slip_dx, p2_slip_dy)
+        p1_dx = (frostslip_x / length1) * player_speed
+        p1_dy = (frostslip_y / length1) * player_speed
+    elif p1_dx != 0 or p1_dy != 0:
         length1 = math.hypot(p1_dx, p1_dy)
         p1_dx = (p1_dx / length1) * player_speed
         p1_dy = (p1_dy / length1) * player_speed
