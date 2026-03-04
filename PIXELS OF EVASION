@@ -3723,6 +3723,8 @@ while running:
         p1_dy = (keys[pygame.K_s]) - (keys[pygame.K_w])
     if p1_dx != 0: p1_slip_dx = p1_dx
     if p1_dy != 0: p1_slip_dy = p1_dy
+    fdp = 1
+    if cold_until > 0 and p1_dx != 0 and p1_dy != 0: fdp = 0.71
     frostslip_x = min(max(frostslip_x + 0.05*p1_dx, -1.6), 1.6)
     frostslip_y = min(max(frostslip_y + 0.05*p1_dy, -1.6), 1.6)
     if p1_dx == 0 or not cold_until > 0:
@@ -3731,8 +3733,8 @@ while running:
         frostslip_y *= 0.95
     if cold_until > 0:
         length1 = math.hypot(p1_slip_dx, p1_slip_dy)
-        p1_dx = (frostslip_x / length1) * player_speed
-        p1_dy = (frostslip_y / length1) * player_speed
+        p1_dx = ((frostslip_x * fdp) / length1) * player_speed
+        p1_dy = ((frostslip_y * fdp) / length1) * player_speed
     elif p1_dx != 0 or p1_dy != 0:
         length1 = math.hypot(p1_dx, p1_dy)
         p1_dx = (p1_dx / length1) * player_speed
@@ -3748,6 +3750,8 @@ while running:
         p2_dy = ((keys[pygame.K_k]) - (keys[pygame.K_i]))
         if p2_dx != 0: p2_slip_dx = p2_dx
         if p2_dy != 0: p2_slip_dy = p2_dy
+        fdp2 = 1
+        if player2_cold_until > 0 and p2_dx != 0 and p2_dy != 0: fdp2 = 0.71
         frostslip2_x = min(max(frostslip2_x + 0.05*p2_dx, -1.6), 1.6)
         frostslip2_y = min(max(frostslip2_y + 0.05*p2_dy, -1.6), 1.6)
         if p2_dx == 0 or not player2_cold_until > 0:
@@ -3756,8 +3760,8 @@ while running:
             frostslip2_y *= 0.95
         if player2_cold_until > 0:
             length2 = math.hypot(p2_slip_dx, p2_slip_dy)
-            p2_dx = (frostslip2_x / length2) * player2_speed
-            p2_dy = (frostslip2_y / length2) * player2_speed
+            p2_dx = ((frostslip2_x * fdp2) / length2) * player2_speed
+            p2_dy = ((frostslip2_y * fdp2) / length2) * player2_speed
         elif p2_dx != 0 or p2_dy != 0:
             length2 = math.hypot(p2_dx, p2_dy)
             p2_dx = (p2_dx / length2) * player2_speed
