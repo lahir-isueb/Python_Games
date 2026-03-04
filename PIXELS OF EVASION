@@ -497,7 +497,7 @@ target_setting = 1
 insta_spawn_setting = 0
 teleport_angle_change_setting = 1
 ambush_per_score_setting = 100
-burn_particle_lifetime_setting = 100
+burn_particle_lifetime_setting = 120
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -4270,7 +4270,7 @@ while running:
 
             enemy["burn timer"] += (60 / FPS) * game_speed
 
-            if enemy["target"] == 1 and hot_until > 0 and enemy["burn timer"] > 4 and player_lives > 0:
+            if enemy["target"] == 1 and hot_until > 0 and enemy["burn timer"] > 6 and player_lives > 0:
                 burn_particles.append({
                         "x": int(enemy["x"]),
                         "y": int(enemy["y"]),
@@ -4281,7 +4281,7 @@ while running:
                     })
                 enemy["burn timer"] = 0
 
-            if enemy["target"] == 2 and player2_hot_until > 0 and enemy["burn timer"] > 4 and players == 2 and player2_lives > 0:
+            if enemy["target"] == 2 and player2_hot_until > 0 and enemy["burn timer"] > 6 and players == 2 and player2_lives > 0:
                 burn_particles.append({
                         "x": int(enemy["x"]),
                         "y": int(enemy["y"]),
@@ -6010,7 +6010,7 @@ while running:
     burn_timer += (60 / FPS) * game_speed
     burn_timer2 += (60 / FPS) * game_speed
     
-    if hot_until > 0 and burn_timer > 4 and player_lives > 0:
+    if hot_until > 0 and burn_timer > 6 and player_lives > 0:
         burn_particles.append({
                 "x": int(player_x),
                 "y": int(player_y),
@@ -6021,7 +6021,7 @@ while running:
             })
         burn_timer = 0
 
-    if player2_hot_until > 0 and burn_timer2 > 4 and players == 2 and player2_lives > 0:
+    if player2_hot_until > 0 and burn_timer2 > 6 and players == 2 and player2_lives > 0:
         burn_particles.append({
                 "x": int(player2_x),
                 "y": int(player2_y),
