@@ -105,9 +105,27 @@ colorword_list = ["White", "Silver", "Cloud", "Gray", "Shadow",
                   "Indigo", "Mauve", "Lavender", "Purple", "Violet",
                   "Magenta", "Pink", "Hot Pink", "Crimson"]
 
+font_list = ['none', "arial", "bahnschrift", "calibri", "cambria", "Candara", "comicsansms",
+             "consolas", "constantia", "corbel", "couriernew", 'Ebrima', 'gabriola', 'Gadugi',
+             'impact', 'leelawadeeui', 'leelawadeeuisemilight', 'malgungothic', 'microsofthimalaya', 'microsoftnewtailue', 'microsoftsansserif',
+             'microsofttaile', 'microsoftyibaiti', 'mingliuextb', 'mongolianbaiti', 'msgothic', 'palatinolinotype', 'sansserifcollection',
+             'segoeui', 'simsun', 'timesnewroman', 'trebuchetms', 'yugothic', 'agencyfb', 'bookantiqua',
+             'baskervilleoldface', 'bell', 'bernardcondensed', 'Bodoni', 'bodoniblack', 'bodonipostercompressed', 'brushscript',
+             'californianfb', 'chiller', 'Colonna', 'curlz', 'dubai', 'erasitc', 'forte',
+             'freestylescript', 'frenchscript', 'Garamond', 'gigi', 'gillsans', 'gillsanscondensed', 'gloucesterextracondensed',
+             'gillsansextcondensed', 'goudyoldstyle', 'Haettenschweiler', 'hightowertext', 'imprintshadow', 'blackadderitc', 'juiceitc',
+             'kunstlerscript', 'leelawadee', 'mistral', 'modernno20', 'microsoftuighur', 'monotypecorsiva', 'niagaraengraved',
+             'niagarasolid', 'ocraextended', 'oldenglishtext', 'onyx', 'palacescript', 'papyrus', 'parchment',
+             'perpetua', 'playbill', 'poorrichard', 'rockwellcondensed', 'rockwell', 'script', 'twcen',
+             'twcencondensed', 'twcencondensedextra', 'simsunextg']
+
 # --- Player Skins ---
 p1_skin_color = 0
 p2_skin_color = 0
+custom_color = 0
+custom_text = 1
+custom_p2text = 23
+custom_font = 0
 player_skins = [
                 [WHITE, RED, BLUE, "none"],
                 [RED, YELLOW, WHITE, "none"],
@@ -132,7 +150,8 @@ player_skins = [
                 [HOT_PINK, PINK, VIOLET, "yugothic"],
                 [TEAL, BLUE, YELLOW, "onyx"],
                 [MAUVE, CYAN, LAVENDER, "oldenglishtext"],
-                [MAGENTA, VIOLET, SALMON, "microsoftnewtailue"]
+                [MAGENTA, VIOLET, SALMON, "microsoftnewtailue"],
+                [color_list[custom_color], color_list[custom_text], color_list[custom_p2text], font_list[custom_font]]
                 ]
 
 # --- Spawner ---
@@ -326,7 +345,6 @@ frostslip_x = 0
 frostslip_y = 0
 frostslip2_x = 0
 frostslip2_y = 0
-frostmax = 1
 
 # --- Split Amount ---
 split_amount = 2
@@ -498,8 +516,7 @@ target_setting = 1
 insta_spawn_setting = 0
 teleport_angle_change_setting = 1
 ambush_per_score_setting = 100
-burn_particle_lifetime_setting = 120
-freezeslip_max_setting = 20
+burn_particle_lifetime_setting = 100
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -606,7 +623,6 @@ def SETTINGS():
     global ambush_per_score_setting
     global teleport_angle_change_setting
     global burn_particle_lifetime_setting
-    global freezeslip_max_setting
     global enemy_locks
     
     global basic_hp_setting
@@ -689,7 +705,6 @@ def SETTINGS():
         global ambush_per_score_setting
         global teleport_angle_change_setting
         global burn_particle_lifetime_setting
-        global freezeslip_max_setting
         global enemy_locks
         
         global basic_hp_setting
@@ -886,7 +901,6 @@ def SETTINGS():
                     case 131: enemy_locks[42] = int(chara)
                     case 132: modifiers[4] = int(chara)
                     case 133: modifiers[5] = int(chara)
-                    case 134: freezeslip_max_setting = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -905,7 +919,7 @@ def SETTINGS():
              "wallstick", "teleanglechange", "unhardening rate",
              "unharden death", "chaser turnspeed", 
              "laser damage", "laser duration",
-             "freeze status", "frostmax", "burn status", "burn duration",
+             "freeze status", "burn status", "burn duration",
              "set locks", "set locks 2",
              
              "basic", "speedy", "sticky", "sticky sensitive",
@@ -990,7 +1004,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GRAY, default_set_button, border_radius=0)
         screen.blit(default_set_text, default_set_text.get_rect(center=default_set_button.center))
         if default_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_120_2_1_1_1_0_9_8_")
+            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_100_2_1_1_1_0_9_")
             pygame.time.delay(200)
 
 
@@ -1042,8 +1056,7 @@ def SETTINGS():
                                  enemy_locks[39], insta_spawn_setting, ambush_per_score_setting,
                                  modifiers[3], whirly_hp_setting, enemy_locks[40], teleport_angle_change_setting,
                                  burn_duration_setting, burn_particle_lifetime_setting, volcanic_hp_setting,
-                                 pyrobeam_hp_setting, enemy_locks[41], enemy_locks[42], modifiers[4], modifiers[5],
-                                 freezeslip_max_setting]
+                                 pyrobeam_hp_setting, enemy_locks[41], enemy_locks[42], modifiers[4], modifiers[5]]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -1069,8 +1082,8 @@ def SETTINGS():
         screen.blit(minus_txt, minus_txt.get_rect(center=max_spawn_delay_minus_button.center))
         if max_spawn_delay_plus_button.collidepoint(mouse_pos) and mouse_click:
             max_spawn_delay_setting += 100
-            if max_spawn_delay_setting > 10000:
-                max_spawn_delay_setting = 10000
+            if max_spawn_delay_setting > 5000:
+                max_spawn_delay_setting = 5000
             pygame.time.delay(50)
         if max_spawn_delay_minus_button.collidepoint(mouse_pos) and mouse_click:
             max_spawn_delay_setting -= 100
@@ -1090,7 +1103,7 @@ def SETTINGS():
         screen.blit(minus_txt, minus_txt.get_rect(center=min_spawn_delay_minus_button.center))
         if min_spawn_delay_plus_button.collidepoint(mouse_pos) and mouse_click:
             min_spawn_delay_setting += 100
-            if min_spawn_delay_setting > 10000 or min_spawn_delay_setting > max_spawn_delay_setting:
+            if min_spawn_delay_setting > 5000 or min_spawn_delay_setting > max_spawn_delay_setting:
                 min_spawn_delay_setting -= 100
             pygame.time.delay(50)
         if min_spawn_delay_minus_button.collidepoint(mouse_pos) and mouse_click:
@@ -1246,26 +1259,6 @@ def SETTINGS():
             freeze_duration_setting -= 50
             if freeze_duration_setting < 0:
                 freeze_duration_setting = 0
-            pygame.time.delay(50)
-
-
-        freezeslip_max_label = font.render("Max Freeze Velocity: " + str(freezeslip_max_setting), True, CYAN)
-        screen.blit(freezeslip_max_label, (50, 180+SLIST.index("frostmax")*60 + scroll_y))
-        freezeslip_max_minus_button = pygame.Rect(500, 180+SLIST.index("frostmax")*60 - button_offset + scroll_y, 50, 50)
-        freezeslip_max_plus_button = pygame.Rect(560, 180+SLIST.index("frostmax")*60 - button_offset + scroll_y, 50, 50)
-        pygame.draw.rect(screen, GREEN, freezeslip_max_plus_button, border_radius=0)
-        screen.blit(plus_txt, plus_txt.get_rect(center=freezeslip_max_plus_button.center))
-        pygame.draw.rect(screen, RED, freezeslip_max_minus_button, border_radius=0)
-        screen.blit(minus_txt, minus_txt.get_rect(center=freezeslip_max_minus_button.center))
-        if freezeslip_max_plus_button.collidepoint(mouse_pos) and mouse_click:
-            freezeslip_max_setting += 1
-            if freezeslip_max_setting > 50:
-                freezeslip_max_setting = 50
-            pygame.time.delay(50)
-        if freezeslip_max_minus_button.collidepoint(mouse_pos) and mouse_click:
-            freezeslip_max_setting -= 1
-            if freezeslip_max_setting < 5:
-                freezeslip_max_setting = 5
             pygame.time.delay(50)
 
 
@@ -3363,7 +3356,7 @@ def apply_settings():
     global regen_delay, player_lives, player2_lives
     global trail_lifetime_ms, trail_interval_ms, burst, teleanglechange
     global target_type
-    global freeze_duration, frostmax, burn_duration, burn_particle_lifetime
+    global freeze_duration, burn_duration, burn_particle_lifetime
     global invincibility_duration, enemy_unlock
     global chase_turn
     global stickiness
@@ -3469,7 +3462,6 @@ def apply_settings():
     enemy_unlock = enemy_unlock_setting
     target_type = target_setting
     burst = burst_setting
-    frostmax = freezeslip_max_setting / 10
     basic_hp = basic_hp_setting
     homing_hp = homing_hp_setting
     fatal_hp = fatal_hp_setting
@@ -3551,9 +3543,8 @@ def apply_settings():
 def TITLE_SCREEN():
     global players
     global player_skins
-    global p1_skin_color
-    global p2_skin_color
-    global skin_match
+    global p1_skin_color, p2_skin_color, skin_match
+    global custom_color, custom_text, custom_p2text, custom_font
     
     skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], 70)
     skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], 70)
@@ -3675,6 +3666,47 @@ def TITLE_SCREEN():
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_ESCAPE)):
                 pygame.quit()
                 quit()
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_y) and (p1_skin_color == 24 or p2_skin_color == 24)):
+                if custom_color+1 == len(color_list): custom_color = 0
+                else: custom_color += 1
+                if custom_color == custom_text and custom_color+1 == len(color_list): custom_color = 0
+                elif custom_color == custom_text: custom_color += 1
+                player_skins[24][0] = color_list[custom_color]
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_h) and (p1_skin_color == 24 or p2_skin_color == 24)):
+                if custom_text+1 == len(color_list): custom_text = 0
+                else: custom_text += 1
+                if custom_text == custom_color and custom_text+1 == len(color_list): custom_text = 0
+                elif custom_text == custom_color: custom_text += 1
+                player_skins[24][1] = color_list[custom_text]
+                if custom_text < (len(color_list)//2): player_skins[24][2] = color_list[custom_text + (len(color_list)//2)]
+                else: player_skins[24][2] = color_list[custom_text - (len(color_list)//2)]
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_n) and (p1_skin_color == 24 or p2_skin_color == 24)):
+                if custom_font+1 == len(font_list): custom_font = 0
+                else: custom_font += 1
+                player_skins[24][3] = font_list[custom_font]
+                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], 70)
+                skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], 70)
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_t) and (p1_skin_color == 24 or p2_skin_color == 24)):
+                if custom_color-1 < 0: custom_color = len(color_list)-1
+                else: custom_color -= 1
+                if custom_color == custom_text and custom_color-1 < 0: custom_color = len(color_list)-1
+                elif custom_color == custom_text: custom_color -= 1
+                player_skins[24][0] = color_list[custom_color]
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_g) and (p1_skin_color == 24 or p2_skin_color == 24)):
+                if custom_text-1 < 0: custom_text = len(color_list)-1
+                else: custom_text -= 1
+                if custom_text == custom_color and custom_text-1 < 0: custom_text = len(color_list)-1
+                elif custom_text == custom_color: custom_text -= 1
+                player_skins[24][1] = color_list[custom_text]
+                print(len(color_list)//2)
+                if custom_text < (len(color_list)//2): player_skins[24][2] = color_list[custom_text + (len(color_list)//2)]
+                else: player_skins[24][2] = color_list[custom_text - (len(color_list)//2)]
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_b) and (p1_skin_color == 24 or p2_skin_color == 24)):
+                if custom_font-1 < 0: custom_font = len(font_list)-1
+                else: custom_font -= 1
+                player_skins[24][3] = font_list[custom_font]
+                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], 70)
+                skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], 70)
             
 
         # --- Settings button ---
@@ -3752,8 +3784,8 @@ while running:
     if p1_dy != 0: p1_slip_dy = p1_dy
     fdp = 1
     if cold_until > 0 and p1_dx != 0 and p1_dy != 0: fdp = 0.71
-    frostslip_x = min(max(frostslip_x + 0.05*p1_dx, 0-frostmax), frostmax)
-    frostslip_y = min(max(frostslip_y + 0.05*p1_dy, 0-frostmax), frostmax)
+    frostslip_x = min(max(frostslip_x + 0.05*p1_dx, -1.6), 1.6)
+    frostslip_y = min(max(frostslip_y + 0.05*p1_dy, -1.6), 1.6)
     if p1_dx == 0 or not cold_until > 0:
         frostslip_x *= 0.95
     if p1_dy == 0 or not cold_until > 0:
@@ -3779,8 +3811,8 @@ while running:
         if p2_dy != 0: p2_slip_dy = p2_dy
         fdp2 = 1
         if player2_cold_until > 0 and p2_dx != 0 and p2_dy != 0: fdp2 = 0.71
-        frostslip2_x = min(max(frostslip2_x + 0.05*p2_dx, 0-frostmax), frostmax)
-        frostslip2_y = min(max(frostslip2_y + 0.05*p2_dy, 0-frostmax), frostmax)
+        frostslip2_x = min(max(frostslip2_x + 0.05*p2_dx, -1.6), 1.6)
+        frostslip2_y = min(max(frostslip2_y + 0.05*p2_dy, -1.6), 1.6)
         if p2_dx == 0 or not player2_cold_until > 0:
             frostslip2_x *= 0.95
         if p2_dy == 0 or not player2_cold_until > 0:
@@ -4297,7 +4329,7 @@ while running:
 
             enemy["burn timer"] += (60 / FPS) * game_speed
 
-            if enemy["target"] == 1 and hot_until > 0 and enemy["burn timer"] > 6 and player_lives > 0:
+            if enemy["target"] == 1 and hot_until > 0 and enemy["burn timer"] > 4 and player_lives > 0:
                 burn_particles.append({
                         "x": int(enemy["x"]),
                         "y": int(enemy["y"]),
@@ -4308,7 +4340,7 @@ while running:
                     })
                 enemy["burn timer"] = 0
 
-            if enemy["target"] == 2 and player2_hot_until > 0 and enemy["burn timer"] > 6 and players == 2 and player2_lives > 0:
+            if enemy["target"] == 2 and player2_hot_until > 0 and enemy["burn timer"] > 4 and players == 2 and player2_lives > 0:
                 burn_particles.append({
                         "x": int(enemy["x"]),
                         "y": int(enemy["y"]),
@@ -4371,6 +4403,7 @@ while running:
                 # Check if off edge now
                 if 0 < enemy["x"] < WIDTH - enemy_size and 0 < enemy["y"] < HEIGHT - enemy_size:
                     enemy.pop("waiting")
+            if enemy["health"] <= 0: enemy["dead"] = True
 
                     
         elif enemy["type"] == 10:
@@ -6037,7 +6070,7 @@ while running:
     burn_timer += (60 / FPS) * game_speed
     burn_timer2 += (60 / FPS) * game_speed
     
-    if hot_until > 0 and burn_timer > 6 and player_lives > 0:
+    if hot_until > 0 and burn_timer > 4 and player_lives > 0:
         burn_particles.append({
                 "x": int(player_x),
                 "y": int(player_y),
@@ -6048,7 +6081,7 @@ while running:
             })
         burn_timer = 0
 
-    if player2_hot_until > 0 and burn_timer2 > 6 and players == 2 and player2_lives > 0:
+    if player2_hot_until > 0 and burn_timer2 > 4 and players == 2 and player2_lives > 0:
         burn_particles.append({
                 "x": int(player2_x),
                 "y": int(player2_y),
