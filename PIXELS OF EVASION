@@ -3816,7 +3816,7 @@ while running:
     if p1_dy == 0 or not cold_until > 0:
         frostslip_y *= 0.95
     if cold_until > 0:
-        length1 = math.hypot(p1_slip_dx, p1_slip_dy)
+        length1 = max(math.hypot(p1_slip_dx, p1_slip_dy), 0.0001)
         p1_dx = ((frostslip_x * fdp) / length1) * player_speed
         p1_dy = ((frostslip_y * fdp) / length1) * player_speed
     elif p1_dx != 0 or p1_dy != 0:
@@ -3843,7 +3843,7 @@ while running:
         if p2_dy == 0 or not player2_cold_until > 0:
             frostslip2_y *= 0.95
         if player2_cold_until > 0:
-            length2 = math.hypot(p2_slip_dx, p2_slip_dy)
+            length2 = max(math.hypot(p2_slip_dx, p2_slip_dy), 0.0001)
             p2_dx = ((frostslip2_x * fdp2) / length2) * player2_speed
             p2_dy = ((frostslip2_y * fdp2) / length2) * player2_speed
         elif p2_dx != 0 or p2_dy != 0:
@@ -5883,16 +5883,22 @@ while running:
                 player_alive = False
             elif p.get("ability") == "damage burn":
                 if current_time >= invincible_until:
-                    hot_until = burn_duration
-                    cold_until = 0
-                    player_burnt = True
-                    player_lives -= projectile_damage
-                    p1_regen_block_until = score + regen_delay
-                    damage_flash_time = current_time
-                    invincible_until = current_time + invincibility_duration
-                    if player_lives <= 0:
-                        player_alive = False
+                    if cold_until > 0:
+                        hot_until = burn_duration
+                        cold_until = 0
+                        player_burnt = True
                         continue
+                    else:
+                        hot_until = burn_duration
+                        cold_until = 0
+                        player_burnt = True
+                        player_lives -= projectile_damage
+                        p1_regen_block_until = score + regen_delay
+                        damage_flash_time = current_time
+                        invincible_until = current_time + invincibility_duration
+                        if player_lives <= 0:
+                            player_alive = False
+                            continue
                 continue
             else:
                 if current_time >= invincible_until:
@@ -5929,16 +5935,19 @@ while running:
                     player2_alive = False
                 elif p.get("ability") == "damage burn":
                     if current_time >= player2_invincible_until:
-                        player2_hot_until = burn_duration
-                        player2_cold_until = 0
-                        player2_burnt = True
-                        player2_lives -= projectile_damage
-                        p2_regen_block_until = score + regen_delay
-                        player2_damage_flash_time = current_time
-                        player2_invincible_until = current_time + invincibility_duration
-                        if player2_lives <= 0:
-                            player2_alive = False
+                        if player2_cold_until > 0:
+                            player2_hot_until = burn_duration
+                            player2_cold_until = 0
+                            player2_burnt = True
                             continue
+                        else:
+                            player2_lives -= projectile_damage
+                            p2_regen_block_until = score + regen_delay
+                            player2_damage_flash_time = current_time
+                            player2_invincible_until = current_time + invincibility_duration
+                            if player2_lives <= 0:
+                                player2_alive = False
+                                continue
                     continue
                 else:
                     if current_time >= player2_invincible_until:
