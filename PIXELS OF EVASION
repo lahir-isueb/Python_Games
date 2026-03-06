@@ -4354,23 +4354,23 @@ while running:
 
             enemy["burn timer"] += (60 / FPS) * game_speed
 
-            if enemy["target"] == 1 and hot_until > 0 and enemy["burn timer"] > 4 and player_lives > 0:
+            if enemy["target"] == 1 and hot_until > 0 and enemy["burn timer"] > 12 and player_lives > 0:
                 burn_particles.append({
                         "x": int(enemy["x"]),
                         "y": int(enemy["y"]),
-                        "harmless timer": enemy_size * (FPS/60) * 0.5,
-                        "lifetime": burn_particle_lifetime,
+                        "harmless timer": enemy_size * 0.5,
+                        "lifetime": burn_particle_lifetime + enemy["size"],
                         "health": 1,
                         "color": GOLD
                     })
                 enemy["burn timer"] = 0
 
-            if enemy["target"] == 2 and player2_hot_until > 0 and enemy["burn timer"] > 4 and players == 2 and player2_lives > 0:
+            if enemy["target"] == 2 and player2_hot_until > 0 and enemy["burn timer"] > 12 and players == 2 and player2_lives > 0:
                 burn_particles.append({
                         "x": int(enemy["x"]),
                         "y": int(enemy["y"]),
-                        "harmless timer": enemy_size * (FPS/60) * 0.5,
-                        "lifetime": burn_particle_lifetime,
+                        "harmless timer": enemy_size * 0.5,
+                        "lifetime": burn_particle_lifetime + enemy["size"],
                         "health": 1,
                         "color": GOLD
                     })
