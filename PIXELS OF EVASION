@@ -267,6 +267,8 @@ regen_delay = 50
 p1_regen_block_until = 0
 p2_regen_block_until = 0
 unlock_scores = []
+p1_xtra_score = 0
+p2_xtra_score = 0
 
 # --- Ambush ---
 insta_spawn = 0
@@ -421,7 +423,7 @@ def reset_game_state():
     global player_lives, player2_lives
     global player_alive, player2_alive
     global enemies, projectiles, trail_squares, burn_particles, burn_timer, burn_timer2
-    global score, truescore, score_p1, score_p2
+    global score, truescore, score_p1, score_p2, p1_xtra_score, p2_xtra_score
     global last_spawn_time, invincible_until, player2_invincible_until
     global spawn_enabled, p1_ready, p2_ready
     global damage_flash_time, player2_damage_flash_time
@@ -455,6 +457,8 @@ def reset_game_state():
     truescore = 0
     score_p1 = 0
     score_p2 = 0
+    p1_xtra_score = 0
+    p2_xtra_score = 0
     last_spawn_time = pygame.time.get_ticks()
     damage_flash_time = 0
     player2_damage_flash_time = 0
@@ -6322,9 +6326,9 @@ while running:
         if truescore < score:
             truescore = math.floor(score)
         if player_alive:
-            score_p1 = truescore
+            score_p1 = truescore + p1_xtra_score
         if player2_alive:
-            score_p2 = truescore
+            score_p2 = truescore + p2_xtra_score
     
     # draw player lives in center
     if player_alive:
