@@ -5979,7 +5979,7 @@ while running:
         if b["lifetime"] <= 0:
             continue
         if player_alive and centered_rect_collision(player_x, player_y, player_size,
-                                                    b["x"], b["y"], trail_size):
+                                                    b["x"], b["y"], 10):
             if b["harmless timer"] <= 0:
                 if current_time >= invincible_until:
                     player_lives -= projectile_damage
@@ -5994,7 +5994,7 @@ while running:
                     new_burns.append(sq)
                 continue
         if players == 2 and player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
-                                                              b["x"], b["y"], trail_size):
+                                                              b["x"], b["y"], 10):
             if b["harmless timer"] <= 0:
                 if current_time >= player2_invincible_until and b["harmless timer"] <= 0:
                     player2_lives -= projectile_damage
@@ -6107,23 +6107,23 @@ while running:
     burn_timer += (60 / FPS) * game_speed
     burn_timer2 += (60 / FPS) * game_speed
     
-    if hot_until > 0 and burn_timer > 4 and player_lives > 0:
+    if hot_until > 0 and burn_timer > 12 and player_lives > 0:
         burn_particles.append({
                 "x": int(player_x),
                 "y": int(player_y),
-                "harmless timer": player_size * (FPS/60) * 0.5,
-                "lifetime": burn_particle_lifetime,
+                "harmless timer": player_size * 0.5,
+                "lifetime": burn_particle_lifetime + player_size,
                 "health": 1,
                 "color": GOLD
             })
         burn_timer = 0
 
-    if player2_hot_until > 0 and burn_timer2 > 4 and players == 2 and player2_lives > 0:
+    if player2_hot_until > 0 and burn_timer2 > 12 and players == 2 and player2_lives > 0:
         burn_particles.append({
                 "x": int(player2_x),
                 "y": int(player2_y),
-                "harmless timer": player_size * (FPS/60) * 0.5,
-                "lifetime": burn_particle_lifetime,
+                "harmless timer": player_size * 0.5,
+                "lifetime": burn_particle_lifetime + player_size,
                 "health": 1,
                 "color": GOLD
             })
@@ -6147,7 +6147,7 @@ while running:
 
     # draw burn particles
     for b in burn_particles:
-        pygame.draw.rect(screen, b["color"], (b["x"] - trail_size // 2, b["y"] - trail_size // 2, trail_size, trail_size))
+        pygame.draw.rect(screen, b["color"], (b["x"] - 10 // 2, b["y"] - 10 // 2, 10, 10))
 
     # draw enemies
     for enemy in enemies:
