@@ -77,14 +77,15 @@ AZURE = (0, 140, 255) #NOT USED
 BLUE = (0, 0, 255)
 NAVY = (0, 0, 100)
 INDIGO = (110, 0, 200)
+PURPLE = (162, 0, 255)
 MAUVE = (145, 95, 140)
 LAVENDER = (210, 130, 255)
-PURPLE = (162, 0, 255)
-VIOLET = (130, 0, 130)
-MAGENTA = (255, 0, 255)
+LILAC = (250, 215, 255)
 PINK = (255, 140, 255)
-HOT_PINK = (255, 0, 106)
+MAGENTA = (255, 0, 255)
+VIOLET = (130, 0, 130)
 CRIMSON = (165, 0, 50)
+HOT_PINK = (255, 0, 106)
 
 color_list = [WHITE, SILVER, CLOUD, GRAY, SHADOW,
               BROWN, BRONZE, MAROON, BRICK, RED,
@@ -93,8 +94,8 @@ color_list = [WHITE, SILVER, CLOUD, GRAY, SHADOW,
               CREAM, CHARTREUSE, VOLT, LIME, GREEN,
               FOREST, TEAL, AQUA, TUNDRA, TURQUOISE,
               ICE, CYAN, SKY, AZURE, BLUE, NAVY,
-              INDIGO, MAUVE, LAVENDER, PURPLE, VIOLET,
-              MAGENTA, PINK, HOT_PINK, CRIMSON]
+              INDIGO, PURPLE, MAUVE, LAVENDER, LILAC,
+              PINK, MAGENTA, VIOLET, CRIMSON, HOT_PINK]
 colorword_list = ["White", "Silver", "Cloud", "Gray", "Shadow",
                   "Brown", "Bronze", "Maroon", "Brick", "Red",
                   "Lava", "Salmon", "Coral", "Tan", "Orange",
@@ -102,8 +103,8 @@ colorword_list = ["White", "Silver", "Cloud", "Gray", "Shadow",
                   "Cream", "Chartreuse", "Volt", "Lime", "Green",
                   "Forest", "Teal", "Aqua", "Tundra", "Turquoise",
                   "Ice", "Cyan", "Sky", "Azure", "Blue", "Navy",
-                  "Indigo", "Mauve", "Lavender", "Purple", "Violet",
-                  "Magenta", "Pink", "Hot Pink", "Crimson"]
+                  "Indigo", "Purple", "Mauve", "Lavender", "Lilac",
+                  "Pink", "Magenta", "Violet", "Crimson", "Hot Pink"]
 
 font_list = ['none', "arial", "bahnschrift", "calibri", "cambria", "Candara", "comicsansms",
              "consolas", "constantia", "corbel", "couriernew", 'Ebrima', 'gabriola', 'Gadugi',
@@ -254,6 +255,7 @@ invisibility_hp = 4 # 40
 whirly_hp = 5 # 41
 volcanic_hp = 2 # 42
 pyrobeam_hp = 1 # 43
+laggy_hp = 5 # 44
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -586,7 +588,7 @@ whirly_hp_setting = 5
 volcanic_hp_setting = 2
 pyrobeam_hp_setting = 1
 
-modifiers = [0, 0, 0, 0, 0, 9]
+modifiers = [0, 0, 0, 0, 0, 9, 0]
 
 def enemy_lock_setup(elock, enumber):
     global available_enemy_types
@@ -909,6 +911,7 @@ def SETTINGS():
                     case 132: modifiers[4] = int(chara)
                     case 133: modifiers[5] = int(chara)
                     case 134: freezeslip_max_setting = int(chara)
+                    case 135: modifiers[6] = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -949,7 +952,8 @@ def SETTINGS():
 
              "forecast",
              
-             "spawner color", "status", "walleffect", "weather", "all one color", "invisenemies"
+             "spawner color", "score style", "status", "walleffect", "weather",
+             "all one color", "invisenemies"
              ]
     true_or_false = ["False", "True"]
     running = True
@@ -1065,7 +1069,7 @@ def SETTINGS():
                                  modifiers[3], whirly_hp_setting, enemy_locks[40], teleport_angle_change_setting,
                                  burn_duration_setting, burn_particle_lifetime_setting, volcanic_hp_setting,
                                  pyrobeam_hp_setting, enemy_locks[41], enemy_locks[42], modifiers[4], modifiers[5],
-                                 freezeslip_max_setting]
+                                 freezeslip_max_setting, modifiers[6]]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -3302,7 +3306,6 @@ def SETTINGS():
         if modifiers[4] == 0: defaultstatus_button_color = SHADOW
         elif modifiers[4] == 1: defaultstatus_button_color = TUNDRA
         elif modifiers[4] == 2: defaultstatus_button_color = LAVA
-        defaultstatus_text_color = WHITE
         defaultstatus_list = ["None", "Freeze", "Burn"]
         defaultstatus_text = font.render("Default Status Effect: " + str(defaultstatus_list[modifiers[4]]), True, defaultstatus_text_color)
         defaultstatus_button = pygame.Rect(50, 180+SLIST.index("status")*60 - button_offset + scroll_y, 800, 50)
@@ -3324,6 +3327,23 @@ def SETTINGS():
         if spawncolor_button.collidepoint(mouse_pos) and mouse_click:
             if modifiers[5] == len(color_list)-1: modifiers[5] = 0
             else: modifiers[5] += 1
+            pygame.time.delay(200)
+
+
+        scorestyle_button_color = SULFUR
+        scorestyle_text_color = WHITE
+        if modifiers[6] == 0: scorestyle_button_color = SULFUR
+        elif modifiers[6] == 1: scorestyle_button_color = ORANGE
+        elif modifiers[6] == 2: scorestyle_button_color = RED
+        scorestyle_text_color = WHITE
+        scorestyle_list = ["Natural", "Natural & Enemy Death", "Enemy Death"]
+        scorestyle_text = font.render("Score Style: " + str(scorestyle_list[modifiers[6]]), True, scorestyle_text_color)
+        scorestyle_button = pygame.Rect(50, 180+SLIST.index("score style")*60 - button_offset + scroll_y, 800, 50)
+        pygame.draw.rect(screen, scorestyle_button_color, scorestyle_button, border_radius=0)
+        screen.blit(scorestyle_text, scorestyle_text.get_rect(center=scorestyle_button.center))
+        if scorestyle_button.collidepoint(mouse_pos) and mouse_click:
+            if modifiers[6] == 2: modifiers[6] = 0
+            else: modifiers[6] += 1
             pygame.time.delay(200)
 
 
