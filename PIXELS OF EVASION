@@ -529,7 +529,7 @@ enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 2, 1, 1, 1,
-               1, 1, 1]
+               1, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -587,6 +587,7 @@ invisibility_hp_setting = 4
 whirly_hp_setting = 5
 volcanic_hp_setting = 2
 pyrobeam_hp_setting = 1
+laggy_hp_setting = 5
 
 modifiers = [0, 0, 0, 0, 0, 9, 0]
 
@@ -688,6 +689,7 @@ def SETTINGS():
     global whirly_hp_setting
     global volcanic_hp_setting
     global pyrobeam_hp_setting
+    global laggy_hp_setting
     global modifiers
     global colorword_list
     global color_list
@@ -770,6 +772,7 @@ def SETTINGS():
         global whirly_hp_setting
         global volcanic_hp_setting
         global pyrobeam_hp_setting
+        global laggy_hp_setting
         global modifiers
         scount = 0
         chara = ""
@@ -912,6 +915,8 @@ def SETTINGS():
                     case 133: modifiers[5] = int(chara)
                     case 134: freezeslip_max_setting = int(chara)
                     case 135: modifiers[6] = int(chara)
+                    case 136: laggy_hp_setting = int(chara)
+                    case 137: enemy_locks[43] = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -934,7 +939,7 @@ def SETTINGS():
              "set locks", "set locks 2",
              
              "basic", "speedy", "sticky", "sticky sensitive",
-             "charger", "charger sensitive", "gloomy", "flow",
+             "charger", "charger sensitive", "gloomy", "flow", "laggy",
              "cold", "magma", "accelerator", "teleporter",
              "hardened", "homing", "splitter", "splitter splits",
              "invisibility",
@@ -1069,7 +1074,7 @@ def SETTINGS():
                                  modifiers[3], whirly_hp_setting, enemy_locks[40], teleport_angle_change_setting,
                                  burn_duration_setting, burn_particle_lifetime_setting, volcanic_hp_setting,
                                  pyrobeam_hp_setting, enemy_locks[41], enemy_locks[42], modifiers[4], modifiers[5],
-                                 freezeslip_max_setting, modifiers[6]]
+                                 freezeslip_max_setting, modifiers[6], laggy_hp_setting, enemy_locks[43]]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -3214,6 +3219,34 @@ def SETTINGS():
             pygame.time.delay(200)
 
 
+        laggy_hp_label = font.render("Laggy Enemy - HP: " + str(laggy_hp_setting), True, LILAC)
+        screen.blit(laggy_hp_label, (50, 180+SLIST.index("laggy")*60 + scroll_y))
+        laggy_hp_minus_button = pygame.Rect(500, 180+SLIST.index("laggy")*60 - button_offset + scroll_y, 50, 50)
+        laggy_hp_plus_button = pygame.Rect(560, 180+SLIST.index("laggy")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, laggy_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=laggy_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, laggy_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=laggy_hp_minus_button.center))
+        if laggy_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            laggy_hp_setting += 1
+            if laggy_hp_setting > 99:
+                laggy_hp_setting = 99
+            pygame.time.delay(50)
+        if laggy_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            laggy_hp_setting -= 1
+            if laggy_hp_setting < 1:
+                laggy_hp_setting = 1
+            pygame.time.delay(50)
+        laggy_locks_text = font.render(enemy_locking_labels[enemy_locks[43]], True, BLACK)
+        laggy_locks_button = pygame.Rect(650, 180+SLIST.index("laggy")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, LILAC, laggy_locks_button, border_radius=0)
+        screen.blit(laggy_locks_text, laggy_locks_text.get_rect(center=laggy_locks_button.center))
+        if laggy_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[43] > (len(enemy_locking_labels) - 2): enemy_locks[43] = 0
+            else: enemy_locks[43] = enemy_locks[43] + 1
+            pygame.time.delay(200)
+
+
         all_enemies_one_color_button_color = SHADOW
         all_enemies_one_color_text_color = WHITE
         if modifiers[0] == 0: all_enemies_one_color_button_color = SHADOW
@@ -3457,6 +3490,7 @@ def apply_settings():
     global whirly_hp
     global volcanic_hp
     global pyrobeam_hp
+    global laggy_hp
     
 
     # --- SETTINGS SET ---
@@ -3568,6 +3602,7 @@ def apply_settings():
     whirly_hp = whirly_hp_setting
     volcanic_hp = volcanic_hp_setting
     pyrobeam_hp = pyrobeam_hp_setting
+    laggy_hp = laggy_hp_setting
     colorblind = modifiers[0]
     weather = modifiers[1]
     walleffect = modifiers[2]
@@ -4157,6 +4192,8 @@ while running:
             shoot_delay = volcanic_delay
         elif enemy_type == 43:
             dx *= 0.65; dy *= 0.65; health = pyrobeam_hp
+        elif enemy_type == 44:
+            dx *= 1; dy *= 1; health = laggy_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -4177,6 +4214,8 @@ while running:
             "dead": False,
             "x": spawner_pos[0]+enemy_size/2,
             "y": spawner_pos[1]+enemy_size/2,
+            "lag x": spawner_pos[0]+enemy_size/2,
+            "lag y": spawner_pos[1]+enemy_size/2,
             "target": target,
             "dx": dx,
             "dy": dy,
@@ -4202,6 +4241,7 @@ while running:
             "whirl": random.choice([-1, 1]),
             "bursts left": 0,
             "burn timer": 0,
+            "lag show": 0,
             "spawn_protected": True,
             "spawn_time": current_time
         })
@@ -5669,6 +5709,18 @@ while running:
                                 player2_invincible_until = current_time + invincibility_duration
                                 if player2_lives <= 0: player2_alive = False
                 continue
+        if enemy["type"] == 44:
+            enemy["lag show"] += (60 / FPS) * game_speed
+            enemy["lag x"] += enemy["dx"] * game_speed; enemy["lag y"] += enemy["dy"] * game_speed
+            if enemy["lag show"] > 10:
+                enemy["x"] = enemy["lag x"]
+                enemy["y"] = enemy["lag y"]
+                enemy["lag show"] = 0
+            bounced = False
+            if enemy["lag x"] <= enemy_size/2 or enemy["lag x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
+            if enemy["lag y"] <= enemy_size/2 or enemy["lag y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
+            if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
+            if enemy["health"] <= 0: enemy_died = True
 
 
 
@@ -6243,6 +6295,7 @@ while running:
             elif enemy["type"] == 41: color = CREAM
             elif enemy["type"] == 42: color = CRIMSON
             elif enemy["type"] == 43: color = CORAL
+            elif enemy["type"] == 44: color = LILAC
 
 
         
