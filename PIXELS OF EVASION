@@ -4446,6 +4446,7 @@ while running:
                                 "spawn_protected": True,
                                 "spawn_time": pygame.time.get_ticks()
                             })
+                    elif modifiers[6] == 1 or modifiers[6] == 2: score+=10/(split_amount*splitter_hp)
                     enemy["dead"] = True
                 continue
             if enemy.get("waiting"):
@@ -4612,6 +4613,7 @@ while running:
                     # remove immediately once tiny
                     if enemy in enemies:
                         enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                     continue
             # movement using current size (sz)
             enemy["x"] += enemy["dx"] * game_speed
@@ -4778,6 +4780,7 @@ while running:
                     # remove immediately once tiny
                     if enemy in enemies:
                         enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                     continue
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
@@ -4851,6 +4854,7 @@ while running:
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
                     enemy["dead"] = True
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                     continue
                 laser_width = enemy_size
                 if enemy["laser_orientation"] == "vertical":
@@ -5253,6 +5257,7 @@ while running:
                 # remove immediately once tiny
                 if enemy in enemies:
                     enemy["dead"] = True
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                 continue
             laser_extend = (60 / FPS) * (90)
             if not enemy.get("laser_mode", False):
@@ -5300,10 +5305,11 @@ while running:
                             enemy["dy"] *= -1
                 elif enemy["health"] <= 0: enemy_died = True
             else:
-                enemy["laser_length"] += laser_extend * game_speed
+                enemy["laser_lifetime"] -= (60 / FPS) * game_speed
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
                     enemy["dead"] = True
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                     continue
                 laser_width = enemy_size
                 if enemy["laser_orientation"] == "vertical":
@@ -5386,6 +5392,7 @@ while running:
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
                     enemy["dead"] = True
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                     continue
                 laser_width = enemy_size
                 if enemy["laser_orientation"] == "vertical":
@@ -5454,6 +5461,7 @@ while running:
                 if enemy["size"] < 2:
                     if enemy in enemies:
                         enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                     continue
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
@@ -5605,6 +5613,7 @@ while running:
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
                     enemy["dead"] = True
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                     continue
                 laser_width = enemy_size
                 if enemy["laser_orientation"] == "vertical":
@@ -5685,6 +5694,7 @@ while running:
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
                         enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                         if player_lives <= 0:
                             player_alive = False
                 if enemy["type"] == 39:
@@ -5702,6 +5712,7 @@ while running:
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
                         enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                         if player_lives <= 0:
                             player_alive = False
                 undertale_hardened_dps = 0.1 * (60 / FPS) * (harden_break / 3)
@@ -5730,7 +5741,9 @@ while running:
                     enemy["shrinking"] = True
                 continue
             elif enemy["type"] == 17:
-                if current_time >= invincible_until: enemy["dead"] = True
+                if current_time >= invincible_until:
+                    enemy["dead"] = True
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                 if cold_until < 0:
                     if current_time >= invincible_until:
                         player_lives -= enemy_damage
@@ -5749,6 +5762,7 @@ while running:
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
                     enemy["dead"] = True
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                     if player_lives <= 0:
                         player_alive = False
                 continue
@@ -5763,6 +5777,7 @@ while running:
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                         if player2_lives <= 0:
                             player2_alive = False
                 if enemy["type"] == 39:
@@ -5780,6 +5795,7 @@ while running:
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                         if player2_lives <= 0:
                             player2_alive = False
                 undertale_hardened_dps = 0.1 * (60 / FPS) * (harden_break / 3)
@@ -5807,7 +5823,9 @@ while running:
                     enemy["shrinking"] = True
                 continue
             elif enemy["type"] == 17:
-                if current_time >= player2_invincible_until: enemy["dead"] = True
+                if current_time >= player2_invincible_until:
+                    enemy["dead"] = True
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                 if player2_cold_until < 0:
                     if current_time >= player2_invincible_until:
                         player2_lives -= enemy_damage
@@ -5826,12 +5844,14 @@ while running:
                     player2_damage_flash_time = current_time
                     player2_invincible_until = current_time + invincibility_duration
                     enemy["dead"] = True
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
                     if player2_lives <= 0:
                         player2_alive = False
             continue
         if enemy_died:
             if enemy in enemies:
                 enemy["dead"] = True
+                if modifiers[6] == 1 or modifiers[6] == 2: score+=10
 
 
     # --- Trail squares update ---
@@ -6342,7 +6362,7 @@ while running:
             pygame.draw.rect(screen, player_skins[p2_skin_color][0], (player2_x - player_size//2, player2_y - player_size//2, player_size, player_size))
 
     if spawn_enabled:
-        score += 0.1 * (60 / FPS) #SCORE SET
+        if modifiers[6] == 0 or modifiers[6] == 1: score += 0.1 * (60 / FPS) #SCORE SET
         if truescore < score:
             truescore = math.floor(score)
         if player_alive:
