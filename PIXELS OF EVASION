@@ -294,9 +294,9 @@ weather = 0
 walleffect = 0
 
 # --- Font Size ---
-slightly_small_font = pygame.font.SysFont(None, 35)
-font = pygame.font.SysFont(None, 40)
-big_font = pygame.font.SysFont(None, 120)
+slightly_small_font = pygame.font.SysFont("ocraextended", 22)
+font = pygame.font.SysFont("ocraextended", 24)
+big_font = pygame.font.SysFont("ocraextended", 90)
 enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size))
 imp_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * enemy_size))
 imp2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * enemy_size))
@@ -1001,7 +1001,7 @@ def SETTINGS():
         text = big_font.render("Settings", True, WHITE)
         screen.blit(text, (50, 50 + scroll_y))
         info = font.render("Press Escape to return", True, SILVER)
-        screen.blit(info, (500, 80 + scroll_y))
+        screen.blit(info, (600, 100 + scroll_y))
         mouse_pos = pygame.mouse.get_pos()
         mouse_click = pygame.mouse.get_pressed()[0]
         plus_txt = font.render("+", True, BLACK)
@@ -1036,7 +1036,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GRAY, default_set_button, border_radius=0)
         screen.blit(default_set_text, default_set_text.get_rect(center=default_set_button.center))
         if default_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_120_2_1_1_1_0_9_20_0_5_1_")
+            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_100_2_1_1_1_0_9_20_0_5_1_6_1_1_1_")
             pygame.time.delay(200)
 
 
@@ -1606,7 +1606,7 @@ def SETTINGS():
         if sticky_sensitive_setting == 1: sticky_sensitive_text = "Sensitive"
         else: sticky_sensitive_text = "Not Sensitive"
         sticky_sensitive_label = font.render(sticky_sensitive_text, True, GREEN)
-        screen.blit(sticky_sensitive_label, (258, 180+SLIST.index("sticky sensitive")*60 + scroll_y))
+        screen.blit(sticky_sensitive_label, (100, 180+SLIST.index("sticky sensitive")*60 + scroll_y))
         sticky_sensitive_true_or_false_button = pygame.Rect(500, 180+SLIST.index("sticky sensitive")*60 - button_offset + scroll_y, 110, 50)
         pygame.draw.rect(screen, YELLOW, sticky_sensitive_true_or_false_button, border_radius=0)
         screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=sticky_sensitive_true_or_false_button.center))
@@ -1619,7 +1619,7 @@ def SETTINGS():
         if charger_sensitive_setting == 1: charger_sensitive_text = "Sensitive"
         else: charger_sensitive_text = "Not Sensitive"
         charger_sensitive_label = font.render(charger_sensitive_text, True, YELLOW)
-        screen.blit(charger_sensitive_label, (288, 180+SLIST.index("charger sensitive")*60 + scroll_y))
+        screen.blit(charger_sensitive_label, (100, 180+SLIST.index("charger sensitive")*60 + scroll_y))
         charger_sensitive_true_or_false_button = pygame.Rect(500, 180+SLIST.index("charger sensitive")*60 - button_offset + scroll_y, 110, 50)
         pygame.draw.rect(screen, YELLOW, charger_sensitive_true_or_false_button, border_radius=0)
         screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=charger_sensitive_true_or_false_button.center))
@@ -1955,7 +1955,7 @@ def SETTINGS():
 
 
         split_amount_label = font.render("Splits: " + str(split_amount_setting), True, LIME)
-        screen.blit(split_amount_label, (276, 180+SLIST.index("splitter splits")*60 + scroll_y))
+        screen.blit(split_amount_label, (100, 180+SLIST.index("splitter splits")*60 + scroll_y))
         split_amount_minus_button = pygame.Rect(500, 180+SLIST.index("splitter splits")*60 - button_offset + scroll_y, 50, 50)
         split_amount_plus_button = pygame.Rect(560, 180+SLIST.index("splitter splits")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, split_amount_plus_button, border_radius=0)
@@ -2005,7 +2005,7 @@ def SETTINGS():
 
 
         bomb_projectile_amount_label = font.render("Bullets: " + str(bomb_projectile_amount_setting), True, MAGENTA)
-        screen.blit(bomb_projectile_amount_label, (251, 180+SLIST.index("bomb bullets")*60 + scroll_y))
+        screen.blit(bomb_projectile_amount_label, (100, 180+SLIST.index("bomb bullets")*60 + scroll_y))
         bomb_projectile_amount_minus_button = pygame.Rect(500, 180+SLIST.index("bomb bullets")*60 - button_offset + scroll_y, 50, 50)
         bomb_projectile_amount_plus_button = pygame.Rect(560, 180+SLIST.index("bomb bullets")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, bomb_projectile_amount_plus_button, border_radius=0)
@@ -2084,7 +2084,7 @@ def SETTINGS():
 
 
         extra_sniper_damage_label = font.render("Extra Damage: " + str(extra_sniper_damage_setting), True, INDIGO)
-        screen.blit(extra_sniper_damage_label, (264, 180+SLIST.index("xtra sniper damage")*60 + scroll_y))
+        screen.blit(extra_sniper_damage_label, (100, 180+SLIST.index("xtra sniper damage")*60 + scroll_y))
         extra_sniper_damage_minus_button = pygame.Rect(500, 180+SLIST.index("xtra sniper damage")*60 - button_offset + scroll_y, 50, 50)
         extra_sniper_damage_plus_button = pygame.Rect(560, 180+SLIST.index("xtra sniper damage")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, extra_sniper_damage_plus_button, border_radius=0)
@@ -2162,7 +2162,7 @@ def SETTINGS():
 
 
         shotgun_bullets_label = font.render("Bullets: " + str(shotgun_bullets_setting), True, BRICK)
-        screen.blit(shotgun_bullets_label, (287, 180+SLIST.index("shotgun bullets")*60 + scroll_y))
+        screen.blit(shotgun_bullets_label, (100, 180+SLIST.index("shotgun bullets")*60 + scroll_y))
         shotgun_bullets_minus_button = pygame.Rect(500, 180+SLIST.index("shotgun bullets")*60 - button_offset + scroll_y, 50, 50)
         shotgun_bullets_plus_button = pygame.Rect(560, 180+SLIST.index("shotgun bullets")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, shotgun_bullets_plus_button, border_radius=0)
@@ -2355,7 +2355,7 @@ def SETTINGS():
 
 
         burst_label = font.render("Burst: " + str(burst_setting), True, SILVER)
-        screen.blit(burst_label, (350, 180+SLIST.index("burst")*60 + scroll_y))
+        screen.blit(burst_label, (100, 180+SLIST.index("burst")*60 + scroll_y))
         burst_minus_button = pygame.Rect(500, 180+SLIST.index("burst")*60 - button_offset + scroll_y, 50, 50)
         burst_plus_button = pygame.Rect(560, 180+SLIST.index("burst")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, burst_plus_button, border_radius=0)
@@ -2405,7 +2405,7 @@ def SETTINGS():
 
 
         frostbite_projectile_amount_label = font.render("Bullets: " + str(frostbite_projectile_amount_setting), True, CYAN)
-        screen.blit(frostbite_projectile_amount_label, (296, 180+SLIST.index("frostbite bullets")*60 + scroll_y))
+        screen.blit(frostbite_projectile_amount_label, (100, 180+SLIST.index("frostbite bullets")*60 + scroll_y))
         frostbite_projectile_amount_minus_button = pygame.Rect(500, 180+SLIST.index("frostbite bullets")*60 - button_offset + scroll_y, 50, 50)
         frostbite_projectile_amount_plus_button = pygame.Rect(560, 180+SLIST.index("frostbite bullets")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, frostbite_projectile_amount_plus_button, border_radius=0)
@@ -2453,7 +2453,7 @@ def SETTINGS():
 
 
         addictive_pull_strength_label = font.render("Strength: " + str(addictive_pull_strength_setting), True, PINK)
-        screen.blit(addictive_pull_strength_label, (305, 180+SLIST.index("addictive strength")*60 + scroll_y))
+        screen.blit(addictive_pull_strength_label, (100, 180+SLIST.index("addictive strength")*60 + scroll_y))
         addictive_pull_strength_minus_button = pygame.Rect(500, 180+SLIST.index("addictive strength")*60 - button_offset + scroll_y, 50, 50)
         addictive_pull_strength_plus_button = pygame.Rect(560, 180+SLIST.index("addictive strength")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, addictive_pull_strength_plus_button, border_radius=0)
@@ -2474,7 +2474,7 @@ def SETTINGS():
 
 
         addictive_pull_radius_label = font.render("Radius: " + str(addictive_pull_radius_setting), True, PINK)
-        screen.blit(addictive_pull_radius_label, (305, 180+SLIST.index("addictive radius")*60 + scroll_y))
+        screen.blit(addictive_pull_radius_label, (100, 180+SLIST.index("addictive radius")*60 + scroll_y))
         addictive_pull_radius_minus_button = pygame.Rect(500, 180+SLIST.index("addictive radius")*60 - button_offset + scroll_y, 50, 50)
         addictive_pull_radius_plus_button = pygame.Rect(560, 180+SLIST.index("addictive radius")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, addictive_pull_radius_plus_button, border_radius=0)
@@ -2988,7 +2988,7 @@ def SETTINGS():
 
 
         annihilator_projectile_amount_label = font.render("Bullets: " + str(annihilator_projectile_amount_setting), True, HOT_PINK)
-        screen.blit(annihilator_projectile_amount_label, (326, 180+SLIST.index("annihilator bullets")*60 + scroll_y))
+        screen.blit(annihilator_projectile_amount_label, (100, 180+SLIST.index("annihilator bullets")*60 + scroll_y))
         annihilator_projectile_amount_minus_button = pygame.Rect(500, 180+SLIST.index("annihilator bullets")*60 - button_offset + scroll_y, 50, 50)
         annihilator_projectile_amount_plus_button = pygame.Rect(560, 180+SLIST.index("annihilator bullets")*60 - button_offset + scroll_y, 50, 50)
         pygame.draw.rect(screen, GREEN, annihilator_projectile_amount_plus_button, border_radius=0)
