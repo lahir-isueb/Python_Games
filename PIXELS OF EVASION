@@ -63,6 +63,7 @@ YELLOW = (255, 255, 0)
 CREAM = (255, 255, 180)
 CHARTREUSE = (220, 230, 150) #NOT USED
 VOLT = (185, 255, 0)
+MINT = (165, 255, 165)
 LIME = (0, 255, 0)
 GREEN = (0, 125, 0)
 FOREST = (0, 60, 0)
@@ -75,7 +76,7 @@ CYAN = (0, 255, 255)
 SKY = (125, 170, 225)
 AZURE = (0, 140, 255) #NOT USED
 BLUE = (0, 0, 255)
-COBALT = (90, 100, 145) #NOT USED
+COBALT = (90, 100, 145)
 NAVY = (0, 0, 100)
 INDIGO = (110, 0, 200)
 PURPLE = (162, 0, 255)
@@ -92,7 +93,7 @@ color_list = [WHITE, SILVER, CLOUD, GRAY, SHADOW,
               BROWN, BRONZE, MAROON, BRICK, RED,
               LAVA, SALMON, CORAL, TAN, ORANGE,
               TANGERINE, GOLD, SULFUR, OLIVE, YELLOW,
-              CREAM, CHARTREUSE, VOLT, LIME, GREEN,
+              CREAM, CHARTREUSE, VOLT, MINT, LIME, GREEN,
               FOREST, TEAL, AQUA, TUNDRA, TURQUOISE,
               ICE, CYAN, SKY, AZURE, BLUE, COBALT, NAVY,
               INDIGO, PURPLE, MAUVE, LAVENDER, LILAC,
@@ -101,7 +102,7 @@ colorword_list = ["White", "Silver", "Cloud", "Gray", "Shadow",
                   "Brown", "Bronze", "Maroon", "Brick", "Red",
                   "Lava", "Salmon", "Coral", "Tan", "Orange",
                   "Tangerine", "Gold", "Sulfur", "Olive", "Yellow",
-                  "Cream", "Chartreuse", "Volt", "Lime", "Green",
+                  "Cream", "Chartreuse", "Volt", "Mint", "Lime", "Green",
                   "Forest", "Teal", "Aqua", "Tundra", "Turquoise",
                   "Ice", "Cyan", "Sky", "Azure", "Blue", "Navy",
                   "Indigo", "Purple", "Mauve", "Lavender", "Lilac",
@@ -257,7 +258,8 @@ whirly_hp = 5 # 41
 volcanic_hp = 2 # 42
 pyrobeam_hp = 1 # 43
 laggy_hp = 5 # 44
-glitchy_hp = 6
+error_hp = 6 # 45
+glitchy_hp = 1 # 46
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -333,6 +335,7 @@ burstshooter_delay = 150
 stickyshooter_delay = 30
 sparker_delay = 5
 volcanic_delay = 5
+glitchy_delay = 6
 projectile_fire_rate = 10
 burst = 10
 bomb_projectile_amount = 8
@@ -531,7 +534,7 @@ enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 2, 1, 1, 1,
-               1, 1, 1, 1, 1]
+               1, 1, 1, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -590,7 +593,8 @@ whirly_hp_setting = 5
 volcanic_hp_setting = 2
 pyrobeam_hp_setting = 1
 laggy_hp_setting = 5
-glitchy_hp_setting = 6
+error_hp_setting = 6
+glitchy_hp_setting = 1
 
 modifiers = [0, 0, 0, 0, 0, 9, 0]
 
@@ -693,6 +697,7 @@ def SETTINGS():
     global volcanic_hp_setting
     global pyrobeam_hp_setting
     global laggy_hp_setting
+    global error_hp_setting
     global glitchy_hp_setting
     global modifiers
     global colorword_list
@@ -777,6 +782,7 @@ def SETTINGS():
         global volcanic_hp_setting
         global pyrobeam_hp_setting
         global laggy_hp_setting
+        global error_hp_setting
         global glitchy_hp_setting
         global modifiers
         scount = 0
@@ -922,8 +928,10 @@ def SETTINGS():
                     case 135: modifiers[6] = int(chara)
                     case 136: laggy_hp_setting = int(chara)
                     case 137: enemy_locks[43] = int(chara)
-                    case 138: glitchy_hp_setting = int(chara)
+                    case 138: error_hp_setting = int(chara)
                     case 139: enemy_locks[44] = int(chara)
+                    case 140: glitchy_hp_setting = int(chara)
+                    case 141: enemy_locks[45] = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -958,9 +966,9 @@ def SETTINGS():
              "addictive", "addictive strength", "addictive radius",
              "voodoo", "impostor", "assassin",
              
-             "whirly", "stream", "glitchy", "sensitive", "motion", "blind",
+             "whirly", "stream", "error", "sensitive", "motion", "blind",
              "savage", "tracer", "stickyshooter", "frostbeam", "pyrobeam",
-             "phantom", "volcanic", "annihilator", "annihilator bullets",
+             "phantom", "volcanic", "glitchy", "annihilator", "annihilator bullets",
 
              "forecast",
              
@@ -1082,7 +1090,7 @@ def SETTINGS():
                                  burn_duration_setting, burn_particle_lifetime_setting, volcanic_hp_setting,
                                  pyrobeam_hp_setting, enemy_locks[41], enemy_locks[42], modifiers[4], modifiers[5],
                                  freezeslip_max_setting, modifiers[6], laggy_hp_setting, enemy_locks[43],
-                                 glitchy_hp_setting, enemy_locks[44]]
+                                 error_hp_setting, enemy_locks[44], glitchy_hp_setting, enemy_locks[45]]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -3256,7 +3264,36 @@ def SETTINGS():
 
 
 
-        glitchy_hp_label = font.render("Glitchy Enemy - HP: " + str(glitchy_hp_setting), True, COBALT)
+        error_hp_label = font.render("Error Enemy - HP: " + str(error_hp_setting), True, COBALT)
+        screen.blit(error_hp_label, (50, 180+SLIST.index("error")*60 + scroll_y))
+        error_hp_minus_button = pygame.Rect(500, 180+SLIST.index("error")*60 - button_offset + scroll_y, 50, 50)
+        error_hp_plus_button = pygame.Rect(560, 180+SLIST.index("error")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, error_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=error_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, error_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=error_hp_minus_button.center))
+        if error_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            error_hp_setting += 1
+            if error_hp_setting > 99:
+                error_hp_setting = 99
+            pygame.time.delay(50)
+        if error_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            error_hp_setting -= 1
+            if error_hp_setting < 1:
+                error_hp_setting = 1
+            pygame.time.delay(50)
+        error_locks_text = font.render(enemy_locking_labels[enemy_locks[44]], True, BLACK)
+        error_locks_button = pygame.Rect(650, 180+SLIST.index("error")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, COBALT, error_locks_button, border_radius=0)
+        screen.blit(error_locks_text, error_locks_text.get_rect(center=error_locks_button.center))
+        if error_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[44] > (len(enemy_locking_labels) - 2): enemy_locks[44] = 0
+            else: enemy_locks[44] = enemy_locks[44] + 1
+            pygame.time.delay(200)
+
+
+
+        glitchy_hp_label = font.render("Glitchy Enemy - HP: " + str(glitchy_hp_setting), True, MINT)
         screen.blit(glitchy_hp_label, (50, 180+SLIST.index("glitchy")*60 + scroll_y))
         glitchy_hp_minus_button = pygame.Rect(500, 180+SLIST.index("glitchy")*60 - button_offset + scroll_y, 50, 50)
         glitchy_hp_plus_button = pygame.Rect(560, 180+SLIST.index("glitchy")*60 - button_offset + scroll_y, 50, 50)
@@ -3274,13 +3311,13 @@ def SETTINGS():
             if glitchy_hp_setting < 1:
                 glitchy_hp_setting = 1
             pygame.time.delay(50)
-        glitchy_locks_text = font.render(enemy_locking_labels[enemy_locks[44]], True, BLACK)
+        glitchy_locks_text = font.render(enemy_locking_labels[enemy_locks[45]], True, BLACK)
         glitchy_locks_button = pygame.Rect(650, 180+SLIST.index("glitchy")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, COBALT, glitchy_locks_button, border_radius=0)
+        pygame.draw.rect(screen, MINT, glitchy_locks_button, border_radius=0)
         screen.blit(glitchy_locks_text, glitchy_locks_text.get_rect(center=glitchy_locks_button.center))
         if glitchy_locks_button.collidepoint(mouse_pos) and mouse_click:
-            if enemy_locks[44] > (len(enemy_locking_labels) - 2): enemy_locks[44] = 0
-            else: enemy_locks[44] = enemy_locks[44] + 1
+            if enemy_locks[45] > (len(enemy_locking_labels) - 2): enemy_locks[45] = 0
+            else: enemy_locks[45] = enemy_locks[45] + 1
             pygame.time.delay(200)
 
 
@@ -3335,7 +3372,6 @@ def SETTINGS():
             if modifiers[1] == 9: modifiers[1] = 0
             else: modifiers[1] += 1
             pygame.time.delay(200)
-
 
 
         walleffect_button_color = SHADOW
@@ -3529,6 +3565,7 @@ def apply_settings():
     global volcanic_hp
     global pyrobeam_hp
     global laggy_hp
+    global error_hp
     global glitchy_hp
     
 
@@ -3642,6 +3679,7 @@ def apply_settings():
     volcanic_hp = volcanic_hp_setting
     pyrobeam_hp = pyrobeam_hp_setting
     laggy_hp = laggy_hp_setting
+    error_hp = error_hp_setting
     glitchy_hp = glitchy_hp_setting
     colorblind = modifiers[0]
     weather = modifiers[1]
@@ -4235,7 +4273,10 @@ while running:
         elif enemy_type == 44:
             dx *= 1; dy *= 1; health = laggy_hp
         elif enemy_type == 45:
+            dx *= 1; dy *= 1; health = error_hp
+        elif enemy_type == 46:
             dx *= 1; dy *= 1; health = glitchy_hp
+            shoot_delay = glitchy_delay
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -5784,6 +5825,43 @@ while running:
                 enemy["lag y"] = enemy["y"]
                 if teleanglechange == 1: enemy["angle"] = random.uniform(0, 2 * math.pi)
             if enemy["health"] <= 0: enemy_died = True
+        elif enemy["type"] == 46:
+            enemy["lag show"] += (60 / FPS) * game_speed
+            enemy["lag x"] += enemy["dx"] * game_speed; enemy["lag y"] += enemy["dy"] * game_speed
+            if enemy["lag show"] > 10:
+                enemy["x"] = enemy["lag x"]
+                enemy["y"] = enemy["lag y"]
+                enemy["lag show"] = 0
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
+            bounced = False
+            if enemy["lag x"] <= enemy_size/2 or enemy["lag x"] >= WIDTH - enemy_size/2: enemy["dx"] *= -1; bounced = True
+            if enemy["lag y"] <= enemy_size/2 or enemy["lag y"] >= HEIGHT - enemy_size/2: enemy["dy"] *= -1; bounced = True
+            if bounced: 
+                enemy["bounces"] += 1
+                enemy["health"] -= 1
+            if enemy["health"] <= 0:
+                enemy_died = True
+
+            if enemy["trail/shot_charge"] >= enemy["shoot_delay"]:
+                angle = random.uniform(0, math.tau)
+                dxp = math.cos(angle)
+                dyp = math.sin(angle)
+                dist = math.hypot(dxp, dyp)
+                dxp = dxp / dist * sparker_projectile_speed
+                dyp = dyp / dist * sparker_projectile_speed
+                projectiles.append({
+                    "x": enemy["lag x"] + projectile_size/2,
+                    "y": enemy["lag y"] + projectile_size/2,
+                    "dx": dxp,
+                    "dy": dyp,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else MINT,
+                    "ability": "lag",
+                    "lag x": enemy["lag x"] + projectile_size/2,
+                    "lag y": enemy["lag y"] + projectile_size/2,
+                    "lag show": 0
+                })
+                enemy["trail/shot_charge"] = 0
+           
 
 
 
@@ -6369,6 +6447,7 @@ while running:
             elif enemy["type"] == 43: color = CORAL
             elif enemy["type"] == 44: color = LILAC
             elif enemy["type"] == 45: color = COBALT
+            elif enemy["type"] == 46: color = MINT
 
 
         
