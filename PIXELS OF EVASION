@@ -51,7 +51,7 @@ BRONZE = (140, 45, 0)
 BRICK = (140, 65, 65)
 RED = (255, 0, 0)
 LAVA = (200, 60, 0)
-SALMON = (255, 125, 125)
+SALMON = (255, 125, 125) #NOT USED
 CORAL = (255, 160, 125)
 TAN = (155, 125, 95)
 ORANGE = (255, 120, 0)
@@ -61,7 +61,7 @@ SULFUR = (190, 190, 0)
 OLIVE = (100, 100, 0)
 YELLOW = (255, 255, 0)
 CREAM = (255, 255, 180)
-CHARTREUSE = (220, 230, 150) #NOT USED
+CHARTREUSE = (220, 230, 150)
 VOLT = (185, 255, 0)
 MINT = (165, 255, 165)
 LIME = (0, 255, 0)
@@ -260,6 +260,7 @@ pyrobeam_hp = 1 # 43
 laggy_hp = 5 # 44
 error_hp = 6 # 45
 glitchy_hp = 1 # 46
+blocker_hp = 5 # 47
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -376,9 +377,11 @@ chase_turn = 5
 # --- Stickiness ---
 stickiness = 2000
 
-# --- Addiction ---
+# --- Addiction / Blocking ---
 addictive_pull_radius = 300
 addictive_pull_strength = 10
+blocker_pull_radius = 300
+blocker_pull_strength = 10
 
 # --- Sticky Sensitivity ---
 sticky_sensitive = 0
@@ -530,11 +533,13 @@ teleport_angle_change_setting = 1
 ambush_per_score_setting = 100
 burn_particle_lifetime_setting = 100
 freezeslip_max_setting = 20
+blocker_push_radius_setting = 300
+blocker_push_strength_setting = 10
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 2, 1, 1, 1,
-               1, 1, 1, 1, 1, 1]
+               1, 1, 1, 1, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -595,6 +600,7 @@ pyrobeam_hp_setting = 1
 laggy_hp_setting = 5
 error_hp_setting = 6
 glitchy_hp_setting = 1
+blocker_hp_setting = 5
 
 modifiers = [0, 0, 0, 0, 0, 9, 0]
 
@@ -640,6 +646,8 @@ def SETTINGS():
     global teleport_angle_change_setting
     global burn_particle_lifetime_setting
     global freezeslip_max_setting
+    global blocker_push_radius_setting
+    global blocker_push_strength_setting
     global enemy_locks
     
     global basic_hp_setting
@@ -699,6 +707,7 @@ def SETTINGS():
     global laggy_hp_setting
     global error_hp_setting
     global glitchy_hp_setting
+    global blocker_hp_setting
     global modifiers
     global colorword_list
     global color_list
@@ -725,6 +734,8 @@ def SETTINGS():
         global ambush_per_score_setting
         global teleport_angle_change_setting
         global burn_particle_lifetime_setting
+        global blocker_push_radius_setting
+        global blocker_push_strength_setting
         global enemy_locks
         
         global basic_hp_setting
@@ -784,6 +795,7 @@ def SETTINGS():
         global laggy_hp_setting
         global error_hp_setting
         global glitchy_hp_setting
+        global blocker_hp_setting
         global modifiers
         scount = 0
         chara = ""
@@ -932,6 +944,10 @@ def SETTINGS():
                     case 139: enemy_locks[44] = int(chara)
                     case 140: glitchy_hp_setting = int(chara)
                     case 141: enemy_locks[45] = int(chara)
+                    case 142: blocker_hp_setting = int(chara)
+                    case 143: enemy_locks[46] = int(chara)
+                    case 144: blocker_push_radius_setting = int (chara)
+                    case 145: blocker_push_strength_setting = int (chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -956,14 +972,14 @@ def SETTINGS():
              "basic", "speedy", "sticky", "sticky sensitive",
              "charger", "charger sensitive", "gloomy", "flow", "laggy",
              "cold", "magma", "accelerator", "teleporter",
-             "hardened", "homing", "splitter", "splitter splits",
-             "invisibility",
+             "homing", "hardened", "splitter", "invisibility", "splitter splits",
              "trail", "shooter", "burstshooter", "burst", "rapidshooter",
              "sniper", "xtra sniper damage", "shotgun", "shotgun bullets",
              "bomb", "bomb bullets",
              "frostbite", "frostbite bullets", "sparker",
              "laser", "fatal",
              "addictive", "addictive strength", "addictive radius",
+             "blocker", "blocker strength", "blocker radius",
              "voodoo", "impostor", "assassin",
              
              "whirly", "stream", "error", "sensitive", "motion", "blind",
@@ -1090,7 +1106,8 @@ def SETTINGS():
                                  burn_duration_setting, burn_particle_lifetime_setting, volcanic_hp_setting,
                                  pyrobeam_hp_setting, enemy_locks[41], enemy_locks[42], modifiers[4], modifiers[5],
                                  freezeslip_max_setting, modifiers[6], laggy_hp_setting, enemy_locks[43],
-                                 error_hp_setting, enemy_locks[44], glitchy_hp_setting, enemy_locks[45]]
+                                 error_hp_setting, enemy_locks[44], glitchy_hp_setting, enemy_locks[45],
+                                 blocker_hp_setting, enemy_locks[46], addictive_pull_radius_setting, addictive_pull_strength_setting]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -1723,7 +1740,7 @@ def SETTINGS():
 
 
 
-        homing_hp_label = font.render("Homing Enemy - HP: " + str(homing_hp_setting), True, SALMON)
+        homing_hp_label = font.render("Homing Enemy - HP: " + str(homing_hp_setting), True, LIME)
         screen.blit(homing_hp_label, (50, 180+SLIST.index("homing")*60 + scroll_y))
         homing_hp_minus_button = pygame.Rect(500, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 50, 50)
         homing_hp_plus_button = pygame.Rect(560, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 50, 50)
@@ -1743,7 +1760,7 @@ def SETTINGS():
             pygame.time.delay(50)
         homing_locks_text = font.render(enemy_locking_labels[enemy_locks[1]], True, BLACK)
         homing_locks_button = pygame.Rect(650, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, SALMON, homing_locks_button, border_radius=0)
+        pygame.draw.rect(screen, LIME, homing_locks_button, border_radius=0)
         screen.blit(homing_locks_text, homing_locks_text.get_rect(center=homing_locks_button.center))
         if homing_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[1] > (len(enemy_locking_labels) - 2): enemy_locks[1] = 0
@@ -1925,7 +1942,7 @@ def SETTINGS():
 
 
 
-        splitter_hp_label = font.render("Splitter Enemy - HP: " + str(splitter_hp_setting), True, LIME)
+        splitter_hp_label = font.render("Splitter Enemy - HP: " + str(splitter_hp_setting), True, CHARTREUSE)
         screen.blit(splitter_hp_label, (50, 180+SLIST.index("splitter")*60 + scroll_y))
         splitter_hp_minus_button = pygame.Rect(500, 180+SLIST.index("splitter")*60 - button_offset + scroll_y, 50, 50)
         splitter_hp_plus_button = pygame.Rect(560, 180+SLIST.index("splitter")*60 - button_offset + scroll_y, 50, 50)
@@ -1945,7 +1962,7 @@ def SETTINGS():
             pygame.time.delay(50)
         splitter_locks_text = font.render(enemy_locking_labels[enemy_locks[8]], True, BLACK)
         splitter_locks_button = pygame.Rect(650, 180+SLIST.index("splitter")*60 - button_offset + scroll_y, 200, 50)
-        pygame.draw.rect(screen, LIME, splitter_locks_button, border_radius=0)
+        pygame.draw.rect(screen, CHARTREUSE, splitter_locks_button, border_radius=0)
         screen.blit(splitter_locks_text, splitter_locks_text.get_rect(center=splitter_locks_button.center))
         if splitter_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[8] > (len(enemy_locking_labels) - 2): enemy_locks[8] = 0
@@ -1954,7 +1971,7 @@ def SETTINGS():
 
 
 
-        split_amount_label = font.render("Splits: " + str(split_amount_setting), True, LIME)
+        split_amount_label = font.render("Splits: " + str(split_amount_setting), True, CHARTREUSE)
         screen.blit(split_amount_label, (100, 180+SLIST.index("splitter splits")*60 + scroll_y))
         split_amount_minus_button = pygame.Rect(500, 180+SLIST.index("splitter splits")*60 - button_offset + scroll_y, 50, 50)
         split_amount_plus_button = pygame.Rect(560, 180+SLIST.index("splitter splits")*60 - button_offset + scroll_y, 50, 50)
@@ -2451,7 +2468,6 @@ def SETTINGS():
             else: enemy_locks[20] = enemy_locks[20] + 1
             pygame.time.delay(200)
 
-
         addictive_pull_strength_label = font.render("Strength: " + str(addictive_pull_strength_setting), True, PINK)
         screen.blit(addictive_pull_strength_label, (100, 180+SLIST.index("addictive strength")*60 + scroll_y))
         addictive_pull_strength_minus_button = pygame.Rect(500, 180+SLIST.index("addictive strength")*60 - button_offset + scroll_y, 50, 50)
@@ -2490,6 +2506,47 @@ def SETTINGS():
             addictive_pull_radius_setting -= 50
             if addictive_pull_radius_setting < 100:
                 addictive_pull_radius_setting = 100
+            pygame.time.delay(50)
+
+
+        blocker_push_strength_label = font.render("Strength: " + str(blocker_push_strength_setting), True, SALMON)
+        screen.blit(blocker_push_strength_label, (100, 180+SLIST.index("blocker strength")*60 + scroll_y))
+        blocker_push_strength_minus_button = pygame.Rect(500, 180+SLIST.index("blocker strength")*60 - button_offset + scroll_y, 50, 50)
+        blocker_push_strength_plus_button = pygame.Rect(560, 180+SLIST.index("blocker strength")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, blocker_push_strength_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=blocker_push_strength_plus_button.center))
+        pygame.draw.rect(screen, RED, blocker_push_strength_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=blocker_push_strength_minus_button.center))
+        if blocker_push_strength_plus_button.collidepoint(mouse_pos) and mouse_click:
+            blocker_push_strength_setting += 1
+            if blocker_push_strength_setting > 20:
+                blocker_push_strength_setting = 20
+            pygame.time.delay(50)
+        if blocker_push_strength_minus_button.collidepoint(mouse_pos) and mouse_click:
+            blocker_push_strength_setting -= 1
+            if blocker_push_strength_setting < 1:
+                blocker_push_strength_setting = 1
+            pygame.time.delay(50)
+
+
+
+        blocker_push_radius_label = font.render("Radius: " + str(blocker_push_radius_setting), True, SALMON)
+        screen.blit(blocker_push_radius_label, (100, 180+SLIST.index("blocker radius")*60 + scroll_y))
+        blocker_push_radius_minus_button = pygame.Rect(500, 180+SLIST.index("blocker radius")*60 - button_offset + scroll_y, 50, 50)
+        blocker_push_radius_plus_button = pygame.Rect(560, 180+SLIST.index("blocker radius")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, blocker_push_radius_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=blocker_push_radius_plus_button.center))
+        pygame.draw.rect(screen, RED, blocker_push_radius_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=blocker_push_radius_minus_button.center))
+        if blocker_push_radius_plus_button.collidepoint(mouse_pos) and mouse_click:
+            blocker_push_radius_setting += 50
+            if blocker_push_radius_setting > 500:
+                blocker_push_radius_setting = 500
+            pygame.time.delay(50)
+        if blocker_push_radius_minus_button.collidepoint(mouse_pos) and mouse_click:
+            blocker_push_radius_setting -= 50
+            if blocker_push_radius_setting < 100:
+                blocker_push_radius_setting = 100
             pygame.time.delay(50)
 
 
@@ -3321,6 +3378,34 @@ def SETTINGS():
             pygame.time.delay(200)
 
 
+        blocker_hp_label = font.render("Blocker Enemy - HP: " + str(blocker_hp_setting), True, SALMON)
+        screen.blit(blocker_hp_label, (50, 180+SLIST.index("blocker")*60 + scroll_y))
+        blocker_hp_minus_button = pygame.Rect(500, 180+SLIST.index("blocker")*60 - button_offset + scroll_y, 50, 50)
+        blocker_hp_plus_button = pygame.Rect(560, 180+SLIST.index("blocker")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, blocker_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=blocker_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, blocker_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=blocker_hp_minus_button.center))
+        if blocker_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            blocker_hp_setting += 1
+            if blocker_hp_setting > 99:
+                blocker_hp_setting = 99
+            pygame.time.delay(50)
+        if blocker_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            blocker_hp_setting -= 1
+            if blocker_hp_setting < 1:
+                blocker_hp_setting = 1
+            pygame.time.delay(50)
+        blocker_locks_text = font.render(enemy_locking_labels[enemy_locks[46]], True, BLACK)
+        blocker_locks_button = pygame.Rect(650, 180+SLIST.index("blocker")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, SALMON, blocker_locks_button, border_radius=0)
+        screen.blit(blocker_locks_text, blocker_locks_text.get_rect(center=blocker_locks_button.center))
+        if blocker_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[46] > (len(enemy_locking_labels) - 2): enemy_locks[46] = 0
+            else: enemy_locks[46] = enemy_locks[46] + 1
+            pygame.time.delay(200)
+        
+
         all_enemies_one_color_button_color = SHADOW
         all_enemies_one_color_text_color = WHITE
         if modifiers[0] == 0: all_enemies_one_color_button_color = SHADOW
@@ -3567,6 +3652,7 @@ def apply_settings():
     global laggy_hp
     global error_hp
     global glitchy_hp
+    global blocker_hp, blocker_push_radius, blocker_push_strength
     
 
     # --- SETTINGS SET ---
@@ -3681,6 +3767,9 @@ def apply_settings():
     laggy_hp = laggy_hp_setting
     error_hp = error_hp_setting
     glitchy_hp = glitchy_hp_setting
+    blocker_hp = blocker_hp_setting
+    blocker_push_radius = blocker_push_radius_setting
+    blocker_push_strength = blocker_push_strength_setting
     colorblind = modifiers[0]
     weather = modifiers[1]
     walleffect = modifiers[2]
@@ -3936,6 +4025,8 @@ while running:
     if not spawn_enabled:
         p1_slip_dx = 0
         p1_slip_dy = 0
+        frostslip_x = 0
+        frostslip_y = 0
     if players == 1:
         p1_dx = (keys[pygame.K_d] or keys[pygame.K_RIGHT]) - (keys[pygame.K_a] or keys[pygame.K_LEFT])
         p1_dy = (keys[pygame.K_s] or keys[pygame.K_DOWN]) - (keys[pygame.K_w] or keys[pygame.K_UP])
@@ -3967,6 +4058,8 @@ while running:
         if not spawn_enabled:
             p2_slip_dx = 0
             p2_slip_dy = 0
+            frostslip2_x = 0
+            frostslip2_y = 0
         p2_dx = ((keys[pygame.K_l]) - (keys[pygame.K_j]))
         p2_dy = ((keys[pygame.K_k]) - (keys[pygame.K_i]))
         if p2_dx != 0: p2_slip_dx = p2_dx
@@ -4087,6 +4180,26 @@ while running:
                     player2_damage_flash_time = current_time
                     player2_invincible_until = current_time + invincibility_duration
                     if player2_lives <= 0: player2_alive = False
+
+        if spawn_enabled == True:
+            if modifiers[4] == 1:
+                if hot_until < 0:
+                    cold_until = 2
+                    player_speed = player_speed_base / 2
+                    player_frozen = True
+                if player2_hot_until < 0:
+                    player2_cold_until = 2
+                    player2_speed = player2_speed_base / 2
+                    player2_frozen = True
+            if modifiers[4] == 2:
+                if cold_until < 0:
+                    hot_until = 2
+                    player_speed = player_speed_base
+                    player_burnt = True
+                if player2_cold_until < 0:
+                    player2_hot_until = 2
+                    player2_speed = player2_speed_base
+                    player2_burnt = True
 
         if player_alive and player2_alive:
             if centered_rect_collision(player_x, player_y, player_size,
@@ -4277,6 +4390,8 @@ while running:
         elif enemy_type == 46:
             dx *= 1; dy *= 1; health = glitchy_hp
             shoot_delay = glitchy_delay
+        elif enemy_type == 47:
+            dx *= 0.75; dy *= 0.75; health = blocker_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -4569,7 +4684,7 @@ while running:
                                 "spawn_protected": True,
                                 "spawn_time": pygame.time.get_ticks()
                             })
-                    elif modifiers[6] == 1 or modifiers[6] == 2: score+=10/(split_amount*splitter_hp)
+                    elif modifiers[6] == 1 or modifiers[6] == 2: score+=5/(split_amount*splitter_hp)
                     enemy["dead"] = True
                 continue
             if enemy.get("waiting"):
@@ -4736,7 +4851,7 @@ while running:
                     # remove immediately once tiny
                     if enemy in enemies:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
             # movement using current size (sz)
             enemy["x"] += enemy["dx"] * game_speed
@@ -4903,7 +5018,7 @@ while running:
                     # remove immediately once tiny
                     if enemy in enemies:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
@@ -4977,7 +5092,7 @@ while running:
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
                     enemy["dead"] = True
-                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
                 laser_width = enemy_size
                 if enemy["laser_orientation"] == "vertical":
@@ -5380,7 +5495,7 @@ while running:
                 # remove immediately once tiny
                 if enemy in enemies:
                     enemy["dead"] = True
-                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                 continue
             laser_extend = (60 / FPS) * (90)
             if not enemy.get("laser_mode", False):
@@ -5432,7 +5547,7 @@ while running:
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
                     enemy["dead"] = True
-                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
                 laser_width = enemy_size
                 if enemy["laser_orientation"] == "vertical":
@@ -5515,7 +5630,7 @@ while running:
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
                     enemy["dead"] = True
-                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
                 laser_width = enemy_size
                 if enemy["laser_orientation"] == "vertical":
@@ -5584,7 +5699,7 @@ while running:
                 if enemy["size"] < 2:
                     if enemy in enemies:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
@@ -5736,7 +5851,7 @@ while running:
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
                     enemy["dead"] = True
-                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
                 laser_width = enemy_size
                 if enemy["laser_orientation"] == "vertical":
@@ -5861,7 +5976,50 @@ while running:
                     "lag show": 0
                 })
                 enemy["trail/shot_charge"] = 0
-           
+        elif enemy["type"] == 47:
+            if enemy.get("shrinking"):
+                enemy["size"] = enemy.get("size", "enemy_size") * 0.85 if isinstance(enemy.get("size", None), (int, float)) else sz * 0.85
+                # update local size variable for subsequent checks/drawing
+                sz = enemy["size"]
+                if enemy["size"] < 2:
+                    # remove immediately once tiny
+                    if enemy in enemies:
+                        enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                    continue
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
+
+            bounced = False
+            if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
+                enemy["dx"] *= -1
+                bounced = True
+            if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
+                enemy["dy"] *= -1
+                bounced = True
+            if bounced:
+                enemy["health"] -= 1
+                if enemy["health"] <= 0:
+                    enemy_died = True
+
+            push_radius = blocker_push_radius
+            base_push_strength = blocker_push_strength
+            if player_alive and not enemy.get("shrinking"):
+                dxp = enemy["x"] - player_x
+                dyp = enemy["y"] - player_y
+                dist = math.hypot(dxp, dyp)
+                if dist < push_radius-50+enemy_size/2+player_size/2 and dist > 1:
+                    push_strength = base_push_strength * (1 - dist / (push_radius-50+enemy_size/2+player_size/2))
+                    player_x -= (dxp / dist) * push_strength
+                    player_y -= (dyp / dist) * push_strength
+            if players == 2 and player2_alive and not enemy.get("shrinking"):
+                dxp = enemy["x"] - player2_x
+                dyp = enemy["y"] - player2_y
+                dist = math.hypot(dxp, dyp)
+                if dist < push_radius and dist > 1:
+                    push_strength = base_push_strength * (1 - dist / push_radius)
+                    player2_x -= (dxp / dist) * push_strength
+                    player2_y -= (dyp / dist) * push_strength   
 
 
 
@@ -5887,7 +6045,7 @@ while running:
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                         if player_lives <= 0:
                             player_alive = False
                 if enemy["type"] == 39:
@@ -5905,7 +6063,7 @@ while running:
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                         if player_lives <= 0:
                             player_alive = False
                 undertale_hardened_dps = 0.1 * (60 / FPS) * (harden_break / 3)
@@ -5936,7 +6094,7 @@ while running:
             elif enemy["type"] == 17:
                 if current_time >= invincible_until:
                     enemy["dead"] = True
-                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                 if cold_until < 0:
                     if current_time >= invincible_until:
                         player_lives -= enemy_damage
@@ -5955,7 +6113,7 @@ while running:
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
                     enemy["dead"] = True
-                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     if player_lives <= 0:
                         player_alive = False
                 continue
@@ -5970,7 +6128,7 @@ while running:
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                         if player2_lives <= 0:
                             player2_alive = False
                 if enemy["type"] == 39:
@@ -5988,7 +6146,7 @@ while running:
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                         if player2_lives <= 0:
                             player2_alive = False
                 undertale_hardened_dps = 0.1 * (60 / FPS) * (harden_break / 3)
@@ -6018,7 +6176,7 @@ while running:
             elif enemy["type"] == 17:
                 if current_time >= player2_invincible_until:
                     enemy["dead"] = True
-                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                 if player2_cold_until < 0:
                     if current_time >= player2_invincible_until:
                         player2_lives -= enemy_damage
@@ -6037,14 +6195,14 @@ while running:
                     player2_damage_flash_time = current_time
                     player2_invincible_until = current_time + invincibility_duration
                     enemy["dead"] = True
-                    if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                    if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     if player2_lives <= 0:
                         player2_alive = False
             continue
         if enemy_died:
             if enemy in enemies:
                 enemy["dead"] = True
-                if modifiers[6] == 1 or modifiers[6] == 2: score+=10
+                if modifiers[6] == 1 or modifiers[6] == 2: score+=5
 
 
     # --- Trail squares update ---
@@ -6401,7 +6559,7 @@ while running:
         elif colorblind != 0: color = colorblind_list[colorblind]
         else:
             if enemy["type"] == 1: color = GRAY
-            elif enemy["type"] == 2: color = SALMON
+            elif enemy["type"] == 2: color = LIME
             elif enemy["type"] == 3: color = RED
             elif enemy["type"] == 4: color = TEAL
             elif enemy["type"] == 5: color = GREEN
@@ -6411,7 +6569,7 @@ while running:
                 if enemy["target"] == 1: color = player_skins[p1_skin_color][0]
                 elif enemy["target"] == 2: color = player_skins[p2_skin_color][0]
                 else: color = WHITE
-            elif enemy["type"] == 9: color = LIME
+            elif enemy["type"] == 9: color = CHARTREUSE
             elif enemy["type"] == 10: color = MAGENTA
             elif enemy["type"] == 11: color = BRONZE
             elif enemy["type"] == 12: color = INDIGO
@@ -6448,6 +6606,7 @@ while running:
             elif enemy["type"] == 44: color = LILAC
             elif enemy["type"] == 45: color = COBALT
             elif enemy["type"] == 46: color = MINT
+            elif enemy["type"] == 47: color = SALMON
 
 
         
@@ -6674,25 +6833,6 @@ while running:
     player2_cold_until -= (60 / FPS) * game_speed
     hot_until -= (60 / FPS) * game_speed
     player2_hot_until -= (60 / FPS) * game_speed
-    if spawn_enabled == True:
-        if modifiers[4] == 1:
-            if hot_until < 0:
-                cold_until = 1
-                player_frozen = True
-                player_speed = player_speed_base / 2
-            if player2_hot_until < 0:
-                player2_cold_until = 1
-                player2_frozen = True
-                player2_speed = player2_speed_base / 2
-        if modifiers[4] == 2:
-            if cold_until < 0:
-                hot_until = 1
-                player_burnt = True
-                player_speed = player_speed_base
-            if player2_cold_until < 0:
-                player2_hot_until = 1
-                player2_burnt = True
-                player2_speed = player2_speed_base
 
 
     
