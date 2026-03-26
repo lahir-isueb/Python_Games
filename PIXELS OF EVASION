@@ -4264,7 +4264,10 @@ while running:
                         player_y += overlap_y
                         player2_y -= overlap_y
 
-
+    if p1_dx < 0.1 and p1_dx > -0.1: p1_dx = 0
+    if p1_dy < 0.1 and p1_dy > -0.1: p1_dy = 0
+    if p2_dx < 0.1 and p2_dx > -0.1: p2_dx = 0
+    if p2_dy < 0.1 and p2_dy > -0.1: p2_dy = 0
     player_moving = (p1_dx != 0 or p1_dy != 0)
     
     if spawn_enabled and weathers[weather] == "Windy" or weathers[weather] == "Sandstorm":
