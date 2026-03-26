@@ -4486,7 +4486,8 @@ while running:
             "burn timer": 0,
             "lag show": 0,
             "spawn_protected": True,
-            "spawn_time": current_time
+            "spawn_time": current_time,
+            "im_dead": False
         })
         last_spawn_time = current_time
         
@@ -4730,13 +4731,13 @@ while running:
                                 "spawn_time": pygame.time.get_ticks()
                             })
                     elif modifiers[6] == 1 or modifiers[6] == 2: score+=5/(split_amount*splitter_hp)
-                    enemy["dead"] = True
+                    enemy["im_dead"] = True
                 continue
             if enemy.get("waiting"):
                 # Check if off edge now
                 if 0 < enemy["x"] < WIDTH - enemy_size and 0 < enemy["y"] < HEIGHT - enemy_size:
                     enemy.pop("waiting")
-            if enemy["health"] <= 0: enemy["dead"] = True
+            if enemy["health"] <= 0: enemy["im_dead"] = True
 
                     
         elif enemy["type"] == 10:
@@ -4895,7 +4896,7 @@ while running:
                 if enemy["size"] < 2:
                     # remove immediately once tiny
                     if enemy in enemies:
-                        enemy["dead"] = True
+                        enemy["im_dead"] = True
                         if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
             # movement using current size (sz)
@@ -5062,7 +5063,7 @@ while running:
                 if enemy["size"] < 2:
                     # remove immediately once tiny
                     if enemy in enemies:
-                        enemy["dead"] = True
+                        enemy["im_dead"] = True
                         if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
             enemy["x"] += enemy["dx"] * game_speed
@@ -5136,7 +5137,7 @@ while running:
                 enemy["laser_lifetime"] -= (60 / FPS) * game_speed
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
-                    enemy["dead"] = True
+                    enemy["im_dead"] = True
                     if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
                 laser_width = enemy_size
@@ -5539,7 +5540,7 @@ while running:
             if enemy["size"] < 2:
                 # remove immediately once tiny
                 if enemy in enemies:
-                    enemy["dead"] = True
+                    enemy["im_dead"] = True
                     if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                 continue
             laser_extend = (60 / FPS) * (90)
@@ -5591,7 +5592,7 @@ while running:
                 enemy["laser_lifetime"] -= (60 / FPS) * game_speed
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
-                    enemy["dead"] = True
+                    enemy["im_dead"] = True
                     if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
                 laser_width = enemy_size
@@ -5674,7 +5675,7 @@ while running:
                 enemy["laser_lifetime"] -= (60 / FPS) * game_speed
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
-                    enemy["dead"] = True
+                    enemy["im_dead"] = True
                     if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
                 laser_width = enemy_size
@@ -5743,7 +5744,7 @@ while running:
                 sz = enemy["size"]
                 if enemy["size"] < 2:
                     if enemy in enemies:
-                        enemy["dead"] = True
+                        enemy["im_dead"] = True
                         if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
             enemy["x"] += enemy["dx"] * game_speed
@@ -5895,7 +5896,7 @@ while running:
                 enemy["laser_lifetime"] -= (60 / FPS) * game_speed
                 enemy["laser_length"] += laser_extend * game_speed
                 if enemy["laser_lifetime"] < 0:
-                    enemy["dead"] = True
+                    enemy["im_dead"] = True
                     if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
                 laser_width = enemy_size
@@ -6029,7 +6030,7 @@ while running:
                 if enemy["size"] < 2:
                     # remove immediately once tiny
                     if enemy in enemies:
-                        enemy["dead"] = True
+                        enemy["im_dead"] = True
                         if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     continue
             enemy["x"] += enemy["dx"] * game_speed
@@ -6089,7 +6090,7 @@ while running:
                         p1_regen_block_until = score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
-                        enemy["dead"] = True
+                        enemy["im_dead"] = True
                         if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                         if player_lives <= 0:
                             player_alive = False
@@ -6107,7 +6108,7 @@ while running:
                         p1_regen_block_until = score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
-                        enemy["dead"] = True
+                        enemy["im_dead"] = True
                         if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                         if player_lives <= 0:
                             player_alive = False
@@ -6148,7 +6149,7 @@ while running:
                 continue
             elif enemy["type"] == 17:
                 if current_time >= invincible_until:
-                    enemy["dead"] = True
+                    enemy["im_dead"] = True
                     if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                 if cold_until < 0:
                     if current_time >= invincible_until:
@@ -6167,11 +6168,11 @@ while running:
                     p1_regen_block_until = score + regen_delay
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
-                    enemy["dead"] = True
+                    enemy["im_dead"] = True
                     if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     if player_lives <= 0:
                         player_alive = False
-                continue
+                
                                 
         if players == 2 and player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
                                                                       enemy["x"], enemy["y"], enemy_size):
@@ -6182,7 +6183,7 @@ while running:
                         p2_regen_block_until = score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
-                        enemy["dead"] = True
+                        enemy["im_dead"] = True
                         if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                         if player2_lives <= 0:
                             player2_alive = False
@@ -6200,7 +6201,7 @@ while running:
                         p2_regen_block_until = score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
-                        enemy["dead"] = True
+                        enemy["im_dead"] = True
                         if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                         if player2_lives <= 0:
                             player2_alive = False
@@ -6240,7 +6241,7 @@ while running:
                 continue
             elif enemy["type"] == 17:
                 if current_time >= player2_invincible_until:
-                    enemy["dead"] = True
+                    enemy["im_dead"] = True
                     if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                 if player2_cold_until < 0:
                     if current_time >= player2_invincible_until:
@@ -6259,14 +6260,13 @@ while running:
                     p2_regen_block_until = score + regen_delay
                     player2_damage_flash_time = current_time
                     player2_invincible_until = current_time + invincibility_duration
-                    enemy["dead"] = True
+                    enemy["im_dead"] = True
                     if modifiers[6] == 1 or modifiers[6] == 2: score+=5
                     if player2_lives <= 0:
                         player2_alive = False
-            continue
         if enemy_died:
             if enemy in enemies:
-                enemy["dead"] = True
+                enemy["im_dead"] = True
                 if modifiers[6] == 1 or modifiers[6] == 2: score+=5
 
 
@@ -6992,8 +6992,12 @@ while running:
                     "dx": 0,
                     "dy": 5,
                     "color": colorblind_list[colorblind] if colorblind != 0 else RED,
-                    "ability": "fatal"
+                    "ability": "fatal"    
                 })
+                
+    for enemy in enemies:
+        if enemy["im_dead"] == True:
+            enemy["dead"] = True
 
     if current_time > everyone_died_at and everyone_died_at != 0:
         result = GAME_OVER(truescore, score_p1, score_p2)
