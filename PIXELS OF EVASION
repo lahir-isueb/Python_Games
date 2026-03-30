@@ -448,7 +448,7 @@ def reset_game_state():
     global FPS
     global weather_timer, storm_timer, sandstorm_direction
     global ambush_score
-    global game_speed
+    global game_speed, targeting_flash
     FPS = 60
     player_x = (WIDTH) / 3
     player_y = spawner_pos[1] + spawner_size / 2
@@ -504,6 +504,7 @@ def reset_game_state():
     sandstorm_direction = random.choice([-1, 1])
     ambush_score = ambush_per_score
     game_speed = 1
+    targeting_flash = 0
 
 player_size_setting = 50
 enemy_size_setting = 50
@@ -6722,13 +6723,7 @@ while running:
             reveal_dist = 500
             enemy_visibility = int(max(0, 255 * min(1, (1.5 - 1.5*closest_dist / reveal_dist))))
         else: enemy_visibility = 255
-        
-        enemy_surface = pygame.Surface((enemy["size"], enemy["size"]), pygame.SRCALPHA)
-        enemy_surface.fill((color[0], color[1], color[2], enemy_visibility))
-        screen.blit(enemy_surface, (enemy["x"] - enemy["size"] / 2, enemy["y"] - enemy["size"] / 2))
-        enemyblack_surface = pygame.Surface((enemy["size"]*0.85, enemy["size"]*0.85), pygame.SRCALPHA)
-        enemyblack_surface.fill((0, 0, 0, enemy_visibility))
-        screen.blit(enemyblack_surface, (enemy["x"] - (enemy["size"]*0.85) / 2, enemy["y"] - (enemy["size"]*0.85) / 2))
+
 
         if enemy["type"] in targetting_enemies:
             if enemy["target"] == 1:
@@ -6738,13 +6733,21 @@ while running:
                 if enemy["type"] == 8 or player_skins[p1_skin_color][0] == player_skins[p2_skin_color][0]: enemy_text_color = player_skins[p2_skin_color][skin_match]
                 else: enemy_text_color = player_skins[p2_skin_color][0]
         else: enemy_text_color = WHITE
+        
+        enemy_surface = pygame.Surface((enemy["size"], enemy["size"]), pygame.SRCALPHA)
+        enemy_surface.fill((color[0], color[1], color[2], enemy_visibility))
+        screen.blit(enemy_surface, (enemy["x"] - enemy["size"] / 2, enemy["y"] - enemy["size"] / 2))
+        enemyblack_surface = pygame.Surface((enemy["size"]*0.85, enemy["size"]*0.85), pygame.SRCALPHA)
+        enemyblack_surface.fill((enemy_text_color[0]*targeting_flash, enemy_text_color[1]*targeting_flash, enemy_text_color[2]*targeting_flash, enemy_visibility))
+        screen.blit(enemyblack_surface, (enemy["x"] - (enemy["size"]*0.85) / 2, enemy["y"] - (enemy["size"]*0.85) / 2))
+
 
         if not enemy.get("shrinking", False):
             if enemy["type"] == 8:
                 if enemy["target"] == 1: text_surface = imp_font.render(str(player_lives), True, enemy_text_color)
                 elif enemy["target"] == 2: text_surface = imp2_font.render(str(player2_lives), True, enemy_text_color)
             else:
-                text_surface = enemy_font.render(str(max(int(enemy.get("health", 0)), 0)), True, enemy_text_color)
+                text_surface = enemy_font.render(str(max(int(enemy.get("health", 0)), 0)), True, color)
             text_surface = text_surface.convert_alpha()
             text_surface.set_alpha(enemy_visibility)
 
@@ -6910,7 +6913,8 @@ while running:
     hot_until -= (60 / FPS) * game_speed
     player2_hot_until -= (60 / FPS) * game_speed
 
-
+    targeting_flash += (60 / FPS) * game_speed * 0.015
+    if targeting_flash >= 0.75: targeting_flash = 0
     
     weather_timer += (60 / FPS) * game_speed
     storm_timer += (60 / FPS) * game_speed
