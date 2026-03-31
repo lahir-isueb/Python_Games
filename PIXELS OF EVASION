@@ -127,20 +127,20 @@ font_list = ['none', "arial", "bahnschrift", "calibri", "cambria", "Candara", "c
 p1_skin_color = 0
 p2_skin_color = 0
 custom_color = 0
-custom_text = 1
+custom_text = 0
 custom_p2text = 23
 custom_font = 0
 player_skins = [
                 [WHITE, RED, BLUE, "none"],
-                [RED, YELLOW, WHITE, "none"],
+                [RED, SALMON, PINK, "none"],
                 [BLUE, SKY, TURQUOISE, "none"],
-                [YELLOW, ORANGE, BROWN, "none"],
-                [LIME, GREEN, YELLOW, "none"],
-                [GRAY, WHITE, BLACK, "courier"],
+                [YELLOW, ORANGE, GOLD, "none"],
+                [LIME, MINT, GREEN, "none"],
+                [GRAY, WHITE, SHADOW, "courier"],
                 [LAVA, GOLD, ORANGE, "Colonna"],
                 [CYAN, TEAL, LAVENDER, "modernno20"],
-                [GREEN, LIME, FOREST, "agencyfb"],
-                [PURPLE, LAVENDER, BLUE, "curlz"],
+                [GREEN, LIME, GREEN, "agencyfb"],
+                [PURPLE, LAVENDER, MAGENTA, "curlz"],
                 [MAROON, RED, CRIMSON, "impact"],
                 [TURQUOISE, HOT_PINK, GREEN, "mistral"],
                 [VOLT, AZURE, GREEN, "erasitc"],
@@ -148,7 +148,7 @@ player_skins = [
                 [SHADOW, PINK, CYAN, "chiller"],
                 [ORANGE, YELLOW, CRIMSON, "perpetua"],
                 [SKY, WHITE, BLUE, "comicsansms"],
-                [BROWN, TAN, GREEN, "papyrus"],
+                [BROWN, TAN, MAROON, "papyrus"],
                 [LAVENDER, PURPLE, BLUE, "bell"],
                 [PINK, HOT_PINK, PURPLE, "palacescript"],
                 [HOT_PINK, PINK, VIOLET, "yugothic"],
@@ -3971,14 +3971,10 @@ def TITLE_SCREEN():
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_y) and (p1_skin_color == 24 or p2_skin_color == 24)):
                 if custom_color+1 == len(color_list): custom_color = 0
                 else: custom_color += 1
-                if custom_color == custom_text and custom_color+1 == len(color_list): custom_color = 0
-                elif custom_color == custom_text: custom_color += 1
                 player_skins[24][0] = color_list[custom_color]
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_h) and (p1_skin_color == 24 or p2_skin_color == 24)):
                 if custom_text+1 == len(color_list): custom_text = 0
                 else: custom_text += 1
-                if custom_text == custom_color and custom_text+1 == len(color_list): custom_text = 0
-                elif custom_text == custom_color: custom_text += 1
                 player_skins[24][1] = color_list[custom_text]
                 if custom_text < (len(color_list)//2): player_skins[24][2] = color_list[custom_text + (len(color_list)//2)]
                 else: player_skins[24][2] = color_list[custom_text - (len(color_list)//2)]
@@ -3991,14 +3987,10 @@ def TITLE_SCREEN():
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_t) and (p1_skin_color == 24 or p2_skin_color == 24)):
                 if custom_color-1 < 0: custom_color = len(color_list)-1
                 else: custom_color -= 1
-                if custom_color == custom_text and custom_color-1 < 0: custom_color = len(color_list)-1
-                elif custom_color == custom_text: custom_color -= 1
                 player_skins[24][0] = color_list[custom_color]
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_g) and (p1_skin_color == 24 or p2_skin_color == 24)):
                 if custom_text-1 < 0: custom_text = len(color_list)-1
                 else: custom_text -= 1
-                if custom_text == custom_color and custom_text-1 < 0: custom_text = len(color_list)-1
-                elif custom_text == custom_color: custom_text -= 1
                 player_skins[24][1] = color_list[custom_text]
                 print(len(color_list)//2)
                 if custom_text < (len(color_list)//2): player_skins[24][2] = color_list[custom_text + (len(color_list)//2)]
