@@ -195,10 +195,11 @@ enemies = []
 available_enemy_types = []
 locked_enemy_types = []
 ambush_enemy_types = []
-targetting_enemies = [2, 8, 11, 12, 14, 15, 19, 26, 27, 29, 32, 33, 38]
+targetting_enemies = [2, 8, 11, 12, 14, 15, 19, 26, 27, 29, 32, 33, 38, 48]
 
 target_type = 1
 current_target = 1
+target_closest = 1
 
 # --- Spawner ---
 spawner_pos = (WIDTH // 2 - spawner_size // 2, HEIGHT // 2 - spawner_size // 2)
@@ -543,6 +544,7 @@ blocker_push_radius_setting = 300
 blocker_push_strength_setting = 10
 addictive_interaction_setting = 2
 blocker_interaction_setting = 1
+target_closest_setting = 1
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -659,6 +661,7 @@ def SETTINGS():
     global blocker_push_strength_setting
     global addictive_interaction_setting
     global blocker_interaction_setting
+    global target_closest_setting
     global enemy_locks
     
     global basic_hp_setting
@@ -750,6 +753,7 @@ def SETTINGS():
         global blocker_push_strength_setting
         global addictive_interaction_setting
         global blocker_interaction_setting
+        global target_closest_setting
         global enemy_locks
         
         global basic_hp_setting
@@ -967,6 +971,7 @@ def SETTINGS():
                     case 147: blocker_interaction_setting = int(chara)
                     case 148: gloomyshooter_hp_setting = int(chara)
                     case 149: enemy_locks[47] = int(chara)
+                    case 150: target_closest_setting = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -978,7 +983,7 @@ def SETTINGS():
              "hp", "regen", "invincibility",
              "player speed", "player size",
              "enemy speed", "enemy size", "enemy damage",
-             "target",
+             "target", "target closest",
              "projectile speed", "projectile fire rate",
              "trail duration", "trail distance",
              "proj/trail damage", "proj/trail size",
@@ -1128,7 +1133,7 @@ def SETTINGS():
                                  error_hp_setting, enemy_locks[44], glitchy_hp_setting, enemy_locks[45],
                                  blocker_hp_setting, enemy_locks[46], addictive_pull_radius_setting, addictive_pull_strength_setting,
                                  addictive_interaction_setting, blocker_interaction_setting, gloomyshooter_hp_setting,
-                                 enemy_locks[47]]
+                                 enemy_locks[47], target_closest_setting]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -3043,6 +3048,18 @@ def SETTINGS():
             pygame.time.delay(200)
 
 
+
+        target_closest_label = font.render("Proximity Aiming: " + str(true_or_false[target_closest_setting]), True, MAGENTA)
+        screen.blit(target_closest_label, (50, 180+SLIST.index("target closest")*60 + scroll_y))
+        target_closest_true_or_false_button = pygame.Rect(500, 180+SLIST.index("target closest")*60 - button_offset + scroll_y, 110, 50)
+        pygame.draw.rect(screen, YELLOW, target_closest_true_or_false_button, border_radius=0)
+        screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=target_closest_true_or_false_button.center))
+        if target_closest_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
+            if target_closest_setting == 0: target_closest_setting = 1
+            else: target_closest_setting = 0
+            pygame.time.delay(200)
+
+
         enemy_damage_label = font.render("Enemy Damage: " + str(enemy_damage_setting), True, RED)
         screen.blit(enemy_damage_label, (50, 180+SLIST.index("enemy damage")*60 + scroll_y))
         enemy_damage_minus_button = pygame.Rect(500, 180+SLIST.index("enemy damage")*60 - button_offset + scroll_y, 50, 50)
@@ -3671,7 +3688,7 @@ def apply_settings():
     global stickyshooter_projectile_speed, sparker_projectile_speed, annihilator_projectile_speed
     global regen_delay, player_lives, player2_lives
     global trail_lifetime_ms, trail_interval_ms, burst, teleanglechange
-    global target_type
+    global target_type, target_closest
     global freeze_duration, frostmax, burn_duration, burn_particle_lifetime
     global invincibility_duration, enemy_unlock
     global chase_turn
@@ -3785,6 +3802,7 @@ def apply_settings():
     enemy_damage = enemy_damage_setting
     enemy_unlock = enemy_unlock_setting
     target_type = target_setting
+    target_closest = target_closest_setting
     burst = burst_setting
     frostmax = freezeslip_max_setting / 10
     basic_hp = basic_hp_setting
@@ -4570,6 +4588,11 @@ while running:
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
             if enemy["health"] <= 0: enemy_died = True
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
 
         elif enemy["type"] == 3:
             enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
@@ -4850,6 +4873,11 @@ while running:
                     "ability": None
                 })
                 enemy["trail/shot_charge"] = 0
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
         elif enemy["type"] == 12:  # Get Sniped
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
@@ -4902,6 +4930,11 @@ while running:
                     "ability": "snipe"
                 })
                 enemy["trail/shot_charge"] = 0
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
         elif enemy["type"] == 13:
             enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
             bounced = False
@@ -4947,6 +4980,11 @@ while running:
                         "ability": None
                     })
                 enemy["trail/shot_charge"] = 0
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
         elif enemy["type"] == 15:
             if enemy.get("shrinking"):
                 enemy["size"] = enemy.get("size", "enemy_size") * 0.85 if isinstance(enemy.get("size", None), (int, float)) else sz * 0.85
@@ -5083,6 +5121,11 @@ while running:
                     "ability": None
                 })
                 enemy["trail/shot_charge"] = 0
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
         elif enemy["type"] == 20:  # Frostbite
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
@@ -5346,6 +5389,11 @@ while running:
                 })
                 enemy["trail/shot_charge"] = 0
             if enemy["health"] <= 0: enemy_died = True
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
         elif enemy["type"] == 27:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
@@ -5377,6 +5425,11 @@ while running:
                 enemy["x"] -= enemy["dx"] * 2.5
             if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
             if enemy["health"] <= 0: enemy_died = True
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
         elif enemy["type"] == 28:
             enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed)
             enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed)
@@ -5415,6 +5468,11 @@ while running:
                 enemy["y"] = spawner_pos[1]+25
                 if teleanglechange == 1: enemy["angle"] = random.uniform(0, 2 * math.pi)
             if enemy["health"] <= 0: enemy_died = True
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
         elif enemy["type"] == 30:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
@@ -5509,6 +5567,11 @@ while running:
                     "ability": None
                 })
                 enemy["trail/shot_charge"] = 0
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
         elif enemy["type"] == 33: #Stickyshooter
             enemy["stop_start_time"] += (60 / FPS) * game_speed
             enemy["trail/shot_charge"] += (60 / FPS) * game_speed
@@ -5560,7 +5623,11 @@ while running:
 
             if enemy["health"] <= 0:
                 enemy_died = True
-                
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
         elif enemy["type"] == 34:
             enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             enemy["x"] += enemy["dx"] * game_speed
@@ -6162,6 +6229,11 @@ while running:
                         "ability": None
                     })
                     enemy["trail/shot_charge"] = 0
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
                 
 
 
