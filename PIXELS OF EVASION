@@ -51,7 +51,7 @@ BRONZE = (140, 45, 0)
 BRICK = (140, 65, 65)
 RED = (255, 0, 0)
 LAVA = (200, 60, 0)
-SALMON = (255, 125, 125) #NOT USED
+SALMON = (255, 125, 125)
 CORAL = (255, 160, 125)
 TAN = (155, 125, 95)
 ORANGE = (255, 120, 0)
@@ -85,6 +85,7 @@ LAVENDER = (210, 130, 255)
 LILAC = (250, 215, 255)
 PINK = (255, 140, 255)
 MAGENTA = (255, 0, 255)
+ORCHID = (210, 3, 250)
 VIOLET = (130, 0, 130)
 CRIMSON = (165, 0, 50)
 HOT_PINK = (255, 0, 106)
@@ -97,7 +98,7 @@ color_list = [WHITE, SILVER, CLOUD, GRAY, SHADOW,
               FOREST, TEAL, AQUA, TUNDRA, TURQUOISE,
               ICE, CYAN, SKY, AZURE, BLUE, COBALT, NAVY,
               INDIGO, PURPLE, MAUVE, LAVENDER, LILAC,
-              PINK, MAGENTA, VIOLET, CRIMSON, HOT_PINK]
+              PINK, MAGENTA, ORCHID, VIOLET, CRIMSON, HOT_PINK]
 colorword_list = ["White", "Silver", "Cloud", "Gray", "Shadow",
                   "Brown", "Bronze", "Maroon", "Brick", "Red",
                   "Lava", "Salmon", "Coral", "Tan", "Orange",
@@ -106,7 +107,7 @@ colorword_list = ["White", "Silver", "Cloud", "Gray", "Shadow",
                   "Forest", "Teal", "Aqua", "Tundra", "Turquoise",
                   "Ice", "Cyan", "Sky", "Azure", "Blue", "Cobalt", "Navy",
                   "Indigo", "Purple", "Mauve", "Lavender", "Lilac",
-                  "Pink", "Magenta", "Violet", "Crimson", "Hot Pink"]
+                  "Pink", "Magenta", "Orchid", "Violet", "Crimson", "Hot Pink"]
 
 font_list = ['none', "arial", "bahnschrift", "calibri", "cambria", "Candara", "comicsansms",
              "consolas", "constantia", "corbel", "couriernew", 'Ebrima', 'gabriola', 'Gadugi',
@@ -4607,8 +4608,8 @@ while running:
             if enemy["health"] <= 0:
                 enemy_died = True
         elif enemy["type"] == 6:
-            dist1 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player_x, player_y) if player_alive else 9999
-            dist2 = distance(enemy["x"]-enemy_size/2, enemy["y"]-enemy_size/2, player2_x, player2_y) if players == 2 and player2_alive else 9999
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
             if closest_dist > 200+enemy_size/2+player_size/2:
                 enemy["x"] += enemy["dx"] * game_speed
