@@ -262,6 +262,7 @@ laggy_hp = 5 # 44
 error_hp = 6 # 45
 glitchy_hp = 1 # 46
 blocker_hp = 5 # 47
+gloomyshooter_hp = 4 # 48
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -338,6 +339,7 @@ stickyshooter_delay = 30
 sparker_delay = 5
 volcanic_delay = 5
 glitchy_delay = 6
+gloomyshooter_delay = 30
 projectile_fire_rate = 10
 burst = 10
 bomb_projectile_amount = 8
@@ -545,7 +547,7 @@ enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 2, 1, 1, 1,
-               1, 1, 1, 1, 1, 1, 1]
+               1, 1, 1, 1, 1, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -607,6 +609,7 @@ laggy_hp_setting = 5
 error_hp_setting = 6
 glitchy_hp_setting = 1
 blocker_hp_setting = 5
+gloomyshooter_hp_setting = 4
 
 modifiers = [0, 0, 0, 0, 0, 9, 0]
 
@@ -716,6 +719,7 @@ def SETTINGS():
     global error_hp_setting
     global glitchy_hp_setting
     global blocker_hp_setting
+    global gloomyshooter_hp_setting
     global modifiers
     global colorword_list
     global color_list
@@ -806,6 +810,7 @@ def SETTINGS():
         global error_hp_setting
         global glitchy_hp_setting
         global blocker_hp_setting
+        global gloomyshooter_hp_setting
         global modifiers
         scount = 0
         chara = ""
@@ -960,6 +965,8 @@ def SETTINGS():
                     case 145: blocker_push_strength_setting = int(chara)
                     case 146: addictive_interaction_setting = int(chara)
                     case 147: blocker_interaction_setting = int(chara)
+                    case 148: gloomyshooter_hp_setting = int(chara)
+                    case 149: enemy_locks[47] = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -995,7 +1002,7 @@ def SETTINGS():
              "voodoo", "impostor", "assassin",
              
              "whirly", "stream", "error", "sensitive", "motion", "blind",
-             "savage", "tracer", "stickyshooter", "frostbeam", "pyrobeam",
+             "savage", "tracer", "stickyshooter", "gloomyshooter", "frostbeam", "pyrobeam",
              "phantom", "volcanic", "glitchy", "annihilator", "annihilator bullets",
 
              "forecast",
@@ -1120,7 +1127,8 @@ def SETTINGS():
                                  freezeslip_max_setting, modifiers[6], laggy_hp_setting, enemy_locks[43],
                                  error_hp_setting, enemy_locks[44], glitchy_hp_setting, enemy_locks[45],
                                  blocker_hp_setting, enemy_locks[46], addictive_pull_radius_setting, addictive_pull_strength_setting,
-                                 addictive_interaction_setting, blocker_interaction_setting]
+                                 addictive_interaction_setting, blocker_interaction_setting, gloomyshooter_hp_setting,
+                                 enemy_locks[47]]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -3444,6 +3452,34 @@ def SETTINGS():
             if enemy_locks[46] > (len(enemy_locking_labels) - 2): enemy_locks[46] = 0
             else: enemy_locks[46] = enemy_locks[46] + 1
             pygame.time.delay(200)
+
+
+        gloomyshooter_hp_label = font.render("Gloomyshooter Enemy - HP: " + str(gloomyshooter_hp_setting), True, ORCHID)
+        screen.blit(gloomyshooter_hp_label, (50, 180+SLIST.index("gloomyshooter")*60 + scroll_y))
+        gloomyshooter_hp_minus_button = pygame.Rect(500, 180+SLIST.index("gloomyshooter")*60 - button_offset + scroll_y, 50, 50)
+        gloomyshooter_hp_plus_button = pygame.Rect(560, 180+SLIST.index("gloomyshooter")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, gloomyshooter_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=gloomyshooter_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, gloomyshooter_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=gloomyshooter_hp_minus_button.center))
+        if gloomyshooter_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            gloomyshooter_hp_setting += 1
+            if gloomyshooter_hp_setting > 99:
+                gloomyshooter_hp_setting = 99
+            pygame.time.delay(50)
+        if gloomyshooter_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            gloomyshooter_hp_setting -= 1
+            if gloomyshooter_hp_setting < 1:
+                gloomyshooter_hp_setting = 1
+            pygame.time.delay(50)
+        gloomyshooter_locks_text = font.render(enemy_locking_labels[enemy_locks[47]], True, BLACK)
+        gloomyshooter_locks_button = pygame.Rect(650, 180+SLIST.index("gloomyshooter")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, ORCHID, gloomyshooter_locks_button, border_radius=0)
+        screen.blit(gloomyshooter_locks_text, gloomyshooter_locks_text.get_rect(center=gloomyshooter_locks_button.center))
+        if gloomyshooter_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[47] > (len(enemy_locking_labels) - 2): enemy_locks[47] = 0
+            else: enemy_locks[47] = enemy_locks[47] + 1
+            pygame.time.delay(200)
         
 
         all_enemies_one_color_button_color = SHADOW
@@ -3694,6 +3730,7 @@ def apply_settings():
     global error_hp
     global glitchy_hp
     global blocker_hp, blocker_push_radius, blocker_push_strength
+    global gloomyshooter_hp
     
 
     # --- SETTINGS SET ---
@@ -3813,6 +3850,7 @@ def apply_settings():
     blocker_hp = blocker_hp_setting
     blocker_push_radius = blocker_push_radius_setting
     blocker_push_strength = blocker_push_strength_setting
+    gloomyshooter_hp = gloomyshooter_hp_setting
     colorblind = modifiers[0]
     weather = modifiers[1]
     walleffect = modifiers[2]
@@ -4358,7 +4396,7 @@ while running:
             dx *= 0.9; dy *= 0.9; health = shooter_hp
             shoot_delay = shooter_delay
         elif enemy_type == 12:
-            dx *= 0.3; dy *= 0.3; health = sniper_hp
+            dx *= 1; dy *= 1; health = sniper_hp
             shoot_delay = sniper_delay
         elif enemy_type == 13:
             dx *= 2; dy *= 2; health = speedy_hp
@@ -4439,6 +4477,9 @@ while running:
             shoot_delay = glitchy_delay
         elif enemy_type == 47:
             dx *= 0.75; dy *= 0.75; health = blocker_hp
+        elif enemy_type == 48:
+            dx *= 1; dy *= 1; health = gloomyshooter_hp
+            shoot_delay = gloomyshooter_delay
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -4810,17 +4851,34 @@ while running:
                 })
                 enemy["trail/shot_charge"] = 0
         elif enemy["type"] == 12:  # Get Sniped
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            closest_dist = min(dist1, dist2)
+            speed_multiplier = 1 if closest_dist < 400+enemy_size/2+player_size/2 else 0.1
             enemy["trail/shot_charge"] += (60 / FPS) * game_speed
-            enemy["x"] += enemy["dx"] * game_speed
-            enemy["y"] += enemy["dy"] * game_speed
+            enemy["x"] += enemy["dx"] * speed_multiplier * game_speed
+            enemy["y"] += enemy["dy"] * speed_multiplier * game_speed
             bounced = False
+            # X-axis bounce
             if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
-                enemy["dx"] *= -1; bounced = True
+                enemy["dx"] *= -1
+                enemy["x"] += enemy["dx"] * speed_multiplier
+                bounced = True
+                if enemy["x"] <= 0: enemy["x"] = 0
+                elif enemy["x"] >= WIDTH - enemy_size: enemy["x"] = WIDTH - enemy_size/2
+            # Y-axis bounce
             if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
-                enemy["dy"] *= -1; bounced = True
-            if bounced: 
+                enemy["dy"] *= -1
+                enemy["y"] += enemy["dy"] * speed_multiplier
+                bounced = True
+                if enemy["y"] <= 0: enemy["y"] = 0
+                elif enemy["y"] >= HEIGHT - enemy_size: enemy["y"] = HEIGHT - enemy_size/2
+            # Update bounce count and health once per frame
+            if bounced:
                 enemy["bounces"] += 1
                 enemy["health"] -= 1
+                
+            # Remove enemy if health depleted
             if enemy["health"] <= 0:
                 enemy_died = True
             # Shoot at player
@@ -6066,7 +6124,46 @@ while running:
                 if dist < push_radius and dist > 1:
                     push_strength = base_push_strength * (1 - dist / push_radius)
                     player2_x -= (dxp / dist) * push_strength
-                    player2_y -= (dyp / dist) * push_strength   
+                    player2_y -= (dyp / dist) * push_strength
+        elif enemy["type"] == 48:
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
+            closest_dist = min(dist1, dist2)
+            if closest_dist > 300+enemy_size/2+player_size/2:
+                enemy["x"] += enemy["dx"] * game_speed
+                enemy["y"] += enemy["dy"] * game_speed
+                bounced = False
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2: 
+                    enemy["dx"] *= -1; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2: 
+                    enemy["dy"] *= -1; bounced = True
+                if bounced:
+                    enemy["bounces"] += 1; enemy["health"] -= 1
+                if enemy["health"] <= 0: enemy_died = True
+            else:
+                if enemy["trail/shot_charge"] >= enemy["shoot_delay"]:
+                    target_pos = get_target_position(enemy)
+                    if target_pos:
+                        tx, ty = target_pos
+                    else:
+                        tx, ty = player_x, player_y
+                    dxp = tx - (enemy["x"])
+                    dyp = ty - (enemy["y"])
+                    dist = math.hypot(dxp, dyp)
+                    dxp = dxp / dist * shooter_projectile_speed
+                    dyp = dyp / dist * shooter_projectile_speed
+                    projectiles.append({
+                        "x": enemy["x"] + projectile_size/2,
+                        "y": enemy["y"] + projectile_size/2,
+                        "dx": dxp,
+                        "dy": dyp,
+                        "color": colorblind_list[colorblind] if colorblind != 0 else ORCHID,
+                        "ability": None
+                    })
+                    enemy["trail/shot_charge"] = 0
+                
+
 
 
 
@@ -6673,6 +6770,7 @@ while running:
             elif enemy["type"] == 45: color = COBALT
             elif enemy["type"] == 46: color = MINT
             elif enemy["type"] == 47: color = SALMON
+            elif enemy["type"] == 48: color = ORCHID
 
 
         
