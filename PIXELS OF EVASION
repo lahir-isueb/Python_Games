@@ -6738,7 +6738,8 @@ while running:
         enemy_surface.fill((color[0], color[1], color[2], enemy_visibility))
         screen.blit(enemy_surface, (enemy["x"] - enemy["size"] / 2, enemy["y"] - enemy["size"] / 2))
         enemyblack_surface = pygame.Surface((enemy["size"]*0.85, enemy["size"]*0.85), pygame.SRCALPHA)
-        enemyblack_surface.fill((enemy_text_color[0]*targeting_flash, enemy_text_color[1]*targeting_flash, enemy_text_color[2]*targeting_flash, enemy_visibility))
+        if enemy["type"] in targetting_enemies and not enemy["type"] == 8 and not enemy["type"] == 38: enemyblack_surface.fill((enemy_text_color[0]*targeting_flash, enemy_text_color[1]*targeting_flash, enemy_text_color[2]*targeting_flash, enemy_visibility))
+        else: enemyblack_surface.fill((0, 0, 0, enemy_visibility))
         screen.blit(enemyblack_surface, (enemy["x"] - (enemy["size"]*0.85) / 2, enemy["y"] - (enemy["size"]*0.85) / 2))
 
 
