@@ -64,6 +64,7 @@ CREAM = (255, 255, 180)
 CHARTREUSE = (220, 230, 150)
 VOLT = (185, 255, 0)
 MINT = (165, 255, 165)
+ACID = (135, 200, 135)
 LIME = (0, 255, 0)
 GREEN = (0, 125, 0)
 FOREST = (0, 60, 0)
@@ -94,8 +95,8 @@ color_list = [WHITE, SILVER, CLOUD, GRAY, SHADOW,
               BROWN, BRONZE, MAROON, BRICK, RED,
               LAVA, SALMON, CORAL, TAN, ORANGE,
               TANGERINE, GOLD, SULFUR, OLIVE, YELLOW,
-              CREAM, CHARTREUSE, VOLT, MINT, LIME, GREEN,
-              FOREST, TEAL, AQUA, TUNDRA, TURQUOISE,
+              CREAM, CHARTREUSE, VOLT, MINT, ACID, LIME,
+              GREEN, FOREST, TEAL, AQUA, TUNDRA, TURQUOISE,
               ICE, CYAN, SKY, AZURE, BLUE, COBALT, NAVY,
               INDIGO, PURPLE, MAUVE, LAVENDER, LILAC,
               PINK, MAGENTA, ORCHID, VIOLET, CRIMSON, HOT_PINK]
@@ -103,8 +104,8 @@ colorword_list = ["White", "Silver", "Cloud", "Gray", "Shadow",
                   "Brown", "Bronze", "Maroon", "Brick", "Red",
                   "Lava", "Salmon", "Coral", "Tan", "Orange",
                   "Tangerine", "Gold", "Sulfur", "Olive", "Yellow",
-                  "Cream", "Chartreuse", "Volt", "Mint", "Lime", "Green",
-                  "Forest", "Teal", "Aqua", "Tundra", "Turquoise",
+                  "Cream", "Chartreuse", "Volt", "Mint", "Acid", "Lime",
+                  "Green", "Forest", "Teal", "Aqua", "Tundra", "Turquoise",
                   "Ice", "Cyan", "Sky", "Azure", "Blue", "Cobalt", "Navy",
                   "Indigo", "Purple", "Mauve", "Lavender", "Lilac",
                   "Pink", "Magenta", "Orchid", "Violet", "Crimson", "Hot Pink"]
@@ -264,6 +265,8 @@ error_hp = 6 # 45
 glitchy_hp = 1 # 46
 blocker_hp = 5 # 47
 gloomyshooter_hp = 4 # 48
+pulse_hp = 2 # 49
+grower_hp = 4 # 50
 
 # --- Enemy Damage ---
 enemy_damage = 1
@@ -330,6 +333,7 @@ burstshooter_projectile_speed = 5
 frostbite_projectile_speed = 5
 sparker_projectile_speed = 5
 annihilator_projectile_speed = 10
+pulse_projectile_speed = 10
 projectile_size = 10
 shooter_delay = 150
 sniper_delay = 275
@@ -341,6 +345,7 @@ sparker_delay = 5
 volcanic_delay = 5
 glitchy_delay = 6
 gloomyshooter_delay = 30
+pulse_delay = 15
 projectile_fire_rate = 10
 burst = 10
 bomb_projectile_amount = 8
@@ -549,7 +554,7 @@ enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 2, 1, 1, 1,
-               1, 1, 1, 1, 1, 1, 1, 1]
+               1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 basic_hp_setting = 5
 homing_hp_setting = 2
@@ -612,6 +617,8 @@ error_hp_setting = 6
 glitchy_hp_setting = 1
 blocker_hp_setting = 5
 gloomyshooter_hp_setting = 4
+pulse_hp_setting = 2
+grower_hp_setting = 4
 
 modifiers = [0, 0, 0, 0, 0, 9, 0]
 
@@ -723,6 +730,8 @@ def SETTINGS():
     global glitchy_hp_setting
     global blocker_hp_setting
     global gloomyshooter_hp_setting
+    global pulse_hp_setting
+    global grower_hp_setting
     global modifiers
     global colorword_list
     global color_list
@@ -815,6 +824,8 @@ def SETTINGS():
         global glitchy_hp_setting
         global blocker_hp_setting
         global gloomyshooter_hp_setting
+        global pulse_hp_setting
+        global grower_hp_setting
         global modifiers
         scount = 0
         chara = ""
@@ -972,6 +983,10 @@ def SETTINGS():
                     case 148: gloomyshooter_hp_setting = int(chara)
                     case 149: enemy_locks[47] = int(chara)
                     case 150: target_closest_setting = int(chara)
+                    case 151: pulse_hp_setting = int(chara)
+                    case 152: grower_hp_setting = int(chara)
+                    case 153: enemy_locks[48] = int(chara)
+                    case 154: enemy_locks[49] = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -993,24 +1008,17 @@ def SETTINGS():
              "freeze status", "frostmax", "burn status", "burn duration",
              "set locks", "set locks 2",
              
-             "basic", "speedy", "sticky", "sticky sensitive",
-             "charger", "charger sensitive", "gloomy", "flow", "laggy",
-             "cold", "magma", "accelerator", "teleporter",
-             "homing", "hardened", "splitter", "splitter splits", "invisibility",
-             "trail", "shooter", "burstshooter", "burst", "rapidshooter",
-             "sniper", "xtra sniper damage", "shotgun", "shotgun bullets",
-             "bomb", "bomb bullets",
-             "frostbite", "frostbite bullets", "sparker",
-             "laser", "fatal",
+             "basic", "speedy", "sticky", "sticky sensitive", "charger", "charger sensitive",
+             "teleporter", "whirly", "accelerator", "homing", "tracer", "flow", "stream", "gloomy", "trail",
+             "grower", "hardened", "sensitive", "laggy", "error", "invisibility", "cold", "magma",
+             "shooter", "burstshooter", "burst", "rapidshooter", "splitter", "splitter splits",
+             "savage", "sniper", "xtra sniper damage", "shotgun", "shotgun bullets", "bomb", "bomb bullets",
+             "motion", "blind", "laser", "frostbeam", "pyrobeam", "voodoo", "sparker",
              "addictive", "addictive strength", "addictive radius", "addictive interaction",
              "blocker", "blocker strength", "blocker radius", "blocker interaction",
-             "voodoo", "impostor", "assassin",
-             
-             "whirly", "stream", "error", "sensitive", "motion", "blind",
-             "savage", "tracer", "stickyshooter", "gloomyshooter", "frostbeam", "pyrobeam",
-             "phantom", "volcanic", "glitchy", "annihilator", "annihilator bullets",
-
-             "forecast",
+             "fatal", "pulse", "frostbite", "frostbite bullets", "volcanic", "stickyshooter", "gloomyshooter",
+             "phantom", "glitchy", "annihilator", "annihilator bullets",
+             "assassin", "impostor", "forecast",
              
              "spawner color", "score style", "status", "walleffect", "weather",
              "all one color", "invisenemies"
@@ -1076,7 +1084,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GRAY, default_set_button, border_radius=0)
         screen.blit(default_set_text, default_set_text.get_rect(center=default_set_button.center))
         if default_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_100_2_1_1_1_0_9_20_0_5_1_6_1_1_1_5_1_300_10_2_1_4_1_1_")
+            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_100_2_1_1_1_0_9_20_0_5_1_6_1_1_1_5_1_300_10_2_1_4_1_1_2_4_1_1_")
             pygame.time.delay(200)
 
 
@@ -1133,7 +1141,8 @@ def SETTINGS():
                                  error_hp_setting, enemy_locks[44], glitchy_hp_setting, enemy_locks[45],
                                  blocker_hp_setting, enemy_locks[46], addictive_pull_radius_setting, addictive_pull_strength_setting,
                                  addictive_interaction_setting, blocker_interaction_setting, gloomyshooter_hp_setting,
-                                 enemy_locks[47], target_closest_setting]
+                                 enemy_locks[47], target_closest_setting, pulse_hp_setting, grower_hp_setting,
+                                 enemy_locks[48], enemy_locks[49]]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -3497,6 +3506,64 @@ def SETTINGS():
             if enemy_locks[47] > (len(enemy_locking_labels) - 2): enemy_locks[47] = 0
             else: enemy_locks[47] = enemy_locks[47] + 1
             pygame.time.delay(200)
+
+
+
+        pulse_hp_label = font.render("Pulse Enemy - HP: " + str(pulse_hp_setting), True, AZURE)
+        screen.blit(pulse_hp_label, (50, 180+SLIST.index("pulse")*60 + scroll_y))
+        pulse_hp_minus_button = pygame.Rect(500, 180+SLIST.index("pulse")*60 - button_offset + scroll_y, 50, 50)
+        pulse_hp_plus_button = pygame.Rect(560, 180+SLIST.index("pulse")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, pulse_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=pulse_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, pulse_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=pulse_hp_minus_button.center))
+        if pulse_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            pulse_hp_setting += 1
+            if pulse_hp_setting > 99:
+                pulse_hp_setting = 99
+            pygame.time.delay(50)
+        if pulse_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            pulse_hp_setting -= 1
+            if pulse_hp_setting < 1:
+                pulse_hp_setting = 1
+            pygame.time.delay(50)
+        pulse_locks_text = font.render(enemy_locking_labels[enemy_locks[48]], True, BLACK)
+        pulse_locks_button = pygame.Rect(650, 180+SLIST.index("pulse")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, AZURE, pulse_locks_button, border_radius=0)
+        screen.blit(pulse_locks_text, pulse_locks_text.get_rect(center=pulse_locks_button.center))
+        if pulse_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[48] > (len(enemy_locking_labels) - 2): enemy_locks[48] = 0
+            else: enemy_locks[48] = enemy_locks[48] + 1
+            pygame.time.delay(200)
+
+
+
+        grower_hp_label = font.render("Grower Enemy - HP: " + str(grower_hp_setting), True, ACID)
+        screen.blit(grower_hp_label, (50, 180+SLIST.index("grower")*60 + scroll_y))
+        grower_hp_minus_button = pygame.Rect(500, 180+SLIST.index("grower")*60 - button_offset + scroll_y, 50, 50)
+        grower_hp_plus_button = pygame.Rect(560, 180+SLIST.index("grower")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, grower_hp_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=grower_hp_plus_button.center))
+        pygame.draw.rect(screen, RED, grower_hp_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=grower_hp_minus_button.center))
+        if grower_hp_plus_button.collidepoint(mouse_pos) and mouse_click:
+            grower_hp_setting += 1
+            if grower_hp_setting > 99:
+                grower_hp_setting = 99
+            pygame.time.delay(50)
+        if grower_hp_minus_button.collidepoint(mouse_pos) and mouse_click:
+            grower_hp_setting -= 1
+            if grower_hp_setting < 1:
+                grower_hp_setting = 1
+            pygame.time.delay(50)
+        grower_locks_text = font.render(enemy_locking_labels[enemy_locks[49]], True, BLACK)
+        grower_locks_button = pygame.Rect(650, 180+SLIST.index("grower")*60 - button_offset + scroll_y, 200, 50)
+        pygame.draw.rect(screen, ACID, grower_locks_button, border_radius=0)
+        screen.blit(grower_locks_text, grower_locks_text.get_rect(center=grower_locks_button.center))
+        if grower_locks_button.collidepoint(mouse_pos) and mouse_click:
+            if enemy_locks[49] > (len(enemy_locking_labels) - 2): enemy_locks[49] = 0
+            else: enemy_locks[49] = enemy_locks[49] + 1
+            pygame.time.delay(200)
         
 
         all_enemies_one_color_button_color = SHADOW
@@ -3748,6 +3815,8 @@ def apply_settings():
     global glitchy_hp
     global blocker_hp, blocker_push_radius, blocker_push_strength
     global gloomyshooter_hp
+    global pulse_hp
+    global grower_hp
     
 
     # --- SETTINGS SET ---
@@ -3869,6 +3938,8 @@ def apply_settings():
     blocker_push_radius = blocker_push_radius_setting
     blocker_push_strength = blocker_push_strength_setting
     gloomyshooter_hp = gloomyshooter_hp_setting
+    pulse_hp = pulse_hp_setting
+    grower_hp = grower_hp_setting
     colorblind = modifiers[0]
     weather = modifiers[1]
     walleffect = modifiers[2]
@@ -4498,6 +4569,11 @@ while running:
         elif enemy_type == 48:
             dx *= 1; dy *= 1; health = gloomyshooter_hp
             shoot_delay = gloomyshooter_delay
+        elif enemy_type == 49:
+            dx *= 1; dy *= 1; health = pulse_hp
+            shoot_delay = pulse_delay
+        elif enemy_type == 50:
+            dx *= 1; dy *= 1; health = grower_hp
 
         if enemy_type in targetting_enemies:
             if players == 1:
@@ -4546,6 +4622,10 @@ while running:
             "bursts left": 0,
             "burn timer": 0,
             "lag show": 0,
+            "pulse lock": random.uniform(0, 2 * math.pi),
+            "size multiplier": 1,
+            "size multiplier change": 0.05,
+            "edge cooldown": False,
             "spawn_protected": True,
             "spawn_time": current_time
         })
@@ -5085,7 +5165,7 @@ while running:
 
             if enemy["health"] <= 0:
                 enemy_died = True
-        elif enemy["type"] == 19:  # Rapid Shooter
+        elif enemy["type"] == 19:
             enemy["trail/shot_charge"] += (60 / FPS) * game_speed
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
@@ -5126,7 +5206,7 @@ while running:
             if target_closest == 1 and players == 2:
                 if dist1<dist2: enemy["target"] = 1
                 if dist1>dist2: enemy["target"] = 2
-        elif enemy["type"] == 20:  # Frostbite
+        elif enemy["type"] == 20:
             enemy["x"] += enemy["dx"] * game_speed
             enemy["y"] += enemy["dy"] * game_speed
             bounced = False
@@ -5385,7 +5465,7 @@ while running:
                     "y": int(enemy["y"]),
                     "lifetime": trail_lifetime_ms,
                     "health": 1,
-                    "color": colorblind_list[colorblind] if colorblind != 0 else SULFUR
+                    "color": colorblind_list[colorblind] if colorblind != 0 else ACID
                 })
                 enemy["trail/shot_charge"] = 0
             if enemy["health"] <= 0: enemy_died = True
@@ -6234,6 +6314,68 @@ while running:
             if target_closest == 1 and players == 2:
                 if dist1<dist2: enemy["target"] = 1
                 if dist1>dist2: enemy["target"] = 2
+        elif enemy["type"] == 49:
+            enemy["trail/shot_charge"] += (60 / FPS) * game_speed
+            enemy["x"] += enemy["dx"] * game_speed
+            enemy["y"] += enemy["dy"] * game_speed
+            bounced = False
+            if enemy["x"] <= enemy_size/2 or enemy["x"] >= WIDTH - enemy_size/2:
+                enemy["dx"] *= -1; bounced = True
+            if enemy["y"] <= enemy_size/2 or enemy["y"] >= HEIGHT - enemy_size/2:
+                enemy["dy"] *= -1; bounced = True
+            if bounced: 
+                enemy["bounces"] += 1
+                enemy["health"] -= 1
+            if enemy["health"] <= 0:
+                enemy_died = True
+
+            # Shoot at player
+            if enemy["trail/shot_charge"] >= enemy["shoot_delay"]:
+                dxp = math.cos(enemy["pulse lock"])
+                dyp = math.sin(enemy["pulse lock"])
+                dist = math.hypot(dxp, dyp)
+                dxp = dxp / dist * pulse_projectile_speed
+                dyp = dyp / dist * pulse_projectile_speed
+                projectiles.append({
+                    "x": enemy["x"] + projectile_size/2,
+                    "y": enemy["y"] + projectile_size/2,
+                    "dx": dxp,
+                    "dy": dyp,
+                    "color": colorblind_list[colorblind] if colorblind != 0 else AZURE,
+                    "ability": None
+                })
+                enemy["trail/shot_charge"] = 0
+            dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
+            dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999999999999
+            if target_closest == 1 and players == 2:
+                if dist1<dist2: enemy["target"] = 1
+                if dist1>dist2: enemy["target"] = 2
+        if enemy["type"] == 50:
+            if enemy["size multiplier"] <= 1: enemy["size multiplier change"] = 0.05
+            if enemy["size multiplier"] >= 4: enemy["size multiplier change"] = -0.05
+            enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
+            enemy["size"] = enemy_size * enemy["size multiplier"]
+            enemy["size multiplier"] += enemy["size multiplier change"] * game_speed
+            bounced = False
+            if not enemy["x"] <= enemy["size"]/2 and not enemy["x"] >= WIDTH - enemy["size"]/2 and not enemy["y"] <= enemy["size"]/2 and not enemy["y"] >= HEIGHT - enemy["size"]/2: enemy["edge cooldown"] = False
+            if enemy["x"] <= enemy["size"]/2:
+                enemy["dx"] *= -1
+                bounced = True
+                enemy["x"] = enemy["size"]/2
+            if enemy["x"] >= WIDTH - enemy["size"]/2:
+                enemy["dx"] *= -1
+                bounced = True
+                enemy["x"] = WIDTH - enemy["size"]/2
+            if enemy["y"] <= enemy["size"]/2:
+                enemy["dy"] *= -1
+                bounced = True
+                enemy["y"] = enemy["size"]/2
+            if enemy["y"] >= HEIGHT - enemy["size"]/2:
+                enemy["dy"] *= -1
+                bounced = True
+                enemy["y"] = HEIGHT - enemy["size"]/2
+            if enemy["edge cooldown"] == False and bounced: enemy["bounces"] += 1; enemy["health"] -= 1; enemy["edge cooldown"] = True
+            if enemy["health"] <= 0: enemy_died = True
                 
 
 
@@ -6252,7 +6394,7 @@ while running:
 
 
         if player_alive and centered_rect_collision(player_x, player_y, player_size,
-                                            enemy["x"], enemy["y"], enemy_size):
+                                            enemy["x"], enemy["y"], enemy["size"]):
             if enemy["type"] == 39:
                 if not player_moving:  # Only damages if player is still
                     if current_time >= invincible_until:
@@ -6345,7 +6487,7 @@ while running:
                 
                                 
         if players == 2 and player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
-                                                                      enemy["x"], enemy["y"], enemy_size):
+                                                                      enemy["x"], enemy["y"], enemy["size"]):
             if enemy["type"] == 39:
                 if p2_dx == 0 and p2_dy == 0:  # not moving
                     if current_time >= player2_invincible_until:
@@ -6843,6 +6985,8 @@ while running:
             elif enemy["type"] == 46: color = MINT
             elif enemy["type"] == 47: color = SALMON
             elif enemy["type"] == 48: color = ORCHID
+            elif enemy["type"] == 49: color = AZURE
+            elif enemy["type"] == 50: color = ACID
 
 
         
