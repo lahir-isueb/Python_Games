@@ -75,7 +75,7 @@ TURQUOISE = (0, 255, 180)
 ICE = (175, 255, 255)
 CYAN = (0, 255, 255)
 SKY = (125, 170, 225)
-AZURE = (0, 140, 255) #NOT USED
+AZURE = (0, 140, 255)
 BLUE = (0, 0, 255)
 COBALT = (90, 100, 145)
 NAVY = (0, 0, 100)
@@ -377,6 +377,9 @@ accel_rate = 0.02
 harden_break = 10
 unharden_death = 0
 
+# --- Growing Speed ---
+growing_speed = 30
+
 # --- Teleport Angle Change ---
 teleanglechange = 1
 
@@ -550,6 +553,7 @@ blocker_push_strength_setting = 10
 addictive_interaction_setting = 2
 blocker_interaction_setting = 1
 target_closest_setting = 1
+growing_speed_setting = 45
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -669,6 +673,7 @@ def SETTINGS():
     global addictive_interaction_setting
     global blocker_interaction_setting
     global target_closest_setting
+    global growing_speed_setting
     global enemy_locks
     
     global basic_hp_setting
@@ -763,6 +768,7 @@ def SETTINGS():
         global addictive_interaction_setting
         global blocker_interaction_setting
         global target_closest_setting
+        global growing_speed_setting
         global enemy_locks
         
         global basic_hp_setting
@@ -987,6 +993,7 @@ def SETTINGS():
                     case 152: grower_hp_setting = int(chara)
                     case 153: enemy_locks[48] = int(chara)
                     case 154: enemy_locks[49] = int(chara)
+                    case 155: growing_speed_setting = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -1010,7 +1017,7 @@ def SETTINGS():
              
              "basic", "speedy", "sticky", "sticky sensitive", "charger", "charger sensitive",
              "teleporter", "whirly", "accelerator", "homing", "tracer", "flow", "stream", "gloomy", "trail",
-             "grower", "hardened", "sensitive", "laggy", "error", "invisibility", "cold", "magma",
+             "grower", "growing speed", "hardened", "sensitive", "laggy", "error", "invisibility", "cold", "magma",
              "shooter", "burstshooter", "burst", "rapidshooter", "splitter", "splitter splits",
              "savage", "sniper", "xtra sniper damage", "shotgun", "shotgun bullets", "bomb", "bomb bullets",
              "motion", "blind", "laser", "frostbeam", "pyrobeam", "voodoo", "sparker",
@@ -1084,7 +1091,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GRAY, default_set_button, border_radius=0)
         screen.blit(default_set_text, default_set_text.get_rect(center=default_set_button.center))
         if default_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_100_2_1_1_1_0_9_20_0_5_1_6_1_1_1_5_1_300_10_2_1_4_1_1_2_4_1_1_")
+            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_100_2_1_1_1_0_9_20_0_5_1_6_1_1_1_5_1_300_10_2_1_4_1_1_2_4_1_1_45_")
             pygame.time.delay(200)
 
 
@@ -1142,7 +1149,7 @@ def SETTINGS():
                                  blocker_hp_setting, enemy_locks[46], addictive_pull_radius_setting, addictive_pull_strength_setting,
                                  addictive_interaction_setting, blocker_interaction_setting, gloomyshooter_hp_setting,
                                  enemy_locks[47], target_closest_setting, pulse_hp_setting, grower_hp_setting,
-                                 enemy_locks[48], enemy_locks[49]]
+                                 enemy_locks[48], enemy_locks[49], growing_speed_setting]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -3564,6 +3571,27 @@ def SETTINGS():
             if enemy_locks[49] > (len(enemy_locking_labels) - 2): enemy_locks[49] = 0
             else: enemy_locks[49] = enemy_locks[49] + 1
             pygame.time.delay(200)
+
+
+
+        growing_speed_label = font.render("Growing Amount: " + str(growing_speed_setting), True, ACID)
+        screen.blit(growing_speed_label, (100, 180+SLIST.index("growing speed")*60 + scroll_y))
+        growing_speed_minus_button = pygame.Rect(500, 180+SLIST.index("growing speed")*60 - button_offset + scroll_y, 50, 50)
+        growing_speed_plus_button = pygame.Rect(560, 180+SLIST.index("growing speed")*60 - button_offset + scroll_y, 50, 50)
+        pygame.draw.rect(screen, GREEN, growing_speed_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=growing_speed_plus_button.center))
+        pygame.draw.rect(screen, RED, growing_speed_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=growing_speed_minus_button.center))
+        if growing_speed_plus_button.collidepoint(mouse_pos) and mouse_click:
+            growing_speed_setting += 5
+            if growing_speed_setting > 440:
+                growing_speed_setting = 440
+            pygame.time.delay(50)
+        if growing_speed_minus_button.collidepoint(mouse_pos) and mouse_click:
+            growing_speed_setting -= 5
+            if growing_speed_setting < 5:
+                growing_speed_setting = 5
+            pygame.time.delay(50)
         
 
         all_enemies_one_color_button_color = SHADOW
@@ -3759,6 +3787,7 @@ def apply_settings():
     global freeze_duration, frostmax, burn_duration, burn_particle_lifetime
     global invincibility_duration, enemy_unlock
     global chase_turn
+    global growing_speed
     global stickiness
     global projectile_fire_rate
     global insta_spawn, ambushes, ambush_per_score
@@ -3865,6 +3894,7 @@ def apply_settings():
     invincibility_duration = invincibility_duration_setting
     chase_turn = chaser_turn_amount_setting
     stickiness = enemy_stick_setting
+    growing_speed = growing_speed_setting
     addictive_interaction = addictive_interaction_setting
     blocker_interaction = blocker_interaction_setting
     projectile_fire_rate = projectile_fire_rate_setting
@@ -6351,30 +6381,33 @@ while running:
                 if dist1<dist2: enemy["target"] = 1
                 if dist1>dist2: enemy["target"] = 2
         if enemy["type"] == 50:
-            if enemy["size multiplier"] <= 1: enemy["size multiplier change"] = 0.05
-            if enemy["size multiplier"] >= 4: enemy["size multiplier change"] = -0.05
             enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
-            enemy["size"] = enemy_size * enemy["size multiplier"]
-            enemy["size multiplier"] += enemy["size multiplier change"] * game_speed
             bounced = False
-            if not enemy["x"] <= enemy["size"]/2 and not enemy["x"] >= WIDTH - enemy["size"]/2 and not enemy["y"] <= enemy["size"]/2 and not enemy["y"] >= HEIGHT - enemy["size"]/2: enemy["edge cooldown"] = False
-            if enemy["x"] <= enemy["size"]/2:
+            if enemy["x"] < enemy["size"]/2:
                 enemy["dx"] *= -1
                 bounced = True
+                enemy["size"] = min(450, enemy["size"]+growing_speed)
+            if enemy["x"] > WIDTH - enemy["size"]/2:
+                enemy["dx"] *= -1
+                bounced = True
+                enemy["size"] = min(450, enemy["size"]+growing_speed)
+            if enemy["y"] < enemy["size"]/2:
+                enemy["dy"] *= -1
+                bounced = True
+                enemy["size"] = min(450, enemy["size"]+growing_speed)
+            if enemy["y"] > HEIGHT - enemy["size"]/2:
+                enemy["dy"] *= -1
+                bounced = True
+                enemy["size"] = min(450, enemy["size"]+growing_speed)
+            if enemy["x"] < enemy["size"]/2:
                 enemy["x"] = enemy["size"]/2
-            if enemy["x"] >= WIDTH - enemy["size"]/2:
-                enemy["dx"] *= -1
-                bounced = True
+            if enemy["x"] > WIDTH - enemy["size"]/2:
                 enemy["x"] = WIDTH - enemy["size"]/2
-            if enemy["y"] <= enemy["size"]/2:
-                enemy["dy"] *= -1
-                bounced = True
+            if enemy["y"] < enemy["size"]/2:
                 enemy["y"] = enemy["size"]/2
-            if enemy["y"] >= HEIGHT - enemy["size"]/2:
-                enemy["dy"] *= -1
-                bounced = True
+            if enemy["y"] > HEIGHT - enemy["size"]/2:
                 enemy["y"] = HEIGHT - enemy["size"]/2
-            if enemy["edge cooldown"] == False and bounced: enemy["bounces"] += 1; enemy["health"] -= 1; enemy["edge cooldown"] = True
+            if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
             if enemy["health"] <= 0: enemy_died = True
                 
 
