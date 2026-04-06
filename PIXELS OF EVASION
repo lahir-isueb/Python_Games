@@ -5465,7 +5465,7 @@ while running:
                     "y": int(enemy["y"]),
                     "lifetime": trail_lifetime_ms,
                     "health": 1,
-                    "color": colorblind_list[colorblind] if colorblind != 0 else ACID
+                    "color": colorblind_list[colorblind] if colorblind != 0 else SULFUR
                 })
                 enemy["trail/shot_charge"] = 0
             if enemy["health"] <= 0: enemy_died = True
