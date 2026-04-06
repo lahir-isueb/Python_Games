@@ -624,7 +624,7 @@ gloomyshooter_hp_setting = 4
 pulse_hp_setting = 2
 grower_hp_setting = 4
 
-modifiers = [0, 0, 0, 0, 0, 9, 0]
+modifiers = [0, 0, 0, 0, 0, 9, 0, 0]
 
 def enemy_lock_setup(elock, enumber):
     global available_enemy_types
@@ -994,6 +994,7 @@ def SETTINGS():
                     case 153: enemy_locks[48] = int(chara)
                     case 154: enemy_locks[49] = int(chara)
                     case 155: growing_speed_setting = int(chara)
+                    case 156: modifiers[7] = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -1028,7 +1029,7 @@ def SETTINGS():
              "assassin", "impostor", "forecast",
              
              "spawner color", "score style", "status", "walleffect", "weather",
-             "all one color", "invisenemies"
+             "all one color", "invisenemies", "drippingenemies"
              ]
     true_or_false = ["False", "True"]
     running = True
@@ -1149,7 +1150,7 @@ def SETTINGS():
                                  blocker_hp_setting, enemy_locks[46], addictive_pull_radius_setting, addictive_pull_strength_setting,
                                  addictive_interaction_setting, blocker_interaction_setting, gloomyshooter_hp_setting,
                                  enemy_locks[47], target_closest_setting, pulse_hp_setting, grower_hp_setting,
-                                 enemy_locks[48], enemy_locks[49], growing_speed_setting]
+                                 enemy_locks[48], enemy_locks[49], growing_speed_setting, modifiers[7]]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -3727,6 +3728,22 @@ def SETTINGS():
             pygame.time.delay(200)
 
 
+        
+        drippingenemies_button_color = SHADOW
+        drippingenemies_text_color = WHITE
+        if modifiers[7] == 0: drippingenemies_button_color = SHADOW
+        elif modifiers[7] == 1: drippingenemies_button_color = AZURE
+        drippingenemies_text_color = WHITE
+        drippingenemies_list = ["No", "Yes"]
+        drippingenemies_text = font.render("Dripping Enemies: " + str(drippingenemies_list[modifiers[7]]), True, drippingenemies_text_color)
+        drippingenemies_button = pygame.Rect(50, 180+SLIST.index("drippingenemies")*60 - button_offset + scroll_y, 800, 50)
+        pygame.draw.rect(screen, drippingenemies_button_color, drippingenemies_button, border_radius=0)
+        screen.blit(drippingenemies_text, drippingenemies_text.get_rect(center=drippingenemies_button.center))
+        if drippingenemies_button.collidepoint(mouse_pos) and mouse_click:
+            if modifiers[7] == 1: modifiers[7] = 0
+            else: modifiers[7] = 1
+            pygame.time.delay(200)
+
 
         pygame.draw.rect(screen, GRAY, scrollbar_track, border_radius=0)
         pygame.draw.rect(screen, WHITE, scrollbar_handle, border_radius=0)
@@ -4653,8 +4670,7 @@ while running:
             "burn timer": 0,
             "lag show": 0,
             "pulse lock": random.uniform(0, 2 * math.pi),
-            "size multiplier": 1,
-            "size multiplier change": 0.05,
+            "drip timer": 0,
             "edge cooldown": False,
             "spawn_protected": True,
             "spawn_time": current_time
@@ -7020,6 +7036,19 @@ while running:
             elif enemy["type"] == 48: color = ORCHID
             elif enemy["type"] == 49: color = AZURE
             elif enemy["type"] == 50: color = ACID
+
+        enemy["drip timer"] += (60 / FPS) * game_speed
+        if modifiers[7] == 1 and not enemy.get("laser_mode", False):
+            if enemy["drip timer"] > 50:
+                enemy["drip timer"] = 0
+                projectiles.append({
+                    "x": enemy["x"],
+                    "y": enemy["y"],
+                    "dx": 0,
+                    "dy": 8,
+                    "color": color,
+                    "ability": None
+                })
 
 
         
