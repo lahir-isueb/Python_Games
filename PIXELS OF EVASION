@@ -162,6 +162,7 @@ player_skins = [
 # --- Spawner ---
 spawner_size = 50
 spawner_color = RED # RED IS DEFAULT
+spawner_timer = 0
 
 # --- Game Speed ---
 game_speed = 1
@@ -201,7 +202,7 @@ targetting_enemies = [2, 8, 11, 12, 14, 15, 19, 26, 27, 29, 32, 33, 38, 48]
 
 target_type = 1
 current_target = 1
-target_closest = 1
+target_closest = 0
 
 # --- Spawner ---
 spawner_pos = (WIDTH // 2 - spawner_size // 2, HEIGHT // 2 - spawner_size // 2)
@@ -461,7 +462,7 @@ def reset_game_state():
     global FPS
     global weather_timer, storm_timer, sandstorm_direction
     global ambush_score
-    global game_speed, targeting_flash, paused
+    global game_speed, targeting_flash, paused, spawner_timer
     FPS = 60
     player_x = (WIDTH) / 3
     player_y = spawner_pos[1] + spawner_size / 2
@@ -519,6 +520,7 @@ def reset_game_state():
     game_speed = 1
     targeting_flash = 0
     paused = False
+    spawner_timer = 0
 
 player_size_setting = 50
 enemy_size_setting = 50
@@ -554,7 +556,7 @@ blocker_push_radius_setting = 300
 blocker_push_strength_setting = 10
 addictive_interaction_setting = 2
 blocker_interaction_setting = 1
-target_closest_setting = 1
+target_closest_setting = 0
 growing_speed_setting = 45
 enemy_locks = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -1094,7 +1096,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GRAY, default_set_button, border_radius=0)
         screen.blit(default_set_text, default_set_text.get_rect(center=default_set_button.center))
         if default_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_100_2_1_1_1_0_9_20_0_5_1_6_1_1_1_5_1_300_10_2_1_4_1_1_2_4_1_1_45_0_")
+            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_100_2_1_1_1_0_9_20_0_5_1_6_1_1_1_5_1_300_10_2_1_4_1_0_2_4_1_1_45_0_")
             pygame.time.delay(200)
 
 
@@ -4481,10 +4483,10 @@ while running:
         # Update spawner activation
         if not spawn_enabled:
             if p1_ready and players == 1:
-                last_spawn_time = current_time
+                spawner_timer = 0
                 spawn_enabled = True
             if p1_ready and p2_ready and players == 2:
-                last_spawn_time = current_time
+                spawner_timer = 0
                 spawn_enabled = True
 
         # --- Dynamic Enemy Unlock ---
@@ -4501,7 +4503,7 @@ while running:
             min_spawn_delay,
             initial_spawn_delay - int(adjusted_score * spawn_rate)
         )
-        if spawn_enabled and ((current_time - last_spawn_time)*game_speed >= spawn_delay or ambushes > 0):
+        if spawn_enabled and (spawner_timer >= spawn_delay or ambushes > 0):
             enemy_type = random.choice(available_enemy_types)
             if len(ambush_enemy_types) > 0 and ambushes > 0:
                 enemy_type = random.choice(ambush_enemy_types)
@@ -4686,7 +4688,7 @@ while running:
                 "spawn_protected": True,
                 "spawn_time": current_time
             })
-            last_spawn_time = current_time
+            spawner_timer = 0
             
             for enemy in enemies:
                 if players == 2:
@@ -6885,7 +6887,7 @@ while running:
     if spawn_enabled:
         # Normal pulse + rotation once spawning starts
         
-        indicator_ratio = min(1.0, (current_time - last_spawn_time) / spawn_delay*game_speed)
+        indicator_ratio = min(1.0, spawner_timer / spawn_delay)
         
         def lerp_color(c1, c2, t):
             return tuple(int(c1[i] + (c2[i] - c1[i]) * t) for i in range(3))
@@ -7397,6 +7399,9 @@ while running:
                         "color": colorblind_list[colorblind] if colorblind != 0 else RED,
                         "ability": "fatal"    
                     })
+                    
+    if paused == False and spawn_enabled == True:
+        spawner_timer += (60 / FPS) * game_speed * 12
 
     if current_time > everyone_died_at and everyone_died_at != 0:
         result = GAME_OVER(truescore, score_p1, score_p2)
