@@ -30,10 +30,6 @@ def GAME_OVER(final_score, p1, p2):
             if event.type == pygame.QUIT:
                 waiting = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                print(f"Final score: {final_score}")
-                if players == 2:
-                    print(f"Player 1 score: {p1}")
-                    print(f"Player 2 score: {p2}")
                 return "TITLE"
         clock.tick(15)
 
@@ -292,7 +288,15 @@ ambush_score = 500
 ambush_per_score = 500
 
 # --- Colorblind ---
-colorblind_list = [WHITE, WHITE, GRAY, RED, ORANGE, YELLOW, LIME, GREEN, TURQUOISE, CYAN, BLUE, PURPLE, PINK, HOT_PINK]
+colorblind_list = [WHITE, WHITE, SILVER, CLOUD, GRAY, SHADOW,
+              BROWN, BRONZE, MAROON, BRICK, RED,
+              LAVA, SALMON, CORAL, TAN, ORANGE,
+              TANGERINE, GOLD, SULFUR, OLIVE, YELLOW,
+              CREAM, CHARTREUSE, VOLT, MINT, ACID, LIME,
+              GREEN, FOREST, TEAL, AQUA, TUNDRA, TURQUOISE,
+              ICE, CYAN, SKY, AZURE, BLUE, COBALT, NAVY,
+              INDIGO, PURPLE, MAUVE, LAVENDER, LILAC,
+              PINK, MAGENTA, ORCHID, VIOLET, CRIMSON, HOT_PINK]
 colorblind = 0
 
 # --- Weather ---
@@ -3603,21 +3607,66 @@ def SETTINGS():
         all_enemies_one_color_text_color = WHITE
         if modifiers[0] == 0: all_enemies_one_color_button_color = SHADOW
         elif modifiers[0] == 1: all_enemies_one_color_button_color = WHITE
-        elif modifiers[0] == 2: all_enemies_one_color_button_color = GRAY
-        elif modifiers[0] == 3: all_enemies_one_color_button_color = RED
-        elif modifiers[0] == 4: all_enemies_one_color_button_color = ORANGE
-        elif modifiers[0] == 5: all_enemies_one_color_button_color = YELLOW
-        elif modifiers[0] == 6: all_enemies_one_color_button_color = LIME
-        elif modifiers[0] == 7: all_enemies_one_color_button_color = GREEN
-        elif modifiers[0] == 8: all_enemies_one_color_button_color = TURQUOISE
-        elif modifiers[0] == 9: all_enemies_one_color_button_color = CYAN
-        elif modifiers[0] == 10: all_enemies_one_color_button_color = BLUE
-        elif modifiers[0] == 11: all_enemies_one_color_button_color = PURPLE
-        elif modifiers[0] == 12: all_enemies_one_color_button_color = PINK
-        elif modifiers[0] == 13: all_enemies_one_color_button_color = HOT_PINK
+        elif modifiers[0] == 2: all_enemies_one_color_button_color = SILVER
+        elif modifiers[0] == 3: all_enemies_one_color_button_color = CLOUD
+        elif modifiers[0] == 4: all_enemies_one_color_button_color = GRAY
+        elif modifiers[0] == 5: all_enemies_one_color_button_color = SHADOW
+        elif modifiers[0] == 6: all_enemies_one_color_button_color = BROWN
+        elif modifiers[0] == 7: all_enemies_one_color_button_color = BRONZE
+        elif modifiers[0] == 8: all_enemies_one_color_button_color = MAROON
+        elif modifiers[0] == 9: all_enemies_one_color_button_color = BRICK
+        elif modifiers[0] == 10: all_enemies_one_color_button_color = RED
+        elif modifiers[0] == 11: all_enemies_one_color_button_color = LAVA
+        elif modifiers[0] == 12: all_enemies_one_color_button_color = SALMON
+        elif modifiers[0] == 13: all_enemies_one_color_button_color = CORAL
+        elif modifiers[0] == 14: all_enemies_one_color_button_color = TAN
+        elif modifiers[0] == 15: all_enemies_one_color_button_color = ORANGE
+        elif modifiers[0] == 16: all_enemies_one_color_button_color = TANGERINE
+        elif modifiers[0] == 17: all_enemies_one_color_button_color = GOLD
+        elif modifiers[0] == 18: all_enemies_one_color_button_color = SULFUR
+        elif modifiers[0] == 19: all_enemies_one_color_button_color = OLIVE
+        elif modifiers[0] == 20: all_enemies_one_color_button_color = YELLOW
+        elif modifiers[0] == 21: all_enemies_one_color_button_color = CREAM
+        elif modifiers[0] == 22: all_enemies_one_color_button_color = CHARTREUSE
+        elif modifiers[0] == 23: all_enemies_one_color_button_color = VOLT
+        elif modifiers[0] == 24: all_enemies_one_color_button_color = MINT
+        elif modifiers[0] == 25: all_enemies_one_color_button_color = ACID
+        elif modifiers[0] == 26: all_enemies_one_color_button_color = LIME
+        elif modifiers[0] == 27: all_enemies_one_color_button_color = GREEN
+        elif modifiers[0] == 28: all_enemies_one_color_button_color = FOREST
+        elif modifiers[0] == 29: all_enemies_one_color_button_color = TEAL
+        elif modifiers[0] == 30: all_enemies_one_color_button_color = AQUA
+        elif modifiers[0] == 31: all_enemies_one_color_button_color = TUNDRA
+        elif modifiers[0] == 32: all_enemies_one_color_button_color = TURQUOISE
+        elif modifiers[0] == 33: all_enemies_one_color_button_color = ICE
+        elif modifiers[0] == 34: all_enemies_one_color_button_color = CYAN
+        elif modifiers[0] == 35: all_enemies_one_color_button_color = SKY
+        elif modifiers[0] == 36: all_enemies_one_color_button_color = AZURE
+        elif modifiers[0] == 37: all_enemies_one_color_button_color = BLUE
+        elif modifiers[0] == 38: all_enemies_one_color_button_color = COBALT
+        elif modifiers[0] == 39: all_enemies_one_color_button_color = NAVY
+        elif modifiers[0] == 40: all_enemies_one_color_button_color = INDIGO
+        elif modifiers[0] == 41: all_enemies_one_color_button_color = PURPLE
+        elif modifiers[0] == 42: all_enemies_one_color_button_color = MAUVE
+        elif modifiers[0] == 43: all_enemies_one_color_button_color = LAVENDER
+        elif modifiers[0] == 44: all_enemies_one_color_button_color = LILAC
+        elif modifiers[0] == 45: all_enemies_one_color_button_color = PINK
+        elif modifiers[0] == 46: all_enemies_one_color_button_color = MAGENTA
+        elif modifiers[0] == 47: all_enemies_one_color_button_color = ORCHID
+        elif modifiers[0] == 48: all_enemies_one_color_button_color = VIOLET
+        elif modifiers[0] == 49: all_enemies_one_color_button_color = CRIMSON
+        elif modifiers[0] == 50: all_enemies_one_color_button_color = HOT_PINK
         if modifiers[0] == 1: all_enemies_one_color_text_color = BLACK
         else: all_enemies_one_color_text_color = WHITE
-        all_enemies_one_color_list = ["No", "White", "Gray", "Red", "Orange", "Yellow", "Lime", "Green", "Turquoise", "Cyan", "Blue", "Purple", "Pink", "Hot Pink"]
+        all_enemies_one_color_list = ["No", "White", "Silver", "Cloud", "Gray", "Shadow",
+                  "Brown", "Bronze", "Maroon", "Brick", "Red",
+                  "Lava", "Salmon", "Coral", "Tan", "Orange",
+                  "Tangerine", "Gold", "Sulfur", "Olive", "Yellow",
+                  "Cream", "Chartreuse", "Volt", "Mint", "Acid", "Lime",
+                  "Green", "Forest", "Teal", "Aqua", "Tundra", "Turquoise",
+                  "Ice", "Cyan", "Sky", "Azure", "Blue", "Cobalt", "Navy",
+                  "Indigo", "Purple", "Mauve", "Lavender", "Lilac",
+                  "Pink", "Magenta", "Orchid", "Violet", "Crimson", "Hot Pink"]
         all_enemies_one_color_text = font.render("One Enemy Color: " + str(all_enemies_one_color_list[modifiers[0]]), True, all_enemies_one_color_text_color)
         all_enemies_one_color_button = pygame.Rect(50, 180+SLIST.index("all one color")*60 - button_offset + scroll_y, 800, 50)
         pygame.draw.rect(screen, all_enemies_one_color_button_color, all_enemies_one_color_button, border_radius=0)
@@ -4170,7 +4219,6 @@ def TITLE_SCREEN():
                 if custom_text-1 < 0: custom_text = len(color_list)-1
                 else: custom_text -= 1
                 player_skins[24][1] = color_list[custom_text]
-                print(len(color_list)//2)
                 if custom_text < (len(color_list)//2): player_skins[24][2] = color_list[custom_text + (len(color_list)//2)]
                 else: player_skins[24][2] = color_list[custom_text - (len(color_list)//2)]
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_b) and (p1_skin_color == 24 or p2_skin_color == 24)):
