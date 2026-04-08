@@ -7403,6 +7403,17 @@ while running:
     if paused == False and spawn_enabled == True:
         spawner_timer += (60 / FPS) * game_speed * 12
 
+    if paused == True:
+        pause_overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        pause_overlay.fill((0, 0, 0, 180))
+        screen.blit(
+            pause_overlay,
+            (0,
+            0)
+        )
+        pause_text = font.render("Paused", True, spawner_color)
+        screen.blit(pause_text, (WIDTH - 120, 20))
+
     if current_time > everyone_died_at and everyone_died_at != 0:
         result = GAME_OVER(truescore, score_p1, score_p2)
         if result == "TITLE":
