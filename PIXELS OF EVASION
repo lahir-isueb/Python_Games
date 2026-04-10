@@ -195,6 +195,7 @@ available_enemy_types = []
 locked_enemy_types = []
 ambush_enemy_types = []
 targetting_enemies = [2, 8, 11, 12, 14, 15, 19, 26, 27, 29, 32, 33, 38, 48]
+nonflammable_enemies = [3, 17, 30, 37, 42, 43]
 
 target_type = 1
 current_target = 1
@@ -5213,6 +5214,8 @@ while running:
                             if player2_lives <= 0:
                                 player2_alive = False
                         enemy_died = True
+                if enemy["health"] <= 0:
+                    enemy_died = True
             elif enemy["type"] == 16:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
@@ -5389,6 +5392,8 @@ while running:
                         pull_strength = base_pull_strength * (1 - dist / pull_radius)
                         player2_x += (dxp / dist) * pull_strength
                         player2_y += (dyp / dist) * pull_strength
+                if enemy["health"] <= 0:
+                    enemy_died = True
             elif enemy["type"] == 22:
                 laser_extend = (60 / FPS) * (90)
                 if not enemy.get("laser_mode", False):
@@ -6380,6 +6385,8 @@ while running:
                         push_strength = base_push_strength * (1 - dist / push_radius)
                         player2_x -= (dxp / dist) * push_strength
                         player2_y -= (dyp / dist) * push_strength
+                if enemy["health"] <= 0:
+                    enemy_died = True
             elif enemy["type"] == 48:
                 enemy["trail/shot_charge"] += (60 / FPS) * game_speed
                 dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
@@ -6911,8 +6918,8 @@ while running:
                     b["x"], b["y"], 6,
                     enemy["x"], enemy["y"], enemy.get("size", enemy_size)
                 ):
-
-                    enemy["health"] -= 1
+                    if enemy["type"] not in nonflammable_enemies:
+                        enemy["health"] -= 1
                     b["health"] = 0
                     break
         burn_particles = [p for p in burn_particles if p["health"] > 0]
