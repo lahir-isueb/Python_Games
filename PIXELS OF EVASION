@@ -6,6 +6,9 @@ import pyperclip
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #(1920, 1080)
 WIDTH, HEIGHT = screen.get_size()
+SCALED_WIDTH = WIDTH / 1920
+SCALED_HEIGHT = HEIGHT / 1080
+SCALED_TEXT = (SCALED_WIDTH + SCALED_HEIGHT)/2
 pygame.display.set_caption("Pixels Of Evasion")
 
 # --- GAME OVER SCREEN ---
@@ -212,7 +215,7 @@ spawn_rate = 10
 player_x = player_size / 2
 player_y = spawner_pos[1] + spawner_size / 2
 
-player2_x = WIDTH - player_size / 2
+player2_x = (WIDTH / SCALED_WIDTH) - player_size / 2
 player2_y = spawner_pos[1] + spawner_size / 2
 
 # --- Enemy Health ---
@@ -311,11 +314,11 @@ walleffect = 0
 slightly_small_font = pygame.font.SysFont("ocraextended", 22)
 font = pygame.font.SysFont("ocraextended", 24)
 big_font = pygame.font.SysFont("ocraextended", 90)
-enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size))
-imp_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * enemy_size))
-imp2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * enemy_size))
-player_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * player_size))
-player2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * player_size))
+enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size * SCALED_TEXT))
+imp_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * enemy_size * SCALED_TEXT))
+imp2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * enemy_size * SCALED_TEXT))
+player_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * player_size * SCALED_TEXT))
+player2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * player_size * SCALED_TEXT))
 
 
 # --- Clock ---
@@ -3921,14 +3924,14 @@ def apply_settings():
 
     # --- SETTINGS SET ---
     player_size = player_size_setting
-    player_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * player_size))
-    player2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * player_size))
+    player_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * player_size * SCALED_TEXT))
+    player2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * player_size * SCALED_TEXT))
     enemy_size = enemy_size_setting
     spawner_size = enemy_size_setting
     spawner_pos = (WIDTH // 2 - spawner_size // 2, HEIGHT // 2 - spawner_size // 2)
-    enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size))
-    imp_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * enemy_size))
-    imp2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * enemy_size))
+    enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size * SCALED_TEXT))
+    imp_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * enemy_size * SCALED_TEXT))
+    imp2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * enemy_size * SCALED_TEXT))
     min_spawn_delay = min_spawn_delay_setting
     initial_spawn_delay = max_spawn_delay_setting
     projectile_size = projectile_size_setting
@@ -4369,7 +4372,7 @@ while running:
         if player_x < player_size / 2:
             if walleffect == 0 or 1: player_x = player_size / 2
             if walleffect == 2: player_lives = 0; player_alive = False
-            if walleffect == 3: player_x = WIDTH - player_size / 2
+            if walleffect == 3: player_x = (WIDTH / SCALED_WIDTH) - player_size / 2
             if walleffect == 1:
                 if current_time >= invincible_until + 100:
                     player_lives -= 1
@@ -4377,8 +4380,8 @@ while running:
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
                     if player_lives <= 0: player_alive = False
-        if player_x > WIDTH - player_size / 2:
-            if walleffect == 0 or 1: player_x = WIDTH - player_size / 2
+        if player_x > (WIDTH / SCALED_WIDTH) - player_size / 2:
+            if walleffect == 0 or 1: player_x = (WIDTH / SCALED_WIDTH) - player_size / 2
             if walleffect == 2: player_lives = 0; player_alive = False
             if walleffect == 3: player_x = player_size / 2
             if walleffect == 1:
@@ -4391,7 +4394,7 @@ while running:
         if player_y < player_size / 2:
             if walleffect == 0 or 1: player_y = player_size / 2
             if walleffect == 2: player_lives = 0; player_alive = False
-            if walleffect == 3: player_y = HEIGHT - player_size / 2
+            if walleffect == 3: player_y = (HEIGHT / SCALED_HEIGHT) - player_size / 2
             if walleffect == 1:
                 if current_time >= invincible_until + 100:
                     player_lives -= 1
@@ -4399,8 +4402,8 @@ while running:
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
                     if player_lives <= 0: player_alive = False
-        if player_y > HEIGHT - player_size / 2:
-            if walleffect == 0 or 1: player_y = HEIGHT - player_size / 2
+        if player_y > (HEIGHT / SCALED_HEIGHT) - player_size / 2:
+            if walleffect == 0 or 1: player_y = (HEIGHT / SCALED_HEIGHT) - player_size / 2
             if walleffect == 2: player_lives = 0; player_alive = False
             if walleffect == 3: player_y = player_size / 2
             if walleffect == 1:
@@ -4438,7 +4441,7 @@ while running:
             if player2_x < player_size / 2:
                 if walleffect == 0 or 1: player2_x = player_size / 2
                 if walleffect == 2: player2_lives = 0; player2_alive = False
-                if walleffect == 3: player2_x = WIDTH - player_size / 2
+                if walleffect == 3: player2_x = (WIDTH / SCALED_WIDTH) - player_size / 2
                 if walleffect == 1:
                     if current_time >= player2_invincible_until + 100:
                         player2_lives -= 1
@@ -4446,8 +4449,8 @@ while running:
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         if player2_lives <= 0: player2_alive = False
-            if player2_x > WIDTH - player_size / 2:
-                if walleffect == 0 or 1: player2_x = WIDTH - player_size / 2
+            if player2_x > (WIDTH / SCALED_WIDTH) - player_size / 2:
+                if walleffect == 0 or 1: player2_x = (WIDTH / SCALED_WIDTH) - player_size / 2
                 if walleffect == 2: player2_lives = 0; player2_alive = False
                 if walleffect == 3: player2_x = player_size / 2
                 if walleffect == 1:
@@ -4460,7 +4463,7 @@ while running:
             if player2_y < player_size / 2:
                 if walleffect == 0 or 1: player2_y = player_size / 2
                 if walleffect == 2: player2_lives = 0; player2_alive = False
-                if walleffect == 3: player2_y = HEIGHT - player_size / 2
+                if walleffect == 3: player2_y = (HEIGHT / SCALED_HEIGHT) - player_size / 2
                 if walleffect == 1:
                     if current_time >= player2_invincible_until + 100:
                         player2_lives -= 1
@@ -4468,8 +4471,8 @@ while running:
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         if player2_lives <= 0: player2_alive = False
-            if player2_y > HEIGHT - player_size / 2:
-                if walleffect == 0 or 1: player2_y = HEIGHT - player_size / 2
+            if player2_y > (HEIGHT / SCALED_HEIGHT) - player_size / 2:
+                if walleffect == 0 or 1: player2_y = (HEIGHT / SCALED_HEIGHT) - player_size / 2
                 if walleffect == 2: player2_lives = 0; player2_alive = False
                 if walleffect == 3: player2_y = player_size / 2
                 if walleffect == 1:
@@ -6863,7 +6866,7 @@ while running:
                         continue
 
             # Keep projectile on screen (using center coords)
-            if 0 - projectile_size < p["x"] < WIDTH + projectile_size and 0 - projectile_size < p["y"] < HEIGHT + projectile_size:
+            if 0 - projectile_size < p["x"] < (WIDTH/SCALED_WIDTH) + projectile_size and 0 - projectile_size < p["y"] < (HEIGHT/SCALED_HEIGHT) + projectile_size:
                 new_projectiles.append(p)
 
         projectiles = new_projectiles
@@ -6987,20 +6990,20 @@ while running:
         pygame.draw.circle(screen, pulse_color, center, spawner_size // 2, 2)
 
 
-    frost_overlay = pygame.Surface((player_size * 1.2, player_size * 1.2), pygame.SRCALPHA)
+    frost_overlay = pygame.Surface((player_size * 1.2*SCALED_WIDTH, player_size * 1.2*SCALED_HEIGHT), pygame.SRCALPHA)
     frost_overlay.fill((175, 255, 255, 180))
 
-    impostor_frost_overlay = pygame.Surface((enemy_size * 1.2, enemy_size * 1.2), pygame.SRCALPHA)
+    impostor_frost_overlay = pygame.Surface((enemy_size * 1.2*SCALED_WIDTH, enemy_size * 1.2*SCALED_HEIGHT), pygame.SRCALPHA)
     impostor_frost_overlay.fill((175, 255, 255, 180))
 
     if paused == False:
         burn_color += game_speed
         if burn_color > 100: burn_color = 0
 
-    burn_overlay = pygame.Surface((player_size, player_size), pygame.SRCALPHA)
+    burn_overlay = pygame.Surface((player_size*SCALED_WIDTH, player_size*SCALED_HEIGHT), pygame.SRCALPHA)
     burn_overlay.fill((255, burn_color, 0, 150))
 
-    impostor_burn_overlay = pygame.Surface((enemy_size, enemy_size), pygame.SRCALPHA)
+    impostor_burn_overlay = pygame.Surface((enemy_size*SCALED_WIDTH, enemy_size*SCALED_HEIGHT), pygame.SRCALPHA)
     impostor_burn_overlay.fill((255, burn_color, 0, 150))
 
     if paused == False:
@@ -7036,18 +7039,18 @@ while running:
     # draw trail squares
     for sq in trail_squares:
         color = sq.get("color", TANGERINE)
-        pygame.draw.rect(screen, color, (sq["x"] - trail_size // 2, sq["y"] - trail_size // 2, trail_size, trail_size))
+        pygame.draw.rect(screen, color, ((sq["x"] - trail_size // 2)*SCALED_WIDTH, (sq["y"] - trail_size // 2)*SCALED_HEIGHT, trail_size*SCALED_WIDTH, trail_size*SCALED_HEIGHT))
 
     # draw projectiles
     for p in projectiles:
         color = p.get("color", HOT_PINK)
         draw_x = int(p["x"] - projectile_size / 2)
         draw_y = int(p["y"] - projectile_size / 2)
-        pygame.draw.rect(screen, color, (draw_x - projectile_size//2, draw_y - projectile_size//2, projectile_size, projectile_size))
+        pygame.draw.rect(screen, color, ((draw_x - projectile_size//2)*SCALED_WIDTH, (draw_y - projectile_size//2)*SCALED_HEIGHT, projectile_size*SCALED_WIDTH, projectile_size*SCALED_HEIGHT))
 
     # draw burn particles
     for b in burn_particles:
-        pygame.draw.rect(screen, b["color"], (b["x"] - 10 // 2, b["y"] - 10 // 2, 10, 10))
+        pygame.draw.rect(screen, b["color"], ((b["x"] - 10 // 2)*SCALED_WIDTH, (b["y"] - 10 // 2)*SCALED_HEIGHT, 10*SCALED_WIDTH, 10*SCALED_HEIGHT))
 
     # draw enemies
     for enemy in enemies:
@@ -7173,14 +7176,14 @@ while running:
                 if enemy["type"] == 8 or player_skins[p1_skin_color][0] == player_skins[p2_skin_color][0]: enemy_text_color = player_skins[p2_skin_color][skin_match]
                 else: enemy_text_color = player_skins[p2_skin_color][0]
         else: enemy_text_color = WHITE
-        
-        enemy_surface = pygame.Surface((enemy["size"], enemy["size"]), pygame.SRCALPHA)
+         
+        enemy_surface = pygame.Surface((enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT), pygame.SRCALPHA)
         enemy_surface.fill((color[0], color[1], color[2], enemy_visibility))
-        screen.blit(enemy_surface, (enemy["x"] - enemy["size"] / 2, enemy["y"] - enemy["size"] / 2))
-        enemyblack_surface = pygame.Surface((enemy["size"]*0.85, enemy["size"]*0.85), pygame.SRCALPHA)
+        screen.blit(enemy_surface, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
+        enemyblack_surface = pygame.Surface((enemy["size"]*0.85*SCALED_WIDTH, enemy["size"]*0.85*SCALED_HEIGHT), pygame.SRCALPHA)
         if enemy["type"] in targetting_enemies and not enemy["type"] == 8 and not enemy["type"] == 38: enemyblack_surface.fill((enemy_text_color[0]*targeting_flash, enemy_text_color[1]*targeting_flash, enemy_text_color[2]*targeting_flash, enemy_visibility))
         else: enemyblack_surface.fill((0, 0, 0, enemy_visibility))
-        screen.blit(enemyblack_surface, (enemy["x"] - (enemy["size"]*0.85) / 2, enemy["y"] - (enemy["size"]*0.85) / 2))
+        screen.blit(enemyblack_surface, ((enemy["x"] - (enemy["size"]*0.85) / 2)*SCALED_WIDTH, (enemy["y"] - (enemy["size"]*0.85) / 2)*SCALED_HEIGHT))
 
 
         if not enemy.get("shrinking", False):
@@ -7192,58 +7195,58 @@ while running:
             text_surface = text_surface.convert_alpha()
             text_surface.set_alpha(enemy_visibility)
 
-            text_rect = text_surface.get_rect(center=(enemy["x"], enemy["y"]))
+            text_rect = text_surface.get_rect(center=(enemy["x"]*SCALED_WIDTH, enemy["y"]*SCALED_HEIGHT))
             screen.blit(text_surface, text_rect)
 
         if enemy["type"] == 8:
             if player_frozen == True and enemy["target"] == 1:
                 screen.blit(
                     impostor_frost_overlay,
-                    (enemy["x"] - impostor_frost_overlay.get_width() // 2,
-                     enemy["y"] - impostor_frost_overlay.get_height() // 2)
+                    ((enemy["x"]*SCALED_WIDTH - impostor_frost_overlay.get_width() / 2),
+                     (enemy["y"]*SCALED_HEIGHT - impostor_frost_overlay.get_height() / 2))
                 )
             elif player2_frozen == True and enemy["target"] == 2:
                 screen.blit(
                     impostor_frost_overlay,
-                    (enemy["x"] - impostor_frost_overlay.get_width() // 2,
-                     enemy["y"] - impostor_frost_overlay.get_height() // 2)
+                    ((enemy["x"]*SCALED_WIDTH - impostor_frost_overlay.get_width() / 2),
+                     (enemy["y"]*SCALED_HEIGHT - impostor_frost_overlay.get_height() / 2))
                 )
             if player_burnt == True and enemy["target"] == 1:
                 screen.blit(
                     impostor_burn_overlay,
-                    (enemy["x"] - impostor_burn_overlay.get_width() // 2,
-                     enemy["y"] - impostor_burn_overlay.get_height() // 2)
+                    ((enemy["x"]*SCALED_WIDTH - impostor_burn_overlay.get_width() / 2),
+                     (enemy["y"]*SCALED_HEIGHT - impostor_burn_overlay.get_height() / 2))
                 )
             if player2_burnt == True and enemy["target"] == 2:
                 screen.blit(
                     impostor_burn_overlay,
-                    (enemy["x"] - impostor_burn_overlay.get_width() // 2,
-                     enemy["y"] - impostor_burn_overlay.get_height() // 2)
+                    ((enemy["x"]*SCALED_WIDTH - impostor_burn_overlay.get_width() / 2),
+                     (enemy["y"]*SCALED_HEIGHT - impostor_burn_overlay.get_height() / 2))
                 )
 
     
     # draw player (flash red if hit)
     if player_alive:
         if current_time - damage_flash_time < 100:
-            if p1_skin_color == 1: pygame.draw.rect(screen, CRIMSON, (player_x - player_size/2, player_y - player_size/2, player_size, player_size))
-            else: pygame.draw.rect(screen, RED, (player_x - player_size/2, player_y - player_size/2, player_size, player_size))
+            if p1_skin_color == 1: pygame.draw.rect(screen, CRIMSON, ((player_x - player_size/2)*SCALED_WIDTH, (player_y - player_size/2)*SCALED_HEIGHT, player_size*SCALED_WIDTH, player_size*SCALED_HEIGHT))
+            else: pygame.draw.rect(screen, RED, ((player_x - player_size/2)*SCALED_WIDTH, (player_y - player_size/2)*SCALED_HEIGHT, player_size*SCALED_WIDTH, player_size*SCALED_HEIGHT))
         elif current_time - heal_flash_time < 150:
-            if p1_skin_color == 4: pygame.draw.rect(screen, YELLOW, (player_x - player_size/2, player_y - player_size/2, player_size, player_size))
-            else: pygame.draw.rect(screen, LIME, (player_x - player_size/2, player_y - player_size/2, player_size, player_size))
+            if p1_skin_color == 4: pygame.draw.rect(screen, YELLOW, ((player_x - player_size/2)*SCALED_WIDTH, (player_y - player_size/2)*SCALED_HEIGHT, player_size*SCALED_WIDTH, player_size*SCALED_HEIGHT))
+            else: pygame.draw.rect(screen, LIME, ((player_x - player_size/2)*SCALED_WIDTH, (player_y - player_size/2)*SCALED_HEIGHT, player_size*SCALED_WIDTH, player_size*SCALED_HEIGHT))
         else:
-            pygame.draw.rect(screen, player_skins[p1_skin_color][0], (player_x - player_size/2, player_y - player_size/2, player_size, player_size))
-        pygame.draw.rect(screen, BLACK, (player_x - (player_size*0.85)/2, player_y - (player_size*0.85)/2, player_size*0.85, player_size*0.85))
+            pygame.draw.rect(screen, player_skins[p1_skin_color][0], ((player_x - player_size/2)*SCALED_WIDTH, (player_y - player_size/2)*SCALED_HEIGHT, player_size*SCALED_WIDTH, player_size*SCALED_HEIGHT))
+        pygame.draw.rect(screen, BLACK, ((player_x - (player_size*0.85)/2)*SCALED_WIDTH, (player_y - (player_size*0.85)/2)*SCALED_HEIGHT, player_size*0.85*SCALED_WIDTH, player_size*0.85*SCALED_HEIGHT))
         
     if players == 2 and player2_alive:
         if current_time - player2_damage_flash_time < 100:
-            if p2_skin_color == 1: pygame.draw.rect(screen, CRIMSON, (player2_x - player_size/2, player2_y - player_size/2, player_size, player_size))
-            else: pygame.draw.rect(screen, RED, (player2_x - player_size/2, player2_y - player_size/2, player_size, player_size))
+            if p2_skin_color == 1: pygame.draw.rect(screen, CRIMSON, ((player2_x - player_size/2)*SCALED_WIDTH, (player2_y - player_size/2)*SCALED_HEIGHT, player_size*SCALED_WIDTH, player_size*SCALED_HEIGHT))
+            else: pygame.draw.rect(screen, RED, ((player2_x - player_size/2)*SCALED_WIDTH, (player2_y - player_size/2)*SCALED_HEIGHT, player_size*SCALED_WIDTH, player_size*SCALED_HEIGHT))
         elif current_time - player2_heal_flash_time < 150:
-            if p2_skin_color == 4: pygame.draw.rect(screen, YELLOW, (player2_x - player_size/2, player2_y - player_size/2, player_size, player_size))
-            else: pygame.draw.rect(screen, LIME, (player2_x - player_size/2, player2_y - player_size/2, player_size, player_size))
+            if p2_skin_color == 4: pygame.draw.rect(screen, YELLOW, ((player2_x - player_size/2)*SCALED_WIDTH, (player2_y - player_size/2)*SCALED_HEIGHT, player_size*SCALED_WIDTH, player_size*SCALED_HEIGHT))
+            else: pygame.draw.rect(screen, LIME, ((player2_x - player_size/2)*SCALED_WIDTH, (player2_y - player_size/2)*SCALED_HEIGHT, player_size*SCALED_WIDTH, player_size*SCALED_HEIGHT))
         else:
-            pygame.draw.rect(screen, player_skins[p2_skin_color][0], (player2_x - player_size/2, player2_y - player_size/2, player_size, player_size))
-        pygame.draw.rect(screen, BLACK, (player2_x - (player_size*0.85)/2, player2_y - (player_size*0.85)/2, player_size*0.85, player_size*0.85))
+            pygame.draw.rect(screen, player_skins[p2_skin_color][0], ((player2_x - player_size/2)*SCALED_WIDTH, (player2_y - player_size/2)*SCALED_HEIGHT, player_size*SCALED_WIDTH, player_size*SCALED_HEIGHT))
+        pygame.draw.rect(screen, BLACK, ((player2_x - (player_size*0.85)/2)*SCALED_WIDTH, (player2_y - (player_size*0.85)/2)*SCALED_HEIGHT, player_size*0.85*SCALED_WIDTH, player_size*0.85*SCALED_HEIGHT))
 
     if spawn_enabled and paused == False:
         if modifiers[6] == 0 or modifiers[6] == 1: score += 0.1 * (60 / FPS) #SCORE SET
@@ -7258,39 +7261,39 @@ while running:
     if player_alive:
         if players == 1: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color][1])
         else: player_life_text = player_font.render(str(player_lives), True, player_skins[p1_skin_color][1])
-        player_life_rect = player_life_text.get_rect(center=(player_x, player_y))
+        player_life_rect = player_life_text.get_rect(center=(player_x*SCALED_WIDTH, player_y*SCALED_HEIGHT))
         screen.blit(player_life_text, player_life_rect)
 
     if player2_alive:
         if players == 2:
             player2_life_text = player2_font.render(str(player2_lives), True, player_skins[p2_skin_color][skin_match])
-            player2_life_rect = player2_life_text.get_rect(center=(player2_x, player2_y))
+            player2_life_rect = player2_life_text.get_rect(center=(player2_x*SCALED_WIDTH, player2_y*SCALED_HEIGHT))
             screen.blit(player2_life_text, player2_life_rect)
 
     if player_frozen and player_alive:
         screen.blit(
             frost_overlay,
-            (player_x - frost_overlay.get_width() // 2,
-             player_y - frost_overlay.get_height() // 2)
+            ((player_x*SCALED_WIDTH - frost_overlay.get_width() / 2),
+             (player_y*SCALED_HEIGHT - frost_overlay.get_height() / 2))
         )
     if player2_frozen and players == 2 and player2_alive:
         screen.blit(
             frost_overlay,
-            (player2_x - frost_overlay.get_width() // 2,
-             player2_y - frost_overlay.get_height() // 2)
+            ((player2_x*SCALED_WIDTH - frost_overlay.get_width() / 2),
+             (player2_y*SCALED_HEIGHT - frost_overlay.get_height() / 2))
         )
 
     if player_burnt and player_alive:
         screen.blit(
             burn_overlay,
-            (player_x - burn_overlay.get_width() // 2,
-             player_y - burn_overlay.get_height() // 2)
+            ((player_x*SCALED_WIDTH - burn_overlay.get_width() / 2),
+             (player_y*SCALED_HEIGHT - burn_overlay.get_height() / 2))
         )
     if player2_burnt and players == 2 and player2_alive:
         screen.blit(
             burn_overlay,
-            (player2_x - burn_overlay.get_width() // 2,
-             player2_y - burn_overlay.get_height() // 2)
+            ((player2_x*SCALED_WIDTH - burn_overlay.get_width() / 2),
+             (player2_y*SCALED_HEIGHT - burn_overlay.get_height() / 2))
         )
 
     # draw HUD
@@ -7369,7 +7372,7 @@ while running:
                 if (weather_timer > 10 and weathers[weather] == "Rain") or (weather_timer > 5 and not weathers[weather] == "Rain"):
                     weather_timer = 0
                     projectiles.append({
-                        "x": random.uniform(projectile_size, WIDTH),
+                        "x": random.uniform(projectile_size, WIDTH/SCALED_WIDTH),
                         "y": 0,
                         "dx": 0,
                         "dy": 5,
@@ -7380,7 +7383,7 @@ while running:
             if weathers[weather] == "Lagstorm":
                 if weather_timer > 10:
                     weather_timer = 0
-                    lagstorm_random = random.uniform(projectile_size, WIDTH)
+                    lagstorm_random = random.uniform(projectile_size, WIDTH/SCALED_WIDTH)
                     projectiles.append({
                         "x": lagstorm_random,
                         "y": 0,
@@ -7396,7 +7399,7 @@ while running:
             if weathers[weather] == "Storm":
                 if storm_timer > 250:
                     storm_timer = 0
-                    stormx = random.uniform(projectile_size, WIDTH)
+                    stormx = random.uniform(projectile_size, WIDTH/SCALED_WIDTH)
                     for i in range(32):
                         projectiles.append({
                             "x": stormx,
@@ -7411,7 +7414,7 @@ while running:
                 if (weather_timer > 10 and weathers[weather] == "Snow") or (weather_timer > 1 and weathers[weather] == "Blizzard"):
                     weather_timer = 0
                     projectiles.append({
-                        "x": random.uniform(projectile_size, WIDTH),
+                        "x": random.uniform(projectile_size, WIDTH/SCALED_WIDTH),
                         "y": 0,
                         "dx": 0,
                         "dy": 5,
@@ -7423,8 +7426,8 @@ while running:
                 if weather_timer > 10:
                     weather_timer = 0
                     projectiles.append({
-                        "x": (WIDTH/2) - sandstorm_direction * (WIDTH/2),
-                        "y": random.uniform(projectile_size, HEIGHT),
+                        "x": ((WIDTH/SCALED_WIDTH)/2) - sandstorm_direction * ((WIDTH/SCALED_WIDTH)/2),
+                        "y": random.uniform(projectile_size, HEIGHT/SCALED_HEIGHT),
                         "dx": 5*sandstorm_direction,
                         "dy": 0,
                         "color": colorblind_list[colorblind] if colorblind != 0 else CLOUD,
@@ -7435,8 +7438,8 @@ while running:
                 if weather_timer > 6:
                     weather_timer = 0
                     projectiles.append({
-                        "x": (WIDTH/2) - sandstorm_direction * (WIDTH/2),
-                        "y": random.uniform(projectile_size, HEIGHT),
+                        "x": ((WIDTH/SCALED_WIDTH)/2) - sandstorm_direction * ((WIDTH/SCALED_WIDTH)/2),
+                        "y": random.uniform(projectile_size, HEIGHT/SCALED_HEIGHT),
                         "dx": 5*sandstorm_direction,
                         "dy": 0,
                         "color": colorblind_list[colorblind] if colorblind != 0 else TAN,
@@ -7447,7 +7450,7 @@ while running:
                 if weather_timer > 12:
                     weather_timer = 0
                     projectiles.append({
-                        "x": random.uniform(projectile_size, WIDTH),
+                        "x": random.uniform(projectile_size, WIDTH/SCALED_WIDTH),
                         "y": 0,
                         "dx": 0,
                         "dy": 5,
