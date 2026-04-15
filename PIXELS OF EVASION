@@ -4,7 +4,7 @@ import math
 import pyperclip
 
 pygame.init()
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #(1920, 1080)
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #((1500, 800)) #((1920, 1080))
 WIDTH, HEIGHT = screen.get_size()
 SCALED_WIDTH = WIDTH / 1920
 SCALED_HEIGHT = HEIGHT / 1080
@@ -313,9 +313,9 @@ weather = 0
 walleffect = 0
 
 # --- Font Size ---
-slightly_small_font = pygame.font.SysFont("ocraextended", 22)
-font = pygame.font.SysFont("ocraextended", 24)
-big_font = pygame.font.SysFont("ocraextended", 90)
+slightly_small_font = pygame.font.SysFont("ocraextended", int(22 * SCALED_TEXT))
+font = pygame.font.SysFont("ocraextended", int(24 * SCALED_TEXT))
+big_font = pygame.font.SysFont("ocraextended", int(90 * SCALED_TEXT))
 enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size * SCALED_TEXT))
 imp_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * enemy_size * SCALED_TEXT))
 imp2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * enemy_size * SCALED_TEXT))
@@ -6477,20 +6477,20 @@ while running:
                 bounced = False
                 if enemy["x"] < enemy["size"]/2:
                     enemy["dx"] *= -1
+                    if bounced == False: enemy["size"] = min(450, enemy["size"]+growing_speed)
                     bounced = True
-                    enemy["size"] = min(450, enemy["size"]+growing_speed)
                 if enemy["x"] > (WIDTH / SCALED_WIDTH) - enemy["size"]/2:
                     enemy["dx"] *= -1
+                    if bounced == False: enemy["size"] = min(450, enemy["size"]+growing_speed)
                     bounced = True
-                    enemy["size"] = min(450, enemy["size"]+growing_speed)
                 if enemy["y"] < enemy["size"]/2:
                     enemy["dy"] *= -1
+                    if bounced == False: enemy["size"] = min(450, enemy["size"]+growing_speed)
                     bounced = True
-                    enemy["size"] = min(450, enemy["size"]+growing_speed)
                 if enemy["y"] > (HEIGHT / SCALED_HEIGHT) - enemy["size"]/2:
                     enemy["dy"] *= -1
+                    if bounced == False: enemy["size"] = min(450, enemy["size"]+growing_speed)
                     bounced = True
-                    enemy["size"] = min(450, enemy["size"]+growing_speed)
                 if enemy["x"] < enemy["size"]/2:
                     enemy["x"] = enemy["size"]/2
                 if enemy["x"] > (WIDTH / SCALED_WIDTH) - enemy["size"]/2:
@@ -7303,12 +7303,12 @@ while running:
     # draw HUD
     if players == 1:
         p1_text = font.render(f"Score: {score_p1}", True, player_skins[p1_skin_color][0])
-        screen.blit(p1_text, (20, 20))
+        screen.blit(p1_text, (20*SCALED_TEXT, 20*SCALED_TEXT))
     elif players == 2:
         p1_text = font.render(f"P1 Score: {score_p1}", True, player_skins[p1_skin_color][0])
-        screen.blit(p1_text, (20, 20))
+        screen.blit(p1_text, (20*SCALED_TEXT, 20*SCALED_TEXT))
         p2_text = font.render(f"P2 Score: {score_p2}", True, player_skins[p2_skin_color][0])
-        screen.blit(p2_text, (20, 60))
+        screen.blit(p2_text, (20*SCALED_TEXT, 60*SCALED_TEXT))
 
         
     if paused == False:
@@ -7459,7 +7459,7 @@ while running:
                         "dx": 0,
                         "dy": 5,
                         "color": colorblind_list[colorblind] if colorblind != 0 else RED,
-                        "ability": "fatal"    
+                        "ability": "fatal"
                     })
                     
     if paused == False and spawn_enabled == True:
@@ -7474,7 +7474,7 @@ while running:
             0)
         )
         pause_text = font.render("Paused", True, spawner_color)
-        screen.blit(pause_text, (WIDTH - 120, 20))
+        screen.blit(pause_text, (WIDTH - 120*SCALED_TEXT, 20*SCALED_TEXT))
 
     if current_time > everyone_died_at and everyone_died_at != 0:
         result = GAME_OVER(truescore, score_p1, score_p2)
