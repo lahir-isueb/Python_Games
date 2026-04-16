@@ -4,7 +4,7 @@ import math
 import pyperclip
 
 pygame.init()
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #((1500, 800)) #((1920, 1080))
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #((1920, 1080))
 WIDTH, HEIGHT = screen.get_size()
 SCALED_WIDTH = WIDTH / 1920
 SCALED_HEIGHT = HEIGHT / 1080
@@ -21,9 +21,9 @@ def GAME_OVER(final_score, p1, p2):
     elif p1 == p2: score_text = font.render(f"Both players tied with a score of {p1}", True, WHITE)
     instr_text = font.render("Press space to return", True, GRAY)
 
-    screen.blit(over_text, over_text.get_rect(center=(WIDTH/2, HEIGHT/2 - 50)))
+    screen.blit(over_text, over_text.get_rect(center=(WIDTH/2, HEIGHT/2 - SCALED_HEIGHT*50)))
     screen.blit(score_text, score_text.get_rect(center=(WIDTH/2, HEIGHT/2)))
-    screen.blit(instr_text, instr_text.get_rect(center=(WIDTH/2, HEIGHT/2 + 50)))
+    screen.blit(instr_text, instr_text.get_rect(center=(WIDTH/2, HEIGHT/2 + SCALED_HEIGHT*50)))
 
     pygame.display.flip()
 
@@ -207,7 +207,7 @@ current_target = 1
 target_closest = 0
 
 # --- Spawner ---
-spawner_pos = (WIDTH / 2 - spawner_width / 2, HEIGHT / 2 - spawner_height / 2)
+spawner_pos = ((WIDTH - spawner_width) / 2, (HEIGHT - spawner_height) / 2)
 initial_spawn_delay = 2000 # ORIGINAL VALUE 2000
 last_spawn_time = pygame.time.get_ticks()
 enemy_speed = 5
@@ -1049,11 +1049,11 @@ def SETTINGS():
     running = True
     button_offset = 10
     scroll_y = 0
-    scroll_speed = 25
-    max_scroll = 180+len(SLIST)*60 - HEIGHT
+    scroll_speed = 75*SCALED_HEIGHT
+    max_scroll = 180*SCALED_HEIGHT+len(SLIST)*60*SCALED_HEIGHT - HEIGHT
     enemy_locking_labels = ["Starter", "Locked", "Banned", "Ambush"]
-    scrollbar_width = 20
-    scrollbar_margin = 50
+    scrollbar_width = 20*SCALED_WIDTH
+    scrollbar_margin = 50*SCALED_WIDTH
     scrollbar_track = pygame.Rect(
         WIDTH - scrollbar_width - scrollbar_margin,
         50,
@@ -1069,9 +1069,9 @@ def SETTINGS():
     while running:
         screen.fill(BLACK)
         text = big_font.render("Settings", True, WHITE)
-        screen.blit(text, (50, 50 + scroll_y))
+        screen.blit(text, (50*SCALED_WIDTH, 50*SCALED_HEIGHT + scroll_y))
         info = font.render("Press Escape to return", True, SILVER)
-        screen.blit(info, (600, 100 + scroll_y))
+        screen.blit(info, (600*SCALED_WIDTH, 100*SCALED_HEIGHT + scroll_y))
         mouse_pos = pygame.mouse.get_pos()
         mouse_click = pygame.mouse.get_pressed()[0]
         plus_txt = font.render("+", True, BLACK)
@@ -1102,7 +1102,7 @@ def SETTINGS():
 
 
         default_set_text = font.render("Set To Default", True, WHITE)
-        default_set_button = pygame.Rect(50, 180+SLIST.index("presets")*60 - button_offset + scroll_y, 225, 50)
+        default_set_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("presets")*60*SCALED_HEIGHT - button_offset + scroll_y, 550*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GRAY, default_set_button, border_radius=0)
         screen.blit(default_set_text, default_set_text.get_rect(center=default_set_button.center))
         if default_set_button.collidepoint(mouse_pos) and mouse_click:
@@ -1111,7 +1111,7 @@ def SETTINGS():
 
 
         copy_seed_text = font.render("Copy Settings", True, WHITE)
-        copy_seed_button = pygame.Rect(300, 180+SLIST.index("presets")*60 - button_offset + scroll_y, 225, 50)
+        copy_seed_button = pygame.Rect(625*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("presets")*60*SCALED_HEIGHT - button_offset + scroll_y, 550*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, SILVER, copy_seed_button, border_radius=0)
         screen.blit(copy_seed_text, copy_seed_text.get_rect(center=copy_seed_button.center))
         if copy_seed_button.collidepoint(mouse_pos) and mouse_click:
@@ -1172,7 +1172,7 @@ def SETTINGS():
             pygame.time.delay(200)
 
         paste_seed_text = font.render("Paste Settings", True, WHITE)
-        paste_seed_button = pygame.Rect(550, 180+SLIST.index("presets")*60 - button_offset + scroll_y, 225, 50)
+        paste_seed_button = pygame.Rect(1200*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("presets")*60*SCALED_HEIGHT - button_offset + scroll_y, 550*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, SILVER, paste_seed_button, border_radius=0)
         screen.blit(paste_seed_text, paste_seed_text.get_rect(center=paste_seed_button.center))
         if paste_seed_button.collidepoint(mouse_pos) and mouse_click:
@@ -1181,9 +1181,9 @@ def SETTINGS():
 
 
         max_spawn_delay_label = font.render("Starting Spawn Delay: " + str(max_spawn_delay_setting), True, MAROON)
-        screen.blit(max_spawn_delay_label, (50, 180+SLIST.index("starting sd")*60 + scroll_y))
-        max_spawn_delay_minus_button = pygame.Rect(500, 180+SLIST.index("starting sd")*60 - button_offset + scroll_y, 50, 50)
-        max_spawn_delay_plus_button = pygame.Rect(560, 180+SLIST.index("starting sd")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(max_spawn_delay_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("starting sd")*60*SCALED_HEIGHT + scroll_y))
+        max_spawn_delay_minus_button = pygame.Rect(1640*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("starting sd")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        max_spawn_delay_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("starting sd")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, max_spawn_delay_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=max_spawn_delay_plus_button.center))
         pygame.draw.rect(screen, RED, max_spawn_delay_minus_button, border_radius=0)
@@ -1202,9 +1202,9 @@ def SETTINGS():
             
 
         min_spawn_delay_label = font.render("Ending Spawn Delay: " + str(min_spawn_delay_setting), True, MAROON)
-        screen.blit(min_spawn_delay_label, (50, 180+SLIST.index("ending sd")*60 + scroll_y))
-        min_spawn_delay_minus_button = pygame.Rect(500, 180+SLIST.index("ending sd")*60 - button_offset + scroll_y, 50, 50)
-        min_spawn_delay_plus_button = pygame.Rect(560, 180+SLIST.index("ending sd")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(min_spawn_delay_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("ending sd")*60*SCALED_HEIGHT + scroll_y))
+        min_spawn_delay_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("ending sd")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        min_spawn_delay_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("ending sd")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, min_spawn_delay_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=min_spawn_delay_plus_button.center))
         pygame.draw.rect(screen, RED, min_spawn_delay_minus_button, border_radius=0)
@@ -1222,9 +1222,9 @@ def SETTINGS():
 
 
         spawn_delay_change_label = font.render("Spawn Delay Change: " + str(spawn_delay_change_setting), True, MAROON)
-        screen.blit(spawn_delay_change_label, (50, 180+SLIST.index("sd change")*60 + scroll_y))
-        spawn_delay_change_minus_button = pygame.Rect(500, 180+SLIST.index("sd change")*60 - button_offset + scroll_y, 50, 50)
-        spawn_delay_change_plus_button = pygame.Rect(560, 180+SLIST.index("sd change")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(spawn_delay_change_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sd change")*60*SCALED_HEIGHT + scroll_y))
+        spawn_delay_change_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sd change")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        spawn_delay_change_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sd change")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, spawn_delay_change_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=spawn_delay_change_plus_button.center))
         pygame.draw.rect(screen, RED, spawn_delay_change_minus_button, border_radius=0)
@@ -1242,9 +1242,9 @@ def SETTINGS():
 
 
         insta_spawn_label = font.render("Enemies Ambushing: " + str(insta_spawn_setting), True, OLIVE)
-        screen.blit(insta_spawn_label, (50, 180+SLIST.index("instaspawn")*60 + scroll_y))
-        insta_spawn_minus_button = pygame.Rect(500, 180+SLIST.index("instaspawn")*60 - button_offset + scroll_y, 50, 50)
-        insta_spawn_plus_button = pygame.Rect(560, 180+SLIST.index("instaspawn")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(insta_spawn_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("instaspawn")*60*SCALED_HEIGHT + scroll_y))
+        insta_spawn_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("instaspawn")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        insta_spawn_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("instaspawn")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, insta_spawn_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=insta_spawn_plus_button.center))
         pygame.draw.rect(screen, RED, insta_spawn_minus_button, border_radius=0)
@@ -1263,9 +1263,9 @@ def SETTINGS():
 
         if ambush_per_score_setting == 6969: ambush_per_score_label = font.render("Only Ambush At Beginning", True, OLIVE)
         else: ambush_per_score_label = font.render("Ambush Per Score: " + str(ambush_per_score_setting), True, OLIVE)
-        screen.blit(ambush_per_score_label, (50, 180+SLIST.index("instaspawn score")*60 + scroll_y))
-        ambush_per_score_minus_button = pygame.Rect(500, 180+SLIST.index("instaspawn score")*60 - button_offset + scroll_y, 50, 50)
-        ambush_per_score_plus_button = pygame.Rect(560, 180+SLIST.index("instaspawn score")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(ambush_per_score_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("instaspawn score")*60*SCALED_HEIGHT + scroll_y))
+        ambush_per_score_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("instaspawn score")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        ambush_per_score_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("instaspawn score")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, ambush_per_score_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=ambush_per_score_plus_button.center))
         pygame.draw.rect(screen, RED, ambush_per_score_minus_button, border_radius=0)
@@ -1285,9 +1285,9 @@ def SETTINGS():
 
 
         player_health_label = font.render("Player Health: " + str(player_health_setting), True, LIME)
-        screen.blit(player_health_label, (50, 180+SLIST.index("hp")*60 + scroll_y))
-        player_health_minus_button = pygame.Rect(500, 180+SLIST.index("hp")*60 - button_offset + scroll_y, 50, 50)
-        player_health_plus_button = pygame.Rect(560, 180+SLIST.index("hp")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(player_health_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("hp")*60*SCALED_HEIGHT + scroll_y))
+        player_health_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("hp")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        player_health_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("hp")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, player_health_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=player_health_plus_button.center))
         pygame.draw.rect(screen, RED, player_health_minus_button, border_radius=0)
@@ -1307,9 +1307,9 @@ def SETTINGS():
 
         if regen_delay_setting == 6969: regen_delay_label = font.render("No Regen", True, LIME)
         else: regen_delay_label = font.render("Regen Delay: " + str(regen_delay_setting), True, LIME)
-        screen.blit(regen_delay_label, (50, 180+SLIST.index("regen")*60 + scroll_y))
-        regen_delay_minus_button = pygame.Rect(500, 180+SLIST.index("regen")*60 - button_offset + scroll_y, 50, 50)
-        regen_delay_plus_button = pygame.Rect(560, 180+SLIST.index("regen")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(regen_delay_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("regen")*60*SCALED_HEIGHT + scroll_y))
+        regen_delay_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("regen")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        regen_delay_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("regen")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, regen_delay_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=regen_delay_plus_button.center))
         pygame.draw.rect(screen, RED, regen_delay_minus_button, border_radius=0)
@@ -1330,9 +1330,9 @@ def SETTINGS():
 
 
         invincibility_duration_label = font.render("Invincibility Duration: " + str(invincibility_duration_setting), True, LIME)
-        screen.blit(invincibility_duration_label, (50, 180+SLIST.index("invincibility")*60 + scroll_y))
-        invincibility_duration_minus_button = pygame.Rect(500, 180+SLIST.index("invincibility")*60 - button_offset + scroll_y, 50, 50)
-        invincibility_duration_plus_button = pygame.Rect(560, 180+SLIST.index("invincibility")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(invincibility_duration_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("invincibility")*60*SCALED_HEIGHT + scroll_y))
+        invincibility_duration_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("invincibility")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        invincibility_duration_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("invincibility")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, invincibility_duration_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=invincibility_duration_plus_button.center))
         pygame.draw.rect(screen, RED, invincibility_duration_minus_button, border_radius=0)
@@ -1351,9 +1351,9 @@ def SETTINGS():
 
 
         freeze_duration_label = font.render("Freeze Duration: " + str(freeze_duration_setting), True, CYAN)
-        screen.blit(freeze_duration_label, (50, 180+SLIST.index("freeze status")*60 + scroll_y))
-        freeze_duration_minus_button = pygame.Rect(500, 180+SLIST.index("freeze status")*60 - button_offset + scroll_y, 50, 50)
-        freeze_duration_plus_button = pygame.Rect(560, 180+SLIST.index("freeze status")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(freeze_duration_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("freeze status")*60*SCALED_HEIGHT + scroll_y))
+        freeze_duration_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("freeze status")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        freeze_duration_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("freeze status")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, freeze_duration_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=freeze_duration_plus_button.center))
         pygame.draw.rect(screen, RED, freeze_duration_minus_button, border_radius=0)
@@ -1370,9 +1370,9 @@ def SETTINGS():
             pygame.time.delay(50)
 
         freezeslip_max_label = font.render("Max Freeze Velocity: " + str(freezeslip_max_setting), True, CYAN)
-        screen.blit(freezeslip_max_label, (50, 180+SLIST.index("frostmax")*60 + scroll_y))
-        freezeslip_max_minus_button = pygame.Rect(500, 180+SLIST.index("frostmax")*60 - button_offset + scroll_y, 50, 50)
-        freezeslip_max_plus_button = pygame.Rect(560, 180+SLIST.index("frostmax")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(freezeslip_max_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostmax")*60*SCALED_HEIGHT + scroll_y))
+        freezeslip_max_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostmax")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        freezeslip_max_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostmax")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, freezeslip_max_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=freezeslip_max_plus_button.center))
         pygame.draw.rect(screen, RED, freezeslip_max_minus_button, border_radius=0)
@@ -1390,9 +1390,9 @@ def SETTINGS():
 
 
         burn_duration_label = font.render("Burn Duration: " + str(burn_duration_setting), True, LAVA)
-        screen.blit(burn_duration_label, (50, 180+SLIST.index("burn status")*60 + scroll_y))
-        burn_duration_minus_button = pygame.Rect(500, 180+SLIST.index("burn status")*60 - button_offset + scroll_y, 50, 50)
-        burn_duration_plus_button = pygame.Rect(560, 180+SLIST.index("burn status")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(burn_duration_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burn status")*60*SCALED_HEIGHT + scroll_y))
+        burn_duration_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burn status")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        burn_duration_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burn status")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, burn_duration_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=burn_duration_plus_button.center))
         pygame.draw.rect(screen, RED, burn_duration_minus_button, border_radius=0)
@@ -1410,9 +1410,9 @@ def SETTINGS():
 
 
         player_speed_label = font.render("Player Speed: " + str(player_speed_setting), True, SKY)
-        screen.blit(player_speed_label, (50, 180+SLIST.index("player speed")*60 + scroll_y))
-        player_speed_minus_button = pygame.Rect(500, 180+SLIST.index("player speed")*60 - button_offset + scroll_y, 50, 50)
-        player_speed_plus_button = pygame.Rect(560, 180+SLIST.index("player speed")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(player_speed_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("player speed")*60*SCALED_HEIGHT + scroll_y))
+        player_speed_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("player speed")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        player_speed_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("player speed")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, player_speed_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=player_speed_plus_button.center))
         pygame.draw.rect(screen, RED, player_speed_minus_button, border_radius=0)
@@ -1430,9 +1430,9 @@ def SETTINGS():
 
 
         player_size_label = font.render("Player Size: " + str(player_size_setting), True, SKY)
-        screen.blit(player_size_label, (50, 180+SLIST.index("player size")*60 + scroll_y))
-        player_size_minus_button = pygame.Rect(500, 180+SLIST.index("player size")*60 - button_offset + scroll_y, 50, 50)
-        player_size_plus_button = pygame.Rect(560, 180+SLIST.index("player size")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(player_size_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("player size")*60*SCALED_HEIGHT + scroll_y))
+        player_size_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("player size")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        player_size_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("player size")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, player_size_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=player_size_plus_button.center))
         pygame.draw.rect(screen, RED, player_size_minus_button, border_radius=0)
@@ -1451,9 +1451,9 @@ def SETTINGS():
 
 
         enemy_speed_label = font.render("Enemy Speed: " + str(enemy_speed_setting), True, RED)
-        screen.blit(enemy_speed_label, (50, 180+SLIST.index("enemy speed")*60 + scroll_y))
-        enemy_speed_minus_button = pygame.Rect(500, 180+SLIST.index("enemy speed")*60 - button_offset + scroll_y, 50, 50)
-        enemy_speed_plus_button = pygame.Rect(560, 180+SLIST.index("enemy speed")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(enemy_speed_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy speed")*60*SCALED_HEIGHT + scroll_y))
+        enemy_speed_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy speed")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        enemy_speed_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy speed")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, enemy_speed_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=enemy_speed_plus_button.center))
         pygame.draw.rect(screen, RED, enemy_speed_minus_button, border_radius=0)
@@ -1473,9 +1473,9 @@ def SETTINGS():
 
 
         enemy_size_label = font.render("Enemy Size: " + str(enemy_size_setting), True, RED)
-        screen.blit(enemy_size_label, (50, 180+SLIST.index("enemy size")*60 + scroll_y))
-        enemy_size_minus_button = pygame.Rect(500, 180+SLIST.index("enemy size")*60 - button_offset + scroll_y, 50, 50)
-        enemy_size_plus_button = pygame.Rect(560, 180+SLIST.index("enemy size")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(enemy_size_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy size")*60*SCALED_HEIGHT + scroll_y))
+        enemy_size_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy size")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        enemy_size_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy size")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, enemy_size_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=enemy_size_plus_button.center))
         pygame.draw.rect(screen, RED, enemy_size_minus_button, border_radius=0)
@@ -1494,9 +1494,9 @@ def SETTINGS():
 
 
         projectile_speed_label = font.render("Projectile Speed: " + str(projectile_speed_setting), True, ORANGE)
-        screen.blit(projectile_speed_label, (50, 180+SLIST.index("projectile speed")*60 + scroll_y))
-        projectile_speed_minus_button = pygame.Rect(500, 180+SLIST.index("projectile speed")*60 - button_offset + scroll_y, 50, 50)
-        projectile_speed_plus_button = pygame.Rect(560, 180+SLIST.index("projectile speed")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(projectile_speed_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("projectile speed")*60*SCALED_HEIGHT + scroll_y))
+        projectile_speed_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("projectile speed")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        projectile_speed_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("projectile speed")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, projectile_speed_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=projectile_speed_plus_button.center))
         pygame.draw.rect(screen, RED, projectile_speed_minus_button, border_radius=0)
@@ -1515,9 +1515,9 @@ def SETTINGS():
 
 
         projectile_fire_rate_label = font.render("Projectile Fire Rate: " + str(projectile_fire_rate_setting), True, ORANGE)
-        screen.blit(projectile_fire_rate_label, (50, 180+SLIST.index("projectile fire rate")*60 + scroll_y))
-        projectile_fire_rate_minus_button = pygame.Rect(500, 180+SLIST.index("projectile fire rate")*60 - button_offset + scroll_y, 50, 50)
-        projectile_fire_rate_plus_button = pygame.Rect(560, 180+SLIST.index("projectile fire rate")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(projectile_fire_rate_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("projectile fire rate")*60*SCALED_HEIGHT + scroll_y))
+        projectile_fire_rate_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("projectile fire rate")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        projectile_fire_rate_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("projectile fire rate")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, projectile_fire_rate_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=projectile_fire_rate_plus_button.center))
         pygame.draw.rect(screen, RED, projectile_fire_rate_minus_button, border_radius=0)
@@ -1536,9 +1536,9 @@ def SETTINGS():
         
 
         projectile_size_label = font.render("Projectile/Trail Size: " + str(projectile_size_setting), True, ORANGE)
-        screen.blit(projectile_size_label, (50, 180+SLIST.index("proj/trail size")*60 + scroll_y))
-        projectile_size_minus_button = pygame.Rect(500, 180+SLIST.index("proj/trail size")*60 - button_offset + scroll_y, 50, 50)
-        projectile_size_plus_button = pygame.Rect(560, 180+SLIST.index("proj/trail size")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(projectile_size_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("proj/trail size")*60*SCALED_HEIGHT + scroll_y))
+        projectile_size_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("proj/trail size")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        projectile_size_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("proj/trail size")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, projectile_size_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=projectile_size_plus_button.center))
         pygame.draw.rect(screen, RED, projectile_size_minus_button, border_radius=0)
@@ -1556,9 +1556,9 @@ def SETTINGS():
 
 
         projectile_damage_label = font.render("Projectile/Trail Damage: " + str(projectile_damage_setting), True, ORANGE)
-        screen.blit(projectile_damage_label, (50, 180+SLIST.index("proj/trail damage")*60 + scroll_y))
-        projectile_damage_minus_button = pygame.Rect(500, 180+SLIST.index("proj/trail damage")*60 - button_offset + scroll_y, 50, 50)
-        projectile_damage_plus_button = pygame.Rect(560, 180+SLIST.index("proj/trail damage")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(projectile_damage_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("proj/trail damage")*60*SCALED_HEIGHT + scroll_y))
+        projectile_damage_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("proj/trail damage")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        projectile_damage_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("proj/trail damage")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, projectile_damage_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=projectile_damage_plus_button.center))
         pygame.draw.rect(screen, RED, projectile_damage_minus_button, border_radius=0)
@@ -1577,9 +1577,9 @@ def SETTINGS():
 
 
         trail_duration_label = font.render("Trail Duration: " + str(trail_duration_setting), True, ORANGE)
-        screen.blit(trail_duration_label, (50, 180+SLIST.index("trail duration")*60 + scroll_y))
-        trail_duration_minus_button = pygame.Rect(500, 180+SLIST.index("trail duration")*60 - button_offset + scroll_y, 50, 50)
-        trail_duration_plus_button = pygame.Rect(560, 180+SLIST.index("trail duration")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(trail_duration_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("trail duration")*60*SCALED_HEIGHT + scroll_y))
+        trail_duration_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("trail duration")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        trail_duration_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("trail duration")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, trail_duration_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=trail_duration_plus_button.center))
         pygame.draw.rect(screen, RED, trail_duration_minus_button, border_radius=0)
@@ -1597,9 +1597,9 @@ def SETTINGS():
 
 
         burn_particle_lifetime_label = font.render("Burn Particle Duration: " + str(burn_particle_lifetime_setting), True, LAVA)
-        screen.blit(burn_particle_lifetime_label, (50, 180+SLIST.index("burn duration")*60 + scroll_y))
-        burn_particle_lifetime_minus_button = pygame.Rect(500, 180+SLIST.index("burn duration")*60 - button_offset + scroll_y, 50, 50)
-        burn_particle_lifetime_plus_button = pygame.Rect(560, 180+SLIST.index("burn duration")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(burn_particle_lifetime_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burn duration")*60*SCALED_HEIGHT + scroll_y))
+        burn_particle_lifetime_minus_button = pygame.Rect(1640*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burn duration")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        burn_particle_lifetime_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burn duration")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, burn_particle_lifetime_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=burn_particle_lifetime_plus_button.center))
         pygame.draw.rect(screen, RED, burn_particle_lifetime_minus_button, border_radius=0)
@@ -1617,9 +1617,9 @@ def SETTINGS():
 
 
         trail_distance_label = font.render("Trail Distance: " + str(trail_distance_setting), True, ORANGE)
-        screen.blit(trail_distance_label, (50, 180+SLIST.index("trail distance")*60 + scroll_y))
-        trail_distance_minus_button = pygame.Rect(500, 180+SLIST.index("trail distance")*60 - button_offset + scroll_y, 50, 50)
-        trail_distance_plus_button = pygame.Rect(560, 180+SLIST.index("trail distance")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(trail_distance_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("trail distance")*60*SCALED_HEIGHT + scroll_y))
+        trail_distance_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("trail distance")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        trail_distance_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("trail distance")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, trail_distance_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=trail_distance_plus_button.center))
         pygame.draw.rect(screen, RED, trail_distance_minus_button, border_radius=0)
@@ -1638,9 +1638,9 @@ def SETTINGS():
 
 
         chaser_turn_amount_label = font.render("Chaser Turn Speed: " + str(chaser_turn_amount_setting), True, SALMON)
-        screen.blit(chaser_turn_amount_label, (50, 180+SLIST.index("chaser turnspeed")*60 + scroll_y))
-        chaser_turn_amount_minus_button = pygame.Rect(500, 180+SLIST.index("chaser turnspeed")*60 - button_offset + scroll_y, 50, 50)
-        chaser_turn_amount_plus_button = pygame.Rect(560, 180+SLIST.index("chaser turnspeed")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(chaser_turn_amount_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("chaser turnspeed")*60*SCALED_HEIGHT + scroll_y))
+        chaser_turn_amount_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("chaser turnspeed")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        chaser_turn_amount_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("chaser turnspeed")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, chaser_turn_amount_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=chaser_turn_amount_plus_button.center))
         pygame.draw.rect(screen, RED, chaser_turn_amount_minus_button, border_radius=0)
@@ -1659,9 +1659,9 @@ def SETTINGS():
 
 
         enemy_stick_label = font.render("Wall Stick Duration: " + str(enemy_stick_setting), True, GREEN)
-        screen.blit(enemy_stick_label, (50, 180+SLIST.index("wallstick")*60 + scroll_y))
-        enemy_stick_minus_button = pygame.Rect(500, 180+SLIST.index("wallstick")*60 - button_offset + scroll_y, 50, 50)
-        enemy_stick_plus_button = pygame.Rect(560, 180+SLIST.index("wallstick")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(enemy_stick_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("wallstick")*60*SCALED_HEIGHT + scroll_y))
+        enemy_stick_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("wallstick")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        enemy_stick_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("wallstick")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, enemy_stick_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=enemy_stick_plus_button.center))
         pygame.draw.rect(screen, RED, enemy_stick_minus_button, border_radius=0)
@@ -1680,8 +1680,8 @@ def SETTINGS():
         if sticky_sensitive_setting == 1: sticky_sensitive_text = "Sensitive"
         else: sticky_sensitive_text = "Not Sensitive"
         sticky_sensitive_label = font.render(sticky_sensitive_text, True, GREEN)
-        screen.blit(sticky_sensitive_label, (100, 180+SLIST.index("sticky sensitive")*60 + scroll_y))
-        sticky_sensitive_true_or_false_button = pygame.Rect(500, 180+SLIST.index("sticky sensitive")*60 - button_offset + scroll_y, 110, 50)
+        screen.blit(sticky_sensitive_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sticky sensitive")*60*SCALED_HEIGHT + scroll_y))
+        sticky_sensitive_true_or_false_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sticky sensitive")*60*SCALED_HEIGHT - button_offset + scroll_y, 110, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, YELLOW, sticky_sensitive_true_or_false_button, border_radius=0)
         screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=sticky_sensitive_true_or_false_button.center))
         if sticky_sensitive_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
@@ -1693,8 +1693,8 @@ def SETTINGS():
         if charger_sensitive_setting == 1: charger_sensitive_text = "Sensitive"
         else: charger_sensitive_text = "Not Sensitive"
         charger_sensitive_label = font.render(charger_sensitive_text, True, YELLOW)
-        screen.blit(charger_sensitive_label, (100, 180+SLIST.index("charger sensitive")*60 + scroll_y))
-        charger_sensitive_true_or_false_button = pygame.Rect(500, 180+SLIST.index("charger sensitive")*60 - button_offset + scroll_y, 110, 50)
+        screen.blit(charger_sensitive_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("charger sensitive")*60*SCALED_HEIGHT + scroll_y))
+        charger_sensitive_true_or_false_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("charger sensitive")*60*SCALED_HEIGHT - button_offset + scroll_y, 110, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, YELLOW, charger_sensitive_true_or_false_button, border_radius=0)
         screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=charger_sensitive_true_or_false_button.center))
         if charger_sensitive_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
@@ -1707,8 +1707,8 @@ def SETTINGS():
         elif addictive_interaction_setting == 2: addictive_interaction_text = "Enemy Shrink"
         else: addictive_interaction_text = "None"
         addictive_interaction_label = font.render("Collision: " + addictive_interaction_text, True, PINK)
-        screen.blit(addictive_interaction_label, (100, 180+SLIST.index("addictive interaction")*60 + scroll_y))
-        addictive_interaction_true_or_false_button = pygame.Rect(500, 180+SLIST.index("addictive interaction")*60 - button_offset + scroll_y, 110, 50)
+        screen.blit(addictive_interaction_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive interaction")*60*SCALED_HEIGHT + scroll_y))
+        addictive_interaction_true_or_false_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive interaction")*60*SCALED_HEIGHT - button_offset + scroll_y, 110, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, YELLOW, addictive_interaction_true_or_false_button, border_radius=0)
         screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=addictive_interaction_true_or_false_button.center))
         if addictive_interaction_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
@@ -1721,8 +1721,8 @@ def SETTINGS():
         elif blocker_interaction_setting == 2: blocker_interaction_text = "Enemy Shrink"
         else: blocker_interaction_text = "None"
         blocker_interaction_label = font.render("Collision: " + blocker_interaction_text, True, SALMON)
-        screen.blit(blocker_interaction_label, (100, 180+SLIST.index("blocker interaction")*60 + scroll_y))
-        blocker_interaction_true_or_false_button = pygame.Rect(500, 180+SLIST.index("blocker interaction")*60 - button_offset + scroll_y, 110, 50)
+        screen.blit(blocker_interaction_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker interaction")*60*SCALED_HEIGHT + scroll_y))
+        blocker_interaction_true_or_false_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker interaction")*60*SCALED_HEIGHT - button_offset + scroll_y, 110, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, YELLOW, blocker_interaction_true_or_false_button, border_radius=0)
         screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=blocker_interaction_true_or_false_button.center))
         if blocker_interaction_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
@@ -1732,9 +1732,9 @@ def SETTINGS():
 
 
         enemy_unlock_label = font.render("Enemy Unlock: " + str(enemy_unlock_setting), True, MAROON)
-        screen.blit(enemy_unlock_label, (50, 180+SLIST.index("enemy unlock")*60 + scroll_y))
-        enemy_unlock_minus_button = pygame.Rect(500, 180+SLIST.index("enemy unlock")*60 - button_offset + scroll_y, 50, 50)
-        enemy_unlock_plus_button = pygame.Rect(560, 180+SLIST.index("enemy unlock")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(enemy_unlock_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy unlock")*60*SCALED_HEIGHT + scroll_y))
+        enemy_unlock_minus_button = pygame.Rect(1640*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy unlock")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        enemy_unlock_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy unlock")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, enemy_unlock_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=enemy_unlock_plus_button.center))
         pygame.draw.rect(screen, RED, enemy_unlock_minus_button, border_radius=0)
@@ -1753,7 +1753,7 @@ def SETTINGS():
 
 
         all_starter_text = font.render("All Starter", True, WHITE)
-        all_starter_button = pygame.Rect(50, 180+SLIST.index("set locks")*60 - button_offset + scroll_y, 225, 50)
+        all_starter_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("set locks")*60*SCALED_HEIGHT - button_offset + scroll_y, 837.5*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, all_starter_button, border_radius=0)
         screen.blit(all_starter_text, all_starter_text.get_rect(center=all_starter_button.center))
         if all_starter_button.collidepoint(mouse_pos) and mouse_click:
@@ -1761,44 +1761,36 @@ def SETTINGS():
                 enemy_locks[en] = 0
             pygame.time.delay(200)
         all_locked_text = font.render("All Locked", True, WHITE)
-        all_locked_button = pygame.Rect(300, 180+SLIST.index("set locks")*60 - button_offset + scroll_y, 225, 50)
-        pygame.draw.rect(screen, SULFUR, all_locked_button, border_radius=0)
+        all_locked_button = pygame.Rect(912.5*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("set locks")*60*SCALED_HEIGHT - button_offset + scroll_y, 837.5*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        pygame.draw.rect(screen, TEAL, all_locked_button, border_radius=0)
         screen.blit(all_locked_text, all_locked_text.get_rect(center=all_locked_button.center))
         if all_locked_button.collidepoint(mouse_pos) and mouse_click:
             for en in range(0, len(enemy_locks)):
                 enemy_locks[en] = 1
             pygame.time.delay(200)
         all_banned_text = font.render("All Banned", True, WHITE)
-        all_banned_button = pygame.Rect(550, 180+SLIST.index("set locks")*60 - button_offset + scroll_y, 225, 50)
-        pygame.draw.rect(screen, RED, all_banned_button, border_radius=0)
+        all_banned_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("set locks 2")*60*SCALED_HEIGHT - button_offset + scroll_y, 837.5*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        pygame.draw.rect(screen, MAROON, all_banned_button, border_radius=0)
         screen.blit(all_banned_text, all_banned_text.get_rect(center=all_banned_button.center))
         if all_banned_button.collidepoint(mouse_pos) and mouse_click:
             for en in range(0, len(enemy_locks)):
                 enemy_locks[en] = 2
             pygame.time.delay(200)
         all_ambush_text = font.render("All Ambush", True, WHITE)
-        all_ambush_button = pygame.Rect(50, 180+SLIST.index("set locks 2")*60 - button_offset + scroll_y, 225, 50)
-        pygame.draw.rect(screen, LAVA, all_ambush_button, border_radius=0)
+        all_ambush_button = pygame.Rect(912.5*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("set locks 2")*60*SCALED_HEIGHT - button_offset + scroll_y, 837.5*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        pygame.draw.rect(screen, OLIVE, all_ambush_button, border_radius=0)
         screen.blit(all_ambush_text, all_ambush_text.get_rect(center=all_ambush_button.center))
         if all_ambush_button.collidepoint(mouse_pos) and mouse_click:
             for en in range(0, len(enemy_locks)):
                 enemy_locks[en] = 3
-            pygame.time.delay(200)
-        all_random_text = font.render("All Random", True, WHITE)
-        all_random_button = pygame.Rect(300, 180+SLIST.index("set locks 2")*60 - button_offset + scroll_y, 225, 50)
-        pygame.draw.rect(screen, PURPLE, all_random_button, border_radius=0)
-        screen.blit(all_random_text, all_random_text.get_rect(center=all_random_button.center))
-        if all_random_button.collidepoint(mouse_pos) and mouse_click:
-            for en in range(0, len(enemy_locks)):
-                enemy_locks[en] = random.randrange(3)
-            pygame.time.delay(200)
+            pygame.time.delay(200) 
 
 
 
         basic_hp_label = font.render("Basic Enemy - HP: " + str(basic_hp_setting), True, GRAY)
-        screen.blit(basic_hp_label, (50, 180+SLIST.index("basic")*60 + scroll_y))
-        basic_hp_minus_button = pygame.Rect(500, 180+SLIST.index("basic")*60 - button_offset + scroll_y, 50, 50)
-        basic_hp_plus_button = pygame.Rect(560, 180+SLIST.index("basic")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(basic_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("basic")*60*SCALED_HEIGHT + scroll_y))
+        basic_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("basic")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        basic_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("basic")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, basic_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=basic_hp_plus_button.center))
         pygame.draw.rect(screen, RED, basic_hp_minus_button, border_radius=0)
@@ -1814,7 +1806,7 @@ def SETTINGS():
                 basic_hp_setting = 1
             pygame.time.delay(50)
         basic_locks_text = font.render(enemy_locking_labels[enemy_locks[0]], True, BLACK)
-        basic_locks_button = pygame.Rect(650, 180+SLIST.index("basic")*60 - button_offset + scroll_y, 200, 50)
+        basic_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("basic")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GRAY, basic_locks_button, border_radius=0)
         screen.blit(basic_locks_text, basic_locks_text.get_rect(center=basic_locks_button.center))
         if basic_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -1825,9 +1817,9 @@ def SETTINGS():
 
 
         homing_hp_label = font.render("Homing Enemy - HP: " + str(homing_hp_setting), True, LIME)
-        screen.blit(homing_hp_label, (50, 180+SLIST.index("homing")*60 + scroll_y))
-        homing_hp_minus_button = pygame.Rect(500, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 50, 50)
-        homing_hp_plus_button = pygame.Rect(560, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(homing_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("homing")*60*SCALED_HEIGHT + scroll_y))
+        homing_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("homing")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        homing_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("homing")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, homing_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=homing_hp_plus_button.center))
         pygame.draw.rect(screen, RED, homing_hp_minus_button, border_radius=0)
@@ -1843,7 +1835,7 @@ def SETTINGS():
                 homing_hp_setting = 1
             pygame.time.delay(50)
         homing_locks_text = font.render(enemy_locking_labels[enemy_locks[1]], True, BLACK)
-        homing_locks_button = pygame.Rect(650, 180+SLIST.index("homing")*60 - button_offset + scroll_y, 200, 50)
+        homing_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("homing")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, LIME, homing_locks_button, border_radius=0)
         screen.blit(homing_locks_text, homing_locks_text.get_rect(center=homing_locks_button.center))
         if homing_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -1853,9 +1845,9 @@ def SETTINGS():
 
 
         fatal_hp_label = font.render("Fatal Enemy - HP: " + str(fatal_hp_setting), True, RED)
-        screen.blit(fatal_hp_label, (50, 180+SLIST.index("fatal")*60 + scroll_y))
-        fatal_hp_minus_button = pygame.Rect(500, 180+SLIST.index("fatal")*60 - button_offset + scroll_y, 50, 50)
-        fatal_hp_plus_button = pygame.Rect(560, 180+SLIST.index("fatal")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(fatal_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("fatal")*60*SCALED_HEIGHT + scroll_y))
+        fatal_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("fatal")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        fatal_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("fatal")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, fatal_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=fatal_hp_plus_button.center))
         pygame.draw.rect(screen, RED, fatal_hp_minus_button, border_radius=0)
@@ -1871,7 +1863,7 @@ def SETTINGS():
                 fatal_hp_setting = 1
             pygame.time.delay(50)
         fatal_locks_text = font.render(enemy_locking_labels[enemy_locks[2]], True, BLACK)
-        fatal_locks_button = pygame.Rect(650, 180+SLIST.index("fatal")*60 - button_offset + scroll_y, 200, 50)
+        fatal_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("fatal")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, RED, fatal_locks_button, border_radius=0)
         screen.blit(fatal_locks_text, fatal_locks_text.get_rect(center=fatal_locks_button.center))
         if fatal_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -1882,9 +1874,9 @@ def SETTINGS():
 
 
         flow_hp_label = font.render("Flow Enemy - HP: " + str(flow_hp_setting), True, TEAL)
-        screen.blit(flow_hp_label, (50, 180+SLIST.index("flow")*60 + scroll_y))
-        flow_hp_minus_button = pygame.Rect(500, 180+SLIST.index("flow")*60 - button_offset + scroll_y, 50, 50)
-        flow_hp_plus_button = pygame.Rect(560, 180+SLIST.index("flow")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(flow_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("flow")*60*SCALED_HEIGHT + scroll_y))
+        flow_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("flow")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        flow_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("flow")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, flow_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=flow_hp_plus_button.center))
         pygame.draw.rect(screen, RED, flow_hp_minus_button, border_radius=0)
@@ -1900,7 +1892,7 @@ def SETTINGS():
                 flow_hp_setting = 1
             pygame.time.delay(50)
         flow_locks_text = font.render(enemy_locking_labels[enemy_locks[3]], True, BLACK)
-        flow_locks_button = pygame.Rect(650, 180+SLIST.index("flow")*60 - button_offset + scroll_y, 200, 50)
+        flow_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("flow")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, TEAL, flow_locks_button, border_radius=0)
         screen.blit(flow_locks_text, flow_locks_text.get_rect(center=flow_locks_button.center))
         if flow_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -1911,9 +1903,9 @@ def SETTINGS():
 
 
         sticky_hp_label = font.render("Sticky Enemy - HP: " + str(sticky_hp_setting), True, GREEN)
-        screen.blit(sticky_hp_label, (50, 180+SLIST.index("sticky")*60 + scroll_y))
-        sticky_hp_minus_button = pygame.Rect(500, 180+SLIST.index("sticky")*60 - button_offset + scroll_y, 50, 50)
-        sticky_hp_plus_button = pygame.Rect(560, 180+SLIST.index("sticky")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(sticky_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sticky")*60*SCALED_HEIGHT + scroll_y))
+        sticky_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sticky")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        sticky_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sticky")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, sticky_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=sticky_hp_plus_button.center))
         pygame.draw.rect(screen, RED, sticky_hp_minus_button, border_radius=0)
@@ -1929,7 +1921,7 @@ def SETTINGS():
                 sticky_hp_setting = 1
             pygame.time.delay(50)
         sticky_locks_text = font.render(enemy_locking_labels[enemy_locks[4]], True, BLACK)
-        sticky_locks_button = pygame.Rect(650, 180+SLIST.index("sticky")*60 - button_offset + scroll_y, 200, 50)
+        sticky_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sticky")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, sticky_locks_button, border_radius=0)
         screen.blit(sticky_locks_text, sticky_locks_text.get_rect(center=sticky_locks_button.center))
         if sticky_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -1940,9 +1932,9 @@ def SETTINGS():
 
 
         gloomy_hp_label = font.render("Gloomy Enemy - HP: " + str(gloomy_hp_setting), True, VIOLET)
-        screen.blit(gloomy_hp_label, (50, 180+SLIST.index("gloomy")*60 + scroll_y))
-        gloomy_hp_minus_button = pygame.Rect(500, 180+SLIST.index("gloomy")*60 - button_offset + scroll_y, 50, 50)
-        gloomy_hp_plus_button = pygame.Rect(560, 180+SLIST.index("gloomy")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(gloomy_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("gloomy")*60*SCALED_HEIGHT + scroll_y))
+        gloomy_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("gloomy")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        gloomy_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("gloomy")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, gloomy_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=gloomy_hp_plus_button.center))
         pygame.draw.rect(screen, RED, gloomy_hp_minus_button, border_radius=0)
@@ -1958,7 +1950,7 @@ def SETTINGS():
                 gloomy_hp_setting = 1
             pygame.time.delay(50)
         gloomy_locks_text = font.render(enemy_locking_labels[enemy_locks[5]], True, BLACK)
-        gloomy_locks_button = pygame.Rect(650, 180+SLIST.index("gloomy")*60 - button_offset + scroll_y, 200, 50)
+        gloomy_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("gloomy")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, VIOLET, gloomy_locks_button, border_radius=0)
         screen.blit(gloomy_locks_text, gloomy_locks_text.get_rect(center=gloomy_locks_button.center))
         if gloomy_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -1969,9 +1961,9 @@ def SETTINGS():
 
 
         trail_hp_label = font.render("Trail Enemy - HP: " + str(trail_hp_setting), True, TANGERINE)
-        screen.blit(trail_hp_label, (50, 180+SLIST.index("trail")*60 + scroll_y))
-        trail_hp_minus_button = pygame.Rect(500, 180+SLIST.index("trail")*60 - button_offset + scroll_y, 50, 50)
-        trail_hp_plus_button = pygame.Rect(560, 180+SLIST.index("trail")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(trail_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("trail")*60*SCALED_HEIGHT + scroll_y))
+        trail_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("trail")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        trail_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("trail")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, trail_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=trail_hp_plus_button.center))
         pygame.draw.rect(screen, RED, trail_hp_minus_button, border_radius=0)
@@ -1987,7 +1979,7 @@ def SETTINGS():
                 trail_hp_setting = 1
             pygame.time.delay(50)
         trail_locks_text = font.render(enemy_locking_labels[enemy_locks[6]], True, BLACK)
-        trail_locks_button = pygame.Rect(650, 180+SLIST.index("trail")*60 - button_offset + scroll_y, 200, 50)
+        trail_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("trail")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, TANGERINE, trail_locks_button, border_radius=0)
         screen.blit(trail_locks_text, trail_locks_text.get_rect(center=trail_locks_button.center))
         if trail_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -1998,9 +1990,9 @@ def SETTINGS():
 
 
         impostor_hp_label = font.render("Impostor Enemy - HP: " + str(impostor_hp_setting), True, WHITE)
-        screen.blit(impostor_hp_label, (50, 180+SLIST.index("impostor")*60 + scroll_y))
-        impostor_hp_minus_button = pygame.Rect(500, 180+SLIST.index("impostor")*60 - button_offset + scroll_y, 50, 50)
-        impostor_hp_plus_button = pygame.Rect(560, 180+SLIST.index("impostor")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(impostor_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("impostor")*60*SCALED_HEIGHT + scroll_y))
+        impostor_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("impostor")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        impostor_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("impostor")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, impostor_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=impostor_hp_plus_button.center))
         pygame.draw.rect(screen, RED, impostor_hp_minus_button, border_radius=0)
@@ -2016,7 +2008,7 @@ def SETTINGS():
                 impostor_hp_setting = 1
             pygame.time.delay(50)
         impostor_locks_text = font.render(enemy_locking_labels[enemy_locks[7]], True, RED)
-        impostor_locks_button = pygame.Rect(650, 180+SLIST.index("impostor")*60 - button_offset + scroll_y, 200, 50)
+        impostor_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("impostor")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, WHITE, impostor_locks_button, border_radius=0)
         screen.blit(impostor_locks_text, impostor_locks_text.get_rect(center=impostor_locks_button.center))
         if impostor_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2027,9 +2019,9 @@ def SETTINGS():
 
 
         splitter_hp_label = font.render("Splitter Enemy - HP: " + str(splitter_hp_setting), True, CHARTREUSE)
-        screen.blit(splitter_hp_label, (50, 180+SLIST.index("splitter")*60 + scroll_y))
-        splitter_hp_minus_button = pygame.Rect(500, 180+SLIST.index("splitter")*60 - button_offset + scroll_y, 50, 50)
-        splitter_hp_plus_button = pygame.Rect(560, 180+SLIST.index("splitter")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(splitter_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("splitter")*60*SCALED_HEIGHT + scroll_y))
+        splitter_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("splitter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        splitter_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("splitter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, splitter_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=splitter_hp_plus_button.center))
         pygame.draw.rect(screen, RED, splitter_hp_minus_button, border_radius=0)
@@ -2045,7 +2037,7 @@ def SETTINGS():
                 splitter_hp_setting = 1
             pygame.time.delay(50)
         splitter_locks_text = font.render(enemy_locking_labels[enemy_locks[8]], True, BLACK)
-        splitter_locks_button = pygame.Rect(650, 180+SLIST.index("splitter")*60 - button_offset + scroll_y, 200, 50)
+        splitter_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("splitter")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, CHARTREUSE, splitter_locks_button, border_radius=0)
         screen.blit(splitter_locks_text, splitter_locks_text.get_rect(center=splitter_locks_button.center))
         if splitter_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2056,9 +2048,9 @@ def SETTINGS():
 
 
         split_amount_label = font.render("Splits: " + str(split_amount_setting), True, CHARTREUSE)
-        screen.blit(split_amount_label, (100, 180+SLIST.index("splitter splits")*60 + scroll_y))
-        split_amount_minus_button = pygame.Rect(500, 180+SLIST.index("splitter splits")*60 - button_offset + scroll_y, 50, 50)
-        split_amount_plus_button = pygame.Rect(560, 180+SLIST.index("splitter splits")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(split_amount_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("splitter splits")*60*SCALED_HEIGHT + scroll_y))
+        split_amount_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("splitter splits")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        split_amount_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("splitter splits")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, split_amount_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=split_amount_plus_button.center))
         pygame.draw.rect(screen, RED, split_amount_minus_button, border_radius=0)
@@ -2077,9 +2069,9 @@ def SETTINGS():
 
 
         bomb_hp_label = font.render("Bomb Enemy - HP: " + str(bomb_hp_setting), True, MAGENTA)
-        screen.blit(bomb_hp_label, (50, 180+SLIST.index("bomb")*60 + scroll_y))
-        bomb_hp_minus_button = pygame.Rect(500, 180+SLIST.index("bomb")*60 - button_offset + scroll_y, 50, 50)
-        bomb_hp_plus_button = pygame.Rect(560, 180+SLIST.index("bomb")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(bomb_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("bomb")*60*SCALED_HEIGHT + scroll_y))
+        bomb_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("bomb")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        bomb_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("bomb")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, bomb_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=bomb_hp_plus_button.center))
         pygame.draw.rect(screen, RED, bomb_hp_minus_button, border_radius=0)
@@ -2095,7 +2087,7 @@ def SETTINGS():
                 bomb_hp_setting = 1
             pygame.time.delay(50)
         bomb_locks_text = font.render(enemy_locking_labels[enemy_locks[9]], True, BLACK)
-        bomb_locks_button = pygame.Rect(650, 180+SLIST.index("bomb")*60 - button_offset + scroll_y, 200, 50)
+        bomb_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("bomb")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, MAGENTA, bomb_locks_button, border_radius=0)
         screen.blit(bomb_locks_text, bomb_locks_text.get_rect(center=bomb_locks_button.center))
         if bomb_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2106,9 +2098,9 @@ def SETTINGS():
 
 
         bomb_projectile_amount_label = font.render("Bullets: " + str(bomb_projectile_amount_setting), True, MAGENTA)
-        screen.blit(bomb_projectile_amount_label, (100, 180+SLIST.index("bomb bullets")*60 + scroll_y))
-        bomb_projectile_amount_minus_button = pygame.Rect(500, 180+SLIST.index("bomb bullets")*60 - button_offset + scroll_y, 50, 50)
-        bomb_projectile_amount_plus_button = pygame.Rect(560, 180+SLIST.index("bomb bullets")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(bomb_projectile_amount_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("bomb bullets")*60*SCALED_HEIGHT + scroll_y))
+        bomb_projectile_amount_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("bomb bullets")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        bomb_projectile_amount_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("bomb bullets")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, bomb_projectile_amount_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=bomb_projectile_amount_plus_button.center))
         pygame.draw.rect(screen, RED, bomb_projectile_amount_minus_button, border_radius=0)
@@ -2127,9 +2119,9 @@ def SETTINGS():
 
 
         shooter_hp_label = font.render("Shooter Enemy - HP: " + str(shooter_hp_setting), True, BRONZE)
-        screen.blit(shooter_hp_label, (50, 180+SLIST.index("shooter")*60 + scroll_y))
-        shooter_hp_minus_button = pygame.Rect(500, 180+SLIST.index("shooter")*60 - button_offset + scroll_y, 50, 50)
-        shooter_hp_plus_button = pygame.Rect(560, 180+SLIST.index("shooter")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(shooter_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("shooter")*60*SCALED_HEIGHT + scroll_y))
+        shooter_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("shooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        shooter_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("shooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, shooter_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=shooter_hp_plus_button.center))
         pygame.draw.rect(screen, RED, shooter_hp_minus_button, border_radius=0)
@@ -2145,7 +2137,7 @@ def SETTINGS():
                 shooter_hp_setting = 1
             pygame.time.delay(50)
         shooter_locks_text = font.render(enemy_locking_labels[enemy_locks[10]], True, BLACK)
-        shooter_locks_button = pygame.Rect(650, 180+SLIST.index("shooter")*60 - button_offset + scroll_y, 200, 50)
+        shooter_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("shooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, BRONZE, shooter_locks_button, border_radius=0)
         screen.blit(shooter_locks_text, shooter_locks_text.get_rect(center=shooter_locks_button.center))
         if shooter_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2156,9 +2148,9 @@ def SETTINGS():
 
 
         sniper_hp_label = font.render("Sniper Enemy - HP: " + str(sniper_hp_setting), True, INDIGO)
-        screen.blit(sniper_hp_label, (50, 180+SLIST.index("sniper")*60 + scroll_y))
-        sniper_hp_minus_button = pygame.Rect(500, 180+SLIST.index("sniper")*60 - button_offset + scroll_y, 50, 50)
-        sniper_hp_plus_button = pygame.Rect(560, 180+SLIST.index("sniper")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(sniper_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sniper")*60*SCALED_HEIGHT + scroll_y))
+        sniper_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sniper")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        sniper_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sniper")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, sniper_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=sniper_hp_plus_button.center))
         pygame.draw.rect(screen, RED, sniper_hp_minus_button, border_radius=0)
@@ -2174,7 +2166,7 @@ def SETTINGS():
                 sniper_hp_setting = 1
             pygame.time.delay(50)
         sniper_locks_text = font.render(enemy_locking_labels[enemy_locks[11]], True, BLACK)
-        sniper_locks_button = pygame.Rect(650, 180+SLIST.index("sniper")*60 - button_offset + scroll_y, 200, 50)
+        sniper_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sniper")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, INDIGO, sniper_locks_button, border_radius=0)
         screen.blit(sniper_locks_text, sniper_locks_text.get_rect(center=sniper_locks_button.center))
         if sniper_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2185,9 +2177,9 @@ def SETTINGS():
 
 
         extra_sniper_damage_label = font.render("Extra Damage: " + str(extra_sniper_damage_setting), True, INDIGO)
-        screen.blit(extra_sniper_damage_label, (100, 180+SLIST.index("xtra sniper damage")*60 + scroll_y))
-        extra_sniper_damage_minus_button = pygame.Rect(500, 180+SLIST.index("xtra sniper damage")*60 - button_offset + scroll_y, 50, 50)
-        extra_sniper_damage_plus_button = pygame.Rect(560, 180+SLIST.index("xtra sniper damage")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(extra_sniper_damage_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("xtra sniper damage")*60*SCALED_HEIGHT + scroll_y))
+        extra_sniper_damage_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("xtra sniper damage")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        extra_sniper_damage_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("xtra sniper damage")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, extra_sniper_damage_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=extra_sniper_damage_plus_button.center))
         pygame.draw.rect(screen, RED, extra_sniper_damage_minus_button, border_radius=0)
@@ -2206,9 +2198,9 @@ def SETTINGS():
 
 
         speedy_hp_label = font.render("Speedy Enemy - HP: " + str(speedy_hp_setting), True, SKY)
-        screen.blit(speedy_hp_label, (50, 180+SLIST.index("speedy")*60 + scroll_y))
-        speedy_hp_minus_button = pygame.Rect(500, 180+SLIST.index("speedy")*60 - button_offset + scroll_y, 50, 50)
-        speedy_hp_plus_button = pygame.Rect(560, 180+SLIST.index("speedy")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(speedy_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("speedy")*60*SCALED_HEIGHT + scroll_y))
+        speedy_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("speedy")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        speedy_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("speedy")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, speedy_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=speedy_hp_plus_button.center))
         pygame.draw.rect(screen, RED, speedy_hp_minus_button, border_radius=0)
@@ -2224,7 +2216,7 @@ def SETTINGS():
                 speedy_hp_setting = 1
             pygame.time.delay(50)
         speedy_locks_text = font.render(enemy_locking_labels[enemy_locks[12]], True, BLACK)
-        speedy_locks_button = pygame.Rect(650, 180+SLIST.index("speedy")*60 - button_offset + scroll_y, 200, 50)
+        speedy_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("speedy")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, SKY, speedy_locks_button, border_radius=0)
         screen.blit(speedy_locks_text, speedy_locks_text.get_rect(center=speedy_locks_button.center))
         if speedy_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2234,9 +2226,9 @@ def SETTINGS():
 
 
         shotgun_hp_label = font.render("Shotgun Enemy - HP: " + str(shotgun_hp_setting), True, BRICK)
-        screen.blit(shotgun_hp_label, (50, 180+SLIST.index("shotgun")*60 + scroll_y))
-        shotgun_hp_minus_button = pygame.Rect(500, 180+SLIST.index("shotgun")*60 - button_offset + scroll_y, 50, 50)
-        shotgun_hp_plus_button = pygame.Rect(560, 180+SLIST.index("shotgun")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(shotgun_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("shotgun")*60*SCALED_HEIGHT + scroll_y))
+        shotgun_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("shotgun")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        shotgun_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("shotgun")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, shotgun_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=shotgun_hp_plus_button.center))
         pygame.draw.rect(screen, RED, shotgun_hp_minus_button, border_radius=0)
@@ -2252,7 +2244,7 @@ def SETTINGS():
                 shotgun_hp_setting = 1
             pygame.time.delay(50)
         shotgun_locks_text = font.render(enemy_locking_labels[enemy_locks[13]], True, BLACK)
-        shotgun_locks_button = pygame.Rect(650, 180+SLIST.index("shotgun")*60 - button_offset + scroll_y, 200, 50)
+        shotgun_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("shotgun")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, BRICK, shotgun_locks_button, border_radius=0)
         screen.blit(shotgun_locks_text, shotgun_locks_text.get_rect(center=shotgun_locks_button.center))
         if shotgun_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2263,9 +2255,9 @@ def SETTINGS():
 
 
         shotgun_bullets_label = font.render("Bullets: " + str(shotgun_bullets_setting), True, BRICK)
-        screen.blit(shotgun_bullets_label, (100, 180+SLIST.index("shotgun bullets")*60 + scroll_y))
-        shotgun_bullets_minus_button = pygame.Rect(500, 180+SLIST.index("shotgun bullets")*60 - button_offset + scroll_y, 50, 50)
-        shotgun_bullets_plus_button = pygame.Rect(560, 180+SLIST.index("shotgun bullets")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(shotgun_bullets_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("shotgun bullets")*60*SCALED_HEIGHT + scroll_y))
+        shotgun_bullets_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("shotgun bullets")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        shotgun_bullets_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("shotgun bullets")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, shotgun_bullets_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=shotgun_bullets_plus_button.center))
         pygame.draw.rect(screen, RED, shotgun_bullets_minus_button, border_radius=0)
@@ -2284,9 +2276,9 @@ def SETTINGS():
 
 
         voodoo_hp_label = font.render("Voodoo Enemy - HP: " + str(voodoo_hp_setting), True, MAUVE)
-        screen.blit(voodoo_hp_label, (50, 180+SLIST.index("voodoo")*60 + scroll_y))
-        voodoo_hp_minus_button = pygame.Rect(500, 180+SLIST.index("voodoo")*60 - button_offset + scroll_y, 50, 50)
-        voodoo_hp_plus_button = pygame.Rect(560, 180+SLIST.index("voodoo")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(voodoo_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("voodoo")*60*SCALED_HEIGHT + scroll_y))
+        voodoo_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("voodoo")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        voodoo_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("voodoo")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, voodoo_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=voodoo_hp_plus_button.center))
         pygame.draw.rect(screen, RED, voodoo_hp_minus_button, border_radius=0)
@@ -2302,7 +2294,7 @@ def SETTINGS():
                 voodoo_hp_setting = 1
             pygame.time.delay(50)
         voodoo_locks_text = font.render(enemy_locking_labels[enemy_locks[14]], True, BLACK)
-        voodoo_locks_button = pygame.Rect(650, 180+SLIST.index("voodoo")*60 - button_offset + scroll_y, 200, 50)
+        voodoo_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("voodoo")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, MAUVE, voodoo_locks_button, border_radius=0)
         screen.blit(voodoo_locks_text, voodoo_locks_text.get_rect(center=voodoo_locks_button.center))
         if voodoo_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2313,9 +2305,9 @@ def SETTINGS():
 
 
         blind_hp_label = font.render("Blind Enemy - HP: " + str(blind_hp_setting), True, BLUE)
-        screen.blit(blind_hp_label, (50, 180+SLIST.index("blind")*60 + scroll_y))
-        blind_hp_minus_button = pygame.Rect(500, 180+SLIST.index("blind")*60 - button_offset + scroll_y, 50, 50)
-        blind_hp_plus_button = pygame.Rect(560, 180+SLIST.index("blind")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(blind_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blind")*60*SCALED_HEIGHT + scroll_y))
+        blind_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blind")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        blind_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blind")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, blind_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=blind_hp_plus_button.center))
         pygame.draw.rect(screen, RED, blind_hp_minus_button, border_radius=0)
@@ -2331,7 +2323,7 @@ def SETTINGS():
                 blind_hp_setting = 1
             pygame.time.delay(50)
         blind_locks_text = font.render(enemy_locking_labels[enemy_locks[15]], True, BLACK)
-        blind_locks_button = pygame.Rect(650, 180+SLIST.index("blind")*60 - button_offset + scroll_y, 200, 50)
+        blind_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blind")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, BLUE, blind_locks_button, border_radius=0)
         screen.blit(blind_locks_text, blind_locks_text.get_rect(center=blind_locks_button.center))
         if blind_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2343,9 +2335,9 @@ def SETTINGS():
 
 
         magma_hp_label = font.render("Magma Enemy - HP: " + str(magma_hp_setting), True, LAVA)
-        screen.blit(magma_hp_label, (50, 180+SLIST.index("magma")*60 + scroll_y))
-        magma_hp_minus_button = pygame.Rect(500, 180+SLIST.index("magma")*60 - button_offset + scroll_y, 50, 50)
-        magma_hp_plus_button = pygame.Rect(560, 180+SLIST.index("magma")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(magma_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("magma")*60*SCALED_HEIGHT + scroll_y))
+        magma_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("magma")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        magma_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("magma")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, magma_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=magma_hp_plus_button.center))
         pygame.draw.rect(screen, RED, magma_hp_minus_button, border_radius=0)
@@ -2361,7 +2353,7 @@ def SETTINGS():
                 magma_hp_setting = 1
             pygame.time.delay(50)
         magma_locks_text = font.render(enemy_locking_labels[enemy_locks[16]], True, BLACK)
-        magma_locks_button = pygame.Rect(650, 180+SLIST.index("magma")*60 - button_offset + scroll_y, 200, 50)
+        magma_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("magma")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, LAVA, magma_locks_button, border_radius=0)
         screen.blit(magma_locks_text, magma_locks_text.get_rect(center=magma_locks_button.center))
         if magma_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2371,9 +2363,9 @@ def SETTINGS():
 
 
         charger_hp_label = font.render("Charger Enemy - HP: " + str(charger_hp_setting), True, YELLOW)
-        screen.blit(charger_hp_label, (50, 180+SLIST.index("charger")*60 + scroll_y))
-        charger_hp_minus_button = pygame.Rect(500, 180+SLIST.index("charger")*60 - button_offset + scroll_y, 50, 50)
-        charger_hp_plus_button = pygame.Rect(560, 180+SLIST.index("charger")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(charger_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("charger")*60*SCALED_HEIGHT + scroll_y))
+        charger_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("charger")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        charger_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("charger")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, charger_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=charger_hp_plus_button.center))
         pygame.draw.rect(screen, RED, charger_hp_minus_button, border_radius=0)
@@ -2389,7 +2381,7 @@ def SETTINGS():
                 charger_hp_setting = 1
             pygame.time.delay(50)
         charger_locks_text = font.render(enemy_locking_labels[enemy_locks[17]], True, BLACK)
-        charger_locks_button = pygame.Rect(650, 180+SLIST.index("charger")*60 - button_offset + scroll_y, 200, 50)
+        charger_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("charger")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, YELLOW, charger_locks_button, border_radius=0)
         screen.blit(charger_locks_text, charger_locks_text.get_rect(center=charger_locks_button.center))
         if charger_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2399,9 +2391,9 @@ def SETTINGS():
 
 
         rapidshooter_hp_label = font.render("Rapidshooter Enemy - HP: " + str(rapidshooter_hp_setting), True, GOLD)
-        screen.blit(rapidshooter_hp_label, (50, 180+SLIST.index("rapidshooter")*60 + scroll_y))
-        rapidshooter_hp_minus_button = pygame.Rect(500, 180+SLIST.index("rapidshooter")*60 - button_offset + scroll_y, 50, 50)
-        rapidshooter_hp_plus_button = pygame.Rect(560, 180+SLIST.index("rapidshooter")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(rapidshooter_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("rapidshooter")*60*SCALED_HEIGHT + scroll_y))
+        rapidshooter_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("rapidshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        rapidshooter_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("rapidshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, rapidshooter_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=rapidshooter_hp_plus_button.center))
         pygame.draw.rect(screen, RED, rapidshooter_hp_minus_button, border_radius=0)
@@ -2417,7 +2409,7 @@ def SETTINGS():
                 rapidshooter_hp_setting = 1
             pygame.time.delay(50)
         rapidshooter_locks_text = font.render(enemy_locking_labels[enemy_locks[18]], True, BLACK)
-        rapidshooter_locks_button = pygame.Rect(650, 180+SLIST.index("rapidshooter")*60 - button_offset + scroll_y, 200, 50)
+        rapidshooter_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("rapidshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GOLD, rapidshooter_locks_button, border_radius=0)
         screen.blit(rapidshooter_locks_text, rapidshooter_locks_text.get_rect(center=rapidshooter_locks_button.center))
         if rapidshooter_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2427,9 +2419,9 @@ def SETTINGS():
 
 
         burstshooter_hp_label = font.render("Burstshooter Enemy - HP: " + str(burstshooter_hp_setting), True, SILVER)
-        screen.blit(burstshooter_hp_label, (50, 180+SLIST.index("burstshooter")*60 + scroll_y))
-        burstshooter_hp_minus_button = pygame.Rect(500, 180+SLIST.index("burstshooter")*60 - button_offset + scroll_y, 50, 50)
-        burstshooter_hp_plus_button = pygame.Rect(560, 180+SLIST.index("burstshooter")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(burstshooter_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burstshooter")*60*SCALED_HEIGHT + scroll_y))
+        burstshooter_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burstshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        burstshooter_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burstshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, burstshooter_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=burstshooter_hp_plus_button.center))
         pygame.draw.rect(screen, RED, burstshooter_hp_minus_button, border_radius=0)
@@ -2445,7 +2437,7 @@ def SETTINGS():
                 burstshooter_hp_setting = 1
             pygame.time.delay(50)
         burstshooter_locks_text = font.render(enemy_locking_labels[enemy_locks[31]], True, BLACK)
-        burstshooter_locks_button = pygame.Rect(650, 180+SLIST.index("burstshooter")*60 - button_offset + scroll_y, 200, 50)
+        burstshooter_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burstshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, SILVER, burstshooter_locks_button, border_radius=0)
         screen.blit(burstshooter_locks_text, burstshooter_locks_text.get_rect(center=burstshooter_locks_button.center))
         if burstshooter_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2456,9 +2448,9 @@ def SETTINGS():
 
 
         burst_label = font.render("Burst: " + str(burst_setting), True, SILVER)
-        screen.blit(burst_label, (100, 180+SLIST.index("burst")*60 + scroll_y))
-        burst_minus_button = pygame.Rect(500, 180+SLIST.index("burst")*60 - button_offset + scroll_y, 50, 50)
-        burst_plus_button = pygame.Rect(560, 180+SLIST.index("burst")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(burst_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burst")*60*SCALED_HEIGHT + scroll_y))
+        burst_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burst")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        burst_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("burst")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, burst_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=burst_plus_button.center))
         pygame.draw.rect(screen, RED, burst_minus_button, border_radius=0)
@@ -2477,9 +2469,9 @@ def SETTINGS():
 
 
         frostbite_hp_label = font.render("Frostbite Enemy - HP: " + str(frostbite_hp_setting), True, CYAN)
-        screen.blit(frostbite_hp_label, (50, 180+SLIST.index("frostbite")*60 + scroll_y))
-        frostbite_hp_minus_button = pygame.Rect(500, 180+SLIST.index("frostbite")*60 - button_offset + scroll_y, 50, 50)
-        frostbite_hp_plus_button = pygame.Rect(560, 180+SLIST.index("frostbite")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(frostbite_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostbite")*60*SCALED_HEIGHT + scroll_y))
+        frostbite_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostbite")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        frostbite_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostbite")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, frostbite_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=frostbite_hp_plus_button.center))
         pygame.draw.rect(screen, RED, frostbite_hp_minus_button, border_radius=0)
@@ -2495,7 +2487,7 @@ def SETTINGS():
                 frostbite_hp_setting = 1
             pygame.time.delay(50)
         frostbite_locks_text = font.render(enemy_locking_labels[enemy_locks[19]], True, BLACK)
-        frostbite_locks_button = pygame.Rect(650, 180+SLIST.index("frostbite")*60 - button_offset + scroll_y, 200, 50)
+        frostbite_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostbite")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, CYAN, frostbite_locks_button, border_radius=0)
         screen.blit(frostbite_locks_text, frostbite_locks_text.get_rect(center=frostbite_locks_button.center))
         if frostbite_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2506,9 +2498,9 @@ def SETTINGS():
 
 
         frostbite_projectile_amount_label = font.render("Bullets: " + str(frostbite_projectile_amount_setting), True, CYAN)
-        screen.blit(frostbite_projectile_amount_label, (100, 180+SLIST.index("frostbite bullets")*60 + scroll_y))
-        frostbite_projectile_amount_minus_button = pygame.Rect(500, 180+SLIST.index("frostbite bullets")*60 - button_offset + scroll_y, 50, 50)
-        frostbite_projectile_amount_plus_button = pygame.Rect(560, 180+SLIST.index("frostbite bullets")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(frostbite_projectile_amount_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostbite bullets")*60*SCALED_HEIGHT + scroll_y))
+        frostbite_projectile_amount_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostbite bullets")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        frostbite_projectile_amount_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostbite bullets")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, frostbite_projectile_amount_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=frostbite_projectile_amount_plus_button.center))
         pygame.draw.rect(screen, RED, frostbite_projectile_amount_minus_button, border_radius=0)
@@ -2526,9 +2518,9 @@ def SETTINGS():
 
 
         addictive_hp_label = font.render("Addictive Enemy - HP: " + str(addictive_hp_setting), True, PINK)
-        screen.blit(addictive_hp_label, (50, 180+SLIST.index("addictive")*60 + scroll_y))
-        addictive_hp_minus_button = pygame.Rect(500, 180+SLIST.index("addictive")*60 - button_offset + scroll_y, 50, 50)
-        addictive_hp_plus_button = pygame.Rect(560, 180+SLIST.index("addictive")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(addictive_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive")*60*SCALED_HEIGHT + scroll_y))
+        addictive_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        addictive_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, addictive_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=addictive_hp_plus_button.center))
         pygame.draw.rect(screen, RED, addictive_hp_minus_button, border_radius=0)
@@ -2544,7 +2536,7 @@ def SETTINGS():
                 addictive_hp_setting = 1
             pygame.time.delay(50)
         addictive_locks_text = font.render(enemy_locking_labels[enemy_locks[20]], True, BLACK)
-        addictive_locks_button = pygame.Rect(650, 180+SLIST.index("addictive")*60 - button_offset + scroll_y, 200, 50)
+        addictive_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, PINK, addictive_locks_button, border_radius=0)
         screen.blit(addictive_locks_text, addictive_locks_text.get_rect(center=addictive_locks_button.center))
         if addictive_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2553,9 +2545,9 @@ def SETTINGS():
             pygame.time.delay(200)
 
         addictive_pull_strength_label = font.render("Strength: " + str(addictive_pull_strength_setting), True, PINK)
-        screen.blit(addictive_pull_strength_label, (100, 180+SLIST.index("addictive strength")*60 + scroll_y))
-        addictive_pull_strength_minus_button = pygame.Rect(500, 180+SLIST.index("addictive strength")*60 - button_offset + scroll_y, 50, 50)
-        addictive_pull_strength_plus_button = pygame.Rect(560, 180+SLIST.index("addictive strength")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(addictive_pull_strength_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive strength")*60*SCALED_HEIGHT + scroll_y))
+        addictive_pull_strength_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive strength")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        addictive_pull_strength_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive strength")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, addictive_pull_strength_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=addictive_pull_strength_plus_button.center))
         pygame.draw.rect(screen, RED, addictive_pull_strength_minus_button, border_radius=0)
@@ -2574,9 +2566,9 @@ def SETTINGS():
 
 
         addictive_pull_radius_label = font.render("Radius: " + str(addictive_pull_radius_setting), True, PINK)
-        screen.blit(addictive_pull_radius_label, (100, 180+SLIST.index("addictive radius")*60 + scroll_y))
-        addictive_pull_radius_minus_button = pygame.Rect(500, 180+SLIST.index("addictive radius")*60 - button_offset + scroll_y, 50, 50)
-        addictive_pull_radius_plus_button = pygame.Rect(560, 180+SLIST.index("addictive radius")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(addictive_pull_radius_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive radius")*60*SCALED_HEIGHT + scroll_y))
+        addictive_pull_radius_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive radius")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        addictive_pull_radius_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("addictive radius")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, addictive_pull_radius_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=addictive_pull_radius_plus_button.center))
         pygame.draw.rect(screen, RED, addictive_pull_radius_minus_button, border_radius=0)
@@ -2594,9 +2586,9 @@ def SETTINGS():
 
 
         blocker_push_strength_label = font.render("Strength: " + str(blocker_push_strength_setting), True, SALMON)
-        screen.blit(blocker_push_strength_label, (100, 180+SLIST.index("blocker strength")*60 + scroll_y))
-        blocker_push_strength_minus_button = pygame.Rect(500, 180+SLIST.index("blocker strength")*60 - button_offset + scroll_y, 50, 50)
-        blocker_push_strength_plus_button = pygame.Rect(560, 180+SLIST.index("blocker strength")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(blocker_push_strength_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker strength")*60*SCALED_HEIGHT + scroll_y))
+        blocker_push_strength_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker strength")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        blocker_push_strength_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker strength")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, blocker_push_strength_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=blocker_push_strength_plus_button.center))
         pygame.draw.rect(screen, RED, blocker_push_strength_minus_button, border_radius=0)
@@ -2615,9 +2607,9 @@ def SETTINGS():
 
 
         blocker_push_radius_label = font.render("Radius: " + str(blocker_push_radius_setting), True, SALMON)
-        screen.blit(blocker_push_radius_label, (100, 180+SLIST.index("blocker radius")*60 + scroll_y))
-        blocker_push_radius_minus_button = pygame.Rect(500, 180+SLIST.index("blocker radius")*60 - button_offset + scroll_y, 50, 50)
-        blocker_push_radius_plus_button = pygame.Rect(560, 180+SLIST.index("blocker radius")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(blocker_push_radius_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker radius")*60*SCALED_HEIGHT + scroll_y))
+        blocker_push_radius_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker radius")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        blocker_push_radius_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker radius")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, blocker_push_radius_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=blocker_push_radius_plus_button.center))
         pygame.draw.rect(screen, RED, blocker_push_radius_minus_button, border_radius=0)
@@ -2636,9 +2628,9 @@ def SETTINGS():
 
 
         laser_hp_label = font.render("Laser Enemy - HP: " + str(laser_hp_setting), True, TURQUOISE)
-        screen.blit(laser_hp_label, (50, 180+SLIST.index("laser")*60 + scroll_y))
-        laser_hp_minus_button = pygame.Rect(500, 180+SLIST.index("laser")*60 - button_offset + scroll_y, 50, 50)
-        laser_hp_plus_button = pygame.Rect(560, 180+SLIST.index("laser")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(laser_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laser")*60*SCALED_HEIGHT + scroll_y))
+        laser_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laser")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        laser_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laser")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, laser_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=laser_hp_plus_button.center))
         pygame.draw.rect(screen, RED, laser_hp_minus_button, border_radius=0)
@@ -2654,7 +2646,7 @@ def SETTINGS():
                 laser_hp_setting = 1
             pygame.time.delay(50)
         laser_locks_text = font.render(enemy_locking_labels[enemy_locks[21]], True, BLACK)
-        laser_locks_button = pygame.Rect(650, 180+SLIST.index("laser")*60 - button_offset + scroll_y, 200, 50)
+        laser_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laser")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, TURQUOISE, laser_locks_button, border_radius=0)
         screen.blit(laser_locks_text, laser_locks_text.get_rect(center=laser_locks_button.center))
         if laser_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2665,9 +2657,9 @@ def SETTINGS():
 
 
         laser_damage_label = font.render("Laser Damage: " + str(laser_damage_setting), True, TURQUOISE)
-        screen.blit(laser_damage_label, (50, 180+SLIST.index("laser damage")*60 + scroll_y))
-        laser_damage_minus_button = pygame.Rect(500, 180+SLIST.index("laser damage")*60 - button_offset + scroll_y, 50, 50)
-        laser_damage_plus_button = pygame.Rect(560, 180+SLIST.index("laser damage")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(laser_damage_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laser damage")*60*SCALED_HEIGHT + scroll_y))
+        laser_damage_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laser damage")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        laser_damage_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laser damage")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, laser_damage_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=laser_damage_plus_button.center))
         pygame.draw.rect(screen, RED, laser_damage_minus_button, border_radius=0)
@@ -2686,9 +2678,9 @@ def SETTINGS():
 
 
         laser_duration_label = font.render("Laser Duration: " + str(laser_duration_setting), True, TURQUOISE)
-        screen.blit(laser_duration_label, (50, 180+SLIST.index("laser duration")*60 + scroll_y))
-        laser_duration_minus_button = pygame.Rect(500, 180+SLIST.index("laser duration")*60 - button_offset + scroll_y, 50, 50)
-        laser_duration_plus_button = pygame.Rect(560, 180+SLIST.index("laser duration")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(laser_duration_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laser duration")*60*SCALED_HEIGHT + scroll_y))
+        laser_duration_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laser duration")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        laser_duration_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laser duration")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, laser_duration_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=laser_duration_plus_button.center))
         pygame.draw.rect(screen, RED, laser_duration_minus_button, border_radius=0)
@@ -2707,9 +2699,9 @@ def SETTINGS():
 
 
         hardened_hp_label = font.render("Hardened Enemy - HP: " + str(hardened_hp_setting), True, BROWN)
-        screen.blit(hardened_hp_label, (50, 180+SLIST.index("hardened")*60 + scroll_y))
-        hardened_hp_minus_button = pygame.Rect(500, 180+SLIST.index("hardened")*60 - button_offset + scroll_y, 50, 50)
-        hardened_hp_plus_button = pygame.Rect(560, 180+SLIST.index("hardened")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(hardened_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("hardened")*60*SCALED_HEIGHT + scroll_y))
+        hardened_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("hardened")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        hardened_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("hardened")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, hardened_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=hardened_hp_plus_button.center))
         pygame.draw.rect(screen, RED, hardened_hp_minus_button, border_radius=0)
@@ -2725,7 +2717,7 @@ def SETTINGS():
                 hardened_hp_setting = 1
             pygame.time.delay(50)
         hardened_locks_text = font.render(enemy_locking_labels[enemy_locks[22]], True, BLACK)
-        hardened_locks_button = pygame.Rect(650, 180+SLIST.index("hardened")*60 - button_offset + scroll_y, 200, 50)
+        hardened_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("hardened")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, BROWN, hardened_locks_button, border_radius=0)
         screen.blit(hardened_locks_text, hardened_locks_text.get_rect(center=hardened_locks_button.center))
         if hardened_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2736,9 +2728,9 @@ def SETTINGS():
 
 
         accelerator_hp_label = font.render("Accelerator Enemy - HP: " + str(accelerator_hp_setting), True, TAN)
-        screen.blit(accelerator_hp_label, (50, 180+SLIST.index("accelerator")*60 + scroll_y))
-        accelerator_hp_minus_button = pygame.Rect(500, 180+SLIST.index("accelerator")*60 - button_offset + scroll_y, 50, 50)
-        accelerator_hp_plus_button = pygame.Rect(560, 180+SLIST.index("accelerator")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(accelerator_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("accelerator")*60*SCALED_HEIGHT + scroll_y))
+        accelerator_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("accelerator")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        accelerator_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("accelerator")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, accelerator_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=accelerator_hp_plus_button.center))
         pygame.draw.rect(screen, RED, accelerator_hp_minus_button, border_radius=0)
@@ -2754,7 +2746,7 @@ def SETTINGS():
                 accelerator_hp_setting = 1
             pygame.time.delay(50)
         accelerator_locks_text = font.render(enemy_locking_labels[enemy_locks[23]], True, BLACK)
-        accelerator_locks_button = pygame.Rect(650, 180+SLIST.index("accelerator")*60 - button_offset + scroll_y, 200, 50)
+        accelerator_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("accelerator")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, TAN, accelerator_locks_button, border_radius=0)
         screen.blit(accelerator_locks_text, accelerator_locks_text.get_rect(center=accelerator_locks_button.center))
         if accelerator_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2765,9 +2757,9 @@ def SETTINGS():
 
 
         cold_hp_label = font.render("Cold Enemy - HP: " + str(cold_hp_setting), True, TUNDRA)
-        screen.blit(cold_hp_label, (50, 180+SLIST.index("cold")*60 + scroll_y))
-        cold_hp_minus_button = pygame.Rect(500, 180+SLIST.index("cold")*60 - button_offset + scroll_y, 50, 50)
-        cold_hp_plus_button = pygame.Rect(560, 180+SLIST.index("cold")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(cold_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("cold")*60*SCALED_HEIGHT + scroll_y))
+        cold_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("cold")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        cold_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("cold")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, cold_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=cold_hp_plus_button.center))
         pygame.draw.rect(screen, RED, cold_hp_minus_button, border_radius=0)
@@ -2783,7 +2775,7 @@ def SETTINGS():
                 cold_hp_setting = 1
             pygame.time.delay(50)
         cold_locks_text = font.render(enemy_locking_labels[enemy_locks[24]], True, BLACK)
-        cold_locks_button = pygame.Rect(650, 180+SLIST.index("cold")*60 - button_offset + scroll_y, 200, 50)
+        cold_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("cold")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, TUNDRA, cold_locks_button, border_radius=0)
         screen.blit(cold_locks_text, cold_locks_text.get_rect(center=cold_locks_button.center))
         if cold_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2794,9 +2786,9 @@ def SETTINGS():
 
 
         tracer_hp_label = font.render("Tracer Enemy - HP: " + str(tracer_hp_setting), True, SULFUR)
-        screen.blit(tracer_hp_label, (50, 180+SLIST.index("tracer")*60 + scroll_y))
-        tracer_hp_minus_button = pygame.Rect(500, 180+SLIST.index("tracer")*60 - button_offset + scroll_y, 50, 50)
-        tracer_hp_plus_button = pygame.Rect(560, 180+SLIST.index("tracer")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(tracer_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("tracer")*60*SCALED_HEIGHT + scroll_y))
+        tracer_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("tracer")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        tracer_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("tracer")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, tracer_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=tracer_hp_plus_button.center))
         pygame.draw.rect(screen, RED, tracer_hp_minus_button, border_radius=0)
@@ -2812,7 +2804,7 @@ def SETTINGS():
                 tracer_hp_setting = 1
             pygame.time.delay(50)
         tracer_locks_text = font.render(enemy_locking_labels[enemy_locks[25]], True, BLACK)
-        tracer_locks_button = pygame.Rect(650, 180+SLIST.index("tracer")*60 - button_offset + scroll_y, 200, 50)
+        tracer_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("tracer")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, SULFUR, tracer_locks_button, border_radius=0)
         screen.blit(tracer_locks_text, tracer_locks_text.get_rect(center=tracer_locks_button.center))
         if tracer_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2823,9 +2815,9 @@ def SETTINGS():
 
 
         savage_hp_label = font.render("Savage Enemy - HP: " + str(savage_hp_setting), True, MAROON)
-        screen.blit(savage_hp_label, (50, 180+SLIST.index("savage")*60 + scroll_y))
-        savage_hp_minus_button = pygame.Rect(500, 180+SLIST.index("savage")*60 - button_offset + scroll_y, 50, 50)
-        savage_hp_plus_button = pygame.Rect(560, 180+SLIST.index("savage")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(savage_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("savage")*60*SCALED_HEIGHT + scroll_y))
+        savage_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("savage")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        savage_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("savage")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, savage_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=savage_hp_plus_button.center))
         pygame.draw.rect(screen, RED, savage_hp_minus_button, border_radius=0)
@@ -2841,7 +2833,7 @@ def SETTINGS():
                 savage_hp_setting = 1
             pygame.time.delay(50)
         savage_locks_text = font.render(enemy_locking_labels[enemy_locks[26]], True, BLACK)
-        savage_locks_button = pygame.Rect(650, 180+SLIST.index("savage")*60 - button_offset + scroll_y, 200, 50)
+        savage_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("savage")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, MAROON, savage_locks_button, border_radius=0)
         screen.blit(savage_locks_text, savage_locks_text.get_rect(center=savage_locks_button.center))
         if savage_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2852,9 +2844,9 @@ def SETTINGS():
 
 
         teleporter_hp_label = font.render("Teleporter Enemy - HP: " + str(teleporter_hp_setting), True, PURPLE)
-        screen.blit(teleporter_hp_label, (50, 180+SLIST.index("teleporter")*60 + scroll_y))
-        teleporter_hp_minus_button = pygame.Rect(500, 180+SLIST.index("teleporter")*60 - button_offset + scroll_y, 50, 50)
-        teleporter_hp_plus_button = pygame.Rect(560, 180+SLIST.index("teleporter")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(teleporter_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("teleporter")*60*SCALED_HEIGHT + scroll_y))
+        teleporter_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("teleporter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        teleporter_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("teleporter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, teleporter_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=teleporter_hp_plus_button.center))
         pygame.draw.rect(screen, RED, teleporter_hp_minus_button, border_radius=0)
@@ -2870,7 +2862,7 @@ def SETTINGS():
                 teleporter_hp_setting = 1
             pygame.time.delay(50)
         teleporter_locks_text = font.render(enemy_locking_labels[enemy_locks[27]], True, BLACK)
-        teleporter_locks_button = pygame.Rect(650, 180+SLIST.index("teleporter")*60 - button_offset + scroll_y, 200, 50)
+        teleporter_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("teleporter")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, PURPLE, teleporter_locks_button, border_radius=0)
         screen.blit(teleporter_locks_text, teleporter_locks_text.get_rect(center=teleporter_locks_button.center))
         if teleporter_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2881,9 +2873,9 @@ def SETTINGS():
 
 
         phantom_hp_label = font.render("Phantom Enemy - HP: " + str(phantom_hp_setting), True, NAVY)
-        screen.blit(phantom_hp_label, (50, 180+SLIST.index("phantom")*60 + scroll_y))
-        phantom_hp_minus_button = pygame.Rect(500, 180+SLIST.index("phantom")*60 - button_offset + scroll_y, 50, 50)
-        phantom_hp_plus_button = pygame.Rect(560, 180+SLIST.index("phantom")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(phantom_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("phantom")*60*SCALED_HEIGHT + scroll_y))
+        phantom_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("phantom")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        phantom_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("phantom")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, phantom_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=phantom_hp_plus_button.center))
         pygame.draw.rect(screen, RED, phantom_hp_minus_button, border_radius=0)
@@ -2899,7 +2891,7 @@ def SETTINGS():
                 phantom_hp_setting = 1
             pygame.time.delay(50)
         phantom_locks_text = font.render(enemy_locking_labels[enemy_locks[28]], True, BLACK)
-        phantom_locks_button = pygame.Rect(650, 180+SLIST.index("phantom")*60 - button_offset + scroll_y, 200, 50)
+        phantom_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("phantom")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, NAVY, phantom_locks_button, border_radius=0)
         screen.blit(phantom_locks_text, phantom_locks_text.get_rect(center=phantom_locks_button.center))
         if phantom_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2910,9 +2902,9 @@ def SETTINGS():
 
 
         stream_hp_label = font.render("Stream Enemy - HP: " + str(stream_hp_setting), True, AQUA)
-        screen.blit(stream_hp_label, (50, 180+SLIST.index("stream")*60 + scroll_y))
-        stream_hp_minus_button = pygame.Rect(500, 180+SLIST.index("stream")*60 - button_offset + scroll_y, 50, 50)
-        stream_hp_plus_button = pygame.Rect(560, 180+SLIST.index("stream")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(stream_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("stream")*60*SCALED_HEIGHT + scroll_y))
+        stream_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("stream")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        stream_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("stream")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, stream_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=stream_hp_plus_button.center))
         pygame.draw.rect(screen, RED, stream_hp_minus_button, border_radius=0)
@@ -2928,7 +2920,7 @@ def SETTINGS():
                 stream_hp_setting = 1
             pygame.time.delay(50)
         stream_locks_text = font.render(enemy_locking_labels[enemy_locks[29]], True, BLACK)
-        stream_locks_button = pygame.Rect(650, 180+SLIST.index("stream")*60 - button_offset + scroll_y, 200, 50)
+        stream_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("stream")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, AQUA, stream_locks_button, border_radius=0)
         screen.blit(stream_locks_text, stream_locks_text.get_rect(center=stream_locks_button.center))
         if stream_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2939,9 +2931,9 @@ def SETTINGS():
 
 
         sensitive_hp_label = font.render("Sensitive Enemy - HP: " + str(sensitive_hp_setting), True, LAVENDER)
-        screen.blit(sensitive_hp_label, (50, 180+SLIST.index("sensitive")*60 + scroll_y))
-        sensitive_hp_minus_button = pygame.Rect(500, 180+SLIST.index("sensitive")*60 - button_offset + scroll_y, 50, 50)
-        sensitive_hp_plus_button = pygame.Rect(560, 180+SLIST.index("sensitive")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(sensitive_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sensitive")*60*SCALED_HEIGHT + scroll_y))
+        sensitive_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sensitive")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        sensitive_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sensitive")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, sensitive_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=sensitive_hp_plus_button.center))
         pygame.draw.rect(screen, RED, sensitive_hp_minus_button, border_radius=0)
@@ -2957,7 +2949,7 @@ def SETTINGS():
                 sensitive_hp_setting = 1
             pygame.time.delay(50)
         sensitive_locks_text = font.render(enemy_locking_labels[enemy_locks[30]], True, BLACK)
-        sensitive_locks_button = pygame.Rect(650, 180+SLIST.index("sensitive")*60 - button_offset + scroll_y, 200, 50)
+        sensitive_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sensitive")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, LAVENDER, sensitive_locks_button, border_radius=0)
         screen.blit(sensitive_locks_text, sensitive_locks_text.get_rect(center=sensitive_locks_button.center))
         if sensitive_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2968,9 +2960,9 @@ def SETTINGS():
 
 
         stickyshooter_hp_label = font.render("Stickyshooter Enemy - HP: " + str(stickyshooter_hp_setting), True, OLIVE)
-        screen.blit(stickyshooter_hp_label, (50, 180+SLIST.index("stickyshooter")*60 + scroll_y))
-        stickyshooter_hp_minus_button = pygame.Rect(500, 180+SLIST.index("stickyshooter")*60 - button_offset + scroll_y, 50, 50)
-        stickyshooter_hp_plus_button = pygame.Rect(560, 180+SLIST.index("stickyshooter")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(stickyshooter_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("stickyshooter")*60*SCALED_HEIGHT + scroll_y))
+        stickyshooter_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("stickyshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        stickyshooter_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("stickyshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, stickyshooter_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=stickyshooter_hp_plus_button.center))
         pygame.draw.rect(screen, RED, stickyshooter_hp_minus_button, border_radius=0)
@@ -2986,7 +2978,7 @@ def SETTINGS():
                 stickyshooter_hp_setting = 1
             pygame.time.delay(50)
         stickyshooter_locks_text = font.render(enemy_locking_labels[enemy_locks[32]], True, BLACK)
-        stickyshooter_locks_button = pygame.Rect(650, 180+SLIST.index("stickyshooter")*60 - button_offset + scroll_y, 200, 50)
+        stickyshooter_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("stickyshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, OLIVE, stickyshooter_locks_button, border_radius=0)
         screen.blit(stickyshooter_locks_text, stickyshooter_locks_text.get_rect(center=stickyshooter_locks_button.center))
         if stickyshooter_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -2997,9 +2989,9 @@ def SETTINGS():
 
 
         sparker_hp_label = font.render("Sparker Enemy - HP: " + str(sparker_hp_setting), True, VOLT)
-        screen.blit(sparker_hp_label, (50, 180+SLIST.index("sparker")*60 + scroll_y))
-        sparker_hp_minus_button = pygame.Rect(500, 180+SLIST.index("sparker")*60 - button_offset + scroll_y, 50, 50)
-        sparker_hp_plus_button = pygame.Rect(560, 180+SLIST.index("sparker")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(sparker_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sparker")*60*SCALED_HEIGHT + scroll_y))
+        sparker_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sparker")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        sparker_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sparker")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, sparker_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=sparker_hp_plus_button.center))
         pygame.draw.rect(screen, RED, sparker_hp_minus_button, border_radius=0)
@@ -3015,7 +3007,7 @@ def SETTINGS():
                 sparker_hp_setting = 1
             pygame.time.delay(50)
         sparker_locks_text = font.render(enemy_locking_labels[enemy_locks[33]], True, BLACK)
-        sparker_locks_button = pygame.Rect(650, 180+SLIST.index("sparker")*60 - button_offset + scroll_y, 200, 50)
+        sparker_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("sparker")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, VOLT, sparker_locks_button, border_radius=0)
         screen.blit(sparker_locks_text, sparker_locks_text.get_rect(center=sparker_locks_button.center))
         if sparker_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3026,9 +3018,9 @@ def SETTINGS():
 
 
         harden_break_label = font.render("Unhardening Rate: " + str(harden_break_setting), True, BROWN)
-        screen.blit(harden_break_label, (50, 180+SLIST.index("unhardening rate")*60 + scroll_y))
-        harden_break_minus_button = pygame.Rect(500, 180+SLIST.index("unhardening rate")*60 - button_offset + scroll_y, 50, 50)
-        harden_break_plus_button = pygame.Rect(560, 180+SLIST.index("unhardening rate")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(harden_break_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("unhardening rate")*60*SCALED_HEIGHT + scroll_y))
+        harden_break_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("unhardening rate")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        harden_break_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("unhardening rate")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, harden_break_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=harden_break_plus_button.center))
         pygame.draw.rect(screen, RED, harden_break_minus_button, border_radius=0)
@@ -3047,8 +3039,8 @@ def SETTINGS():
 
 
         unharden_death_label = font.render("Death By Unhardening: " + str(true_or_false[unharden_death_setting]), True, BROWN)
-        screen.blit(unharden_death_label, (50, 180+SLIST.index("unharden death")*60 + scroll_y))
-        unharden_death_true_or_false_button = pygame.Rect(500, 180+SLIST.index("unharden death")*60 - button_offset + scroll_y, 110, 50)
+        screen.blit(unharden_death_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("unharden death")*60*SCALED_HEIGHT + scroll_y))
+        unharden_death_true_or_false_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("unharden death")*60*SCALED_HEIGHT - button_offset + scroll_y, 110, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, YELLOW, unharden_death_true_or_false_button, border_radius=0)
         screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=unharden_death_true_or_false_button.center))
         if unharden_death_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
@@ -3058,8 +3050,8 @@ def SETTINGS():
 
 
         teleport_angle_change_label = font.render("Teleport Angle Change: " + str(true_or_false[teleport_angle_change_setting]), True, PURPLE)
-        screen.blit(teleport_angle_change_label, (50, 180+SLIST.index("teleanglechange")*60 + scroll_y))
-        teleport_angle_change_true_or_false_button = pygame.Rect(500, 180+SLIST.index("teleanglechange")*60 - button_offset + scroll_y, 110, 50)
+        screen.blit(teleport_angle_change_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("teleanglechange")*60*SCALED_HEIGHT + scroll_y))
+        teleport_angle_change_true_or_false_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("teleanglechange")*60*SCALED_HEIGHT - button_offset + scroll_y, 110, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, YELLOW, teleport_angle_change_true_or_false_button, border_radius=0)
         screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=teleport_angle_change_true_or_false_button.center))
         if teleport_angle_change_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
@@ -3069,8 +3061,8 @@ def SETTINGS():
             
 
         target_label = font.render("Randomized Targeting: " + str(true_or_false[target_setting]), True, MAGENTA)
-        screen.blit(target_label, (50, 180+SLIST.index("target")*60 + scroll_y))
-        target_true_or_false_button = pygame.Rect(500, 180+SLIST.index("target")*60 - button_offset + scroll_y, 110, 50)
+        screen.blit(target_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("target")*60*SCALED_HEIGHT + scroll_y))
+        target_true_or_false_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("target")*60*SCALED_HEIGHT - button_offset + scroll_y, 110, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, YELLOW, target_true_or_false_button, border_radius=0)
         screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=target_true_or_false_button.center))
         if target_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
@@ -3081,8 +3073,8 @@ def SETTINGS():
 
 
         target_closest_label = font.render("Proximity Aiming: " + str(true_or_false[target_closest_setting]), True, MAGENTA)
-        screen.blit(target_closest_label, (50, 180+SLIST.index("target closest")*60 + scroll_y))
-        target_closest_true_or_false_button = pygame.Rect(500, 180+SLIST.index("target closest")*60 - button_offset + scroll_y, 110, 50)
+        screen.blit(target_closest_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("target closest")*60*SCALED_HEIGHT + scroll_y))
+        target_closest_true_or_false_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("target closest")*60*SCALED_HEIGHT - button_offset + scroll_y, 110, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, YELLOW, target_closest_true_or_false_button, border_radius=0)
         screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=target_closest_true_or_false_button.center))
         if target_closest_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
@@ -3092,9 +3084,9 @@ def SETTINGS():
 
 
         enemy_damage_label = font.render("Enemy Damage: " + str(enemy_damage_setting), True, RED)
-        screen.blit(enemy_damage_label, (50, 180+SLIST.index("enemy damage")*60 + scroll_y))
-        enemy_damage_minus_button = pygame.Rect(500, 180+SLIST.index("enemy damage")*60 - button_offset + scroll_y, 50, 50)
-        enemy_damage_plus_button = pygame.Rect(560, 180+SLIST.index("enemy damage")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(enemy_damage_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy damage")*60*SCALED_HEIGHT + scroll_y))
+        enemy_damage_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy damage")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        enemy_damage_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("enemy damage")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, enemy_damage_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=enemy_damage_plus_button.center))
         pygame.draw.rect(screen, RED, enemy_damage_minus_button, border_radius=0)
@@ -3112,9 +3104,9 @@ def SETTINGS():
 
 
         annihilator_hp_label = font.render("Annihilator Enemy - HP: " + str(annihilator_hp_setting), True, HOT_PINK)
-        screen.blit(annihilator_hp_label, (50, 180+SLIST.index("annihilator")*60 + scroll_y))
-        annihilator_hp_minus_button = pygame.Rect(500, 180+SLIST.index("annihilator")*60 - button_offset + scroll_y, 50, 50)
-        annihilator_hp_plus_button = pygame.Rect(560, 180+SLIST.index("annihilator")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(annihilator_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("annihilator")*60*SCALED_HEIGHT + scroll_y))
+        annihilator_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("annihilator")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        annihilator_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("annihilator")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, annihilator_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=annihilator_hp_plus_button.center))
         pygame.draw.rect(screen, RED, annihilator_hp_minus_button, border_radius=0)
@@ -3130,7 +3122,7 @@ def SETTINGS():
                 annihilator_hp_setting = 1
             pygame.time.delay(50)
         annihilator_locks_text = font.render(enemy_locking_labels[enemy_locks[34]], True, BLACK)
-        annihilator_locks_button = pygame.Rect(650, 180+SLIST.index("annihilator")*60 - button_offset + scroll_y, 200, 50)
+        annihilator_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("annihilator")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, HOT_PINK, annihilator_locks_button, border_radius=0)
         screen.blit(annihilator_locks_text, annihilator_locks_text.get_rect(center=annihilator_locks_button.center))
         if annihilator_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3141,9 +3133,9 @@ def SETTINGS():
 
 
         annihilator_projectile_amount_label = font.render("Bullets: " + str(annihilator_projectile_amount_setting), True, HOT_PINK)
-        screen.blit(annihilator_projectile_amount_label, (100, 180+SLIST.index("annihilator bullets")*60 + scroll_y))
-        annihilator_projectile_amount_minus_button = pygame.Rect(500, 180+SLIST.index("annihilator bullets")*60 - button_offset + scroll_y, 50, 50)
-        annihilator_projectile_amount_plus_button = pygame.Rect(560, 180+SLIST.index("annihilator bullets")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(annihilator_projectile_amount_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("annihilator bullets")*60*SCALED_HEIGHT + scroll_y))
+        annihilator_projectile_amount_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("annihilator bullets")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        annihilator_projectile_amount_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("annihilator bullets")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, annihilator_projectile_amount_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=annihilator_projectile_amount_plus_button.center))
         pygame.draw.rect(screen, RED, annihilator_projectile_amount_minus_button, border_radius=0)
@@ -3162,9 +3154,9 @@ def SETTINGS():
 
 
         frostbeam_hp_label = font.render("Frostbeam Enemy - HP: " + str(frostbeam_hp_setting), True, ICE)
-        screen.blit(frostbeam_hp_label, (50, 180+SLIST.index("frostbeam")*60 + scroll_y))
-        frostbeam_hp_minus_button = pygame.Rect(500, 180+SLIST.index("frostbeam")*60 - button_offset + scroll_y, 50, 50)
-        frostbeam_hp_plus_button = pygame.Rect(560, 180+SLIST.index("frostbeam")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(frostbeam_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostbeam")*60*SCALED_HEIGHT + scroll_y))
+        frostbeam_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostbeam")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        frostbeam_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostbeam")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, frostbeam_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=frostbeam_hp_plus_button.center))
         pygame.draw.rect(screen, RED, frostbeam_hp_minus_button, border_radius=0)
@@ -3180,7 +3172,7 @@ def SETTINGS():
                 frostbeam_hp_setting = 1
             pygame.time.delay(50)
         frostbeam_locks_text = font.render(enemy_locking_labels[enemy_locks[35]], True, BLACK)
-        frostbeam_locks_button = pygame.Rect(650, 180+SLIST.index("frostbeam")*60 - button_offset + scroll_y, 200, 50)
+        frostbeam_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("frostbeam")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, ICE, frostbeam_locks_button, border_radius=0)
         screen.blit(frostbeam_locks_text, frostbeam_locks_text.get_rect(center=frostbeam_locks_button.center))
         if frostbeam_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3191,9 +3183,9 @@ def SETTINGS():
 
 
         forecast_hp_label = font.render("Forecast Enemy - HP: " + str(forecast_hp_setting), True, CLOUD)
-        screen.blit(forecast_hp_label, (50, 180+SLIST.index("forecast")*60 + scroll_y))
-        forecast_hp_minus_button = pygame.Rect(500, 180+SLIST.index("forecast")*60 - button_offset + scroll_y, 50, 50)
-        forecast_hp_plus_button = pygame.Rect(560, 180+SLIST.index("forecast")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(forecast_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("forecast")*60*SCALED_HEIGHT + scroll_y))
+        forecast_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("forecast")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        forecast_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("forecast")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, forecast_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=forecast_hp_plus_button.center))
         pygame.draw.rect(screen, RED, forecast_hp_minus_button, border_radius=0)
@@ -3209,7 +3201,7 @@ def SETTINGS():
                 forecast_hp_setting = 1
             pygame.time.delay(50)
         forecast_locks_text = font.render(enemy_locking_labels[enemy_locks[36]], True, BLACK)
-        forecast_locks_button = pygame.Rect(650, 180+SLIST.index("forecast")*60 - button_offset + scroll_y, 200, 50)
+        forecast_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("forecast")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, CLOUD, forecast_locks_button, border_radius=0)
         screen.blit(forecast_locks_text, forecast_locks_text.get_rect(center=forecast_locks_button.center))
         if forecast_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3220,9 +3212,9 @@ def SETTINGS():
 
 
         assassin_hp_label = font.render("Assassin Enemy - HP: " + str(assassin_hp_setting), True, SHADOW)
-        screen.blit(assassin_hp_label, (50, 180+SLIST.index("assassin")*60 + scroll_y))
-        assassin_hp_minus_button = pygame.Rect(500, 180+SLIST.index("assassin")*60 - button_offset + scroll_y, 50, 50)
-        assassin_hp_plus_button = pygame.Rect(560, 180+SLIST.index("assassin")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(assassin_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("assassin")*60*SCALED_HEIGHT + scroll_y))
+        assassin_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("assassin")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        assassin_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("assassin")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, assassin_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=assassin_hp_plus_button.center))
         pygame.draw.rect(screen, RED, assassin_hp_minus_button, border_radius=0)
@@ -3238,7 +3230,7 @@ def SETTINGS():
                 assassin_hp_setting = 1
             pygame.time.delay(50)
         assassin_locks_text = font.render(enemy_locking_labels[enemy_locks[37]], True, BLACK)
-        assassin_locks_button = pygame.Rect(650, 180+SLIST.index("assassin")*60 - button_offset + scroll_y, 200, 50)
+        assassin_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("assassin")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, SHADOW, assassin_locks_button, border_radius=0)
         screen.blit(assassin_locks_text, assassin_locks_text.get_rect(center=assassin_locks_button.center))
         if assassin_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3249,9 +3241,9 @@ def SETTINGS():
 
 
         motion_hp_label = font.render("Motion Enemy - HP: " + str(motion_hp_setting), True, ORANGE)
-        screen.blit(motion_hp_label, (50, 180+SLIST.index("motion")*60 + scroll_y))
-        motion_hp_minus_button = pygame.Rect(500, 180+SLIST.index("motion")*60 - button_offset + scroll_y, 50, 50)
-        motion_hp_plus_button = pygame.Rect(560, 180+SLIST.index("motion")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(motion_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("motion")*60*SCALED_HEIGHT + scroll_y))
+        motion_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("motion")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        motion_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("motion")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, motion_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=motion_hp_plus_button.center))
         pygame.draw.rect(screen, RED, motion_hp_minus_button, border_radius=0)
@@ -3267,7 +3259,7 @@ def SETTINGS():
                 motion_hp_setting = 1
             pygame.time.delay(50)
         motion_locks_text = font.render(enemy_locking_labels[enemy_locks[38]], True, BLACK)
-        motion_locks_button = pygame.Rect(650, 180+SLIST.index("motion")*60 - button_offset + scroll_y, 200, 50)
+        motion_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("motion")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, ORANGE, motion_locks_button, border_radius=0)
         screen.blit(motion_locks_text, motion_locks_text.get_rect(center=motion_locks_button.center))
         if motion_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3277,9 +3269,9 @@ def SETTINGS():
 
 
         invisibility_hp_label = font.render("Invisibility Enemy - HP: " + str(invisibility_hp_setting), True, FOREST)
-        screen.blit(invisibility_hp_label, (50, 180+SLIST.index("invisibility")*60 + scroll_y))
-        invisibility_hp_minus_button = pygame.Rect(500, 180+SLIST.index("invisibility")*60 - button_offset + scroll_y, 50, 50)
-        invisibility_hp_plus_button = pygame.Rect(560, 180+SLIST.index("invisibility")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(invisibility_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("invisibility")*60*SCALED_HEIGHT + scroll_y))
+        invisibility_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("invisibility")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        invisibility_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("invisibility")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, invisibility_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=invisibility_hp_plus_button.center))
         pygame.draw.rect(screen, RED, invisibility_hp_minus_button, border_radius=0)
@@ -3295,7 +3287,7 @@ def SETTINGS():
                 invisibility_hp_setting = 1
             pygame.time.delay(50)
         invisibility_locks_text = font.render(enemy_locking_labels[enemy_locks[39]], True, BLACK)
-        invisibility_locks_button = pygame.Rect(650, 180+SLIST.index("invisibility")*60 - button_offset + scroll_y, 200, 50)
+        invisibility_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("invisibility")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, FOREST, invisibility_locks_button, border_radius=0)
         screen.blit(invisibility_locks_text, invisibility_locks_text.get_rect(center=invisibility_locks_button.center))
         if invisibility_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3305,9 +3297,9 @@ def SETTINGS():
 
 
         whirly_hp_label = font.render("Whirly Enemy - HP: " + str(whirly_hp_setting), True, CREAM)
-        screen.blit(whirly_hp_label, (50, 180+SLIST.index("whirly")*60 + scroll_y))
-        whirly_hp_minus_button = pygame.Rect(500, 180+SLIST.index("whirly")*60 - button_offset + scroll_y, 50, 50)
-        whirly_hp_plus_button = pygame.Rect(560, 180+SLIST.index("whirly")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(whirly_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("whirly")*60*SCALED_HEIGHT + scroll_y))
+        whirly_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("whirly")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        whirly_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("whirly")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, whirly_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=whirly_hp_plus_button.center))
         pygame.draw.rect(screen, RED, whirly_hp_minus_button, border_radius=0)
@@ -3323,7 +3315,7 @@ def SETTINGS():
                 whirly_hp_setting = 1
             pygame.time.delay(50)
         whirly_locks_text = font.render(enemy_locking_labels[enemy_locks[40]], True, BLACK)
-        whirly_locks_button = pygame.Rect(650, 180+SLIST.index("whirly")*60 - button_offset + scroll_y, 200, 50)
+        whirly_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("whirly")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, CREAM, whirly_locks_button, border_radius=0)
         screen.blit(whirly_locks_text, whirly_locks_text.get_rect(center=whirly_locks_button.center))
         if whirly_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3333,9 +3325,9 @@ def SETTINGS():
 
 
         volcanic_hp_label = font.render("Volcanic Enemy - HP: " + str(volcanic_hp_setting), True, CRIMSON)
-        screen.blit(volcanic_hp_label, (50, 180+SLIST.index("volcanic")*60 + scroll_y))
-        volcanic_hp_minus_button = pygame.Rect(500, 180+SLIST.index("volcanic")*60 - button_offset + scroll_y, 50, 50)
-        volcanic_hp_plus_button = pygame.Rect(560, 180+SLIST.index("volcanic")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(volcanic_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("volcanic")*60*SCALED_HEIGHT + scroll_y))
+        volcanic_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("volcanic")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        volcanic_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("volcanic")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, volcanic_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=volcanic_hp_plus_button.center))
         pygame.draw.rect(screen, RED, volcanic_hp_minus_button, border_radius=0)
@@ -3351,7 +3343,7 @@ def SETTINGS():
                 volcanic_hp_setting = 1
             pygame.time.delay(50)
         volcanic_locks_text = font.render(enemy_locking_labels[enemy_locks[41]], True, BLACK)
-        volcanic_locks_button = pygame.Rect(650, 180+SLIST.index("volcanic")*60 - button_offset + scroll_y, 200, 50)
+        volcanic_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("volcanic")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, CRIMSON, volcanic_locks_button, border_radius=0)
         screen.blit(volcanic_locks_text, volcanic_locks_text.get_rect(center=volcanic_locks_button.center))
         if volcanic_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3361,9 +3353,9 @@ def SETTINGS():
 
 
         pyrobeam_hp_label = font.render("Pyrobeam Enemy - HP: " + str(pyrobeam_hp_setting), True, CORAL)
-        screen.blit(pyrobeam_hp_label, (50, 180+SLIST.index("pyrobeam")*60 + scroll_y))
-        pyrobeam_hp_minus_button = pygame.Rect(500, 180+SLIST.index("pyrobeam")*60 - button_offset + scroll_y, 50, 50)
-        pyrobeam_hp_plus_button = pygame.Rect(560, 180+SLIST.index("pyrobeam")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(pyrobeam_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("pyrobeam")*60*SCALED_HEIGHT + scroll_y))
+        pyrobeam_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("pyrobeam")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        pyrobeam_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("pyrobeam")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, pyrobeam_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=pyrobeam_hp_plus_button.center))
         pygame.draw.rect(screen, RED, pyrobeam_hp_minus_button, border_radius=0)
@@ -3379,7 +3371,7 @@ def SETTINGS():
                 pyrobeam_hp_setting = 1
             pygame.time.delay(50)
         pyrobeam_locks_text = font.render(enemy_locking_labels[enemy_locks[42]], True, BLACK)
-        pyrobeam_locks_button = pygame.Rect(650, 180+SLIST.index("pyrobeam")*60 - button_offset + scroll_y, 200, 50)
+        pyrobeam_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("pyrobeam")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, CORAL, pyrobeam_locks_button, border_radius=0)
         screen.blit(pyrobeam_locks_text, pyrobeam_locks_text.get_rect(center=pyrobeam_locks_button.center))
         if pyrobeam_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3389,9 +3381,9 @@ def SETTINGS():
 
 
         laggy_hp_label = font.render("Laggy Enemy - HP: " + str(laggy_hp_setting), True, LILAC)
-        screen.blit(laggy_hp_label, (50, 180+SLIST.index("laggy")*60 + scroll_y))
-        laggy_hp_minus_button = pygame.Rect(500, 180+SLIST.index("laggy")*60 - button_offset + scroll_y, 50, 50)
-        laggy_hp_plus_button = pygame.Rect(560, 180+SLIST.index("laggy")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(laggy_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laggy")*60*SCALED_HEIGHT + scroll_y))
+        laggy_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laggy")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        laggy_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laggy")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, laggy_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=laggy_hp_plus_button.center))
         pygame.draw.rect(screen, RED, laggy_hp_minus_button, border_radius=0)
@@ -3407,7 +3399,7 @@ def SETTINGS():
                 laggy_hp_setting = 1
             pygame.time.delay(50)
         laggy_locks_text = font.render(enemy_locking_labels[enemy_locks[43]], True, BLACK)
-        laggy_locks_button = pygame.Rect(650, 180+SLIST.index("laggy")*60 - button_offset + scroll_y, 200, 50)
+        laggy_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("laggy")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, LILAC, laggy_locks_button, border_radius=0)
         screen.blit(laggy_locks_text, laggy_locks_text.get_rect(center=laggy_locks_button.center))
         if laggy_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3418,9 +3410,9 @@ def SETTINGS():
 
 
         error_hp_label = font.render("Error Enemy - HP: " + str(error_hp_setting), True, COBALT)
-        screen.blit(error_hp_label, (50, 180+SLIST.index("error")*60 + scroll_y))
-        error_hp_minus_button = pygame.Rect(500, 180+SLIST.index("error")*60 - button_offset + scroll_y, 50, 50)
-        error_hp_plus_button = pygame.Rect(560, 180+SLIST.index("error")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(error_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("error")*60*SCALED_HEIGHT + scroll_y))
+        error_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("error")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        error_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("error")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, error_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=error_hp_plus_button.center))
         pygame.draw.rect(screen, RED, error_hp_minus_button, border_radius=0)
@@ -3436,7 +3428,7 @@ def SETTINGS():
                 error_hp_setting = 1
             pygame.time.delay(50)
         error_locks_text = font.render(enemy_locking_labels[enemy_locks[44]], True, BLACK)
-        error_locks_button = pygame.Rect(650, 180+SLIST.index("error")*60 - button_offset + scroll_y, 200, 50)
+        error_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("error")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, COBALT, error_locks_button, border_radius=0)
         screen.blit(error_locks_text, error_locks_text.get_rect(center=error_locks_button.center))
         if error_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3447,9 +3439,9 @@ def SETTINGS():
 
 
         glitchy_hp_label = font.render("Glitchy Enemy - HP: " + str(glitchy_hp_setting), True, MINT)
-        screen.blit(glitchy_hp_label, (50, 180+SLIST.index("glitchy")*60 + scroll_y))
-        glitchy_hp_minus_button = pygame.Rect(500, 180+SLIST.index("glitchy")*60 - button_offset + scroll_y, 50, 50)
-        glitchy_hp_plus_button = pygame.Rect(560, 180+SLIST.index("glitchy")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(glitchy_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("glitchy")*60*SCALED_HEIGHT + scroll_y))
+        glitchy_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("glitchy")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        glitchy_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("glitchy")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, glitchy_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=glitchy_hp_plus_button.center))
         pygame.draw.rect(screen, RED, glitchy_hp_minus_button, border_radius=0)
@@ -3465,7 +3457,7 @@ def SETTINGS():
                 glitchy_hp_setting = 1
             pygame.time.delay(50)
         glitchy_locks_text = font.render(enemy_locking_labels[enemy_locks[45]], True, BLACK)
-        glitchy_locks_button = pygame.Rect(650, 180+SLIST.index("glitchy")*60 - button_offset + scroll_y, 200, 50)
+        glitchy_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("glitchy")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, MINT, glitchy_locks_button, border_radius=0)
         screen.blit(glitchy_locks_text, glitchy_locks_text.get_rect(center=glitchy_locks_button.center))
         if glitchy_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3475,9 +3467,9 @@ def SETTINGS():
 
 
         blocker_hp_label = font.render("Blocker Enemy - HP: " + str(blocker_hp_setting), True, SALMON)
-        screen.blit(blocker_hp_label, (50, 180+SLIST.index("blocker")*60 + scroll_y))
-        blocker_hp_minus_button = pygame.Rect(500, 180+SLIST.index("blocker")*60 - button_offset + scroll_y, 50, 50)
-        blocker_hp_plus_button = pygame.Rect(560, 180+SLIST.index("blocker")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(blocker_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker")*60*SCALED_HEIGHT + scroll_y))
+        blocker_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        blocker_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, blocker_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=blocker_hp_plus_button.center))
         pygame.draw.rect(screen, RED, blocker_hp_minus_button, border_radius=0)
@@ -3493,7 +3485,7 @@ def SETTINGS():
                 blocker_hp_setting = 1
             pygame.time.delay(50)
         blocker_locks_text = font.render(enemy_locking_labels[enemy_locks[46]], True, BLACK)
-        blocker_locks_button = pygame.Rect(650, 180+SLIST.index("blocker")*60 - button_offset + scroll_y, 200, 50)
+        blocker_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("blocker")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, SALMON, blocker_locks_button, border_radius=0)
         screen.blit(blocker_locks_text, blocker_locks_text.get_rect(center=blocker_locks_button.center))
         if blocker_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3503,9 +3495,9 @@ def SETTINGS():
 
 
         gloomyshooter_hp_label = font.render("Gloomyshooter Enemy - HP: " + str(gloomyshooter_hp_setting), True, ORCHID)
-        screen.blit(gloomyshooter_hp_label, (50, 180+SLIST.index("gloomyshooter")*60 + scroll_y))
-        gloomyshooter_hp_minus_button = pygame.Rect(500, 180+SLIST.index("gloomyshooter")*60 - button_offset + scroll_y, 50, 50)
-        gloomyshooter_hp_plus_button = pygame.Rect(560, 180+SLIST.index("gloomyshooter")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(gloomyshooter_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("gloomyshooter")*60*SCALED_HEIGHT + scroll_y))
+        gloomyshooter_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("gloomyshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        gloomyshooter_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("gloomyshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, gloomyshooter_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=gloomyshooter_hp_plus_button.center))
         pygame.draw.rect(screen, RED, gloomyshooter_hp_minus_button, border_radius=0)
@@ -3521,7 +3513,7 @@ def SETTINGS():
                 gloomyshooter_hp_setting = 1
             pygame.time.delay(50)
         gloomyshooter_locks_text = font.render(enemy_locking_labels[enemy_locks[47]], True, BLACK)
-        gloomyshooter_locks_button = pygame.Rect(650, 180+SLIST.index("gloomyshooter")*60 - button_offset + scroll_y, 200, 50)
+        gloomyshooter_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("gloomyshooter")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, ORCHID, gloomyshooter_locks_button, border_radius=0)
         screen.blit(gloomyshooter_locks_text, gloomyshooter_locks_text.get_rect(center=gloomyshooter_locks_button.center))
         if gloomyshooter_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3532,9 +3524,9 @@ def SETTINGS():
 
 
         pulse_hp_label = font.render("Pulse Enemy - HP: " + str(pulse_hp_setting), True, AZURE)
-        screen.blit(pulse_hp_label, (50, 180+SLIST.index("pulse")*60 + scroll_y))
-        pulse_hp_minus_button = pygame.Rect(500, 180+SLIST.index("pulse")*60 - button_offset + scroll_y, 50, 50)
-        pulse_hp_plus_button = pygame.Rect(560, 180+SLIST.index("pulse")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(pulse_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("pulse")*60*SCALED_HEIGHT + scroll_y))
+        pulse_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("pulse")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        pulse_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("pulse")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, pulse_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=pulse_hp_plus_button.center))
         pygame.draw.rect(screen, RED, pulse_hp_minus_button, border_radius=0)
@@ -3550,7 +3542,7 @@ def SETTINGS():
                 pulse_hp_setting = 1
             pygame.time.delay(50)
         pulse_locks_text = font.render(enemy_locking_labels[enemy_locks[48]], True, BLACK)
-        pulse_locks_button = pygame.Rect(650, 180+SLIST.index("pulse")*60 - button_offset + scroll_y, 200, 50)
+        pulse_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("pulse")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, AZURE, pulse_locks_button, border_radius=0)
         screen.blit(pulse_locks_text, pulse_locks_text.get_rect(center=pulse_locks_button.center))
         if pulse_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3561,9 +3553,9 @@ def SETTINGS():
 
 
         grower_hp_label = font.render("Grower Enemy - HP: " + str(grower_hp_setting), True, ACID)
-        screen.blit(grower_hp_label, (50, 180+SLIST.index("grower")*60 + scroll_y))
-        grower_hp_minus_button = pygame.Rect(500, 180+SLIST.index("grower")*60 - button_offset + scroll_y, 50, 50)
-        grower_hp_plus_button = pygame.Rect(560, 180+SLIST.index("grower")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(grower_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("grower")*60*SCALED_HEIGHT + scroll_y))
+        grower_hp_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("grower")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        grower_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("grower")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, grower_hp_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=grower_hp_plus_button.center))
         pygame.draw.rect(screen, RED, grower_hp_minus_button, border_radius=0)
@@ -3579,7 +3571,7 @@ def SETTINGS():
                 grower_hp_setting = 1
             pygame.time.delay(50)
         grower_locks_text = font.render(enemy_locking_labels[enemy_locks[49]], True, BLACK)
-        grower_locks_button = pygame.Rect(650, 180+SLIST.index("grower")*60 - button_offset + scroll_y, 200, 50)
+        grower_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("grower")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, ACID, grower_locks_button, border_radius=0)
         screen.blit(grower_locks_text, grower_locks_text.get_rect(center=grower_locks_button.center))
         if grower_locks_button.collidepoint(mouse_pos) and mouse_click:
@@ -3590,9 +3582,9 @@ def SETTINGS():
 
 
         growing_speed_label = font.render("Growing Amount: " + str(growing_speed_setting), True, ACID)
-        screen.blit(growing_speed_label, (100, 180+SLIST.index("growing speed")*60 + scroll_y))
-        growing_speed_minus_button = pygame.Rect(500, 180+SLIST.index("growing speed")*60 - button_offset + scroll_y, 50, 50)
-        growing_speed_plus_button = pygame.Rect(560, 180+SLIST.index("growing speed")*60 - button_offset + scroll_y, 50, 50)
+        screen.blit(growing_speed_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("growing speed")*60*SCALED_HEIGHT + scroll_y))
+        growing_speed_minus_button = pygame.Rect(500*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("growing speed")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        growing_speed_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("growing speed")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, GREEN, growing_speed_plus_button, border_radius=0)
         screen.blit(plus_txt, plus_txt.get_rect(center=growing_speed_plus_button.center))
         pygame.draw.rect(screen, RED, growing_speed_minus_button, border_radius=0)
@@ -3674,7 +3666,7 @@ def SETTINGS():
                   "Indigo", "Purple", "Mauve", "Lavender", "Lilac",
                   "Pink", "Magenta", "Orchid", "Violet", "Crimson", "Hot Pink"]
         all_enemies_one_color_text = font.render("One Enemy Color: " + str(all_enemies_one_color_list[modifiers[0]]), True, all_enemies_one_color_text_color)
-        all_enemies_one_color_button = pygame.Rect(50, 180+SLIST.index("all one color")*60 - button_offset + scroll_y, 800, 50)
+        all_enemies_one_color_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("all one color")*60*SCALED_HEIGHT - button_offset + scroll_y, 1700*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, all_enemies_one_color_button_color, all_enemies_one_color_button, border_radius=0)
         screen.blit(all_enemies_one_color_text, all_enemies_one_color_text.get_rect(center=all_enemies_one_color_button.center))
         if all_enemies_one_color_button.collidepoint(mouse_pos) and mouse_click:
@@ -3698,7 +3690,7 @@ def SETTINGS():
         weather_text_color = WHITE
         weather_list = ["None", "Rain", "Heavy Rain", "Storm", "Snow", "Blizzard", "Windy", "Sandstorm", "Blood Rain", "Lagstorm"]
         weather_text = font.render("Weather: " + str(weather_list[modifiers[1]]), True, weather_text_color)
-        weather_button = pygame.Rect(50, 180+SLIST.index("weather")*60 - button_offset + scroll_y, 800, 50)
+        weather_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("weather")*60*SCALED_HEIGHT - button_offset + scroll_y, 1700*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, weather_button_color, weather_button, border_radius=0)
         screen.blit(weather_text, weather_text.get_rect(center=weather_button.center))
         if weather_button.collidepoint(mouse_pos) and mouse_click:
@@ -3716,7 +3708,7 @@ def SETTINGS():
         walleffect_text_color = WHITE
         walleffect_list = ["None", "Damage", "Death", "Teleport"]
         walleffect_text = font.render("Wall Effect: " + str(walleffect_list[modifiers[2]]), True, walleffect_text_color)
-        walleffect_button = pygame.Rect(50, 180+SLIST.index("walleffect")*60 - button_offset + scroll_y, 800, 50)
+        walleffect_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("walleffect")*60*SCALED_HEIGHT - button_offset + scroll_y, 1700*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, walleffect_button_color, walleffect_button, border_radius=0)
         screen.blit(walleffect_text, walleffect_text.get_rect(center=walleffect_button.center))
         if walleffect_button.collidepoint(mouse_pos) and mouse_click:
@@ -3732,7 +3724,7 @@ def SETTINGS():
         invisenemies_text_color = WHITE
         invisenemies_list = ["No", "Yes"]
         invisenemies_text = font.render("All Enemies Invisible: " + str(invisenemies_list[modifiers[3]]), True, invisenemies_text_color)
-        invisenemies_button = pygame.Rect(50, 180+SLIST.index("invisenemies")*60 - button_offset + scroll_y, 800, 50)
+        invisenemies_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("invisenemies")*60*SCALED_HEIGHT - button_offset + scroll_y, 1700*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, invisenemies_button_color, invisenemies_button, border_radius=0)
         screen.blit(invisenemies_text, invisenemies_text.get_rect(center=invisenemies_button.center))
         if invisenemies_button.collidepoint(mouse_pos) and mouse_click:
@@ -3748,7 +3740,7 @@ def SETTINGS():
         elif modifiers[4] == 2: defaultstatus_button_color = LAVA
         defaultstatus_list = ["None", "Freeze", "Burn"]
         defaultstatus_text = font.render("Default Status Effect: " + str(defaultstatus_list[modifiers[4]]), True, defaultstatus_text_color)
-        defaultstatus_button = pygame.Rect(50, 180+SLIST.index("status")*60 - button_offset + scroll_y, 800, 50)
+        defaultstatus_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("status")*60*SCALED_HEIGHT - button_offset + scroll_y, 1700*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, defaultstatus_button_color, defaultstatus_button, border_radius=0)
         screen.blit(defaultstatus_text, defaultstatus_text.get_rect(center=defaultstatus_button.center))
         if defaultstatus_button.collidepoint(mouse_pos) and mouse_click:
@@ -3761,7 +3753,7 @@ def SETTINGS():
         spawncolor_text_color = WHITE
         if modifiers[5] == 0: spawncolor_text_color = BLACK
         spawncolor_text = font.render("Spawner Color: " + str(colorword_list[modifiers[5]]), True, spawncolor_text_color)
-        spawncolor_button = pygame.Rect(50, 180+SLIST.index("spawner color")*60 - button_offset + scroll_y, 800, 50)
+        spawncolor_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("spawner color")*60*SCALED_HEIGHT - button_offset + scroll_y, 1700*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, spawncolor_button_color, spawncolor_button, border_radius=0)
         screen.blit(spawncolor_text, spawncolor_text.get_rect(center=spawncolor_button.center))
         if spawncolor_button.collidepoint(mouse_pos) and mouse_click:
@@ -3778,7 +3770,7 @@ def SETTINGS():
         scorestyle_text_color = WHITE
         scorestyle_list = ["Natural", "Natural & Enemy Death", "Enemy Death"]
         scorestyle_text = font.render("Score Style: " + str(scorestyle_list[modifiers[6]]), True, scorestyle_text_color)
-        scorestyle_button = pygame.Rect(50, 180+SLIST.index("score style")*60 - button_offset + scroll_y, 800, 50)
+        scorestyle_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("score style")*60*SCALED_HEIGHT - button_offset + scroll_y, 1700*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, scorestyle_button_color, scorestyle_button, border_radius=0)
         screen.blit(scorestyle_text, scorestyle_text.get_rect(center=scorestyle_button.center))
         if scorestyle_button.collidepoint(mouse_pos) and mouse_click:
@@ -3795,7 +3787,7 @@ def SETTINGS():
         drippingenemies_text_color = WHITE
         drippingenemies_list = ["No", "Yes"]
         drippingenemies_text = font.render("Dripping Enemies: " + str(drippingenemies_list[modifiers[7]]), True, drippingenemies_text_color)
-        drippingenemies_button = pygame.Rect(50, 180+SLIST.index("drippingenemies")*60 - button_offset + scroll_y, 800, 50)
+        drippingenemies_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("drippingenemies")*60*SCALED_HEIGHT - button_offset + scroll_y, 1700*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, drippingenemies_button_color, drippingenemies_button, border_radius=0)
         screen.blit(drippingenemies_text, drippingenemies_text.get_rect(center=drippingenemies_button.center))
         if drippingenemies_button.collidepoint(mouse_pos) and mouse_click:
@@ -3932,7 +3924,7 @@ def apply_settings():
     spawner_size = enemy_size_setting
     spawner_width = spawner_size*SCALED_WIDTH
     spawner_height = spawner_size*SCALED_HEIGHT
-    spawner_pos = (WIDTH / 2 - spawner_width / 2, HEIGHT / 2 - spawner_height / 2)
+    spawner_pos = ((WIDTH - spawner_width) / 2, (HEIGHT - spawner_height) / 2)
     enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size * SCALED_TEXT))
     imp_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * enemy_size * SCALED_TEXT))
     imp2_font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(0.96 * enemy_size * SCALED_TEXT))
@@ -4075,19 +4067,19 @@ def TITLE_SCREEN():
     global p1_skin_color, p2_skin_color, skin_match
     global custom_color, custom_text, custom_p2text, custom_font
     
-    skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], 70)
-    skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], 70)
+    skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(70*SCALED_TEXT))
+    skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(70*SCALED_TEXT))
 
-    start_button = pygame.Rect(WIDTH/2 - 100, 300, 200, 60)
-    button_1p = pygame.Rect(WIDTH/2 - 220, 400, 200, 60)
-    button_2p = pygame.Rect(WIDTH/2 + 20, 400, 200, 60)
-    settings_button = pygame.Rect(WIDTH/2 - 100, 500, 200, 60)
-    quit_button = pygame.Rect(WIDTH/2 - 100, 600, 200, 60)
+    start_button = pygame.Rect(WIDTH/2 - 100*SCALED_WIDTH, 300*SCALED_HEIGHT, 200*SCALED_WIDTH, 60*SCALED_HEIGHT)
+    button_1p = pygame.Rect(WIDTH/2 - 220*SCALED_WIDTH, 400*SCALED_HEIGHT, 200*SCALED_WIDTH, 60*SCALED_HEIGHT)
+    button_2p = pygame.Rect(WIDTH/2 + 20*SCALED_WIDTH, 400*SCALED_HEIGHT, 200*SCALED_WIDTH, 60*SCALED_HEIGHT)
+    settings_button = pygame.Rect(WIDTH/2 - 100*SCALED_WIDTH, 500*SCALED_HEIGHT, 200*SCALED_WIDTH, 60*SCALED_HEIGHT)
+    quit_button = pygame.Rect(WIDTH/2 - 100*SCALED_WIDTH, 600*SCALED_HEIGHT, 200*SCALED_WIDTH, 60*SCALED_HEIGHT)
         
-    p1_skin_button = pygame.Rect(WIDTH/2 - 160, HEIGHT - 200, 100, 100)
-    p2_skin_button = pygame.Rect(WIDTH/2 + 60, HEIGHT - 200, 100, 100)
-    black_p1_skin_button = pygame.Rect(WIDTH/2 - 160, HEIGHT - 192.5, 85, 85)
-    black_p2_skin_button = pygame.Rect(WIDTH/2 + 60, HEIGHT - 192.5, 85, 85)
+    p1_skin_button = pygame.Rect(WIDTH/2 - 160*SCALED_WIDTH, HEIGHT - 200*SCALED_HEIGHT, 100*SCALED_WIDTH, 100*SCALED_HEIGHT)
+    p2_skin_button = pygame.Rect(WIDTH/2 + 60*SCALED_WIDTH, HEIGHT - 200*SCALED_HEIGHT, 100*SCALED_WIDTH, 100*SCALED_HEIGHT)
+    black_p1_skin_button = pygame.Rect(WIDTH/2 - 160*SCALED_WIDTH, HEIGHT - 192.5*SCALED_HEIGHT, 85*SCALED_WIDTH, 85*SCALED_HEIGHT)
+    black_p2_skin_button = pygame.Rect(WIDTH/2 + 60*SCALED_WIDTH, HEIGHT - 192.5*SCALED_HEIGHT, 85*SCALED_WIDTH, 85*SCALED_HEIGHT)
 
         
     waiting = True
@@ -4149,7 +4141,7 @@ def TITLE_SCREEN():
         if p1_skin_button.collidepoint(mouse_pos) and mouse_click:
             if p1_skin_color+1 == len(player_skins): p1_skin_color = 0
             else: p1_skin_color += 1
-            skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], 70)
+            skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(70*SCALED_TEXT))
             pygame.time.delay(200)
 
 
@@ -4166,7 +4158,7 @@ def TITLE_SCREEN():
         if p2_skin_button.collidepoint(mouse_pos) and mouse_click:
             if p2_skin_color+1 == len(player_skins): p2_skin_color = 0
             else: p2_skin_color += 1
-            skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], 70)
+            skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(70*SCALED_TEXT))
             pygame.time.delay(200)
 
 
@@ -4175,27 +4167,27 @@ def TITLE_SCREEN():
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)) and players == 1:
                 if p1_skin_color-1 < 0: p1_skin_color = len(player_skins)-1
                 else: p1_skin_color -= 1
-                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], 70)
+                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(70*SCALED_TEXT))
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_a)):
                 if p1_skin_color-1 < 0: p1_skin_color = len(player_skins)-1
                 else: p1_skin_color -= 1
-                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], 70)
+                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(70*SCALED_TEXT))
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT) and players == 1):
                 if p1_skin_color+1 == len(player_skins): p1_skin_color = 0
                 else: p1_skin_color += 1
-                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], 70)
+                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(70*SCALED_TEXT))
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_d)):
                 if p1_skin_color+1 == len(player_skins): p1_skin_color = 0
                 else: p1_skin_color += 1
-                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], 70)
+                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(70*SCALED_TEXT))
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_j) and players == 2):
                 if p2_skin_color-1 < 0: p2_skin_color = len(player_skins)-1
                 else: p2_skin_color -= 1
-                skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], 70)
+                skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(70*SCALED_TEXT))
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_l) and players == 2):
                 if p2_skin_color+1 == len(player_skins): p2_skin_color = 0
                 else: p2_skin_color += 1
-                skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], 70)
+                skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(70*SCALED_TEXT))
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_SPACE)):
                 apply_settings()
                 reset_game_state()
@@ -4217,8 +4209,8 @@ def TITLE_SCREEN():
                 if custom_font+1 == len(font_list): custom_font = 0
                 else: custom_font += 1
                 player_skins[24][3] = font_list[custom_font]
-                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], 70)
-                skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], 70)
+                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(70*SCALED_TEXT))
+                skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(70*SCALED_TEXT))
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_t) and (p1_skin_color == 24 or p2_skin_color == 24)):
                 if custom_color-1 < 0: custom_color = len(color_list)-1
                 else: custom_color -= 1
@@ -4233,8 +4225,8 @@ def TITLE_SCREEN():
                 if custom_font-1 < 0: custom_font = len(font_list)-1
                 else: custom_font -= 1
                 player_skins[24][3] = font_list[custom_font]
-                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], 70)
-                skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], 70)
+                skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(70*SCALED_TEXT))
+                skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(70*SCALED_TEXT))
             
 
         # --- Settings button ---
@@ -6943,9 +6935,8 @@ while running:
 
 
         # --- FULL SPAWNER INDICATOR --
-    center = (spawner_pos[0] + spawner_width / 2,
-        spawner_pos[1] + spawner_height / 2)
-
+    spnr_avg = (spawner_height + spawner_width)/2
+    center = (WIDTH/2, HEIGHT/2)
     if spawn_enabled:
         # Normal pulse + rotation once spawning starts
         
@@ -6993,6 +6984,10 @@ while running:
         pygame.draw.rect(screen, pulse_color, (*spawner_pos, spawner_width, spawner_height/2), 3)
         pygame.draw.circle(screen, pulse_color, center, spawner_size / 2, 2)
 
+    # --- spawner core ---
+    pygame.draw.rect(screen, BLACK, (*spawner_pos, spawner_width, spawner_height))
+    pygame.draw.rect(screen, spawner_color, (*spawner_pos, spawner_width, spawner_height), math.ceil(3*SCALED_TEXT))
+
 
     frost_overlay = pygame.Surface((player_size * 1.2*SCALED_WIDTH, player_size * 1.2*SCALED_HEIGHT), pygame.SRCALPHA)
     frost_overlay.fill((175, 255, 255, 180))
@@ -7036,9 +7031,6 @@ while running:
                 })
             burn_timer2 = 0
 
-    # --- spawner core ---
-    pygame.draw.rect(screen, BLACK, (*spawner_pos, spawner_width, spawner_height))
-    pygame.draw.rect(screen, spawner_color, (*spawner_pos, spawner_width, spawner_height), 3)
 
     # draw trail squares
     for sq in trail_squares:
