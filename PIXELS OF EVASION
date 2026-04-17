@@ -217,7 +217,7 @@ spawn_rate = 10
 player_x = player_size / 2
 player_y = spawner_pos[1] + spawner_size / 2
 
-player2_x = (WIDTH / SCALED_WIDTH) - player_size / 2
+player2_x = 1920 - player_size / 2
 player2_y = spawner_pos[1] + spawner_size / 2
 
 # --- Enemy Health ---
@@ -4086,13 +4086,13 @@ def TITLE_SCREEN():
     while waiting:
         screen.fill((0, 0, 0))
         title_text = big_font.render("Pixels Of Evasion", True, (255, 0, 0))
-        screen.blit(title_text, title_text.get_rect(center=(WIDTH/2, 150)))
+        screen.blit(title_text, title_text.get_rect(center=(WIDTH/2, 150*SCALED_HEIGHT)))
         
         if players == 2:
-            p1_skin_button.centerx = WIDTH / 2 - 100
-            p2_skin_button.centerx = WIDTH / 2 + 100
-            black_p1_skin_button.centerx = WIDTH / 2 - 100
-            black_p2_skin_button.centerx = WIDTH / 2 + 100
+            p1_skin_button.centerx = WIDTH / 2 - 100*SCALED_WIDTH
+            p2_skin_button.centerx = WIDTH / 2 + 100*SCALED_WIDTH
+            black_p1_skin_button.centerx = WIDTH / 2 - 100*SCALED_WIDTH
+            black_p2_skin_button.centerx = WIDTH / 2 + 100*SCALED_WIDTH
         else:
             p1_skin_button.centerx = WIDTH / 2
             p2_skin_button.centerx = WIDTH + 69696969
@@ -4368,7 +4368,7 @@ while running:
         if player_x < player_size / 2:
             if walleffect == 0 or 1: player_x = player_size / 2
             if walleffect == 2: player_lives = 0; player_alive = False
-            if walleffect == 3: player_x = (WIDTH / SCALED_WIDTH) - player_size / 2
+            if walleffect == 3: player_x = 1920 - player_size / 2
             if walleffect == 1:
                 if current_time >= invincible_until + 100:
                     player_lives -= 1
@@ -4376,8 +4376,8 @@ while running:
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
                     if player_lives <= 0: player_alive = False
-        if player_x > (WIDTH / SCALED_WIDTH) - player_size / 2:
-            if walleffect == 0 or 1: player_x = (WIDTH / SCALED_WIDTH) - player_size / 2
+        if player_x > 1920 - player_size / 2:
+            if walleffect == 0 or 1: player_x = 1920 - player_size / 2
             if walleffect == 2: player_lives = 0; player_alive = False
             if walleffect == 3: player_x = player_size / 2
             if walleffect == 1:
@@ -4390,7 +4390,7 @@ while running:
         if player_y < player_size / 2:
             if walleffect == 0 or 1: player_y = player_size / 2
             if walleffect == 2: player_lives = 0; player_alive = False
-            if walleffect == 3: player_y = (HEIGHT / SCALED_HEIGHT) - player_size / 2
+            if walleffect == 3: player_y = 1080 - player_size / 2
             if walleffect == 1:
                 if current_time >= invincible_until + 100:
                     player_lives -= 1
@@ -4398,8 +4398,8 @@ while running:
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
                     if player_lives <= 0: player_alive = False
-        if player_y > (HEIGHT / SCALED_HEIGHT) - player_size / 2:
-            if walleffect == 0 or 1: player_y = (HEIGHT / SCALED_HEIGHT) - player_size / 2
+        if player_y > 1080 - player_size / 2:
+            if walleffect == 0 or 1: player_y = 1080 - player_size / 2
             if walleffect == 2: player_lives = 0; player_alive = False
             if walleffect == 3: player_y = player_size / 2
             if walleffect == 1:
@@ -4437,7 +4437,7 @@ while running:
             if player2_x < player_size / 2:
                 if walleffect == 0 or 1: player2_x = player_size / 2
                 if walleffect == 2: player2_lives = 0; player2_alive = False
-                if walleffect == 3: player2_x = (WIDTH / SCALED_WIDTH) - player_size / 2
+                if walleffect == 3: player2_x = 1920 - player_size / 2
                 if walleffect == 1:
                     if current_time >= player2_invincible_until + 100:
                         player2_lives -= 1
@@ -4445,8 +4445,8 @@ while running:
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         if player2_lives <= 0: player2_alive = False
-            if player2_x > (WIDTH / SCALED_WIDTH) - player_size / 2:
-                if walleffect == 0 or 1: player2_x = (WIDTH / SCALED_WIDTH) - player_size / 2
+            if player2_x > 1920 - player_size / 2:
+                if walleffect == 0 or 1: player2_x = 1920 - player_size / 2
                 if walleffect == 2: player2_lives = 0; player2_alive = False
                 if walleffect == 3: player2_x = player_size / 2
                 if walleffect == 1:
@@ -4459,7 +4459,7 @@ while running:
             if player2_y < player_size / 2:
                 if walleffect == 0 or 1: player2_y = player_size / 2
                 if walleffect == 2: player2_lives = 0; player2_alive = False
-                if walleffect == 3: player2_y = (HEIGHT / SCALED_HEIGHT) - player_size / 2
+                if walleffect == 3: player2_y = 1080 - player_size / 2
                 if walleffect == 1:
                     if current_time >= player2_invincible_until + 100:
                         player2_lives -= 1
@@ -4467,8 +4467,8 @@ while running:
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         if player2_lives <= 0: player2_alive = False
-            if player2_y > (HEIGHT / SCALED_HEIGHT) - player_size / 2:
-                if walleffect == 0 or 1: player2_y = (HEIGHT / SCALED_HEIGHT) - player_size / 2
+            if player2_y > 1080 - player_size / 2:
+                if walleffect == 0 or 1: player2_y = 1080 - player_size / 2
                 if walleffect == 2: player2_lives = 0; player2_alive = False
                 if walleffect == 3: player2_y = player_size / 2
                 if walleffect == 1:
@@ -4753,8 +4753,8 @@ while running:
             if enemy["type"] == 1:
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["dy"] *= -1; bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["dy"] *= -1; bounced = True
                 if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
                 if enemy["health"] <= 0: enemy_died = True
 
@@ -4771,8 +4771,8 @@ while running:
                 enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
                 if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
                 if enemy["health"] <= 0: enemy_died = True
                 dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 999999999999
@@ -4784,8 +4784,8 @@ while running:
             elif enemy["type"] == 3:
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["dy"] *= -1; bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["dy"] *= -1; bounced = True
                 if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
                 if enemy["health"] <= 0: enemy_died = True
 
@@ -4798,19 +4798,19 @@ while running:
                 enemy["y"] += enemy["dy"] * speed_multiplier * game_speed
                 bounced = False
                 # X-axis bounce
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     enemy["x"] += enemy["dx"] * speed_multiplier
                     bounced = True
                     if enemy["x"] <= 0: enemy["x"] = 0
-                    elif enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size: enemy["x"] = (WIDTH / SCALED_WIDTH) - enemy_size/2
+                    elif enemy["x"] >= 1920 - enemy_size: enemy["x"] = 1920 - enemy_size/2
                 # Y-axis bounce
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     enemy["y"] += enemy["dy"] * speed_multiplier
                     bounced = True
                     if enemy["y"] <= 0: enemy["y"] = 0
-                    elif enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size: enemy["y"] = (HEIGHT / SCALED_HEIGHT) - enemy_size/2
+                    elif enemy["y"] >= 1080 - enemy_size: enemy["y"] = 1080 - enemy_size/2
                 # Update bounce count and health once per frame
                 if bounced:
                     enemy["bounces"] += 1
@@ -4833,10 +4833,10 @@ while running:
                     enemy["y"] += enemy["dy"] * game_speed
 
                     bounced = False
-                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                         enemy["dx"] *= -1
                         bounced = True
-                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                         enemy["dy"] *= -1
                         bounced = True
 
@@ -4858,9 +4858,9 @@ while running:
                     enemy["x"] += enemy["dx"] * game_speed
                     enemy["y"] += enemy["dy"] * game_speed
                     bounced = False
-                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: 
+                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: 
                         enemy["dx"] *= -1; bounced = True
-                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: 
+                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: 
                         enemy["dy"] *= -1; bounced = True
                     if bounced:
                         enemy["bounces"] += 1; enemy["health"] -= 1
@@ -4871,8 +4871,8 @@ while running:
                 enemy["trail/shot_charge"] += (60 / FPS) * game_speed
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["dy"] *= -1; bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["dy"] *= -1; bounced = True
                 if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
                 if enemy["trail/shot_charge"] >= trail_interval_ms:
                     trail_squares.append({
@@ -4900,10 +4900,10 @@ while running:
                             enemy["x"] += enemy["sussy_dx"] * game_speed
                             enemy["y"] += enemy["sussy_dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["sussy_dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["sussy_dy"] *= -1
                     bounced = True
                 if bounced:
@@ -4947,16 +4947,16 @@ while running:
                         enemy.pop("spawn_protected")
 
                 hit_edge = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     hit_edge = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     hit_edge = True
 
                 if hit_edge:
                     if enemy.get("spawn_protected"):
-                        if enemy["x"] < enemy_size/2 or enemy["x"] > (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                        if enemy["x"] < enemy_size/2 or enemy["x"] > 1920 - enemy_size/2:
                             enemy["dx"] *= -1
-                        if enemy["y"] < enemy_size/2 or enemy["y"] > (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                        if enemy["y"] < enemy_size/2 or enemy["y"] > 1080 - enemy_size/2:
                             enemy["dy"] *= -1
                         length = math.hypot(enemy["dx"], enemy["dy"])
 
@@ -4970,8 +4970,8 @@ while running:
                                 dx = math.cos(angle) * enemy_speed
                                 dy = math.sin(angle) * enemy_speed
                                 enemies.append({
-                                    "x": max(1 + enemy_size/2, min((WIDTH / SCALED_WIDTH) - enemy_size/2 - 1, enemy["x"])),
-                                    "y": max(1 + enemy_size/2, min((HEIGHT / SCALED_HEIGHT) - enemy_size/2 - 1, enemy["y"])),
+                                    "x": max(1 + enemy_size/2, min(1920 - enemy_size/2 - 1, enemy["x"])),
+                                    "y": max(1 + enemy_size/2, min(1080 - enemy_size/2 - 1, enemy["y"])),
                                     "dx": dx,
                                     "dy": dy,
                                     "size": enemy_size,
@@ -4988,7 +4988,7 @@ while running:
                     continue
                 if enemy.get("waiting"):
                     # Check if off edge now
-                    if 0 < enemy["x"] < (WIDTH / SCALED_WIDTH) - enemy_size and 0 < enemy["y"] < (HEIGHT / SCALED_HEIGHT) - enemy_size:
+                    if 0 < enemy["x"] < 1920 - enemy_size and 0 < enemy["y"] < 1080 - enemy_size:
                         enemy.pop("waiting")
                 if enemy["health"] <= 0: enemy["dead"] = True
 
@@ -4997,10 +4997,10 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
@@ -5030,9 +5030,9 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1; bounced = True
                 if bounced: 
                     enemy["bounces"] += 1
@@ -5076,19 +5076,19 @@ while running:
                 enemy["y"] += enemy["dy"] * speed_multiplier * game_speed
                 bounced = False
                 # X-axis bounce
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     enemy["x"] += enemy["dx"] * speed_multiplier
                     bounced = True
                     if enemy["x"] <= 0: enemy["x"] = 0
-                    elif enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size: enemy["x"] = (WIDTH / SCALED_WIDTH) - enemy_size/2
+                    elif enemy["x"] >= 1920 - enemy_size: enemy["x"] = 1920 - enemy_size/2
                 # Y-axis bounce
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     enemy["y"] += enemy["dy"] * speed_multiplier
                     bounced = True
                     if enemy["y"] <= 0: enemy["y"] = 0
-                    elif enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size: enemy["y"] = (HEIGHT / SCALED_HEIGHT) - enemy_size/2
+                    elif enemy["y"] >= 1080 - enemy_size: enemy["y"] = 1080 - enemy_size/2
                 # Update bounce count and health once per frame
                 if bounced:
                     enemy["bounces"] += 1
@@ -5126,8 +5126,8 @@ while running:
             elif enemy["type"] == 13:
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["dy"] *= -1; bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["dy"] *= -1; bounced = True
                 if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
                 if enemy["health"] <= 0: enemy_died = True
             elif enemy["type"] == 14:
@@ -5135,9 +5135,9 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1; bounced = True
                 if bounced:
                     enemy["bounces"] += 1
@@ -5188,10 +5188,10 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= sz/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - sz/2:
+                if enemy["x"] <= sz/2 or enemy["x"] >= 1920 - sz/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= sz/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - sz/2:
+                if enemy["y"] <= sz/2 or enemy["y"] >= 1080 - sz/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
@@ -5219,10 +5219,10 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
@@ -5234,10 +5234,10 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
@@ -5258,10 +5258,10 @@ while running:
                     enemy["y"] += enemy["dy"] * game_speed
 
                     bounced = False
-                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                         enemy["dx"] *= -1
                         bounced = True
-                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                         enemy["dy"] *= -1
                         bounced = True
 
@@ -5280,9 +5280,9 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1; bounced = True
                 if bounced: 
                     enemy["bounces"] += 1
@@ -5320,10 +5320,10 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
@@ -5362,10 +5362,10 @@ while running:
                 enemy["y"] += enemy["dy"] * game_speed
 
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
@@ -5400,9 +5400,9 @@ while running:
                     enemy["y"] += enemy["dy"] * game_speed
 
                     hit_left = enemy["x"] <= enemy_size/2
-                    hit_right = enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2
+                    hit_right = enemy["x"] >= 1920 - enemy_size/2
                     hit_top = enemy["y"] <= enemy_size/2
-                    hit_bottom = enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2
+                    hit_bottom = enemy["y"] >= 1080 - enemy_size/2
                     if hit_left or hit_right or hit_top or hit_bottom:
                         enemy["health"] -= 1
 
@@ -5485,10 +5485,10 @@ while running:
                 enemy["y"] += enemy["dy"] * game_speed
 
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 hardened_dps = 0.1 * (60 / FPS) * (harden_break / 10)
@@ -5527,16 +5527,16 @@ while running:
                 enemy["y"] += enemy["dy"] * game_speed
 
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["base_dx"] *= -1
                     bounced = True
                     if enemy["x"] <= enemy_size: enemy["x"] = enemy_size/2 + enemy["base_dx"]
-                    elif enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size: enemy["x"] = (WIDTH / SCALED_WIDTH) - enemy_size/2 + enemy["base_dx"]
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                    elif enemy["x"] >= 1920 - enemy_size: enemy["x"] = 1920 - enemy_size/2 + enemy["base_dx"]
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["base_dy"] *= -1
                     bounced = True
                     if enemy["y"] <= enemy_size: enemy["y"] = enemy_size/2 + enemy["base_dy"]
-                    elif enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size: enemy["y"] = (HEIGHT / SCALED_HEIGHT) - enemy_size/2 + enemy["base_dy"]
+                    elif enemy["y"] >= 1080 - enemy_size: enemy["y"] = 1080 - enemy_size/2 + enemy["base_dy"]
 
                 if bounced:
                     enemy["accel"] = 0.0
@@ -5550,8 +5550,8 @@ while running:
             elif enemy["type"] == 25:
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["dy"] *= -1; bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["dy"] *= -1; bounced = True
                 if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
                 if enemy["health"] <= 0: enemy_died = True
             elif enemy["type"] == 26:
@@ -5568,8 +5568,8 @@ while running:
                 enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed * 0.7)
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
                 if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
                 if enemy["trail/shot_charge"] >= trail_interval_ms:
                     trail_squares.append({
@@ -5605,15 +5605,15 @@ while running:
                 enemy["x"] += enemy["dx"] * speed_multiplier * game_speed
                 enemy["y"] += enemy["dy"] * speed_multiplier * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["angle"] = math.pi - enemy["angle"]; bounced = True
                     if enemy["x"] <= 0: enemy["x"] = 0
-                    elif enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size: enemy["x"] = (WIDTH / SCALED_WIDTH) - enemy_size/2
+                    elif enemy["x"] >= 1920 - enemy_size: enemy["x"] = 1920 - enemy_size/2
                     enemy["y"] -= enemy["dy"] * 2.5
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["angle"] = -enemy["angle"]; bounced = True
                     if enemy["y"] <= 0: enemy["y"] = 0
-                    elif enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size: enemy["y"] = (HEIGHT / SCALED_HEIGHT) - enemy_size/2
+                    elif enemy["y"] >= 1080 - enemy_size: enemy["y"] = 1080 - enemy_size/2
                     enemy["x"] -= enemy["dx"] * 2.5
                 if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
                 if enemy["health"] <= 0: enemy_died = True
@@ -5628,8 +5628,8 @@ while running:
                 enemy["x"] += enemy["dx"]
                 enemy["y"] += enemy["dy"]
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: bounced = True
                 if bounced:
                     enemy["bounces"] += 1
                     enemy["health"] -= 1
@@ -5651,8 +5651,8 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
                 if bounced:
                     enemy["bounces"] += 1
                     enemy["health"] -= 1
@@ -5675,8 +5675,8 @@ while running:
                 enemy["x"] += enemy["dx"] * speed_multiplier * game_speed
                 enemy["y"] += enemy["dy"] * speed_multiplier * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["angle"] = math.pi - enemy["angle"]; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["angle"] = -enemy["angle"]; bounced = True
                 if bounced:
                     enemy["bounces"] += 1
                     enemy["health"] -= 1
@@ -5694,19 +5694,19 @@ while running:
                 enemy["y"] += enemy["dy"] * speed_multiplier * game_speed
                 bounced = False
                 # X-axis bounce
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     enemy["x"] += enemy["dx"] * speed_multiplier
                     bounced = True
                     if enemy["x"] <= 0: enemy["x"] = 0
-                    elif enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size: enemy["x"] = (WIDTH / SCALED_WIDTH) - enemy_size/2
+                    elif enemy["x"] >= 1920 - enemy_size: enemy["x"] = 1920 - enemy_size/2
                 # Y-axis bounce
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     enemy["y"] += enemy["dy"] * speed_multiplier
                     bounced = True
                     if enemy["y"] <= 0: enemy["y"] = 0
-                    elif enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size: enemy["y"] = (HEIGHT / SCALED_HEIGHT) - enemy_size/2
+                    elif enemy["y"] >= 1080 - enemy_size: enemy["y"] = 1080 - enemy_size/2
                 hardened_dps = 0.1 * (60 / FPS) * (harden_break / 10)
                 if dist1 < 200+enemy_size/2+player_size/2:
                     enemy["health"] -= hardened_dps
@@ -5728,9 +5728,9 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1; bounced = True
                 if bounced: 
                     enemy["bounces"] += 1
@@ -5798,10 +5798,10 @@ while running:
                     enemy["y"] += enemy["dy"] * game_speed
 
                     bounced = False
-                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                         enemy["dx"] *= -1
                         bounced = True
-                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                         enemy["dy"] *= -1
                         bounced = True
 
@@ -5825,9 +5825,9 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1; bounced = True
                 if bounced: 
                     enemy["bounces"] += 1
@@ -5867,9 +5867,9 @@ while running:
                     enemy["y"] += enemy["dy"] * game_speed
 
                     hit_left = enemy["x"] <= enemy_size/2
-                    hit_right = enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2
+                    hit_right = enemy["x"] >= 1920 - enemy_size/2
                     hit_top = enemy["y"] <= enemy_size/2
-                    hit_bottom = enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2
+                    hit_bottom = enemy["y"] >= 1080 - enemy_size/2
                     if hit_left or hit_right or hit_top or hit_bottom:
                         enemy["health"] -= 1
 
@@ -5962,9 +5962,9 @@ while running:
                     enemy["y"] += enemy["dy"] * game_speed
 
                     hit_left = enemy["x"] <= enemy_size/2
-                    hit_right = enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2
+                    hit_right = enemy["x"] >= 1920 - enemy_size/2
                     hit_top = enemy["y"] <= enemy_size/2
-                    hit_bottom = enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2
+                    hit_bottom = enemy["y"] >= 1080 - enemy_size/2
                     if hit_left or hit_right or hit_top or hit_bottom:
                         enemy["health"] -= 1
 
@@ -6068,10 +6068,10 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= sz/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - sz/2:
+                if enemy["x"] <= sz/2 or enemy["x"] >= 1920 - sz/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= sz/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - sz/2:
+                if enemy["y"] <= sz/2 or enemy["y"] >= 1080 - sz/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
@@ -6087,10 +6087,10 @@ while running:
                             enemy["x"] += enemy["sussy_dx"] * game_speed
                             enemy["y"] += enemy["sussy_dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["sussy_dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["sussy_dy"] *= -1
                     bounced = True
                 if bounced:
@@ -6102,10 +6102,10 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
@@ -6116,8 +6116,8 @@ while running:
             if enemy["type"] == 40:
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["dy"] *= -1; bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["dy"] *= -1; bounced = True
                 if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
                 if enemy["health"] <= 0: enemy_died = True
             elif enemy["type"] == 41:
@@ -6128,8 +6128,8 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: bounced = True
                 if bounced:
                     enemy["bounces"] += 1
                     enemy["health"] -= 1
@@ -6144,10 +6144,10 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
@@ -6183,9 +6183,9 @@ while running:
                     enemy["y"] += enemy["dy"] * game_speed
 
                     hit_left = enemy["x"] <= enemy_size/2
-                    hit_right = enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2
+                    hit_right = enemy["x"] >= 1920 - enemy_size/2
                     hit_top = enemy["y"] <= enemy_size/2
-                    hit_bottom = enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2
+                    hit_bottom = enemy["y"] >= 1080 - enemy_size/2
                     if hit_left or hit_right or hit_top or hit_bottom:
                         enemy["health"] -= 1
 
@@ -6279,8 +6279,8 @@ while running:
                     enemy["y"] = enemy["lag y"]
                     enemy["lag show"] = 0
                 bounced = False
-                if enemy["lag x"] <= enemy_size/2 or enemy["lag x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["dx"] *= -1; bounced = True
-                if enemy["lag y"] <= enemy_size/2 or enemy["lag y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["dy"] *= -1; bounced = True
+                if enemy["lag x"] <= enemy_size/2 or enemy["lag x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
+                if enemy["lag y"] <= enemy_size/2 or enemy["lag y"] >= 1080 - enemy_size/2: enemy["dy"] *= -1; bounced = True
                 if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
                 if enemy["health"] <= 0: enemy_died = True
             if enemy["type"] == 45:
@@ -6293,8 +6293,8 @@ while running:
                     enemy["y"] = enemy["lag y"]
                     enemy["lag show"] = 0
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:bounced = True
                 if bounced:
                     enemy["bounces"] += 1
                     enemy["health"] -= 1
@@ -6313,8 +6313,8 @@ while running:
                     enemy["lag show"] = 0
                 enemy["trail/shot_charge"] += (60 / FPS) * game_speed
                 bounced = False
-                if enemy["lag x"] <= enemy_size/2 or enemy["lag x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: enemy["dx"] *= -1; bounced = True
-                if enemy["lag y"] <= enemy_size/2 or enemy["lag y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: enemy["dy"] *= -1; bounced = True
+                if enemy["lag x"] <= enemy_size/2 or enemy["lag x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
+                if enemy["lag y"] <= enemy_size/2 or enemy["lag y"] >= 1080 - enemy_size/2: enemy["dy"] *= -1; bounced = True
                 if bounced: 
                     enemy["bounces"] += 1
                     enemy["health"] -= 1
@@ -6355,10 +6355,10 @@ while running:
                 enemy["y"] += enemy["dy"] * game_speed
 
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
@@ -6395,9 +6395,9 @@ while running:
                     enemy["x"] += enemy["dx"] * game_speed
                     enemy["y"] += enemy["dy"] * game_speed
                     bounced = False
-                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2: 
+                    if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: 
                         enemy["dx"] *= -1; bounced = True
-                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2: 
+                    if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: 
                         enemy["dy"] *= -1; bounced = True
                     if bounced:
                         enemy["bounces"] += 1; enemy["health"] -= 1
@@ -6433,9 +6433,9 @@ while running:
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
                     enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
                     enemy["dy"] *= -1; bounced = True
                 if bounced: 
                     enemy["bounces"] += 1
@@ -6471,7 +6471,7 @@ while running:
                     enemy["dx"] *= -1
                     if bounced == False: enemy["size"] = min(450, enemy["size"]+growing_speed)
                     bounced = True
-                if enemy["x"] > (WIDTH / SCALED_WIDTH) - enemy["size"]/2:
+                if enemy["x"] > 1920 - enemy["size"]/2:
                     enemy["dx"] *= -1
                     if bounced == False: enemy["size"] = min(450, enemy["size"]+growing_speed)
                     bounced = True
@@ -6479,18 +6479,18 @@ while running:
                     enemy["dy"] *= -1
                     if bounced == False: enemy["size"] = min(450, enemy["size"]+growing_speed)
                     bounced = True
-                if enemy["y"] > (HEIGHT / SCALED_HEIGHT) - enemy["size"]/2:
+                if enemy["y"] > 1080 - enemy["size"]/2:
                     enemy["dy"] *= -1
                     if bounced == False: enemy["size"] = min(450, enemy["size"]+growing_speed)
                     bounced = True
                 if enemy["x"] < enemy["size"]/2:
                     enemy["x"] = enemy["size"]/2
-                if enemy["x"] > (WIDTH / SCALED_WIDTH) - enemy["size"]/2:
-                    enemy["x"] = (WIDTH / SCALED_WIDTH) - enemy["size"]/2
+                if enemy["x"] > 1920 - enemy["size"]/2:
+                    enemy["x"] = 1920 - enemy["size"]/2
                 if enemy["y"] < enemy["size"]/2:
                     enemy["y"] = enemy["size"]/2
-                if enemy["y"] > (HEIGHT / SCALED_HEIGHT) - enemy["size"]/2:
-                    enemy["y"] = (HEIGHT / SCALED_HEIGHT) - enemy["size"]/2
+                if enemy["y"] > 1080 - enemy["size"]/2:
+                    enemy["y"] = 1080 - enemy["size"]/2
                 if bounced: enemy["bounces"] += 1; enemy["health"] -= 1
                 if enemy["health"] <= 0: enemy_died = True
                     
@@ -6862,7 +6862,7 @@ while running:
                         continue
 
             # Keep projectile on screen (using center coords)
-            if 0 - projectile_size < p["x"] < (WIDTH/SCALED_WIDTH) + projectile_size and 0 - projectile_size < p["y"] < (HEIGHT/SCALED_HEIGHT) + projectile_size:
+            if 0 - projectile_size < p["x"] < 1920 + projectile_size and 0 - projectile_size < p["y"] < 1080 + projectile_size:
                 new_projectiles.append(p)
 
         projectiles = new_projectiles
@@ -7422,7 +7422,7 @@ while running:
                 if weather_timer > 10:
                     weather_timer = 0
                     projectiles.append({
-                        "x": ((WIDTH/SCALED_WIDTH)/2) - sandstorm_direction * ((WIDTH/SCALED_WIDTH)/2),
+                        "x": (1920/2) - sandstorm_direction * (1920/2),
                         "y": random.uniform(projectile_size, HEIGHT/SCALED_HEIGHT),
                         "dx": 5*sandstorm_direction,
                         "dy": 0,
@@ -7434,7 +7434,7 @@ while running:
                 if weather_timer > 6:
                     weather_timer = 0
                     projectiles.append({
-                        "x": ((WIDTH/SCALED_WIDTH)/2) - sandstorm_direction * ((WIDTH/SCALED_WIDTH)/2),
+                        "x": (1920/2) - sandstorm_direction * (1920/2),
                         "y": random.uniform(projectile_size, HEIGHT/SCALED_HEIGHT),
                         "dx": 5*sandstorm_direction,
                         "dy": 0,
