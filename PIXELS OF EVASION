@@ -4,12 +4,81 @@ import math
 import pyperclip
 
 pygame.init()
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #((1920, 1080))
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+#screen = pygame.display.set_mode((1280, 720))
+#Recommended Screen Resolutions:
+    #(1920, 1080), (1680, 1050), (1600, 900), (1440, 900), (1400, 1050), (1366, 768), (1360, 768), (1280, 1024), (1280, 960)
+    #(1280, 800), (1280, 768), (1280, 768), (1280, 720), (1280, 600), (1152, 864), (1024, 768), (800, 600)
 WIDTH, HEIGHT = screen.get_size()
 SCALED_WIDTH = WIDTH / 1920
 SCALED_HEIGHT = HEIGHT / 1080
 SCALED_TEXT = (SCALED_WIDTH + SCALED_HEIGHT)/2
 pygame.display.set_caption("Pixels Of Evasion")
+
+# --- Textures ---
+try:
+    #basic_texture = pygame.image.load('textures/basic_enemy.png').convert_alpha()
+    homing_texture = pygame.image.load('textures/homing_enemy.png').convert_alpha()
+    fatal_texture = pygame.image.load('textures/fatal_enemy.png').convert_alpha()
+    #flow_texture = pygame.image.load('textures/flow_enemy.png').convert_alpha()
+    #sticky_texture = pygame.image.load('textures/sticky_enemy.png').convert_alpha()
+    #gloomy_texture = pygame.image.load('textures/gloomy_enemy.png').convert_alpha()
+    #trail_texture = pygame.image.load('textures/trail_enemy.png').convert_alpha()
+    #impostor_texture = pygame.image.load('textures/impostor_enemy.png').convert_alpha()
+    #splitter_texture = pygame.image.load('textures/splitter_enemy.png').convert_alpha()
+    bomb_texture = pygame.image.load('textures/bomb_enemy.png').convert_alpha()
+    shooter_texture = pygame.image.load('textures/shooter_enemy.png').convert_alpha()
+    #sniper_texture = pygame.image.load('textures/c_enemy.png').convert_alpha()
+    #speedy_texture = pygame.image.load('textures/c_enemy.png').convert_alpha()
+    #shotgun_texture = pygame.image.load('textures/shotgun_enemy.png').convert_alpha()
+    #voodoo_texture = pygame.image.load('textures/voodoo_enemy.png').convert_alpha()
+    #blind_texture = pygame.image.load('textures/blind_enemy.png').convert_alpha()
+    #magma_texture = pygame.image.load('textures/magma_enemy.png').convert_alpha()
+    #charger_texture = pygame.image.load('textures/charger_enemy.png').convert_alpha()
+    rapidshooter_texture = pygame.image.load('textures/rapidshooter_enemy.png').convert_alpha()
+    #frostbite_texture = pygame.image.load('textures/frostbite_enemy.png').convert_alpha()
+    #addictive_texture = pygame.image.load('textures/addictive_enemy.png').convert_alpha()
+    laser_texture = pygame.image.load('textures/laser_enemy.png').convert_alpha()
+    #hardened_texture = pygame.image.load('textures/hardened_enemy.png').convert_alpha()
+    #accelerator_texture = pygame.image.load('textures/accelerator_enemy.png').convert_alpha()
+    #cold_texture = pygame.image.load('textures/cold_enemy.png').convert_alpha()
+    tracer_texture = pygame.image.load('textures/tracer_enemy.png').convert_alpha()
+    savage_texture = pygame.image.load('textures/savage_enemy.png').convert_alpha()
+    #teleporter_texture = pygame.image.load('textures/teleporter_enemy.png').convert_alpha()
+    phantom_texture = pygame.image.load('textures/phantom_enemy.png').convert_alpha()
+    #stream_texture = pygame.image.load('textures/stream_enemy.png').convert_alpha()
+    #sensitive_texture = pygame.image.load('textures/sensitive_enemy.png').convert_alpha()
+    burstshooter_texture = pygame.image.load('textures/burstshooter_enemy.png').convert_alpha()
+    #stickyshooter_texture = pygame.image.load('textures/stickyshooter_enemy.png').convert_alpha()
+    #sparker_texture = pygame.image.load('textures/sparker_enemy.png').convert_alpha()
+    #annihilator_texture = pygame.image.load('textures/annihilator_enemy.png').convert_alpha()
+    frostbeam_texture = pygame.image.load('textures/frostbeam_enemy.png').convert_alpha()
+    #forecast_texture = pygame.image.load('textures/forecast_enemy.png').convert_alpha()
+    #assassin_texture = pygame.image.load('textures/assassin_enemy.png').convert_alpha()
+    #motion_texture = pygame.image.load('textures/motion_enemy.png').convert_alpha()
+    #invisibility_texture = pygame.image.load('textures/invisibility_enemy.png').convert_alpha()
+    #whirly_texture = pygame.image.load('textures/whirly_enemy.png').convert_alpha()
+    #volcanic_texture = pygame.image.load('textures/volcanic_enemy.png').convert_alpha()
+    pyrobeam_texture = pygame.image.load('textures/pyrobeam_enemy.png').convert_alpha()
+    #laggy_texture = pygame.image.load('textures/laggy_enemy.png').convert_alpha()
+    #error_texture = pygame.image.load('textures/error_enemy.png').convert_alpha()
+    #glitchy_texture = pygame.image.load('textures/glitchy_enemy.png').convert_alpha()
+    #blocker_texture = pygame.image.load('textures/blocker_enemy.png').convert_alpha()
+    #gloomyshooter_texture = pygame.image.load('textures/gloomyshooter_enemy.png').convert_alpha()
+    #pulse_texture = pygame.image.load('textures/pulse_enemy.png').convert_alpha()
+    #grower_texture = pygame.image.load('textures/grower_enemy.png').convert_alpha()
+
+    # --- JOKES LMAO ---
+    fatal_joke_texture = pygame.image.load('jokes/ifilaugh.png').convert_alpha()
+    bomb_joke_texture = pygame.image.load('jokes/sal.png').convert_alpha()
+    voodoo_joke_texture = pygame.image.load('jokes/voodoo mario.png').convert_alpha()
+    charger_joke_texture = pygame.image.load('jokes/yellowman.png').convert_alpha()
+    sparker_joke_texture = pygame.image.load('jokes/venom-no.png').convert_alpha()
+    annihilator_joke_texture = pygame.image.load('jokes/kill7billion.png').convert_alpha()
+    use_textures = True
+
+except:
+    use_textures = False
 
 # --- GAME OVER SCREEN ---
 def GAME_OVER(final_score, p1, p2): 
@@ -133,17 +202,17 @@ custom_font = 0
 player_skins = [
                 [WHITE, RED, BLUE, "none"],
                 [RED, SALMON, PINK, "none"],
-                [BLUE, SKY, TURQUOISE, "none"],
-                [YELLOW, ORANGE, GOLD, "none"],
+                [BLUE, SKY, AZURE, "none"],
+                [YELLOW, GOLD, ORANGE, "none"],
                 [LIME, MINT, GREEN, "none"],
                 [GRAY, WHITE, SHADOW, "courier"],
                 [LAVA, GOLD, ORANGE, "Colonna"],
                 [CYAN, TEAL, LAVENDER, "modernno20"],
                 [GREEN, LIME, GREEN, "agencyfb"],
-                [PURPLE, LAVENDER, MAGENTA, "curlz"],
+                [PURPLE, LAVENDER, HOT_PINK, "curlz"],
                 [MAROON, RED, CRIMSON, "impact"],
                 [TURQUOISE, HOT_PINK, GREEN, "mistral"],
-                [VOLT, AZURE, GREEN, "erasitc"],
+                [SULFUR, GRAY, AZURE, "erasitc"],
                 [CLOUD, AZURE, MAGENTA, "bernardcondensed"],
                 [SHADOW, PINK, CYAN, "chiller"],
                 [ORANGE, YELLOW, CRIMSON, "perpetua"],
@@ -555,7 +624,7 @@ enemy_damage_setting = 1
 burst_setting = 10
 enemy_unlock_setting = 100
 projectile_damage_setting = 1
-unharden_death_setting = 0
+unharden_death_setting = 1
 target_setting = 1
 insta_spawn_setting = 0
 teleport_angle_change_setting = 1
@@ -589,7 +658,7 @@ bomb_hp_setting = 8
 bomb_projectile_amount_setting = 8
 shooter_hp_setting = 4
 sniper_hp_setting = 1
-extra_sniper_damage_setting = 1
+extra_sniper_damage_setting = 0
 speedy_hp_setting = 5
 shotgun_hp_setting = 4
 shotgun_bullets_setting = 5
@@ -1106,7 +1175,7 @@ def SETTINGS():
         pygame.draw.rect(screen, GRAY, default_set_button, border_radius=0)
         screen.blit(default_set_text, default_set_text.get_rect(center=default_set_button.center))
         if default_set_button.collidepoint(mouse_pos) and mouse_click:
-            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_1_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_0_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_100_2_1_1_1_0_9_20_0_5_1_6_1_1_1_5_1_300_10_2_1_4_1_0_2_4_1_1_45_0_")
+            give_seed("50_50_10_500_2000_10_8_5_5_50_200_25_500_1000_5_100_10_1_10_100_1_0_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_5_2_3_3_7_9_3_5_3_2_8_8_4_1_0_5_4_5_5_9_4_3_1_4_32_7_10_300_3_1_100_30_10_5_5_1_2_6_2_4_10_3_2_1_3_32_1_0_3_1_1_0_0_1_3_2_3_1_15_1_0_4_1_0_100_0_5_1_1_500_100_2_1_1_1_0_9_20_0_5_1_6_1_1_1_5_1_300_10_2_1_4_1_0_2_4_1_1_45_0_")
             pygame.time.delay(200)
 
 
@@ -4734,6 +4803,7 @@ while running:
                 "drip timer": 0,
                 "edge cooldown": False,
                 "spawn_protected": True,
+                "troll": random.randint(1, 1000),
                 "spawn_time": current_time
             })
             spawner_timer = 0
@@ -5216,19 +5286,28 @@ while running:
                 if enemy["health"] <= 0:
                     enemy_died = True
             elif enemy["type"] == 16:
+                if enemy.get("shrinking"):
+                    enemy["size"] = enemy.get("size", "enemy_size") * 0.85 if isinstance(enemy.get("size", None), (int, float)) else sz * 0.85
+                sz = enemy["size"]
+                if enemy["size"] < 2:
+                    # remove immediately once tiny
+                    if enemy in enemies:
+                        enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                    continue
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
                     enemy["bounces"] += 1
                     enemy["health"] -= 1
-                if enemy["health"] < 1:
+                if enemy["health"] < 1 and bounced:
                     enemy_died = True
             elif enemy["type"] == 17:
                 enemy["x"] += enemy["dx"] * game_speed
@@ -5481,14 +5560,24 @@ while running:
 
                 
             elif enemy["type"] == 23:
+                if enemy.get("shrinking"):
+                    enemy["size"] = enemy.get("size", "enemy_size") * 0.85 if isinstance(enemy.get("size", None), (int, float)) else sz * 0.85
+                sz = enemy["size"]
+                if enemy["size"] < 2:
+                    # remove immediately once tiny
+                    if enemy in enemies:
+                        enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                    continue
+
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
 
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 hardened_dps = 0.1 * (60 / FPS) * (harden_break / 10)
@@ -5499,16 +5588,21 @@ while running:
                     enemy["health"] -= hardened_dps
                     if enemy["health"] < 1:
                         if unharden_death == 0: enemy["health"] = 1
-                        elif unharden_death == 1: enemy_died = True
+                        elif unharden_death == 1:
+                            if not enemy.get("shrinking", False):
+                                enemy["shrinking"] = True
                 if dist2 < 250+enemy_size/2+player_size/2:
                     enemy["health"] -= hardened_dps
                     if enemy["health"] < 1:
                         if unharden_death == 0: enemy["health"] = 1
-                        elif unharden_death == 1: enemy_died = True
+                        elif unharden_death == 1:
+                            if not enemy.get("shrinking", False):
+                                enemy["shrinking"] = True
                 if bounced:
                     enemy["health"] -= 1
-                if enemy["health"] < 1:
+                if enemy["health"] < 1 and bounced:
                     enemy_died = True
+
             elif enemy["type"] == 24:
                 enemy["accel"] += enemy.get("accel_rate", 0.02)
                 vx = enemy.get("base_dx", enemy["dx"]) * enemy["accel"]
@@ -5686,6 +5780,15 @@ while running:
                 if enemy["health"] <= 0:
                     enemy_died = True
             elif enemy["type"] == 31:
+                if enemy.get("shrinking"):
+                    enemy["size"] = enemy.get("size", "enemy_size") * 0.85 if isinstance(enemy.get("size", None), (int, float)) else sz * 0.85
+                sz = enemy["size"]
+                if enemy["size"] < 2:
+                    # remove immediately once tiny
+                    if enemy in enemies:
+                        enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                    continue
                 dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
                 dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
                 closest_dist = min(dist1, dist2)
@@ -5694,34 +5797,38 @@ while running:
                 enemy["y"] += enemy["dy"] * speed_multiplier * game_speed
                 bounced = False
                 # X-axis bounce
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
                     enemy["dx"] *= -1
                     enemy["x"] += enemy["dx"] * speed_multiplier
                     bounced = True
                     if enemy["x"] <= 0: enemy["x"] = 0
-                    elif enemy["x"] >= 1920 - enemy_size: enemy["x"] = 1920 - enemy_size/2
+                    elif enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size: enemy["x"] = (WIDTH / SCALED_WIDTH) - enemy_size/2
                 # Y-axis bounce
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
                     enemy["dy"] *= -1
                     enemy["y"] += enemy["dy"] * speed_multiplier
                     bounced = True
                     if enemy["y"] <= 0: enemy["y"] = 0
-                    elif enemy["y"] >= 1080 - enemy_size: enemy["y"] = 1080 - enemy_size/2
+                    elif enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size: enemy["y"] = (HEIGHT / SCALED_HEIGHT) - enemy_size/2
                 hardened_dps = 0.1 * (60 / FPS) * (harden_break / 10)
                 if dist1 < 200+enemy_size/2+player_size/2:
                     enemy["health"] -= hardened_dps
                     if enemy["health"] < 1:
                         if unharden_death == 0: enemy["health"] = 1
-                        elif unharden_death == 1: enemy_died = True
+                        elif unharden_death == 1:
+                            if not enemy.get("shrinking", False):
+                                enemy["shrinking"] = True
                 if dist2 < 150+enemy_size/2+player_size/2:
                     enemy["health"] -= hardened_dps
                     if enemy["health"] < 1:
                         if unharden_death == 0: enemy["health"] = 1
-                        elif unharden_death == 1: enemy_died = True
+                        elif unharden_death == 1:
+                            if not enemy.get("shrinking", False):
+                                enemy["shrinking"] = True
                 if bounced:
                     enemy["health"] -= 1
                     enemy["bounces"] += 1
-                if enemy["health"] < 1:
+                if enemy["health"] < 1 and bounced:
                     enemy_died = True
             elif enemy["type"] == 32:
                 enemy["trail/shot_charge"] += (60 / FPS) * game_speed
@@ -6099,19 +6206,28 @@ while running:
                 if enemy["health"] <= 0:
                     enemy_died = True
             elif enemy["type"] == 39:
+                if enemy.get("shrinking"):
+                    enemy["size"] = enemy.get("size", "enemy_size") * 0.85 if isinstance(enemy.get("size", None), (int, float)) else sz * 0.85
+                sz = enemy["size"]
+                if enemy["size"] < 2:
+                    # remove immediately once tiny
+                    if enemy in enemies:
+                        enemy["dead"] = True
+                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                    continue
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2:
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= (WIDTH / SCALED_WIDTH) - enemy_size/2:
                     enemy["dx"] *= -1
                     bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2:
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= (HEIGHT / SCALED_HEIGHT) - enemy_size/2:
                     enemy["dy"] *= -1
                     bounced = True
                 if bounced:
                     enemy["bounces"] += 1
                     enemy["health"] -= 1
-                if enemy["health"] < 1:
+                if enemy["health"] < 1 and bounced:
                     enemy_died = True
             if enemy["type"] == 40:
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
@@ -6513,7 +6629,7 @@ while running:
             if player_alive and centered_rect_collision(player_x, player_y, player_size,
                                                 enemy["x"], enemy["y"], enemy["size"]):
                 if enemy["type"] == 39:
-                    if not player_moving:  # Only damages if player is still
+                    if not player_moving and not enemy["shrinking"]:  # Only damages if player is still
                         if current_time >= invincible_until:
                             player_lives -= enemy_damage
                             p1_regen_block_until = score + regen_delay
@@ -6528,10 +6644,12 @@ while running:
                         enemy["health"] -= undertale_hardened_dps
                         if enemy["health"] < 1:
                             if unharden_death == 0: enemy["health"] = 1
-                            elif unharden_death == 1: enemy_died = True
+                            elif unharden_death == 1:
+                                if not enemy.get("shrinking", False):
+                                    enemy["shrinking"] = True
                     continue
                 elif enemy["type"] == 16:
-                    if player_moving:  # Only damages if player is moving
+                    if player_moving and not enemy["shrinking"]:  # Only damages if player is moving
                         if current_time >= invincible_until:
                             player_lives -= enemy_damage
                             p1_regen_block_until = score + regen_delay
@@ -6545,7 +6663,9 @@ while running:
                     enemy["health"] -= undertale_hardened_dps
                     if enemy["health"] < 1:
                         if unharden_death == 0: enemy["health"] = 1
-                        elif unharden_death == 1: enemy_died = True
+                        elif unharden_death == 1:
+                            if not enemy.get("shrinking", False):
+                                enemy["shrinking"] = True
 
                     continue
                 elif enemy["type"] == 15 or enemy["type"] == 35:
@@ -7173,13 +7293,52 @@ while running:
                 else: enemy_text_color = player_skins[p2_skin_color][0]
         else: enemy_text_color = WHITE
          
+# --- Placing on Textures ---
+        if use_textures:
+            textures = ["None", homing_texture, fatal_texture, "None", "None", "None", "None", "None", "None", bomb_texture,
+                        shooter_texture, "None", "None", "None", "None", "None", "None", "None", rapidshooter_texture, "None",
+                        "None", laser_texture, "None", "None", "None", tracer_texture, savage_texture, "None", phantom_texture, "None",
+                        "None", burstshooter_texture, "None", "None", "None", frostbeam_texture, "None", "None", "None", "None",
+                        "None", "None", pyrobeam_texture, "None", "None", "None", "None", "None", "None", "None"]
+
+            joke_textures = ["None", "None", fatal_joke_texture, "None", "None", "None", "None", "None", "None", bomb_joke_texture,
+                        "None", "None", "None", "None", voodoo_joke_texture, "None", "None", charger_joke_texture, "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
+                        "None", "None", "None", sparker_joke_texture, annihilator_joke_texture, "None", "None", "None", "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
+        else:
+            textures = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
+
+            joke_textures = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
+
         enemy_surface = pygame.Surface((enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT), pygame.SRCALPHA)
         enemy_surface.fill((color[0], color[1], color[2], enemy_visibility))
-        screen.blit(enemy_surface, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
-        enemyblack_surface = pygame.Surface((enemy["size"]*0.85*SCALED_WIDTH, enemy["size"]*0.85*SCALED_HEIGHT), pygame.SRCALPHA)
-        if enemy["type"] in targetting_enemies and not enemy["type"] == 8 and not enemy["type"] == 38: enemyblack_surface.fill((enemy_text_color[0]*targeting_flash, enemy_text_color[1]*targeting_flash, enemy_text_color[2]*targeting_flash, enemy_visibility))
-        else: enemyblack_surface.fill((0, 0, 0, enemy_visibility))
-        screen.blit(enemyblack_surface, ((enemy["x"] - (enemy["size"]*0.85) / 2)*SCALED_WIDTH, (enemy["y"] - (enemy["size"]*0.85) / 2)*SCALED_HEIGHT))
+        if joke_textures[enemy["type"] - 1] != "None" and enemy["troll"] == 1:
+            texturedEnemy = pygame.transform.scale(joke_textures[enemy["type"] - 1], (enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT))
+            texturedEnemy.set_alpha(enemy_visibility)
+            screen.blit(texturedEnemy, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
+        elif textures[enemy["type"] - 1] != "None":
+            texturedEnemy = pygame.transform.scale(textures[enemy["type"] - 1], (enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT))
+            texturedEnemy.set_alpha(enemy_visibility)
+            screen.blit(texturedEnemy, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
+            enemyblack_surface = pygame.Surface((enemy["size"]*0.85*SCALED_WIDTH, enemy["size"]*0.85*SCALED_HEIGHT), pygame.SRCALPHA)
+            if enemy["type"] in targetting_enemies and not enemy["type"] == 8 and not enemy["type"] == 38: enemyblack_surface.fill((enemy_text_color[0]*targeting_flash, enemy_text_color[1]*targeting_flash, enemy_text_color[2]*targeting_flash, enemy_visibility))
+            else: enemyblack_surface.fill((0, 0, 0, enemy_visibility))
+            screen.blit(enemyblack_surface, ((enemy["x"] - (enemy["size"]*0.85) / 2)*SCALED_WIDTH, (enemy["y"] - (enemy["size"]*0.85) / 2)*SCALED_HEIGHT))
+        else:
+            screen.blit(enemy_surface, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
+            enemyblack_surface = pygame.Surface((enemy["size"]*0.85*SCALED_WIDTH, enemy["size"]*0.85*SCALED_HEIGHT), pygame.SRCALPHA)
+            if enemy["type"] in targetting_enemies and not enemy["type"] == 8 and not enemy["type"] == 38: enemyblack_surface.fill((enemy_text_color[0]*targeting_flash, enemy_text_color[1]*targeting_flash, enemy_text_color[2]*targeting_flash, enemy_visibility))
+            else: enemyblack_surface.fill((0, 0, 0, enemy_visibility))
+            screen.blit(enemyblack_surface, ((enemy["x"] - (enemy["size"]*0.85) / 2)*SCALED_WIDTH, (enemy["y"] - (enemy["size"]*0.85) / 2)*SCALED_HEIGHT))
 
 
         if not enemy.get("shrinking", False):
