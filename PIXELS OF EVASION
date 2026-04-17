@@ -234,6 +234,9 @@ spawner_height = spawner_size*SCALED_HEIGHT
 spawner_color = RED # RED IS DEFAULT
 spawner_timer = 0
 
+# --- Control Point ---
+control_point_spawned = False
+
 # --- Game Speed ---
 game_speed = 1
 paused = False
@@ -544,6 +547,7 @@ def reset_game_state():
     global weather_timer, storm_timer, sandstorm_direction
     global ambush_score
     global game_speed, targeting_flash, paused, spawner_timer
+    global control_point_spawned
     FPS = 60
     player_x = (WIDTH) / 3
     player_y = spawner_pos[1] + spawner_size / 2
@@ -602,6 +606,7 @@ def reset_game_state():
     targeting_flash = 0
     paused = False
     spawner_timer = 0
+    control_point_spawned = False
 
 player_size_setting = 50
 enemy_size_setting = 50
@@ -3858,17 +3863,21 @@ def SETTINGS():
 
         scorestyle_button_color = SULFUR
         scorestyle_text_color = WHITE
-        if modifiers[6] == 0: scorestyle_button_color = SULFUR
-        elif modifiers[6] == 1: scorestyle_button_color = ORANGE
-        elif modifiers[6] == 2: scorestyle_button_color = RED
+        if modifiers[6] == 0: scorestyle_button_color = SHADOW
+        elif modifiers[6] == 1: scorestyle_button_color = SULFUR
+        elif modifiers[6] == 2: scorestyle_button_color = MAROON
+        elif modifiers[6] == 3: scorestyle_button_color = TURQUOISE
+        elif modifiers[6] == 4: scorestyle_button_color = TEAL
+        elif modifiers[6] == 5: scorestyle_button_color = INDIGO
+        elif modifiers[6] == 6: scorestyle_button_color = MAGENTA
         scorestyle_text_color = WHITE
-        scorestyle_list = ["Natural", "Natural & Enemy Death", "Enemy Death"]
+        scorestyle_list = ["Natural", "Natural & Enemy Death", "Enemy Death", "Control Point", "Natural & Control Point", "Enemy Death & Control Point", "Yes"]
         scorestyle_text = font.render("Score Style: " + str(scorestyle_list[modifiers[6]]), True, scorestyle_text_color)
         scorestyle_button = pygame.Rect(50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("score style")*60*SCALED_HEIGHT - button_offset + scroll_y, 1700*SCALED_WIDTH, 50*SCALED_HEIGHT)
         pygame.draw.rect(screen, scorestyle_button_color, scorestyle_button, border_radius=0)
         screen.blit(scorestyle_text, scorestyle_text.get_rect(center=scorestyle_button.center))
         if scorestyle_button.collidepoint(mouse_pos) and mouse_click:
-            if modifiers[6] == 2: modifiers[6] = 0
+            if modifiers[6] == 6: modifiers[6] = 0
             else: modifiers[6] += 1
             pygame.time.delay(200)
 
@@ -4654,9 +4663,13 @@ while running:
             initial_spawn_delay - int(adjusted_score * spawn_rate)
         )
         if spawn_enabled and (spawner_timer >= spawn_delay or ambushes > 0):
-            enemy_type = random.choice(available_enemy_types)
-            if len(ambush_enemy_types) > 0 and ambushes > 0:
-                enemy_type = random.choice(ambush_enemy_types)
+            if control_point_spawned == False and (modifiers[6] == 3 or modifiers[6] == 4 or modifiers[6] == 5 or modifiers[6] == 6):
+                enemy_type = 6767
+                control_point_spawned = True
+            else:
+                enemy_type = random.choice(available_enemy_types)
+                if len(ambush_enemy_types) > 0 and ambushes > 0:
+                    enemy_type = random.choice(ambush_enemy_types)
             if ambushes > 0: ambushes -= 1
             angle = random.uniform(0, 2 * math.pi)
             dx = math.cos(angle) * enemy_speed
@@ -4853,7 +4866,15 @@ while running:
             
             enemy_died = False
             sz = enemy.get("size", enemy_size)
-            if enemy["type"] == 1:
+            if enemy["type"] == 6767:
+                enemy["size"] = enemy_size+100
+                enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
+                bounced = False
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["dy"] *= -1; bounced = True
+                if bounced: enemy["bounces"] += 1
+                if enemy["health"] <= 0: enemy_died = True
+            elif enemy["type"] == 1:
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
                 if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
@@ -6661,7 +6682,8 @@ while running:
 
             if player_alive and centered_rect_collision(player_x, player_y, player_size,
                                                 enemy["x"], enemy["y"], enemy["size"]):
-                if enemy["type"] == 39:
+                if enemy["type"] == 6767: p1_xtra_score += 0.2 * (60 / FPS)
+                elif enemy["type"] == 39:
                     if not player_moving and not enemy["shrinking"]:  # Only damages if player is still
                         if current_time >= invincible_until:
                             player_lives -= enemy_damage
@@ -6758,7 +6780,8 @@ while running:
                                     
             if players == 2 and player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
                                                                           enemy["x"], enemy["y"], enemy["size"]):
-                if enemy["type"] == 39:
+                if enemy["type"] == 6767: p2_xtra_score += 0.2 * (60 / FPS)
+                elif enemy["type"] == 39:
                     if p2_dx == 0 and p2_dy == 0:  # not moving
                         if current_time >= player2_invincible_until:
                             player2_lives -= enemy_damage
@@ -7204,7 +7227,8 @@ while running:
     # draw enemies
     for enemy in enemies:
         if enemy["type"] == 15: color = MAUVE
-        elif colorblind != 0: color = colorblind_list[colorblind]
+        elif enemy["type"] == 6767: color = spawner_color
+        elif colorblind != 0: color = TURQUOISE
         else:
             if enemy["type"] == 1: color = GRAY
             elif enemy["type"] == 2: color = LIME
@@ -7354,7 +7378,12 @@ while running:
 
         enemy_surface = pygame.Surface((enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT), pygame.SRCALPHA)
         enemy_surface.fill((color[0], color[1], color[2], enemy_visibility))
-        if joke_textures[enemy["type"] - 1] != "None" and enemy["troll"] == 1:
+
+        controlpoint_surface = pygame.Surface((enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT), pygame.SRCALPHA)
+        controlpoint_surface.fill((color[0], color[1], color[2], 100))
+        if enemy["type"] == 6767:
+            screen.blit(controlpoint_surface, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
+        elif joke_textures[enemy["type"] - 1] != "None" and enemy["troll"] == 1:
             texturedEnemy = pygame.transform.scale(joke_textures[enemy["type"] - 1], (enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT))
             texturedEnemy.set_alpha(enemy_visibility)
             screen.blit(texturedEnemy, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
@@ -7374,7 +7403,7 @@ while running:
             screen.blit(enemyblack_surface, ((enemy["x"] - (enemy["size"]*0.85) / 2)*SCALED_WIDTH, (enemy["y"] - (enemy["size"]*0.85) / 2)*SCALED_HEIGHT))
 
 
-        if not enemy.get("shrinking", False):
+        if not enemy.get("shrinking", False) and not enemy["type"] == 6767:
             if enemy["type"] == 8:
                 if enemy["target"] == 1: text_surface = imp_font.render(str(player_lives), True, enemy_text_color)
                 elif enemy["target"] == 2: text_surface = imp2_font.render(str(player2_lives), True, enemy_text_color)
@@ -7441,9 +7470,9 @@ while running:
         if truescore < score:
             truescore = math.floor(score)
         if player_alive:
-            score_p1 = truescore + p1_xtra_score
+            score_p1 = truescore + math.ceil(p1_xtra_score)
         if player2_alive:
-            score_p2 = truescore + p2_xtra_score
+            score_p2 = truescore + math.ceil(p2_xtra_score)
     
     # draw player lives in center
     if player_alive:
