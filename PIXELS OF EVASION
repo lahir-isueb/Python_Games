@@ -1116,16 +1116,16 @@ def SETTINGS():
              "freeze status", "frostmax", "burn status", "burn duration",
              "set locks", "set locks 2",
              
-             "basic", "speedy", "sticky", "sticky sensitive", "charger", "charger sensitive",
-             "teleporter", "whirly", "accelerator", "homing", "tracer", "flow", "stream", "gloomy", "trail",
-             "grower", "growing speed", "hardened", "sensitive", "laggy", "error", "invisibility", "cold", "magma",
-             "shooter", "burstshooter", "burst", "rapidshooter", "splitter", "splitter splits",
-             "savage", "sniper", "xtra sniper damage", "shotgun", "shotgun bullets", "bomb", "bomb bullets",
-             "motion", "blind", "laser", "frostbeam", "pyrobeam", "voodoo", "sparker",
+             "basic", "speedy", "sticky", "sticky sensitive", "charger", "charger sensitive", "teleporter",
+             "gloomy", "flow", "stream", "accelerator", "trail", "homing", "tracer", "whirly", "cold", "magma",
+             "hardened", "sensitive", "laggy", "error", "shooter", "burstshooter", "burst", "rapidshooter",
+             "bomb", "bomb bullets", "frostbite", "frostbite bullets", "volcanic", "grower", "growing speed",
+             "invisibility", "sniper", "xtra sniper damage", "shotgun", "shotgun bullets", "motion", "blind",
+             "splitter", "splitter splits", "savage", "laser", "frostbeam", "pyrobeam", "sparker", "pulse",
              "addictive", "addictive strength", "addictive radius", "addictive interaction",
              "blocker", "blocker strength", "blocker radius", "blocker interaction",
-             "fatal", "pulse", "frostbite", "frostbite bullets", "volcanic", "stickyshooter", "gloomyshooter",
-             "phantom", "glitchy", "annihilator", "annihilator bullets", "annihilator interaction",
+             "stickyshooter", "gloomyshooter", "voodoo", "fatal", "phantom", "glitchy",
+             "annihilator", "annihilator bullets", "annihilator interaction",
              "assassin", "impostor", "forecast",
              
              "spawner color", "score style", "status", "walleffect", "weather",
@@ -7262,7 +7262,7 @@ while running:
     for enemy in enemies:
         if enemy["type"] == 15: color = MAUVE
         elif enemy["type"] == 6767: color = spawner_color
-        elif colorblind != 0: color = TURQUOISE
+        elif colorblind != 0: color = colorblind_list[colorblind]
         else:
             if enemy["type"] == 1: color = GRAY
             elif enemy["type"] == 2: color = LIME
@@ -7385,7 +7385,7 @@ while running:
         else: enemy_text_color = WHITE
          
 # --- Placing on Textures ---
-        if use_textures:
+        if use_textures and modifiers[0] == 0:
             textures = ["None", homing_texture, fatal_texture, "None", "None", "None", "None", "None", "None", bomb_texture,
                         shooter_texture, "None", "None", "None", "None", "None", "None", "None", rapidshooter_texture, "None",
                         "None", laser_texture, "None", "None", "None", tracer_texture, savage_texture, "None", phantom_texture, "None",
