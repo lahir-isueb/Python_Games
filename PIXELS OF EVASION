@@ -483,6 +483,8 @@ blocker_pull_radius = 300
 blocker_pull_strength = 10
 blocker_interaction = 1
 
+annihilator_interaction = 2
+
 # --- Sticky Sensitivity ---
 sticky_sensitive = 0
 charger_sensitive = 1
@@ -642,6 +644,7 @@ blocker_push_radius_setting = 300
 blocker_push_strength_setting = 10
 addictive_interaction_setting = 2
 blocker_interaction_setting = 1
+annihilator_interaction_setting = 2
 target_closest_setting = 0
 growing_speed_setting = 45
 ambush_start_setting = 100
@@ -766,6 +769,7 @@ def SETTINGS():
     global target_closest_setting
     global growing_speed_setting
     global ambush_start_setting
+    global annihilator_interaction_setting
     global enemy_locks
     
     global basic_hp_setting
@@ -862,6 +866,7 @@ def SETTINGS():
         global target_closest_setting
         global growing_speed_setting
         global ambush_start_setting
+        global annihilator_interaction_setting
         global enemy_locks
         
         global basic_hp_setting
@@ -1089,6 +1094,7 @@ def SETTINGS():
                     case 155: growing_speed_setting = int(chara)
                     case 156: modifiers[7] = int(chara)
                     case 157: ambush_start_setting = int(chara)
+                    case 158: annihilator_interaction_setting = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -1119,7 +1125,7 @@ def SETTINGS():
              "addictive", "addictive strength", "addictive radius", "addictive interaction",
              "blocker", "blocker strength", "blocker radius", "blocker interaction",
              "fatal", "pulse", "frostbite", "frostbite bullets", "volcanic", "stickyshooter", "gloomyshooter",
-             "phantom", "glitchy", "annihilator", "annihilator bullets",
+             "phantom", "glitchy", "annihilator", "annihilator bullets", "annihilator interaction",
              "assassin", "impostor", "forecast",
              
              "spawner color", "score style", "status", "walleffect", "weather",
@@ -1244,7 +1250,8 @@ def SETTINGS():
                                  blocker_hp_setting, enemy_locks[46], addictive_pull_radius_setting, addictive_pull_strength_setting,
                                  addictive_interaction_setting, blocker_interaction_setting, gloomyshooter_hp_setting,
                                  enemy_locks[47], target_closest_setting, pulse_hp_setting, grower_hp_setting,
-                                 enemy_locks[48], enemy_locks[49], growing_speed_setting, modifiers[7], ambush_start_setting]
+                                 enemy_locks[48], enemy_locks[49], growing_speed_setting, modifiers[7], ambush_start_setting,
+                                 annihilator_interaction_setting]
 
             
             for x in copy_setting_list: copied += f"{x}_"
@@ -1827,6 +1834,20 @@ def SETTINGS():
         if blocker_interaction_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
             if blocker_interaction_setting < 3: blocker_interaction_setting += 1
             else: blocker_interaction_setting = 1
+            pygame.time.delay(200)
+
+
+        if annihilator_interaction_setting == 1: annihilator_interaction_text = "Damage"
+        elif annihilator_interaction_setting == 2: annihilator_interaction_text = "Enemy Shrink"
+        else: annihilator_interaction_text = "None"
+        annihilator_interaction_label = font.render("Collision: " + annihilator_interaction_text, True, HOT_PINK)
+        screen.blit(annihilator_interaction_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("annihilator interaction")*60*SCALED_HEIGHT + scroll_y))
+        annihilator_interaction_true_or_false_button = pygame.Rect(1385*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("annihilator interaction")*60*SCALED_HEIGHT - button_offset + scroll_y, 115*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        pygame.draw.rect(screen, YELLOW, annihilator_interaction_true_or_false_button, border_radius=0)
+        screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=annihilator_interaction_true_or_false_button.center))
+        if annihilator_interaction_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
+            if annihilator_interaction_setting < 3: annihilator_interaction_setting += 1
+            else: annihilator_interaction_setting = 1
             pygame.time.delay(200)
 
 
@@ -3970,7 +3991,7 @@ def apply_settings():
     global fatal_hp
     global flow_hp
     global sticky_hp, sticky_sensitive
-    global addictive_interaction, blocker_interaction
+    global addictive_interaction, blocker_interaction, annihilator_interaction
     global gloomy_hp
     global trail_hp
     global impostor_hp
@@ -4073,6 +4094,7 @@ def apply_settings():
     growing_speed = growing_speed_setting
     addictive_interaction = addictive_interaction_setting
     blocker_interaction = blocker_interaction_setting
+    annihilator_interaction = annihilator_interaction_setting
     projectile_fire_rate = projectile_fire_rate_setting
     enemy_damage = enemy_damage_setting
     enemy_unlock = enemy_unlock_setting
@@ -6725,7 +6747,7 @@ while running:
                                 enemy["shrinking"] = True
 
                     continue
-                elif enemy["type"] == 15 or enemy["type"] == 35:
+                elif enemy["type"] == 15:
                     if not enemy.get("shrinking", False):
                         enemy["shrinking"] = True
                     continue
@@ -6739,6 +6761,11 @@ while running:
                         enemy["shrinking"] = True
                     continue
                 elif enemy["type"] == 47 and blocker_interaction == 3: filler_variable = 1
+                elif enemy["type"] == 35 and annihilator_interaction == 2:
+                    if not enemy.get("shrinking", False):
+                        enemy["shrinking"] = True
+                    continue
+                elif enemy["type"] == 35 and annihilator_interaction == 3: filler_variable = 1
                 elif enemy["type"] == 25:
                     cold_until = freeze_duration
                     hot_until = 0
@@ -6818,7 +6845,7 @@ while running:
                         if unharden_death == 0: enemy["health"] = 1
                         elif unharden_death == 1: enemy_died = True
                     continue
-                elif enemy["type"] == 15 or enemy["type"] == 35:
+                elif enemy["type"] == 15:
                     if not enemy.get("shrinking", False):
                         enemy["shrinking"] = True
                     continue
@@ -6832,6 +6859,11 @@ while running:
                         enemy["shrinking"] = True
                     continue
                 elif enemy["type"] == 47 and blocker_interaction == 3: filler_variable = 1
+                elif enemy["type"] == 35 and annihilator_interaction == 2:
+                    if not enemy.get("shrinking", False):
+                        enemy["shrinking"] = True
+                    continue
+                elif enemy["type"] == 35 and annihilator_interaction == 3: filler_variable = 1
                 elif enemy["type"] == 25:
                     player2_cold_until = freeze_duration
                     player2_hot_until = 0
