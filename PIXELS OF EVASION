@@ -4478,7 +4478,7 @@ while running:
             if walleffect == 1:
                 if current_time >= invincible_until + 100:
                     player_lives -= 1
-                    p1_regen_block_until = score + regen_delay
+                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
                     if player_lives <= 0: player_alive = False
@@ -4489,7 +4489,7 @@ while running:
             if walleffect == 1:
                 if current_time >= invincible_until + 100:
                     player_lives -= 1
-                    p1_regen_block_until = score + regen_delay
+                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
                     if player_lives <= 0: player_alive = False
@@ -4500,7 +4500,7 @@ while running:
             if walleffect == 1:
                 if current_time >= invincible_until + 100:
                     player_lives -= 1
-                    p1_regen_block_until = score + regen_delay
+                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
                     if player_lives <= 0: player_alive = False
@@ -4511,7 +4511,7 @@ while running:
             if walleffect == 1:
                 if current_time >= invincible_until + 100:
                     player_lives -= 1
-                    p1_regen_block_until = score + regen_delay
+                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
                     if player_lives <= 0: player_alive = False
@@ -4547,7 +4547,7 @@ while running:
                 if walleffect == 1:
                     if current_time >= player2_invincible_until + 100:
                         player2_lives -= 1
-                        p2_regen_block_until = score + regen_delay
+                        p2_regen_block_until = score + p2_xtra_score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         if player2_lives <= 0: player2_alive = False
@@ -4558,7 +4558,7 @@ while running:
                 if walleffect == 1:
                     if current_time >= player2_invincible_until + 100:
                         player2_lives -= 1
-                        p2_regen_block_until = score + regen_delay
+                        p2_regen_block_until = score + p2_xtra_score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         if player2_lives <= 0: player2_alive = False
@@ -4569,7 +4569,7 @@ while running:
                 if walleffect == 1:
                     if current_time >= player2_invincible_until + 100:
                         player2_lives -= 1
-                        p2_regen_block_until = score + regen_delay
+                        p2_regen_block_until = score + p2_xtra_score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         if player2_lives <= 0: player2_alive = False
@@ -4580,7 +4580,7 @@ while running:
                 if walleffect == 1:
                     if current_time >= player2_invincible_until + 100:
                         player2_lives -= 1
-                        p2_regen_block_until = score + regen_delay
+                        p2_regen_block_until = score + p2_xtra_score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         if player2_lives <= 0: player2_alive = False
@@ -4649,7 +4649,7 @@ while running:
                 spawn_enabled = True
 
         # --- Dynamic Enemy Unlock ---
-        while unlock_scores and truescore >= unlock_scores[0]:
+        while unlock_scores and truescore + max(p1_xtra_score, p2_xtra_score) >= unlock_scores[0]:
             if len(locked_enemy_types) > 0:
                 new_type = locked_enemy_types[0]
                 available_enemy_types.append(new_type)
@@ -4657,7 +4657,7 @@ while running:
             unlock_scores.pop(0)
 
         # --- Enemy Spawning ---
-        adjusted_score = score / 5  # scale back to old point rate
+        adjusted_score = (score + max(p1_xtra_score, p2_xtra_score)) / 5  # scale back to old point rate
         spawn_delay = max(
             min_spawn_delay,
             initial_spawn_delay - int(adjusted_score * spawn_rate)
@@ -5107,7 +5107,7 @@ while running:
                                     "spawn_time": pygame.time.get_ticks(),
                                     "drip timer": enemy["drip timer"]
                                 })
-                        elif modifiers[6] == 1 or modifiers[6] == 2: score+=5/(split_amount*splitter_hp)
+                        elif modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5/(split_amount*splitter_hp)
                         enemy["dead"] = True
                     continue
                 if enemy.get("waiting"):
@@ -5306,7 +5306,7 @@ while running:
                         # remove immediately once tiny
                         if enemy in enemies:
                             enemy["dead"] = True
-                            if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                            if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                         continue
                 # movement using current size (sz)
                 enemy["x"] += enemy["dx"] * game_speed
@@ -5326,10 +5326,10 @@ while running:
                         if current_time >= invincible_until:
                             if enemy["target"] == 1:
                                 player_lives -= enemy_damage
-                                p1_regen_block_until = score + regen_delay
+                                p1_regen_block_until = score + p1_xtra_score + regen_delay
                             if enemy["target"] == 2:
                                 player2_lives -= enemy_damage
-                                p2_regen_block_until = score + regen_delay
+                                p2_regen_block_until = score + p2_xtra_score + regen_delay
                             damage_flash_time = current_time
                             invincible_until = current_time + invincibility_duration
                             if player_lives <= 0:
@@ -5347,7 +5347,7 @@ while running:
                     # remove immediately once tiny
                     if enemy in enemies:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                     continue
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
@@ -5489,7 +5489,7 @@ while running:
                         # remove immediately once tiny
                         if enemy in enemies:
                             enemy["dead"] = True
-                            if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                            if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                         continue
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
@@ -5565,7 +5565,7 @@ while running:
                     enemy["laser_length"] += laser_extend * game_speed
                     if enemy["laser_lifetime"] < 0:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                         continue
                     laser_width = enemy_size
                     if enemy["laser_orientation"] == "vertical":
@@ -5575,7 +5575,7 @@ while running:
                             if abs(player_x - lx) < (player_size/2 + enemy_size / 2) and abs(player_y - ly) < enemy["laser_length"] / 2:
                                 if current_time >= invincible_until + 100:
                                     player_lives -= laser_damage
-                                    p1_regen_block_until = score + regen_delay
+                                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                                     damage_flash_time = current_time
                                     invincible_until = current_time + invincibility_duration
                                     if player_lives <= 0: player_alive = False
@@ -5584,7 +5584,7 @@ while running:
                             if abs(player2_x - lx) < (player_size/2 + enemy_size / 2) and abs(player2_y - ly) < enemy["laser_length"] / 2:
                                 if current_time >= player2_invincible_until + 100:
                                     player2_lives -= laser_damage
-                                    p2_regen_block_until = score + regen_delay
+                                    p2_regen_block_until = score + p2_xtra_score + regen_delay
                                     player2_damage_flash_time = current_time
                                     player2_invincible_until = current_time + invincibility_duration
                                     if player2_lives <= 0: player2_alive = False
@@ -5595,7 +5595,7 @@ while running:
                             if abs(player_y - ly) < (player_size/2 + enemy_size / 2) and abs(player_x - lx) < enemy["laser_length"] / 2:
                                 if current_time >= invincible_until + 100:
                                     player_lives -= laser_damage
-                                    p1_regen_block_until = score + regen_delay
+                                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                                     damage_flash_time = current_time
                                     invincible_until = current_time + invincibility_duration
                                     if player_lives <= 0: player_alive = False
@@ -5604,7 +5604,7 @@ while running:
                             if abs(player2_y - ly) < (player_size/2 + enemy_size / 2) and abs(player2_x - lx) < enemy["laser_length"] / 2:
                                 if current_time >= player2_invincible_until + 100:
                                     player2_lives -= laser_damage
-                                    p2_regen_block_until = score + regen_delay
+                                    p2_regen_block_until = score + p2_xtra_score + regen_delay
                                     player2_damage_flash_time = current_time
                                     player2_invincible_until = current_time + invincibility_duration
                                     if player2_lives <= 0: player2_alive = False
@@ -5621,7 +5621,7 @@ while running:
                     # remove immediately once tiny
                     if enemy in enemies:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                     continue
 
                 enemy["x"] += enemy["dx"] * game_speed
@@ -5841,7 +5841,7 @@ while running:
                     # remove immediately once tiny
                     if enemy in enemies:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                     continue
                 dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) if player_alive else 9999
                 dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) if players == 2 and player2_alive else 9999
@@ -6020,7 +6020,7 @@ while running:
                     # remove immediately once tiny
                     if enemy in enemies:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                     continue
                 laser_extend = (60 / FPS) * (90)
                 if not enemy.get("laser_mode", False):
@@ -6072,7 +6072,7 @@ while running:
                     enemy["laser_length"] += laser_extend * game_speed
                     if enemy["laser_lifetime"] < 0:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                         continue
                     laser_width = enemy_size
                     if enemy["laser_orientation"] == "vertical":
@@ -6082,7 +6082,7 @@ while running:
                             if abs(player_x - lx) < (player_size/2 + enemy_size / 2) and abs(player_y - ly) < enemy["laser_length"] / 2:
                                 if current_time >= invincible_until + 100:
                                     player_lives -= laser_damage
-                                    p1_regen_block_until = score + regen_delay
+                                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                                     damage_flash_time = current_time
                                     invincible_until = current_time + invincibility_duration
                                     if player_lives <= 0: player_alive = False
@@ -6091,7 +6091,7 @@ while running:
                             if abs(player2_x - lx) < (player_size/2 + enemy_size / 2) and abs(player2_y - ly) < enemy["laser_length"] / 2:
                                 if current_time >= player2_invincible_until + 100:
                                     player2_lives -= laser_damage
-                                    p2_regen_block_until = score + regen_delay
+                                    p2_regen_block_until = score + p2_xtra_score + regen_delay
                                     player2_damage_flash_time = current_time
                                     player2_invincible_until = current_time + invincibility_duration
                                     if player2_lives <= 0: player2_alive = False
@@ -6102,7 +6102,7 @@ while running:
                             if abs(player_y - ly) < (player_size/2 + enemy_size / 2) and abs(player_x - lx) < enemy["laser_length"] / 2:
                                 if current_time >= invincible_until + 100:
                                     player_lives -= laser_damage
-                                    p1_regen_block_until = score + regen_delay
+                                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                                     damage_flash_time = current_time
                                     invincible_until = current_time + invincibility_duration
                                     if player_lives <= 0: player_alive = False
@@ -6111,7 +6111,7 @@ while running:
                             if abs(player2_y - ly) < (player_size/2 + enemy_size / 2) and abs(player2_x - lx) < enemy["laser_length"] / 2:
                                 if current_time >= player2_invincible_until + 100:
                                     player2_lives -= laser_damage
-                                    p2_regen_block_until = score + regen_delay
+                                    p2_regen_block_until = score + p2_xtra_score + regen_delay
                                     player2_damage_flash_time = current_time
                                     player2_invincible_until = current_time + invincibility_duration
                                     if player2_lives <= 0: player2_alive = False
@@ -6155,7 +6155,7 @@ while running:
                     enemy["laser_length"] += laser_extend * game_speed
                     if enemy["laser_lifetime"] < 0:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                         continue
                     laser_width = enemy_size
                     if enemy["laser_orientation"] == "vertical":
@@ -6169,7 +6169,7 @@ while running:
                                 player_frozen = True
                                 if current_time >= invincible_until + 100:
                                     player_lives -= laser_damage
-                                    p1_regen_block_until = score + regen_delay
+                                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                                     damage_flash_time = current_time
                                     invincible_until = current_time + invincibility_duration
                                     if player_lives <= 0: player_alive = False
@@ -6182,7 +6182,7 @@ while running:
                                 player2_frozen = True
                                 if current_time >= player2_invincible_until + 100:
                                     player2_lives -= laser_damage
-                                    p2_regen_block_until = score + regen_delay
+                                    p2_regen_block_until = score + p2_xtra_score + regen_delay
                                     player2_damage_flash_time = current_time
                                     player2_invincible_until = current_time + invincibility_duration
                                     if player2_lives <= 0: player2_alive = False
@@ -6197,7 +6197,7 @@ while running:
                                 player_frozen = True
                                 if current_time >= invincible_until + 100:
                                     player_lives -= laser_damage
-                                    p1_regen_block_until = score + regen_delay
+                                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                                     damage_flash_time = current_time
                                     invincible_until = current_time + invincibility_duration
                                     if player_lives <= 0: player_alive = False
@@ -6210,7 +6210,7 @@ while running:
                                 player2_frozen = True
                                 if current_time >= player2_invincible_until + 100:
                                     player2_lives -= laser_damage
-                                    p2_regen_block_until = score + regen_delay
+                                    p2_regen_block_until = score + p2_xtra_score + regen_delay
                                     player2_damage_flash_time = current_time
                                     player2_invincible_until = current_time + invincibility_duration
                                     if player2_lives <= 0: player2_alive = False
@@ -6224,7 +6224,7 @@ while running:
                     if enemy["size"] < 2:
                         if enemy in enemies:
                             enemy["dead"] = True
-                            if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                            if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                         continue
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
@@ -6267,7 +6267,7 @@ while running:
                     # remove immediately once tiny
                     if enemy in enemies:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                     continue
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
@@ -6385,7 +6385,7 @@ while running:
                     enemy["laser_length"] += laser_extend * game_speed
                     if enemy["laser_lifetime"] < 0:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                         continue
                     laser_width = enemy_size
                     if enemy["laser_orientation"] == "vertical":
@@ -6398,7 +6398,7 @@ while running:
                                 player_burnt = True
                                 if current_time >= invincible_until + 100:
                                     player_lives -= laser_damage
-                                    p1_regen_block_until = score + regen_delay
+                                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                                     damage_flash_time = current_time
                                     invincible_until = current_time + invincibility_duration
                                     if player_lives <= 0: player_alive = False
@@ -6410,7 +6410,7 @@ while running:
                                 player2_burnt = True
                                 if current_time >= player2_invincible_until + 100:
                                     player2_lives -= laser_damage
-                                    p2_regen_block_until = score + regen_delay
+                                    p2_regen_block_until = score + p2_xtra_score + regen_delay
                                     player2_damage_flash_time = current_time
                                     player2_invincible_until = current_time + invincibility_duration
                                     if player2_lives <= 0: player2_alive = False
@@ -6424,7 +6424,7 @@ while running:
                                 player_burnt = True
                                 if current_time >= invincible_until + 100:
                                     player_lives -= laser_damage
-                                    p1_regen_block_until = score + regen_delay
+                                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                                     damage_flash_time = current_time
                                     invincible_until = current_time + invincibility_duration
                                     if player_lives <= 0: player_alive = False
@@ -6436,7 +6436,7 @@ while running:
                                 player2_burnt = True
                                 if current_time >= player2_invincible_until + 100:
                                     player2_lives -= laser_damage
-                                    p2_regen_block_until = score + regen_delay
+                                    p2_regen_block_until = score + p2_xtra_score + regen_delay
                                     player2_damage_flash_time = current_time
                                     player2_invincible_until = current_time + invincibility_duration
                                     if player2_lives <= 0: player2_alive = False
@@ -6519,7 +6519,7 @@ while running:
                         # remove immediately once tiny
                         if enemy in enemies:
                             enemy["dead"] = True
-                            if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                            if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                         continue
                 enemy["x"] += enemy["dx"] * game_speed
                 enemy["y"] += enemy["dy"] * game_speed
@@ -6687,11 +6687,11 @@ while running:
                     if not player_moving and not enemy["shrinking"]:  # Only damages if player is still
                         if current_time >= invincible_until:
                             player_lives -= enemy_damage
-                            p1_regen_block_until = score + regen_delay
+                            p1_regen_block_until = score + p1_xtra_score + regen_delay
                             damage_flash_time = current_time
                             invincible_until = current_time + invincibility_duration
                             enemy["dead"] = True
-                            if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                            if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                             if player_lives <= 0:
                                 player_alive = False
                     if enemy["type"] == 39:
@@ -6707,11 +6707,11 @@ while running:
                     if player_moving and not enemy["shrinking"]:  # Only damages if player is moving
                         if current_time >= invincible_until:
                             player_lives -= enemy_damage
-                            p1_regen_block_until = score + regen_delay
+                            p1_regen_block_until = score + p1_xtra_score + regen_delay
                             damage_flash_time = current_time
                             invincible_until = current_time + invincibility_duration
                             enemy["dead"] = True
-                            if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                            if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                             if player_lives <= 0:
                                 player_alive = False
                     undertale_hardened_dps = 0.1 * (60 / FPS) * (harden_break / 3)
@@ -6754,11 +6754,11 @@ while running:
                 elif enemy["type"] == 17:
                     if current_time >= invincible_until:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                     if cold_until < 0:
                         if current_time >= invincible_until:
                             player_lives -= enemy_damage
-                            p1_regen_block_until = score + regen_delay
+                            p1_regen_block_until = score + p1_xtra_score + regen_delay
                             damage_flash_time = current_time
                             invincible_until = current_time + invincibility_duration
                             if player_lives <= 0:
@@ -6769,11 +6769,11 @@ while running:
                 else:
                     if current_time >= invincible_until:
                         player_lives -= enemy_damage
-                        p1_regen_block_until = score + regen_delay
+                        p1_regen_block_until = score + p1_xtra_score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                         if player_lives <= 0:
                             player_alive = False
                     
@@ -6785,11 +6785,11 @@ while running:
                     if p2_dx == 0 and p2_dy == 0:  # not moving
                         if current_time >= player2_invincible_until:
                             player2_lives -= enemy_damage
-                            p2_regen_block_until = score + regen_delay
+                            p2_regen_block_until = score + p2_xtra_score + regen_delay
                             player2_damage_flash_time = current_time
                             player2_invincible_until = current_time + invincibility_duration
                             enemy["dead"] = True
-                            if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                            if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                             if player2_lives <= 0:
                                 player2_alive = False
                     if enemy["type"] == 39:
@@ -6803,11 +6803,11 @@ while running:
                     if (p2_dx != 0 or p2_dy != 0):
                         if current_time >= player2_invincible_until:
                             player2_lives -= enemy_damage
-                            p2_regen_block_until = score + regen_delay
+                            p2_regen_block_until = score + p2_xtra_score + regen_delay
                             player2_damage_flash_time = current_time
                             player2_invincible_until = current_time + invincibility_duration
                             enemy["dead"] = True
-                            if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                            if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                             if player2_lives <= 0:
                                 player2_alive = False
                     undertale_hardened_dps = 0.1 * (60 / FPS) * (harden_break / 3)
@@ -6847,11 +6847,11 @@ while running:
                 elif enemy["type"] == 17:
                     if current_time >= player2_invincible_until:
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                     if player2_cold_until < 0:
                         if current_time >= player2_invincible_until:
                             player2_lives -= enemy_damage
-                            p2_regen_block_until = score + regen_delay
+                            p2_regen_block_until = score + p2_xtra_score + regen_delay
                             player2_damage_flash_time = current_time
                             player2_invincible_until = current_time + invincibility_duration
                             if player2_lives <= 0:
@@ -6862,17 +6862,17 @@ while running:
                 else:
                     if current_time >= player2_invincible_until:
                         player2_lives -= enemy_damage
-                        p2_regen_block_until = score + regen_delay
+                        p2_regen_block_until = score + p2_xtra_score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         enemy["dead"] = True
-                        if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                        if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
                         if player2_lives <= 0:
                             player2_alive = False
             if enemy_died:
                 if enemy in enemies:
                     enemy["dead"] = True
-                    if modifiers[6] == 1 or modifiers[6] == 2: score+=5
+                    if modifiers[6] == 1 or modifiers[6] == 2 or modifiers[6] == 5 or modifiers[6] == 6: score+=5
 
 
         # --- Trail squares update ---
@@ -6885,7 +6885,7 @@ while running:
                                                         sq["x"], sq["y"], trail_size):
                 if current_time >= invincible_until:
                     player_lives -= projectile_damage
-                    p1_regen_block_until = score + regen_delay
+                    p1_regen_block_until = score + p1_xtra_score + regen_delay
                     damage_flash_time = current_time
                     invincible_until = current_time + invincibility_duration
                     if player_lives <= 0:
@@ -6899,7 +6899,7 @@ while running:
                                                                   sq["x"], sq["y"], trail_size):
                 if current_time >= player2_invincible_until:
                     player2_lives -= projectile_damage
-                    p2_regen_block_until = score + regen_delay
+                    p2_regen_block_until = score + p2_xtra_score + regen_delay
                     player2_damage_flash_time = current_time
                     player2_invincible_until = current_time + invincibility_duration
                     if player2_lives <= 0:
@@ -6945,7 +6945,7 @@ while running:
                 elif p.get("ability") == "snipe":
                     if current_time >= invincible_until:
                         player_lives -= projectile_damage + extra_sniper_damage
-                        p1_regen_block_until = score + regen_delay
+                        p1_regen_block_until = score + p1_xtra_score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
                         if player_lives <= 0:
@@ -6967,7 +6967,7 @@ while running:
                             cold_until = 0
                             player_burnt = True
                             player_lives -= projectile_damage
-                            p1_regen_block_until = score + regen_delay
+                            p1_regen_block_until = score + p1_xtra_score + regen_delay
                             damage_flash_time = current_time
                             invincible_until = current_time + invincibility_duration
                             if player_lives <= 0:
@@ -6977,7 +6977,7 @@ while running:
                 else:
                     if current_time >= invincible_until:
                         player_lives -= projectile_damage
-                        p1_regen_block_until = score + regen_delay
+                        p1_regen_block_until = score + p1_xtra_score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
                         if player_lives <= 0:
@@ -6997,7 +6997,7 @@ while running:
                     elif p.get("ability") == "snipe":
                         if current_time >= player2_invincible_until:
                             player2_lives -= projectile_damage + extra_sniper_damage
-                            p2_regen_block_until = score + regen_delay
+                            p2_regen_block_until = score + p2_xtra_score + regen_delay
                             player2_damage_flash_time = current_time
                             player2_invincible_until = current_time + invincibility_duration
                             if player2_lives <= 0:
@@ -7019,7 +7019,7 @@ while running:
                                 player2_cold_until = 0
                                 player2_burnt = True
                                 player2_lives -= projectile_damage
-                                p2_regen_block_until = score + regen_delay
+                                p2_regen_block_until = score + p2_xtra_score + regen_delay
                                 player2_damage_flash_time = current_time
                                 player2_invincible_until = current_time + invincibility_duration
                                 if player2_lives <= 0:
@@ -7029,7 +7029,7 @@ while running:
                     else:
                         if current_time >= player2_invincible_until:
                             player2_lives -= projectile_damage
-                            p2_regen_block_until = score + regen_delay
+                            p2_regen_block_until = score + p2_xtra_score + regen_delay
                             player2_damage_flash_time = current_time
                             player2_invincible_until = current_time + invincibility_duration
                             if player2_lives <= 0:
@@ -7057,7 +7057,7 @@ while running:
                 if b["harmless timer"] <= 0:
                     if current_time >= invincible_until:
                         player_lives -= projectile_damage
-                        p1_regen_block_until = score + regen_delay
+                        p1_regen_block_until = score + p1_xtra_score + regen_delay
                         damage_flash_time = current_time
                         invincible_until = current_time + invincibility_duration
                         if player_lives <= 0:
@@ -7072,7 +7072,7 @@ while running:
                 if b["harmless timer"] <= 0:
                     if current_time >= player2_invincible_until and b["harmless timer"] <= 0:
                         player2_lives -= projectile_damage
-                        p2_regen_block_until = score + regen_delay
+                        p2_regen_block_until = score + p2_xtra_score + regen_delay
                         player2_damage_flash_time = current_time
                         player2_invincible_until = current_time + invincibility_duration
                         if player2_lives <= 0:
@@ -7466,7 +7466,7 @@ while running:
         pygame.draw.rect(screen, BLACK, ((player2_x - (player_size*0.85)/2)*SCALED_WIDTH, (player2_y - (player_size*0.85)/2)*SCALED_HEIGHT, player_size*0.85*SCALED_WIDTH, player_size*0.85*SCALED_HEIGHT))
 
     if spawn_enabled and paused == False:
-        if modifiers[6] == 0 or modifiers[6] == 1: score += 0.1 * (60 / FPS) #SCORE SET
+        if modifiers[6] == 0 or modifiers[6] == 1 or modifiers[6] == 4 or modifiers[6] == 6: score += 0.1 * (60 / FPS) #SCORE SET
         if truescore < score:
             truescore = math.floor(score)
         if player_alive:
@@ -7525,15 +7525,15 @@ while running:
 
         
     if paused == False:
-        if player_alive and score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6969:
+        if player_alive and score + p1_xtra_score >= p1_regen_block_until and player_lives < player_health_setting and regen_delay != 6969:
             player_lives += 1
             heal_flash_time = current_time
-            p1_regen_block_until = score + regen_delay
+            p1_regen_block_until = score + p1_xtra_score + regen_delay
 
-        if players == 2 and player2_alive and score >= p2_regen_block_until and player2_lives < player_health_setting and regen_delay != 6969:
+        if players == 2 and player2_alive and score + p2_xtra_score >= p2_regen_block_until and player2_lives < player_health_setting and regen_delay != 6969:
             player2_lives += 1
             player2_heal_flash_time = current_time
-            p2_regen_block_until = score + regen_delay
+            p2_regen_block_until = score + p2_xtra_score + regen_delay
 
         if not player_alive and death_explosion == 0:
             for i in range(16):  # fire 8 projectiles in all directions
