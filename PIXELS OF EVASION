@@ -7126,7 +7126,7 @@ while running:
                 if b["harmless timer"] <= 0 and centered_rect_collision(
                     b["x"], b["y"], 6,
                     enemy["x"], enemy["y"], enemy.get("size", enemy_size)
-                ):
+                ) and enemy["type"] != 6767:
                     if enemy["type"] not in nonflammable_enemies:
                         enemy["health"] -= 1
                     b["health"] = 0
