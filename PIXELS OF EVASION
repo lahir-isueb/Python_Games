@@ -4684,7 +4684,9 @@ while running:
             shoot_delay = 1
 
             # Determine enemy attributes based on type
-            if enemy_type == 1:
+            if enemy_type == 6767:
+                dx *= 1; dy *= 1; health = 67696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769
+            elif enemy_type == 1:
                 dx *= 1; dy *= 1; health = basic_hp
             elif enemy_type == 2:
                 dx *= 0.7; dy *= 0.7; health = homing_hp
@@ -4867,13 +4869,13 @@ while running:
             enemy_died = False
             sz = enemy.get("size", enemy_size)
             if enemy["type"] == 6767:
+                enemy["health"] = 67696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769
                 enemy["size"] = enemy_size+100
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
                 if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
                 if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["dy"] *= -1; bounced = True
                 if bounced: enemy["bounces"] += 1
-                if enemy["health"] <= 0: enemy_died = True
             elif enemy["type"] == 1:
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
@@ -7378,29 +7380,25 @@ while running:
 
         enemy_surface = pygame.Surface((enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT), pygame.SRCALPHA)
         enemy_surface.fill((color[0], color[1], color[2], enemy_visibility))
-
-        controlpoint_surface = pygame.Surface((enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT), pygame.SRCALPHA)
-        controlpoint_surface.fill((color[0], color[1], color[2], 100))
-        if enemy["type"] == 6767:
-            screen.blit(controlpoint_surface, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
-        elif joke_textures[enemy["type"] - 1] != "None" and enemy["troll"] == 1:
-            texturedEnemy = pygame.transform.scale(joke_textures[enemy["type"] - 1], (enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT))
-            texturedEnemy.set_alpha(enemy_visibility)
-            screen.blit(texturedEnemy, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
-        elif textures[enemy["type"] - 1] != "None":
-            texturedEnemy = pygame.transform.scale(textures[enemy["type"] - 1], (enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT))
-            texturedEnemy.set_alpha(enemy_visibility)
-            screen.blit(texturedEnemy, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
-            enemyblack_surface = pygame.Surface((enemy["size"]*0.85*SCALED_WIDTH, enemy["size"]*0.85*SCALED_HEIGHT), pygame.SRCALPHA)
-            if enemy["type"] in targetting_enemies and not enemy["type"] == 8 and not enemy["type"] == 38: enemyblack_surface.fill((enemy_text_color[0]*targeting_flash, enemy_text_color[1]*targeting_flash, enemy_text_color[2]*targeting_flash, enemy_visibility))
-            else: enemyblack_surface.fill((0, 0, 0, enemy_visibility))
-            screen.blit(enemyblack_surface, ((enemy["x"] - (enemy["size"]*0.85) / 2)*SCALED_WIDTH, (enemy["y"] - (enemy["size"]*0.85) / 2)*SCALED_HEIGHT))
-        else:
-            screen.blit(enemy_surface, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
-            enemyblack_surface = pygame.Surface((enemy["size"]*0.85*SCALED_WIDTH, enemy["size"]*0.85*SCALED_HEIGHT), pygame.SRCALPHA)
-            if enemy["type"] in targetting_enemies and not enemy["type"] == 8 and not enemy["type"] == 38: enemyblack_surface.fill((enemy_text_color[0]*targeting_flash, enemy_text_color[1]*targeting_flash, enemy_text_color[2]*targeting_flash, enemy_visibility))
-            else: enemyblack_surface.fill((0, 0, 0, enemy_visibility))
-            screen.blit(enemyblack_surface, ((enemy["x"] - (enemy["size"]*0.85) / 2)*SCALED_WIDTH, (enemy["y"] - (enemy["size"]*0.85) / 2)*SCALED_HEIGHT))
+        if not enemy["type"] == 6767:
+            if joke_textures[enemy["type"] - 1] != "None" and enemy["troll"] == 1:
+                texturedEnemy = pygame.transform.scale(joke_textures[enemy["type"] - 1], (enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT))
+                texturedEnemy.set_alpha(enemy_visibility)
+                screen.blit(texturedEnemy, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
+            elif textures[enemy["type"] - 1] != "None":
+                texturedEnemy = pygame.transform.scale(textures[enemy["type"] - 1], (enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT))
+                texturedEnemy.set_alpha(enemy_visibility)
+                screen.blit(texturedEnemy, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
+                enemyblack_surface = pygame.Surface((enemy["size"]*0.85*SCALED_WIDTH, enemy["size"]*0.85*SCALED_HEIGHT), pygame.SRCALPHA)
+                if enemy["type"] in targetting_enemies and not enemy["type"] == 8 and not enemy["type"] == 38: enemyblack_surface.fill((enemy_text_color[0]*targeting_flash, enemy_text_color[1]*targeting_flash, enemy_text_color[2]*targeting_flash, enemy_visibility))
+                else: enemyblack_surface.fill((0, 0, 0, enemy_visibility))
+                screen.blit(enemyblack_surface, ((enemy["x"] - (enemy["size"]*0.85) / 2)*SCALED_WIDTH, (enemy["y"] - (enemy["size"]*0.85) / 2)*SCALED_HEIGHT))
+            else:
+                screen.blit(enemy_surface, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
+                enemyblack_surface = pygame.Surface((enemy["size"]*0.85*SCALED_WIDTH, enemy["size"]*0.85*SCALED_HEIGHT), pygame.SRCALPHA)
+                if enemy["type"] in targetting_enemies and not enemy["type"] == 8 and not enemy["type"] == 38: enemyblack_surface.fill((enemy_text_color[0]*targeting_flash, enemy_text_color[1]*targeting_flash, enemy_text_color[2]*targeting_flash, enemy_visibility))
+                else: enemyblack_surface.fill((0, 0, 0, enemy_visibility))
+                screen.blit(enemyblack_surface, ((enemy["x"] - (enemy["size"]*0.85) / 2)*SCALED_WIDTH, (enemy["y"] - (enemy["size"]*0.85) / 2)*SCALED_HEIGHT))
 
 
         if not enemy.get("shrinking", False) and not enemy["type"] == 6767:
@@ -7677,6 +7675,11 @@ while running:
                     
     if paused == False and spawn_enabled == True:
         spawner_timer += (60 / FPS) * game_speed * 12
+
+    for enemy in enemies:
+        controlpoint_surface = pygame.Surface((enemy["size"]*SCALED_WIDTH, enemy["size"]*SCALED_HEIGHT), pygame.SRCALPHA)
+        controlpoint_surface.fill((spawner_color[0], spawner_color[1], spawner_color[2], 100))
+        if enemy["type"] == 6767: screen.blit(controlpoint_surface, ((enemy["x"] - enemy["size"] / 2)*SCALED_WIDTH, (enemy["y"] - enemy["size"] / 2)* SCALED_HEIGHT))
 
     if paused == True:
         pause_overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
