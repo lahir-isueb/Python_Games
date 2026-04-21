@@ -1,4 +1,4 @@
-import pygame
+=import pygame
 import random
 import math
 import pyperclip
@@ -1349,7 +1349,7 @@ def SETTINGS():
             pygame.time.delay(50)
 
 
-        if ambush_per_score_setting == 6969: ambush_per_score_label = font.render("Only Ambush At Beginning", True, OLIVE)
+        if ambush_per_score_setting == 6969: ambush_per_score_label = font.render("Ambush Once", True, OLIVE)
         else: ambush_per_score_label = font.render("Ambush Per Score: " + str(ambush_per_score_setting), True, OLIVE)
         screen.blit(ambush_per_score_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("instaspawn score")*60*SCALED_HEIGHT + scroll_y))
         ambush_per_score_minus_button = pygame.Rect(1385*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("instaspawn score")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
