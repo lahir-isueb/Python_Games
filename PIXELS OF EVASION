@@ -389,6 +389,7 @@ walleffect = 0
 # --- Font Size ---
 slightly_small_font = pygame.font.SysFont("ocraextended", int(22 * SCALED_TEXT))
 font = pygame.font.SysFont("ocraextended", int(24 * SCALED_TEXT))
+biggish_font = pygame.font.SysFont("ocraextended", int(40 * SCALED_TEXT))
 big_font = pygame.font.SysFont("ocraextended", int(90 * SCALED_TEXT))
 enemy_font = pygame.font.SysFont(None, int(0.96 * enemy_size * SCALED_TEXT))
 imp_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(0.96 * enemy_size * SCALED_TEXT))
@@ -4412,10 +4413,11 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE and paused == True:
             reset_game_state()
             TITLE_SCREEN()
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+            continue
+        if event.type == pygame.KEYDOWN and (event.key == pygame.K_p or event.key == pygame.K_ESCAPE):
                 if paused == True:
                     paused = False
                 else:
@@ -7723,6 +7725,10 @@ while running:
         )
         pause_text = font.render("Paused", True, spawner_color)
         screen.blit(pause_text, (WIDTH - 120*SCALED_TEXT, 20*SCALED_TEXT))
+        pause_message_text = biggish_font.render("Press p to resume.", True, spawner_color)
+        screen.blit(pause_message_text, (WIDTH/2-220*SCALED_TEXT, HEIGHT/2-45*SCALED_TEXT))
+        pause_message_text = biggish_font.render("Press escape to exit.", True, spawner_color)
+        screen.blit(pause_message_text, (WIDTH/2-240*SCALED_TEXT, HEIGHT/2+25*SCALED_TEXT))
 
     if current_time > everyone_died_at and everyone_died_at != 0:
         result = GAME_OVER(truescore, score_p1, score_p2)
