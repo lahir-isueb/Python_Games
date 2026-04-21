@@ -1,4 +1,4 @@
-=import pygame
+import pygame
 import random
 import math
 import pyperclip
@@ -6189,7 +6189,7 @@ while running:
                         ly = enemy["laser_y"]
                         if player_alive:
                             if abs(player_x - lx) < (player_size/2 + enemy_size / 2) and abs(player_y - ly) < enemy["laser_length"] / 2:
-                                cold_until = freeze_duration
+                                cold_until = max(2, freeze_duration)
                                 hot_until = 0
                                 player_speed = player_speed_base / 2
                                 player_frozen = True
@@ -6202,7 +6202,7 @@ while running:
 
                         if players == 2 and player2_alive:
                             if abs(player2_x - lx) < (player_size/2 + enemy_size / 2) and abs(player2_y - ly) < enemy["laser_length"] / 2:
-                                player2_cold_until = freeze_duration
+                                player2_cold_until = max(2, freeze_duration)
                                 player2_hot_until = 0
                                 player2_speed = player2_speed_base / 2
                                 player2_frozen = True
@@ -6217,7 +6217,7 @@ while running:
                         ly = enemy["laser_y"]
                         if player_alive:
                             if abs(player_y - ly) < (player_size/2 + enemy_size / 2) and abs(player_x - lx) < enemy["laser_length"] / 2:
-                                cold_until = freeze_duration
+                                cold_until = max(2, freeze_duration)
                                 hot_until = 0
                                 player_speed = player_speed_base / 2
                                 player_frozen = True
@@ -6230,7 +6230,7 @@ while running:
 
                         if players == 2 and player2_alive:
                             if abs(player2_y - ly) < (player_size/2 + enemy_size / 2) and abs(player2_x - lx) < enemy["laser_length"] / 2:
-                                player2_cold_until = freeze_duration
+                                player2_cold_until = max(2, freeze_duration)
                                 player2_hot_until = 0
                                 player2_speed = player2_speed_base / 2
                                 player2_frozen = True
@@ -6419,7 +6419,7 @@ while running:
                         ly = enemy["laser_y"]
                         if player_alive:
                             if abs(player_x - lx) < (player_size/2 + enemy_size / 2) and abs(player_y - ly) < enemy["laser_length"] / 2:
-                                hot_until = burn_duration
+                                hot_until = max(2, burn_duration)
                                 cold_until = 0
                                 player_burnt = True
                                 if current_time >= invincible_until + 100:
@@ -6431,7 +6431,7 @@ while running:
 
                         if players == 2 and player2_alive:
                             if abs(player2_x - lx) < (player_size/2 + enemy_size / 2) and abs(player2_y - ly) < enemy["laser_length"] / 2:
-                                player2_hot_until = burn_duration
+                                player2_hot_until = max(2, burn_duration)
                                 player2_cold_until = 0
                                 player2_burnt = True
                                 if current_time >= player2_invincible_until + 100:
@@ -6445,7 +6445,7 @@ while running:
                         ly = enemy["laser_y"]
                         if player_alive:
                             if abs(player_y - ly) < (player_size/2 + enemy_size / 2) and abs(player_x - lx) < enemy["laser_length"] / 2:
-                                hot_until = burn_duration
+                                hot_until = max(2, burn_duration)
                                 cold_until = 0
                                 player_burnt = True
                                 if current_time >= invincible_until + 100:
@@ -6457,7 +6457,7 @@ while running:
 
                         if players == 2 and player2_alive:
                             if abs(player2_y - ly) < (player_size/2 + enemy_size / 2) and abs(player2_x - lx) < enemy["laser_length"] / 2:
-                                player2_hot_until = burn_duration
+                                player2_hot_until = max(2, burn_duration)
                                 player2_cold_until = 0
                                 player2_burnt = True
                                 if current_time >= player2_invincible_until + 100:
@@ -6769,7 +6769,7 @@ while running:
                     continue
                 elif enemy["type"] == 35 and annihilator_interaction == 3: filler_variable = 1
                 elif enemy["type"] == 25:
-                    cold_until = freeze_duration
+                    cold_until = max(2, freeze_duration)
                     hot_until = 0
                     player_speed = player_speed_base / 2
                     player_frozen = True
@@ -6794,7 +6794,7 @@ while running:
                             invincible_until = current_time + invincibility_duration
                             if player_lives <= 0:
                                 player_alive = False
-                    hot_until = burn_duration
+                    hot_until = max(2, burn_duration)
                     cold_until = 0
                     player_burnt = True
                 else:
@@ -6867,7 +6867,7 @@ while running:
                     continue
                 elif enemy["type"] == 35 and annihilator_interaction == 3: filler_variable = 1
                 elif enemy["type"] == 25:
-                    player2_cold_until = freeze_duration
+                    player2_cold_until = max(2, freeze_duration)
                     player2_hot_until = 0
                     player2_speed = player2_speed_base / 2
                     player2_frozen = True
@@ -6892,7 +6892,7 @@ while running:
                             player2_invincible_until = current_time + invincibility_duration
                             if player2_lives <= 0:
                                 player2_alive = False
-                    player2_hot_until = burn_duration
+                    player2_hot_until = max(2, burn_duration)
                     player2_cold_until = 0
                     player2_burnt = True
                 else:
@@ -6974,7 +6974,7 @@ while running:
             if player_alive and centered_rect_collision(player_x, player_y, player_size,
                                                         p["x"] - projectile_size/2, p["y"] - projectile_size/2, projectile_size):
                 if p.get("ability") == "freeze":
-                    cold_until = freeze_duration  # 10 seconds
+                    cold_until = max(2, freeze_duration)  # 10 seconds
                     hot_until = 0
                     player_speed = player_speed_base / 2
                     player_frozen = True
@@ -6994,12 +6994,12 @@ while running:
                 elif p.get("ability") == "damage burn":
                     if current_time >= invincible_until:
                         if cold_until >= 0:
-                            hot_until = burn_duration
+                            hot_until = max(2, burn_duration)
                             cold_until = 0
                             player_burnt = True
                             continue
                         else:
-                            hot_until = burn_duration
+                            hot_until = max(2, burn_duration)
                             cold_until = 0
                             player_burnt = True
                             player_lives -= projectile_damage
@@ -7026,7 +7026,7 @@ while running:
                 if player2_alive and centered_rect_collision(player2_x, player2_y, player_size,
                                                         p["x"] - projectile_size/2, p["y"] - projectile_size/2, projectile_size):
                     if p.get("ability") == "freeze":
-                        player2_cold_until = freeze_duration
+                        player2_cold_until = max(2, freeze_duration)
                         player2_hot_until = 0
                         player2_speed = player2_speed_base / 2
                         player2_frozen = True
@@ -7046,12 +7046,12 @@ while running:
                     elif p.get("ability") == "damage burn":
                         if current_time >= player2_invincible_until:
                             if player2_cold_until >= 0:
-                                player2_hot_until = burn_duration
+                                player2_hot_until = max(2, burn_duration)
                                 player2_cold_until = 0
                                 player2_burnt = True
                                 continue
                             else:
-                                player2_hot_until = burn_duration
+                                player2_hot_until = max(2, burn_duration)
                                 player2_cold_until = 0
                                 player2_burnt = True
                                 player2_lives -= projectile_damage
