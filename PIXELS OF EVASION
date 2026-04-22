@@ -28,9 +28,9 @@ try:
     #splitter_texture = pygame.image.load('textures/splitter_enemy.png').convert_alpha()
     bomb_texture = pygame.image.load('textures/bomb_enemy.png').convert_alpha()
     shooter_texture = pygame.image.load('textures/shooter_enemy.png').convert_alpha()
-    #sniper_texture = pygame.image.load('textures/c_enemy.png').convert_alpha()
+    sniper_texture = pygame.image.load('textures/c_enemy.png').convert_alpha()
     #speedy_texture = pygame.image.load('textures/c_enemy.png').convert_alpha()
-    #shotgun_texture = pygame.image.load('textures/shotgun_enemy.png').convert_alpha()
+    shotgun_texture = pygame.image.load('textures/shotgun_enemy.png').convert_alpha()
     #voodoo_texture = pygame.image.load('textures/voodoo_enemy.png').convert_alpha()
     #blind_texture = pygame.image.load('textures/blind_enemy.png').convert_alpha()
     #magma_texture = pygame.image.load('textures/magma_enemy.png').convert_alpha()
@@ -51,7 +51,7 @@ try:
     burstshooter_texture = pygame.image.load('textures/burstshooter_enemy.png').convert_alpha()
     #stickyshooter_texture = pygame.image.load('textures/stickyshooter_enemy.png').convert_alpha()
     #sparker_texture = pygame.image.load('textures/sparker_enemy.png').convert_alpha()
-    #annihilator_texture = pygame.image.load('textures/annihilator_enemy.png').convert_alpha()
+    annihilator_texture = pygame.image.load('textures/annihilator_enemy.png').convert_alpha()
     frostbeam_texture = pygame.image.load('textures/frostbeam_enemy.png').convert_alpha()
     #forecast_texture = pygame.image.load('textures/forecast_enemy.png').convert_alpha()
     #assassin_texture = pygame.image.load('textures/assassin_enemy.png').convert_alpha()
@@ -66,7 +66,7 @@ try:
     #blocker_texture = pygame.image.load('textures/blocker_enemy.png').convert_alpha()
     #gloomyshooter_texture = pygame.image.load('textures/gloomyshooter_enemy.png').convert_alpha()
     #pulse_texture = pygame.image.load('textures/pulse_enemy.png').convert_alpha()
-    #grower_texture = pygame.image.load('textures/grower_enemy.png').convert_alpha()
+    grower_texture = pygame.image.load('textures/grower_enemy.png').convert_alpha()
 
     # --- JOKES LMAO ---
     fatal_joke_texture = pygame.image.load('jokes/ifilaugh.png').convert_alpha()
@@ -4709,7 +4709,7 @@ while running:
 
             # Determine enemy attributes based on type
             if enemy_type == 6767:
-                dx *= 1; dy *= 1; health = 67696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769
+                health = 67696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769
             elif enemy_type == 1:
                 dx *= 1; dy *= 1; health = basic_hp
             elif enemy_type == 2:
@@ -4895,10 +4895,11 @@ while running:
             if enemy["type"] == 6767:
                 enemy["health"] = 67696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769676967696769
                 enemy["size"] = enemy_size+100
-                enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
+                enemy["x"] += enemy["sussy_dx"] * 0.5 * game_speed
+                enemy["y"] += enemy["sussy_dy"] * 0.5 * game_speed
                 bounced = False
-                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["dx"] *= -1; bounced = True
-                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["dy"] *= -1; bounced = True
+                if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: enemy["sussy_dx"] *= -1; bounced = True
+                if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: enemy["sussy_dy"] *= -1; bounced = True
                 if bounced: enemy["bounces"] += 1
             elif enemy["type"] == 1:
                 enemy["x"] += enemy["dx"] * game_speed; enemy["y"] += enemy["dy"] * game_speed
@@ -7389,10 +7390,10 @@ while running:
 # --- Placing on Textures ---
         if use_textures and modifiers[0] == 0:
             textures = ["None", homing_texture, fatal_texture, "None", "None", "None", "None", "None", "None", bomb_texture,
-                        shooter_texture, "None", "None", "None", "None", "None", "None", "None", rapidshooter_texture, "None",
+                        shooter_texture, sniper_texture, "None", shotgun_texture, "None", "None", "None", "None", rapidshooter_texture, "None",
                         "None", laser_texture, "None", "None", "None", tracer_texture, savage_texture, "None", phantom_texture, "None",
-                        "None", burstshooter_texture, "None", "None", "None", frostbeam_texture, "None", "None", "None", "None",
-                        "None", "None", pyrobeam_texture, "None", "None", "None", "None", "None", "None", "None"]
+                        "None", burstshooter_texture, "None", "None", annihilator_texture, frostbeam_texture, "None", "None", "None", "None",
+                        "None", "None", pyrobeam_texture, "None", "None", "None", "None", "None", "None", grower_texture]
 
             joke_textures = ["None", "None", fatal_joke_texture, "None", "None", "None", "None", "None", "None", bomb_joke_texture,
                         "None", "None", "None", "None", voodoo_joke_texture, "None", "None", charger_joke_texture, "None", "None",
