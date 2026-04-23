@@ -5884,8 +5884,8 @@ while running:
             elif enemy["type"] == 28:
                 enemy["dx"] = math.cos(enemy["angle"]) * (enemy_speed)
                 enemy["dy"] = math.sin(enemy["angle"]) * (enemy_speed)
-                enemy["x"] += enemy["dx"]
-                enemy["y"] += enemy["dy"]
+                enemy["x"] += enemy["dx"] * game_speed
+                enemy["y"] += enemy["dy"] * game_speed
                 bounced = False
                 if enemy["x"] <= enemy_size/2 or enemy["x"] >= 1920 - enemy_size/2: bounced = True
                 if enemy["y"] <= enemy_size/2 or enemy["y"] >= 1080 - enemy_size/2: bounced = True
