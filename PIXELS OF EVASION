@@ -4,13 +4,14 @@ import math
 import pyperclip
 
 pygame.init()
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-#screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN | pygame.SCALED)
+#screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN | pygame.SCALED)
 #screen = pygame.display.set_mode((1280, 720))
 #Recommended Screen Resolutions:
     #(1920, 1080), (1680, 1050), (1600, 900), (1440, 900), (1400, 1050), (1366, 768), (1360, 768), (1280, 1024), (1280, 960)
     #(1280, 800), (1280, 768), (1280, 768), (1280, 720), (1280, 600), (1152, 864), (1024, 768), (800, 600)
 WIDTH, HEIGHT = screen.get_size()
+screen_full = True
 SCALED_WIDTH = WIDTH / 1920
 SCALED_HEIGHT = HEIGHT / 1080
 SCALED_TEXT = (SCALED_WIDTH + SCALED_HEIGHT)/2
@@ -68,10 +69,10 @@ try:
     #gloomyshooter_texture = pygame.image.load('textures/gloomyshooter_enemy.png').convert_alpha()
     pulse_texture = pygame.image.load('textures/pulse_enemy.png').convert_alpha()
     grower_texture = pygame.image.load('textures/grower_enemy.png').convert_alpha()
-    use_textures = True
+    can_use_textures = True
 
 except:
-    use_textures = False
+    can_use_textures = False
 
 try:
     # --- JOKES LMAO ---
@@ -81,9 +82,9 @@ try:
     charger_joke_texture = pygame.image.load('jokes/yellowman.png').convert_alpha()
     sparker_joke_texture = pygame.image.load('jokes/venom-no.png').convert_alpha()
     annihilator_joke_texture = pygame.image.load('jokes/kill7billion.png').convert_alpha()
-    use_joke_textures = True
+    can_use_joke_textures = True
 except:
-    use_joke_textures = False
+    can_use_joke_textures = False
 
 # --- GAME OVER SCREEN ---
 def GAME_OVER(final_score, p1, p2): 
@@ -184,19 +185,12 @@ colorword_list = ["White", "Silver", "Cloud", "Gray", "Shadow",
                   "Indigo", "Purple", "Mauve", "Lavender", "Lilac",
                   "Pink", "Magenta", "Orchid", "Violet", "Crimson", "Hot Pink"]
 
-font_list = ['none', "arial", "bahnschrift", "calibri", "cambria", "Candara", "comicsansms",
-             "consolas", "constantia", "corbel", "couriernew", 'Ebrima', 'gabriola', 'Gadugi',
-             'impact', 'leelawadeeui', 'leelawadeeuisemilight', 'malgungothic', 'microsofthimalaya', 'microsoftnewtailue', 'microsoftsansserif',
-             'microsofttaile', 'microsoftyibaiti', 'mingliuextb', 'mongolianbaiti', 'msgothic', 'palatinolinotype', 'sansserifcollection',
-             'segoeui', 'simsun', 'timesnewroman', 'trebuchetms', 'yugothic', 'agencyfb', 'bookantiqua',
-             'baskervilleoldface', 'bell', 'bernardcondensed', 'Bodoni', 'bodoniblack', 'bodonipostercompressed', 'brushscript',
-             'californianfb', 'chiller', 'Colonna', 'curlz', 'dubai', 'erasitc', 'forte',
-             'freestylescript', 'frenchscript', 'Garamond', 'gigi', 'gillsans', 'gillsanscondensed', 'gloucesterextracondensed',
+font_list = ['none', "comicsansms", "couriernew", 'gabriola', 'impact', 'microsofthimalaya', 'agencyfb', 'bookantiqua', 'bernardcondensed', 'Bodoni', 'brushscript',
+             'californianfb', 'chiller', 'Colonna', 'curlz', 'forte', 'freestylescript', 'frenchscript', 'gigi', 'gillsanscondensed', 'gloucesterextracondensed',
              'gillsansextcondensed', 'goudyoldstyle', 'Haettenschweiler', 'hightowertext', 'imprintshadow', 'blackadderitc', 'juiceitc',
-             'kunstlerscript', 'leelawadee', 'mistral', 'modernno20', 'microsoftuighur', 'monotypecorsiva', 'niagaraengraved',
-             'niagarasolid', 'ocraextended', 'oldenglishtext', 'onyx', 'palacescript', 'papyrus', 'parchment',
-             'perpetua', 'playbill', 'poorrichard', 'rockwellcondensed', 'rockwell', 'script', 'twcen',
-             'twcencondensed', 'twcencondensedextra', 'simsunextg']
+             'kunstlerscript', 'leelawadee', 'mistral', 'modernno20', 'microsoftuighur', 'monotypecorsiva', 'niagaraengraved', 'ocraextended', 'oldenglishtext',
+             'onyx', 'palacescript', 'papyrus', 'parchment', 'perpetua', 'playbill', 'poorrichard', 'rockwellcondensed', 'rockwell', 'script', 'twcencondensed',
+             'twcencondensedextra', 'simsunextg']
 
 # --- Player Skins ---
 p1_skin_color = 0
@@ -216,7 +210,7 @@ player_skins = [
                 [CYAN, TEAL, LAVENDER, "modernno20"],
                 [GREEN, LIME, GREEN, "agencyfb"],
                 [PURPLE, LAVENDER, HOT_PINK, "curlz"],
-                [MAROON, RED, CRIMSON, "impact"],
+                [MAROON, RED, CRIMSON, 'Haettenschweiler'],
                 [TURQUOISE, HOT_PINK, GREEN, "mistral"],
                 [SULFUR, GRAY, AZURE, "erasitc"],
                 [CLOUD, AZURE, MAGENTA, "bernardcondensed"],
@@ -732,6 +726,11 @@ blocker_hp_setting = 5
 gloomyshooter_hp_setting = 4
 pulse_hp_setting = 2
 grower_hp_setting = 4
+screen_size_setting = 0
+if can_use_textures: use_textures = True
+else: use_textures = False
+if can_use_joke_textures: use_joke_textures = True
+else: use_joke_textures = False
 
 modifiers = [0, 0, 0, 0, 0, 9, 0, 0]
 
@@ -855,6 +854,9 @@ def SETTINGS():
     global colorword_list
     global color_list
 
+    global screen_size_setting, screen_full, screen, WIDTH, HEIGHT, SCALED_WIDTH, SCALED_HEIGHT, SCALED_TEXT
+    global use_textures, use_joke_textures
+
     def give_seed(pasted):
         global player_size_setting, enemy_size_setting, projectile_size_setting, min_spawn_delay_setting, max_spawn_delay_setting, spawn_delay_change_setting
         global player_speed_setting, enemy_speed_setting, projectile_speed_setting
@@ -888,6 +890,7 @@ def SETTINGS():
         global hardened_speed_percent_setting
         global fatal_speed_percent_setting
         global annihilator_speed_percent_setting
+        global freezeslip_max_setting
         global enemy_locks
         
         global basic_hp_setting
@@ -954,176 +957,179 @@ def SETTINGS():
         global modifiers
         scount = 0
         chara = ""
-        for c in pasted:
-            if c == "_":
-                match scount:
-                    case 0: player_size_setting = int(chara)
-                    case 1: enemy_size_setting = int(chara)
-                    case 2: projectile_size_setting = int(chara)
-                    case 3: min_spawn_delay_setting = int(chara)
-                    case 4: max_spawn_delay_setting = int(chara)
-                    case 5: spawn_delay_change_setting = int(chara)
-                    case 6: player_speed_setting = int(chara)
-                    case 7: enemy_speed_setting = int(chara)
-                    case 8: projectile_speed_setting = int(chara)
-                    case 9: regen_delay_setting = int(chara)
-                    case 10: trail_duration_setting = int(chara)
-                    case 11: trail_distance_setting = int(chara)
-                    case 12: freeze_duration_setting = int(chara)
-                    case 13: invincibility_duration_setting = int(chara)
-                    case 14: chaser_turn_amount_setting = int(chara)
-                    case 15: enemy_stick_setting = int(chara)
-                    case 16: projectile_fire_rate_setting = int(chara)
-                    case 17: enemy_damage_setting = int(chara)
-                    case 18: burst_setting = int(chara)
-                    case 19: enemy_unlock_setting = int(chara)
-                    case 20: projectile_damage_setting = int(chara)
-                    case 21: enemy_locks[0] = int(chara)
-                    case 22: enemy_locks[1] = int(chara)
-                    case 23: enemy_locks[2] = int(chara)
-                    case 24: enemy_locks[3] = int(chara)
-                    case 25: enemy_locks[4] = int(chara)
-                    case 26: enemy_locks[5] = int(chara)
-                    case 27: enemy_locks[6] = int(chara)
-                    case 28: enemy_locks[7] = int(chara)
-                    case 29: enemy_locks[8] = int(chara)
-                    case 30: enemy_locks[9] = int(chara)
-                    case 31: enemy_locks[10] = int(chara)
-                    case 32: enemy_locks[11] = int(chara)
-                    case 33: enemy_locks[12] = int(chara)
-                    case 34: enemy_locks[13] = int(chara)
-                    case 35: enemy_locks[14] = int(chara)
-                    case 36: enemy_locks[15] = int(chara)
-                    case 37: enemy_locks[16] = int(chara)
-                    case 38: enemy_locks[17] = int(chara)
-                    case 39: enemy_locks[18] = int(chara)
-                    case 40: enemy_locks[19] = int(chara)
-                    case 41: enemy_locks[20] = int(chara)
-                    case 42: enemy_locks[21] = int(chara)
-                    case 43: enemy_locks[22] = int(chara)
-                    case 44: enemy_locks[23] = int(chara)
-                    case 45: enemy_locks[24] = int(chara)
-                    case 46: enemy_locks[25] = int(chara)
-                    case 47: enemy_locks[26] = int(chara)
-                    case 48: enemy_locks[27] = int(chara)
-                    case 49: enemy_locks[28] = int(chara)
-                    case 50: enemy_locks[29] = int(chara)
-                    case 51: enemy_locks[30] = int(chara)
-                    case 52: enemy_locks[31] = int(chara)
-                    case 53: enemy_locks[32] = int(chara)
-                    case 54: enemy_locks[33] = int(chara)
-                    case 55: enemy_locks[34] = int(chara)
-                    case 56: enemy_locks[35] = int(chara)
-                    case 57: basic_hp_setting = int(chara)
-                    case 58: homing_hp_setting = int(chara)
-                    case 59: fatal_hp_setting = int(chara)
-                    case 60: flow_hp_setting = int(chara)
-                    case 61: sticky_hp_setting = int(chara)
-                    case 62: gloomy_hp_setting = int(chara)
-                    case 63: trail_hp_setting = int(chara)
-                    case 64: impostor_hp_setting = int(chara)
-                    case 65: splitter_hp_setting = int(chara)
-                    case 66: split_amount_setting = int(chara)
-                    case 67: bomb_hp_setting = int(chara)
-                    case 68: bomb_projectile_amount_setting = int(chara)
-                    case 69: shooter_hp_setting = int(chara)
-                    case 70: sniper_hp_setting = int(chara)
-                    case 71: extra_sniper_damage_setting = int(chara)
-                    case 72: speedy_hp_setting = int(chara)
-                    case 73: shotgun_hp_setting = int(chara)
-                    case 74: shotgun_bullets_setting = int(chara)
-                    case 75: voodoo_hp_setting = int(chara)
-                    case 76: blind_hp_setting = int(chara)
-                    case 77: magma_hp_setting = int(chara)
-                    case 78: charger_hp_setting = int(chara)
-                    case 79: rapidshooter_hp_setting = int(chara)
-                    case 80: frostbite_hp_setting = int(chara)
-                    case 81: frostbite_projectile_amount_setting = int(chara)
-                    case 82: addictive_hp_setting = int(chara)
-                    case 83: addictive_pull_strength_setting = int(chara)
-                    case 84: addictive_pull_radius_setting = int(chara)
-                    case 85: laser_hp_setting = int(chara)
-                    case 86: laser_damage_setting = int(chara)
-                    case 87: laser_duration_setting = int(chara)
-                    case 88: hardened_hp_setting = int(chara)
-                    case 89: harden_break_setting = int(chara)
-                    case 90: accelerator_hp_setting = int(chara)
-                    case 91: cold_hp_setting = int(chara)
-                    case 92: tracer_hp_setting = int(chara)
-                    case 93: savage_hp_setting = int(chara)
-                    case 94: teleporter_hp_setting = int(chara)
-                    case 95: phantom_hp_setting = int(chara)
-                    case 96: stream_hp_setting = int(chara)
-                    case 97: sensitive_hp_setting = int(chara)
-                    case 98: burstshooter_hp_setting = int(chara)
-                    case 99: stickyshooter_hp_setting = int(chara)
-                    case 100: sparker_hp_setting = int(chara)
-                    case 101: annihilator_hp_setting = int(chara)
-                    case 102: annihilator_projectile_amount_setting = int(chara)
-                    case 103: frostbeam_hp_setting = int(chara)
-                    case 104: modifiers[0] = int(chara)
-                    case 105: player_health_setting = int(chara)
-                    case 106: unharden_death_setting = int(chara)
-                    case 107: target_setting = int(chara)
-                    case 108: modifiers[1] = int(chara)
-                    case 109: sticky_sensitive_setting = int(chara)
-                    case 110: charger_sensitive_setting = int(chara)
-                    case 111: forecast_hp_setting = int(chara)
-                    case 112: enemy_locks[36] = int(chara)
-                    case 113: assassin_hp_setting = int(chara)
-                    case 114: enemy_locks[37] = int(chara)
-                    case 115: motion_hp_setting = int(chara)
-                    case 116: enemy_locks[38] = int(chara)
-                    case 117: modifiers[2] = int(chara)
-                    case 118: invisibility_hp_setting = int(chara)
-                    case 119: enemy_locks[39] = int(chara)
-                    case 120: insta_spawn_setting = int(chara)
-                    case 121: ambush_per_score_setting = int(chara)
-                    case 122: modifiers[3] = int(chara)
-                    case 123: whirly_hp_setting = int(chara)
-                    case 124: enemy_locks[40] = int(chara)
-                    case 125: teleport_angle_change_setting = int(chara)
-                    case 126: burn_duration_setting = int(chara)
-                    case 127: burn_particle_lifetime_setting = int(chara)
-                    case 128: volcanic_hp_setting = int(chara)
-                    case 129: pyrobeam_hp_setting = int(chara)
-                    case 130: enemy_locks[41] = int(chara)
-                    case 131: enemy_locks[42] = int(chara)
-                    case 132: modifiers[4] = int(chara)
-                    case 133: modifiers[5] = int(chara)
-                    case 134: freezeslip_max_setting = int(chara)
-                    case 135: modifiers[6] = int(chara)
-                    case 136: laggy_hp_setting = int(chara)
-                    case 137: enemy_locks[43] = int(chara)
-                    case 138: error_hp_setting = int(chara)
-                    case 139: enemy_locks[44] = int(chara)
-                    case 140: glitchy_hp_setting = int(chara)
-                    case 141: enemy_locks[45] = int(chara)
-                    case 142: blocker_hp_setting = int(chara)
-                    case 143: enemy_locks[46] = int(chara)
-                    case 144: blocker_push_radius_setting = int(chara)
-                    case 145: blocker_push_strength_setting = int(chara)
-                    case 146: addictive_interaction_setting = int(chara)
-                    case 147: blocker_interaction_setting = int(chara)
-                    case 148: gloomyshooter_hp_setting = int(chara)
-                    case 149: enemy_locks[47] = int(chara)
-                    case 150: target_closest_setting = int(chara)
-                    case 151: pulse_hp_setting = int(chara)
-                    case 152: grower_hp_setting = int(chara)
-                    case 153: enemy_locks[48] = int(chara)
-                    case 154: enemy_locks[49] = int(chara)
-                    case 155: growing_speed_setting = int(chara)
-                    case 156: modifiers[7] = int(chara)
-                    case 157: ambush_start_setting = int(chara)
-                    case 158: annihilator_interaction_setting = int(chara)
-                    case 159: hardened_speed_percent_setting = int(chara)
-                    case 160: fatal_speed_percent_setting = int(chara)
-                    case 161: annihilator_speed_percent_setting = int(chara)
-                scount += 1
-                chara = ""
-            else: chara += c
+        try:
+            for c in pasted:
+                if c == "_":
+                    match scount:
+                        case 0: player_size_setting = int(chara)
+                        case 1: enemy_size_setting = int(chara)
+                        case 2: projectile_size_setting = int(chara)
+                        case 3: min_spawn_delay_setting = int(chara)
+                        case 4: max_spawn_delay_setting = int(chara)
+                        case 5: spawn_delay_change_setting = int(chara)
+                        case 6: player_speed_setting = int(chara)
+                        case 7: enemy_speed_setting = int(chara)
+                        case 8: projectile_speed_setting = int(chara)
+                        case 9: regen_delay_setting = int(chara)
+                        case 10: trail_duration_setting = int(chara)
+                        case 11: trail_distance_setting = int(chara)
+                        case 12: freeze_duration_setting = int(chara)
+                        case 13: invincibility_duration_setting = int(chara)
+                        case 14: chaser_turn_amount_setting = int(chara)
+                        case 15: enemy_stick_setting = int(chara)
+                        case 16: projectile_fire_rate_setting = int(chara)
+                        case 17: enemy_damage_setting = int(chara)
+                        case 18: burst_setting = int(chara)
+                        case 19: enemy_unlock_setting = int(chara)
+                        case 20: projectile_damage_setting = int(chara)
+                        case 21: enemy_locks[0] = int(chara)
+                        case 22: enemy_locks[1] = int(chara)
+                        case 23: enemy_locks[2] = int(chara)
+                        case 24: enemy_locks[3] = int(chara)
+                        case 25: enemy_locks[4] = int(chara)
+                        case 26: enemy_locks[5] = int(chara)
+                        case 27: enemy_locks[6] = int(chara)
+                        case 28: enemy_locks[7] = int(chara)
+                        case 29: enemy_locks[8] = int(chara)
+                        case 30: enemy_locks[9] = int(chara)
+                        case 31: enemy_locks[10] = int(chara)
+                        case 32: enemy_locks[11] = int(chara)
+                        case 33: enemy_locks[12] = int(chara)
+                        case 34: enemy_locks[13] = int(chara)
+                        case 35: enemy_locks[14] = int(chara)
+                        case 36: enemy_locks[15] = int(chara)
+                        case 37: enemy_locks[16] = int(chara)
+                        case 38: enemy_locks[17] = int(chara)
+                        case 39: enemy_locks[18] = int(chara)
+                        case 40: enemy_locks[19] = int(chara)
+                        case 41: enemy_locks[20] = int(chara)
+                        case 42: enemy_locks[21] = int(chara)
+                        case 43: enemy_locks[22] = int(chara)
+                        case 44: enemy_locks[23] = int(chara)
+                        case 45: enemy_locks[24] = int(chara)
+                        case 46: enemy_locks[25] = int(chara)
+                        case 47: enemy_locks[26] = int(chara)
+                        case 48: enemy_locks[27] = int(chara)
+                        case 49: enemy_locks[28] = int(chara)
+                        case 50: enemy_locks[29] = int(chara)
+                        case 51: enemy_locks[30] = int(chara)
+                        case 52: enemy_locks[31] = int(chara)
+                        case 53: enemy_locks[32] = int(chara)
+                        case 54: enemy_locks[33] = int(chara)
+                        case 55: enemy_locks[34] = int(chara)
+                        case 56: enemy_locks[35] = int(chara)
+                        case 57: basic_hp_setting = int(chara)
+                        case 58: homing_hp_setting = int(chara)
+                        case 59: fatal_hp_setting = int(chara)
+                        case 60: flow_hp_setting = int(chara)
+                        case 61: sticky_hp_setting = int(chara)
+                        case 62: gloomy_hp_setting = int(chara)
+                        case 63: trail_hp_setting = int(chara)
+                        case 64: impostor_hp_setting = int(chara)
+                        case 65: splitter_hp_setting = int(chara)
+                        case 66: split_amount_setting = int(chara)
+                        case 67: bomb_hp_setting = int(chara)
+                        case 68: bomb_projectile_amount_setting = int(chara)
+                        case 69: shooter_hp_setting = int(chara)
+                        case 70: sniper_hp_setting = int(chara)
+                        case 71: extra_sniper_damage_setting = int(chara)
+                        case 72: speedy_hp_setting = int(chara)
+                        case 73: shotgun_hp_setting = int(chara)
+                        case 74: shotgun_bullets_setting = int(chara)
+                        case 75: voodoo_hp_setting = int(chara)
+                        case 76: blind_hp_setting = int(chara)
+                        case 77: magma_hp_setting = int(chara)
+                        case 78: charger_hp_setting = int(chara)
+                        case 79: rapidshooter_hp_setting = int(chara)
+                        case 80: frostbite_hp_setting = int(chara)
+                        case 81: frostbite_projectile_amount_setting = int(chara)
+                        case 82: addictive_hp_setting = int(chara)
+                        case 83: addictive_pull_strength_setting = int(chara)
+                        case 84: addictive_pull_radius_setting = int(chara)
+                        case 85: laser_hp_setting = int(chara)
+                        case 86: laser_damage_setting = int(chara)
+                        case 87: laser_duration_setting = int(chara)
+                        case 88: hardened_hp_setting = int(chara)
+                        case 89: harden_break_setting = int(chara)
+                        case 90: accelerator_hp_setting = int(chara)
+                        case 91: cold_hp_setting = int(chara)
+                        case 92: tracer_hp_setting = int(chara)
+                        case 93: savage_hp_setting = int(chara)
+                        case 94: teleporter_hp_setting = int(chara)
+                        case 95: phantom_hp_setting = int(chara)
+                        case 96: stream_hp_setting = int(chara)
+                        case 97: sensitive_hp_setting = int(chara)
+                        case 98: burstshooter_hp_setting = int(chara)
+                        case 99: stickyshooter_hp_setting = int(chara)
+                        case 100: sparker_hp_setting = int(chara)
+                        case 101: annihilator_hp_setting = int(chara)
+                        case 102: annihilator_projectile_amount_setting = int(chara)
+                        case 103: frostbeam_hp_setting = int(chara)
+                        case 104: modifiers[0] = int(chara)
+                        case 105: player_health_setting = int(chara)
+                        case 106: unharden_death_setting = int(chara)
+                        case 107: target_setting = int(chara)
+                        case 108: modifiers[1] = int(chara)
+                        case 109: sticky_sensitive_setting = int(chara)
+                        case 110: charger_sensitive_setting = int(chara)
+                        case 111: forecast_hp_setting = int(chara)
+                        case 112: enemy_locks[36] = int(chara)
+                        case 113: assassin_hp_setting = int(chara)
+                        case 114: enemy_locks[37] = int(chara)
+                        case 115: motion_hp_setting = int(chara)
+                        case 116: enemy_locks[38] = int(chara)
+                        case 117: modifiers[2] = int(chara)
+                        case 118: invisibility_hp_setting = int(chara)
+                        case 119: enemy_locks[39] = int(chara)
+                        case 120: insta_spawn_setting = int(chara)
+                        case 121: ambush_per_score_setting = int(chara)
+                        case 122: modifiers[3] = int(chara)
+                        case 123: whirly_hp_setting = int(chara)
+                        case 124: enemy_locks[40] = int(chara)
+                        case 125: teleport_angle_change_setting = int(chara)
+                        case 126: burn_duration_setting = int(chara)
+                        case 127: burn_particle_lifetime_setting = int(chara)
+                        case 128: volcanic_hp_setting = int(chara)
+                        case 129: pyrobeam_hp_setting = int(chara)
+                        case 130: enemy_locks[41] = int(chara)
+                        case 131: enemy_locks[42] = int(chara)
+                        case 132: modifiers[4] = int(chara)
+                        case 133: modifiers[5] = int(chara)
+                        case 134: freezeslip_max_setting = int(chara)
+                        case 135: modifiers[6] = int(chara)
+                        case 136: laggy_hp_setting = int(chara)
+                        case 137: enemy_locks[43] = int(chara)
+                        case 138: error_hp_setting = int(chara)
+                        case 139: enemy_locks[44] = int(chara)
+                        case 140: glitchy_hp_setting = int(chara)
+                        case 141: enemy_locks[45] = int(chara)
+                        case 142: blocker_hp_setting = int(chara)
+                        case 143: enemy_locks[46] = int(chara)
+                        case 144: blocker_push_radius_setting = int(chara)
+                        case 145: blocker_push_strength_setting = int(chara)
+                        case 146: addictive_interaction_setting = int(chara)
+                        case 147: blocker_interaction_setting = int(chara)
+                        case 148: gloomyshooter_hp_setting = int(chara)
+                        case 149: enemy_locks[47] = int(chara)
+                        case 150: target_closest_setting = int(chara)
+                        case 151: pulse_hp_setting = int(chara)
+                        case 152: grower_hp_setting = int(chara)
+                        case 153: enemy_locks[48] = int(chara)
+                        case 154: enemy_locks[49] = int(chara)
+                        case 155: growing_speed_setting = int(chara)
+                        case 156: modifiers[7] = int(chara)
+                        case 157: ambush_start_setting = int(chara)
+                        case 158: annihilator_interaction_setting = int(chara)
+                        case 159: hardened_speed_percent_setting = int(chara)
+                        case 160: fatal_speed_percent_setting = int(chara)
+                        case 161: annihilator_speed_percent_setting = int(chara)
+                    scount += 1
+                    chara = ""
+                else: chara += c
+        except:
+            scount = 0
 
-    SLIST = ["presets",
+    SLIST = ["presets", "textures", "joke-textures", "screen-size", "fullscreen",
 
              "starting sd", "ending sd", "sd change", "enemy unlock",
              "instaspawn score", "instaspawn", "ambush start",
@@ -1288,8 +1294,88 @@ def SETTINGS():
         screen.blit(paste_seed_text, paste_seed_text.get_rect(center=paste_seed_button.center))
         if paste_seed_button.collidepoint(mouse_pos) and mouse_click:
             give_seed(pyperclip.paste())
-            pygame.time.delay(200)        
+            pygame.time.delay(200)
 
+        if use_textures: use_textures_text = "Use Texture Rendering"
+        else: use_textures_text = "Use Pygame Rendering"
+        use_textures_label = font.render(use_textures_text, True, WHITE)
+        screen.blit(use_textures_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("textures")*60*SCALED_HEIGHT + scroll_y))
+        if can_use_textures:
+            textures_true_or_false_button = pygame.Rect(1385*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("textures")*60*SCALED_HEIGHT - button_offset + scroll_y, 115*SCALED_WIDTH, 50*SCALED_HEIGHT)
+            pygame.draw.rect(screen, YELLOW, textures_true_or_false_button, border_radius=0)
+            screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=textures_true_or_false_button.center))
+            if textures_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
+                if use_textures: use_textures = False
+                else: use_textures = True
+                pygame.time.delay(200)
+        else:
+            textures_true_or_false_button = pygame.Rect(1385*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("textures")*60*SCALED_HEIGHT - button_offset + scroll_y, 115*SCALED_WIDTH, 50*SCALED_HEIGHT)
+            pygame.draw.rect(screen, SHADOW, textures_true_or_false_button, border_radius=0)
+            screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=textures_true_or_false_button.center))
+
+        if use_joke_textures: joke_textures_text = "Secret Textures can appear"
+        else: joke_textures_text = "Secret Textures won't appear"
+        joke_textures_label = font.render(joke_textures_text, True, WHITE)
+        screen.blit(joke_textures_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("joke-textures")*60*SCALED_HEIGHT + scroll_y))
+        if can_use_joke_textures:
+            joke_true_or_false_button = pygame.Rect(1385*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("joke-textures")*60*SCALED_HEIGHT - button_offset + scroll_y, 115*SCALED_WIDTH, 50*SCALED_HEIGHT)
+            pygame.draw.rect(screen, YELLOW, joke_true_or_false_button, border_radius=0)
+            screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=joke_true_or_false_button.center))
+            if joke_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
+                if use_joke_textures: use_joke_textures = False
+                else: use_joke_textures = True
+                pygame.time.delay(200)
+        else:
+            joke_true_or_false_button = pygame.Rect(1385*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("textures")*60*SCALED_HEIGHT - button_offset + scroll_y, 115*SCALED_WIDTH, 50*SCALED_HEIGHT)
+            pygame.draw.rect(screen, SHADOW, joke_true_or_false_button, border_radius=0)
+            screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=joke_true_or_false_button.center))
+
+        screen_sizes = [[1920, 1080], [1680, 1050], [1600, 900], [1440, 900], [1400, 1050], [1366, 768], [1360, 768], [1280, 1024], [1280, 960], [1280, 800], [1280, 768], [1280, 720], [1280, 600], [1152, 864],
+                        [1024, 768], [800, 600]]
+        screen_resolution_label = font.render("Screen Resolution: " + str(screen_sizes[screen_size_setting][0]) + " : " + str(screen_sizes[screen_size_setting][1]), True, WHITE)
+        screen.blit(screen_resolution_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("screen-size")*60*SCALED_HEIGHT + scroll_y))
+        screen_resolution_minus_button = pygame.Rect(1385*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("screen-size")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        screen_resolution_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("screen-size")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        pygame.draw.rect(screen, GREEN, screen_resolution_plus_button, border_radius=0)
+        screen.blit(plus_txt, plus_txt.get_rect(center=screen_resolution_plus_button.center))
+        pygame.draw.rect(screen, RED, screen_resolution_minus_button, border_radius=0)
+        screen.blit(minus_txt, minus_txt.get_rect(center=screen_resolution_minus_button.center))
+        if screen_resolution_plus_button.collidepoint(mouse_pos) and mouse_click:
+            screen_size_setting -= 1
+            if screen_size_setting < 0: screen_size_setting = 0
+            if screen_full: screen = pygame.display.set_mode((screen_sizes[screen_size_setting][0], screen_sizes[screen_size_setting][1]), pygame.FULLSCREEN | pygame.SCALED)
+            else: screen = pygame.display.set_mode((screen_sizes[screen_size_setting][0], screen_sizes[screen_size_setting][1]))
+            WIDTH, HEIGHT = screen.get_size()
+            SCALED_WIDTH = WIDTH / 1920
+            SCALED_HEIGHT = HEIGHT / 1080
+            SCALED_TEXT = (SCALED_WIDTH + SCALED_HEIGHT)/2
+            pygame.time.delay(50)
+        if screen_resolution_minus_button.collidepoint(mouse_pos) and mouse_click:
+            screen_size_setting += 1
+            if screen_size_setting == len(screen_sizes): screen_size_setting = len(screen_sizes) - 1
+            if screen_full: screen = pygame.display.set_mode((screen_sizes[screen_size_setting][0], screen_sizes[screen_size_setting][1]), pygame.FULLSCREEN | pygame.SCALED)
+            else: screen = pygame.display.set_mode((screen_sizes[screen_size_setting][0], screen_sizes[screen_size_setting][1]))
+            WIDTH, HEIGHT = screen.get_size()
+            SCALED_WIDTH = WIDTH / 1920
+            SCALED_HEIGHT = HEIGHT / 1080
+            SCALED_TEXT = (SCALED_WIDTH + SCALED_HEIGHT)/2
+            pygame.time.delay(50)
+
+        if screen_full: fullscreen_text = "Fullscreen: True"
+        else: fullscreen_text = "Fullscreen: False"
+        fullscreen_label = font.render(fullscreen_text, True, WHITE)
+        screen.blit(fullscreen_label, (100*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("fullscreen")*60*SCALED_HEIGHT + scroll_y))
+        fullscreen_true_or_false_button = pygame.Rect(1385*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("fullscreen")*60*SCALED_HEIGHT - button_offset + scroll_y, 115*SCALED_WIDTH, 50*SCALED_HEIGHT)
+        pygame.draw.rect(screen, YELLOW, fullscreen_true_or_false_button, border_radius=0)
+        screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=fullscreen_true_or_false_button.center))
+        if fullscreen_true_or_false_button.collidepoint(mouse_pos) and mouse_click:
+            if screen_full:
+                screen_full = False
+                screen = pygame.display.set_mode((screen_sizes[screen_size_setting][0], screen_sizes[screen_size_setting][1]))
+            else:
+                screen_full = True
+                screen = pygame.display.set_mode((screen_sizes[screen_size_setting][0], screen_sizes[screen_size_setting][1]), pygame.FULLSCREEN | pygame.SCALED)
+            pygame.time.delay(200)
 
         max_spawn_delay_label = font.render("Starting Spawn Delay: " + str(max_spawn_delay_setting), True, MAROON)
         screen.blit(max_spawn_delay_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("starting sd")*60*SCALED_HEIGHT + scroll_y))
@@ -2195,7 +2281,7 @@ def SETTINGS():
 
 
 
-        impostor_hp_label = font.render("Impostor Enemy - HP: " + str(impostor_hp_setting), True, WHITE)
+        impostor_hp_label = font.render("Impostor Enemy - HP: " + str(impostor_hp_setting), True, player_skins[p1_skin_color][0])
         screen.blit(impostor_hp_label, (50*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("impostor")*60*SCALED_HEIGHT + scroll_y))
         impostor_hp_minus_button = pygame.Rect(1385*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("impostor")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
         impostor_hp_plus_button = pygame.Rect(1450*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("impostor")*60*SCALED_HEIGHT - button_offset + scroll_y, 50*SCALED_WIDTH, 50*SCALED_HEIGHT)
@@ -2213,9 +2299,12 @@ def SETTINGS():
             if impostor_hp_setting < 1:
                 impostor_hp_setting = 1
             pygame.time.delay(50)
-        impostor_locks_text = font.render(enemy_locking_labels[enemy_locks[7]], True, RED)
+        if player_skins[p1_skin_color][1] == player_skins[p1_skin_color][0]:
+            impostor_locks_text = font.render(enemy_locking_labels[enemy_locks[7]], True, BLACK)
+        else:
+            impostor_locks_text = font.render(enemy_locking_labels[enemy_locks[7]], True, player_skins[p1_skin_color][1])
         impostor_locks_button = pygame.Rect(1550*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("impostor")*60*SCALED_HEIGHT - button_offset + scroll_y, 200*SCALED_WIDTH, 50*SCALED_HEIGHT)
-        pygame.draw.rect(screen, WHITE, impostor_locks_button, border_radius=0)
+        pygame.draw.rect(screen, player_skins[p1_skin_color][0], impostor_locks_button, border_radius=0)
         screen.blit(impostor_locks_text, impostor_locks_text.get_rect(center=impostor_locks_button.center))
         if impostor_locks_button.collidepoint(mouse_pos) and mouse_click:
             if enemy_locks[7] > (len(enemy_locking_labels) - 2): enemy_locks[7] = 0
