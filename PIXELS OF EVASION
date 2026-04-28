@@ -68,6 +68,7 @@ try:
     #gloomyshooter_texture = pygame.image.load('textures/gloomyshooter_enemy.png').convert_alpha()
     pulse_texture = pygame.image.load('textures/pulse_enemy.png').convert_alpha()
     grower_texture = pygame.image.load('textures/grower_enemy.png').convert_alpha()
+    use_textures = True
 
 except:
     use_textures = False
