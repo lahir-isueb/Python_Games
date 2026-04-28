@@ -18,57 +18,61 @@ pygame.display.set_caption("Pixels Of Evasion")
 
 # --- Textures ---
 try:
-    #basic_texture = pygame.image.load('textures/basic_enemy.png').convert_alpha()
+    basic_texture = pygame.image.load('textures/basic_enemy.png').convert_alpha()
     homing_texture = pygame.image.load('textures/homing_enemy.png').convert_alpha()
     fatal_texture = pygame.image.load('textures/fatal_enemy.png').convert_alpha()
-    #flow_texture = pygame.image.load('textures/flow_enemy.png').convert_alpha()
-    #sticky_texture = pygame.image.load('textures/sticky_enemy.png').convert_alpha()
+    flow_texture = pygame.image.load('textures/flow_enemy.png').convert_alpha()
+    sticky_texture = pygame.image.load('textures/sticky_enemy.png').convert_alpha()
     #gloomy_texture = pygame.image.load('textures/gloomy_enemy.png').convert_alpha()
-    #trail_texture = pygame.image.load('textures/trail_enemy.png').convert_alpha()
+    trail_texture = pygame.image.load('textures/trail_enemy.png').convert_alpha()
     #impostor_texture = pygame.image.load('textures/impostor_enemy.png').convert_alpha()
-    #splitter_texture = pygame.image.load('textures/splitter_enemy.png').convert_alpha()
+    splitter_texture = pygame.image.load('textures/splitter_enemy.png').convert_alpha()
     bomb_texture = pygame.image.load('textures/bomb_enemy.png').convert_alpha()
     shooter_texture = pygame.image.load('textures/shooter_enemy.png').convert_alpha()
-    sniper_texture = pygame.image.load('textures/c_enemy.png').convert_alpha()
-    #speedy_texture = pygame.image.load('textures/c_enemy.png').convert_alpha()
+    sniper_texture = pygame.image.load('textures/sniper_enemy.png').convert_alpha()
+    speedy_texture = pygame.image.load('textures/speedy_enemy.png').convert_alpha()
     shotgun_texture = pygame.image.load('textures/shotgun_enemy.png').convert_alpha()
     #voodoo_texture = pygame.image.load('textures/voodoo_enemy.png').convert_alpha()
     #blind_texture = pygame.image.load('textures/blind_enemy.png').convert_alpha()
-    #magma_texture = pygame.image.load('textures/magma_enemy.png').convert_alpha()
-    #charger_texture = pygame.image.load('textures/charger_enemy.png').convert_alpha()
+    magma_texture = pygame.image.load('textures/magma_enemy.png').convert_alpha()
+    charger_texture = pygame.image.load('textures/charger_enemy.png').convert_alpha()
     rapidshooter_texture = pygame.image.load('textures/rapidshooter_enemy.png').convert_alpha()
-    #frostbite_texture = pygame.image.load('textures/frostbite_enemy.png').convert_alpha()
+    frostbite_texture = pygame.image.load('textures/frostbite_enemy.png').convert_alpha()
     #addictive_texture = pygame.image.load('textures/addictive_enemy.png').convert_alpha()
     laser_texture = pygame.image.load('textures/laser_enemy.png').convert_alpha()
     #hardened_texture = pygame.image.load('textures/hardened_enemy.png').convert_alpha()
     #accelerator_texture = pygame.image.load('textures/accelerator_enemy.png').convert_alpha()
-    #cold_texture = pygame.image.load('textures/cold_enemy.png').convert_alpha()
+    cold_texture = pygame.image.load('textures/cold_enemy.png').convert_alpha()
     tracer_texture = pygame.image.load('textures/tracer_enemy.png').convert_alpha()
     savage_texture = pygame.image.load('textures/savage_enemy.png').convert_alpha()
-    #teleporter_texture = pygame.image.load('textures/teleporter_enemy.png').convert_alpha()
+    teleporter_texture = pygame.image.load('textures/teleporter_enemy.png').convert_alpha()
     phantom_texture = pygame.image.load('textures/phantom_enemy.png').convert_alpha()
-    #stream_texture = pygame.image.load('textures/stream_enemy.png').convert_alpha()
+    stream_texture = pygame.image.load('textures/stream_enemy.png').convert_alpha()
     #sensitive_texture = pygame.image.load('textures/sensitive_enemy.png').convert_alpha()
     burstshooter_texture = pygame.image.load('textures/burstshooter_enemy.png').convert_alpha()
-    #stickyshooter_texture = pygame.image.load('textures/stickyshooter_enemy.png').convert_alpha()
-    #sparker_texture = pygame.image.load('textures/sparker_enemy.png').convert_alpha()
+    stickyshooter_texture = pygame.image.load('textures/stickyshooter_enemy.png').convert_alpha()
+    sparker_texture = pygame.image.load('textures/sparker_enemy.png').convert_alpha()
     annihilator_texture = pygame.image.load('textures/annihilator_enemy.png').convert_alpha()
     frostbeam_texture = pygame.image.load('textures/frostbeam_enemy.png').convert_alpha()
     #forecast_texture = pygame.image.load('textures/forecast_enemy.png').convert_alpha()
     #assassin_texture = pygame.image.load('textures/assassin_enemy.png').convert_alpha()
     #motion_texture = pygame.image.load('textures/motion_enemy.png').convert_alpha()
     #invisibility_texture = pygame.image.load('textures/invisibility_enemy.png').convert_alpha()
-    #whirly_texture = pygame.image.load('textures/whirly_enemy.png').convert_alpha()
-    #volcanic_texture = pygame.image.load('textures/volcanic_enemy.png').convert_alpha()
+    whirly_texture = pygame.image.load('textures/whirly_enemy.png').convert_alpha()
+    volcanic_texture = pygame.image.load('textures/volcanic_enemy.png').convert_alpha()
     pyrobeam_texture = pygame.image.load('textures/pyrobeam_enemy.png').convert_alpha()
-    #laggy_texture = pygame.image.load('textures/laggy_enemy.png').convert_alpha()
-    #error_texture = pygame.image.load('textures/error_enemy.png').convert_alpha()
-    #glitchy_texture = pygame.image.load('textures/glitchy_enemy.png').convert_alpha()
+    laggy_texture = pygame.image.load('textures/laggy_enemy.png').convert_alpha()
+    error_texture = pygame.image.load('textures/error_enemy.png').convert_alpha()
+    glitchy_texture = pygame.image.load('textures/glitchy_enemy.png').convert_alpha()
     #blocker_texture = pygame.image.load('textures/blocker_enemy.png').convert_alpha()
     #gloomyshooter_texture = pygame.image.load('textures/gloomyshooter_enemy.png').convert_alpha()
-    #pulse_texture = pygame.image.load('textures/pulse_enemy.png').convert_alpha()
+    pulse_texture = pygame.image.load('textures/pulse_enemy.png').convert_alpha()
     grower_texture = pygame.image.load('textures/grower_enemy.png').convert_alpha()
 
+except:
+    use_textures = False
+
+try:
     # --- JOKES LMAO ---
     fatal_joke_texture = pygame.image.load('jokes/ifilaugh.png').convert_alpha()
     bomb_joke_texture = pygame.image.load('jokes/sal.png').convert_alpha()
@@ -76,10 +80,9 @@ try:
     charger_joke_texture = pygame.image.load('jokes/yellowman.png').convert_alpha()
     sparker_joke_texture = pygame.image.load('jokes/venom-no.png').convert_alpha()
     annihilator_joke_texture = pygame.image.load('jokes/kill7billion.png').convert_alpha()
-    use_textures = True
-
+    use_joke_textures = True
 except:
-    use_textures = False
+    use_joke_textures = False
 
 # --- GAME OVER SCREEN ---
 def GAME_OVER(final_score, p1, p2): 
@@ -169,6 +172,7 @@ color_list = [WHITE, SILVER, CLOUD, GRAY, SHADOW,
               ICE, CYAN, SKY, AZURE, BLUE, COBALT, NAVY,
               INDIGO, PURPLE, MAUVE, LAVENDER, LILAC,
               PINK, MAGENTA, ORCHID, VIOLET, CRIMSON, HOT_PINK]
+
 colorword_list = ["White", "Silver", "Cloud", "Gray", "Shadow",
                   "Brown", "Bronze", "Maroon", "Brick", "Red",
                   "Lava", "Salmon", "Coral", "Tan", "Orange",
@@ -4376,6 +4380,7 @@ def TITLE_SCREEN():
 
 
         # --- Keyboard Controls for title --
+        custom_skin_number = len(player_skins) - 1
         for event in pygame.event.get():
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)) and players == 1:
                 if p1_skin_color-1 < 0: p1_skin_color = len(player_skins)-1
@@ -4408,36 +4413,36 @@ def TITLE_SCREEN():
             if (event.type == pygame.KEYDOWN and (event.key == pygame.K_ESCAPE)):
                 pygame.quit()
                 quit()
-            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_y) and (p1_skin_color == 24 or p2_skin_color == 24)):
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_y) and (p1_skin_color == custom_skin_number or p2_skin_color == custom_skin_number)):
                 if custom_color+1 == len(color_list): custom_color = 0
                 else: custom_color += 1
-                player_skins[24][0] = color_list[custom_color]
-            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_h) and (p1_skin_color == 24 or p2_skin_color == 24)):
+                player_skins[custom_skin_number][0] = color_list[custom_color]
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_h) and (p1_skin_color == custom_skin_number or p2_skin_color == custom_skin_number)):
                 if custom_text+1 == len(color_list): custom_text = 0
                 else: custom_text += 1
-                player_skins[24][1] = color_list[custom_text]
-                if custom_text < (len(color_list)/2): player_skins[24][2] = color_list[custom_text + (len(color_list)/2)]
-                else: player_skins[24][2] = color_list[custom_text - (len(color_list)/2)]
-            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_n) and (p1_skin_color == 24 or p2_skin_color == 24)):
+                player_skins[custom_skin_number][1] = color_list[custom_text]
+                if custom_text < (len(color_list)//2): player_skins[custom_skin_number][2] = color_list[custom_text + (len(color_list)//2)]
+                else: player_skins[custom_skin_number][2] = color_list[custom_text - (len(color_list)//2)]
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_n) and (p1_skin_color == custom_skin_number or p2_skin_color == custom_skin_number)):
                 if custom_font+1 == len(font_list): custom_font = 0
                 else: custom_font += 1
-                player_skins[24][3] = font_list[custom_font]
+                player_skins[custom_skin_number][3] = font_list[custom_font]
                 skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(70*SCALED_TEXT))
                 skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(70*SCALED_TEXT))
-            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_t) and (p1_skin_color == 24 or p2_skin_color == 24)):
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_t) and (p1_skin_color == custom_skin_number or p2_skin_color == custom_skin_number)):
                 if custom_color-1 < 0: custom_color = len(color_list)-1
                 else: custom_color -= 1
-                player_skins[24][0] = color_list[custom_color]
-            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_g) and (p1_skin_color == 24 or p2_skin_color == 24)):
+                player_skins[custom_skin_number][0] = color_list[custom_color]
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_g) and (p1_skin_color == custom_skin_number or p2_skin_color == custom_skin_number)):
                 if custom_text-1 < 0: custom_text = len(color_list)-1
                 else: custom_text -= 1
-                player_skins[24][1] = color_list[custom_text]
-                if custom_text < (len(color_list)/2): player_skins[24][2] = color_list[custom_text + (len(color_list)/2)]
-                else: player_skins[24][2] = color_list[custom_text - (len(color_list)/2)]
-            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_b) and (p1_skin_color == 24 or p2_skin_color == 24)):
+                player_skins[custom_skin_number][1] = color_list[custom_text]
+                if custom_text < (len(color_list)//2): player_skins[custom_skin_number][2] = color_list[custom_text + (len(color_list)//2)]
+                else: player_skins[custom_skin_number][2] = color_list[custom_text - (len(color_list)//2)]
+            if (event.type == pygame.KEYDOWN and (event.key == pygame.K_b) and (p1_skin_color == custom_skin_number or p2_skin_color == custom_skin_number)):
                 if custom_font-1 < 0: custom_font = len(font_list)-1
                 else: custom_font -= 1
-                player_skins[24][3] = font_list[custom_font]
+                player_skins[custom_skin_number][3] = font_list[custom_font]
                 skin_font = pygame.font.SysFont(player_skins[p1_skin_color][3], int(70*SCALED_TEXT))
                 skin_2font = pygame.font.SysFont(player_skins[p2_skin_color][3], int(70*SCALED_TEXT))
             
@@ -7473,17 +7478,11 @@ while running:
          
 # --- Placing on Textures ---
         if use_textures and modifiers[0] == 0:
-            textures = ["None", homing_texture, fatal_texture, "None", "None", "None", "None", "None", "None", bomb_texture,
-                        shooter_texture, sniper_texture, "None", shotgun_texture, "None", "None", "None", "None", rapidshooter_texture, "None",
-                        "None", laser_texture, "None", "None", "None", tracer_texture, savage_texture, "None", phantom_texture, "None",
-                        "None", burstshooter_texture, "None", "None", annihilator_texture, frostbeam_texture, "None", "None", "None", "None",
-                        "None", "None", pyrobeam_texture, "None", "None", "None", "None", "None", "None", grower_texture]
-
-            joke_textures = ["None", "None", fatal_joke_texture, "None", "None", "None", "None", "None", "None", bomb_joke_texture,
-                        "None", "None", "None", "None", voodoo_joke_texture, "None", "None", charger_joke_texture, "None", "None",
-                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
-                        "None", "None", "None", sparker_joke_texture, annihilator_joke_texture, "None", "None", "None", "None", "None",
-                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
+            textures = [basic_texture, homing_texture, fatal_texture, flow_texture, sticky_texture, "None", trail_texture, "None", splitter_texture, bomb_texture,
+                        shooter_texture, sniper_texture, speedy_texture, shotgun_texture, "None", "None", magma_texture, charger_texture, rapidshooter_texture, frostbite_texture,
+                        "None", laser_texture, "None", "None", cold_texture, tracer_texture, savage_texture, teleporter_texture, phantom_texture, stream_texture,
+                        "None", burstshooter_texture, stickyshooter_texture, sparker_texture, annihilator_texture, frostbeam_texture, "None", "None", "None", "None",
+                        whirly_texture, volcanic_texture, pyrobeam_texture, laggy_texture, error_texture, glitchy_texture, "None", "None", pulse_texture, grower_texture]
         else:
             textures = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
                         "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
@@ -7491,6 +7490,13 @@ while running:
                         "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
                         "None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
 
+        if use_joke_textures and modifiers[0] == 0:
+            joke_textures = ["None", "None", fatal_joke_texture, "None", "None", "None", "None", "None", "None", bomb_joke_texture,
+                        "None", "None", "None", "None", voodoo_joke_texture, "None", "None", charger_joke_texture, "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
+                        "None", "None", "None", sparker_joke_texture, annihilator_joke_texture, "None", "None", "None", "None", "None",
+                        "None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
+        else:
             joke_textures = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
                         "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
                         "None", "None", "None", "None", "None", "None", "None", "None", "None", "None",
