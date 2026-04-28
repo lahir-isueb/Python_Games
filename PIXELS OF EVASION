@@ -1111,9 +1111,9 @@ def SETTINGS():
                     case 156: modifiers[7] = int(chara)
                     case 157: ambush_start_setting = int(chara)
                     case 158: annihilator_interaction_setting = int(chara)
-                    case 159: hardened_speed_percent = int(chara)
-                    case 160: fatal_speed_percent = int(chara)
-                    case 161: annihilator_speed_percent = int(chara)
+                    case 159: hardened_speed_percent_setting = int(chara)
+                    case 160: fatal_speed_percent_setting = int(chara)
+                    case 161: annihilator_speed_percent_setting = int(chara)
                 scount += 1
                 chara = ""
             else: chara += c
@@ -1270,7 +1270,7 @@ def SETTINGS():
                                  addictive_interaction_setting, blocker_interaction_setting, gloomyshooter_hp_setting,
                                  enemy_locks[47], target_closest_setting, pulse_hp_setting, grower_hp_setting,
                                  enemy_locks[48], enemy_locks[49], growing_speed_setting, modifiers[7], ambush_start_setting,
-                                 annihilator_interaction_setting, hardened_speed_percent, fatal_speed_percent, annihilator_speed_percent]
+                                 annihilator_interaction_setting, hardened_speed_percent_setting, fatal_speed_percent_setting, annihilator_speed_percent_setting]
 
             
             for x in copy_setting_list: copied += f"{x}_"
