@@ -1129,7 +1129,7 @@ def SETTINGS():
         except:
             scount = 0
 
-    SLIST = ["presets", "textures", "joke-textures", "screen-size", "fullscreen",
+    SLIST = ["textures", "joke-textures", "screen-size", "fullscreen", "presets",
 
              "starting sd", "ending sd", "sd change", "enemy unlock",
              "instaspawn score", "instaspawn", "ambush start",
@@ -1326,7 +1326,7 @@ def SETTINGS():
                 else: use_joke_textures = True
                 pygame.time.delay(200)
         else:
-            joke_true_or_false_button = pygame.Rect(1385*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("textures")*60*SCALED_HEIGHT - button_offset + scroll_y, 115*SCALED_WIDTH, 50*SCALED_HEIGHT)
+            joke_true_or_false_button = pygame.Rect(1385*SCALED_WIDTH, 180*SCALED_HEIGHT+SLIST.index("joke-textures")*60*SCALED_HEIGHT - button_offset + scroll_y, 115*SCALED_WIDTH, 50*SCALED_HEIGHT)
             pygame.draw.rect(screen, SHADOW, joke_true_or_false_button, border_radius=0)
             screen.blit(true_or_false_txt, true_or_false_txt.get_rect(center=joke_true_or_false_button.center))
 
@@ -4833,7 +4833,7 @@ while running:
         if players == 2 and player2_hot_until < 0:
             player2_burnt = False
 
-        if ambush_fully_started == False and truescore >= ambush_start:
+        if ambush_fully_started == False and truescore + max(p1_xtra_score, p2_xtra_score) >= ambush_start:
             ambushes = insta_spawn
             ambush_score += ambush_start
             ambush_fully_started = True
