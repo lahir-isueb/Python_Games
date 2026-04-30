@@ -7008,7 +7008,9 @@ while running:
                         enemy["health"] -= undertale_hardened_dps
                         if enemy["health"] < 1:
                             if unharden_death == 0: enemy["health"] = 1
-                            elif unharden_death == 1: enemy_died = True
+                            elif unharden_death == 1:
+                                if not enemy.get("shrinking", False):
+                                    enemy["shrinking"] = True
                     continue
                 elif enemy["type"] == 16:
                     if (p2_dx != 0 or p2_dy != 0):
@@ -7025,7 +7027,9 @@ while running:
                     enemy["health"] -= undertale_hardened_dps
                     if enemy["health"] < 1:
                         if unharden_death == 0: enemy["health"] = 1
-                        elif unharden_death == 1: enemy_died = True
+                        elif unharden_death == 1:
+                            if not enemy.get("shrinking", False):
+                                enemy["shrinking"] = True
                     continue
                 elif enemy["type"] == 15:
                     if not enemy.get("shrinking", False):
