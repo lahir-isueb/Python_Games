@@ -4838,7 +4838,7 @@ while running:
             ambush_score += ambush_start
             ambush_fully_started = True
 
-        if truescore >= ambush_score and ambush_per_score != 6969 and ambush_fully_started == True:
+        if truescore + max(p1_xtra_score, p2_xtra_score) >= ambush_score and ambush_per_score != 6969 and ambush_fully_started == True:
             ambushes = insta_spawn
             ambush_score += ambush_per_score
 
@@ -7505,7 +7505,7 @@ while running:
 
         if paused == False:
             enemy["drip timer"] += (60 / FPS) * game_speed
-            if modifiers[7] == 1 and not enemy.get("laser_mode", False):
+            if modifiers[7] == 1 and not enemy.get("laser_mode", False) and not enemy.get("shrinking", False):
                 if enemy["drip timer"] > 50 and enemy["type"] != 6767:
                     enemy["drip timer"] = 0
                     projectiles.append({
