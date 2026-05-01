@@ -7552,7 +7552,7 @@ while running:
             continue
 
         enemy_visibility = 255
-        if enemy["type"] == 40 or enemy["type"] == 29 or enemy["type"] == 38 or modifiers[3] == 1:
+        if (enemy["type"] == 40 or enemy["type"] == 29 or enemy["type"] == 38 or modifiers[3] == 1) and enemy["type"] != 15:
             dist1 = distance(enemy["x"], enemy["y"], player_x, player_y) - enemy["size"]/2 - player_size/2 if player_alive else 9999
             dist2 = distance(enemy["x"], enemy["y"], player2_x, player2_y) - enemy["size"]/2 - player_size/2 if players == 2 and player2_alive else 9999
             closest_dist = min(dist1, dist2)
@@ -7841,7 +7841,7 @@ while running:
                             "dx": random.uniform(-2, 2),
                             "dy": random.uniform(10, 15),
                             "color": colorblind_list[colorblind] if colorblind != 0 else YELLOW,
-                            "ability": "snipe"
+                            "ability": None
                         })
 
             if weathers[weather] == "Snow" or weathers[weather] == "Blizzard":
